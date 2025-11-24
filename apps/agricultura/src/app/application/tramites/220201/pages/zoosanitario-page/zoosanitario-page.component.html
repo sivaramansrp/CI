@@ -36,7 +36,7 @@
         <btn-continuar [datos]="datosPasos" [btnGuardar]="btnGuardar" [btnGuardarVisible]="btnGuardarVisible"
           (continuarEvento)="getValorIndice($event)" [dePadre]="true"
           [btnHabilitarContinuar] = "true"
-          (btnGuardarClicked)="guardadoTotalSolicitud()"></btn-continuar>
+          (btnGuardarClicked)="guardadoParcialSolicitud()"></btn-continuar>
         } @else {
         <div class="mt-5 mb-3 d-flex justify-content-end">
           <button type="button" class="btn btn-default" (click)="anterior()" *ngIf="seccionCargarDocumentos">

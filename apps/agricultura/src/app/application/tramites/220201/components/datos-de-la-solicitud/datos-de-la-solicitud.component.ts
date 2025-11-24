@@ -1,29 +1,31 @@
 import { ActivatedRoute, Router } from '@angular/router';
 import { AfterViewInit, Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
-import { 
-  AlertComponent, 
-  Catalogo, 
-  CatalogoSelectComponent, 
-  ConfiguracionColumna, 
-  InputRadioComponent, 
-  Notificacion, 
-  NotificacionesComponent, 
-  SharedModule, 
-  TablaDinamicaComponent, 
-  TablaDinamicaExpandidaComponent, 
-  TablaSeleccion, 
-  TituloComponent, 
+import {
+  AlertComponent,
+  Catalogo,
+  CatalogoSelectComponent,
+  ConfiguracionColumna,
+  InputRadioComponent,
+  Notificacion,
+  NotificacionesComponent,
+  SharedModule,
+  TablaDinamicaComponent,
+  TablaDinamicaExpandidaComponent,
+  TablaSeleccion,
+  TituloComponent,
   convertDate,
   formatFechaCreacion,
   formatFechaCustom,
   formatearFechaSolicitud,
-  formatearFechaSolicitudSinHora, } from '@libs/shared/data-access-user/src';
-  import { 
+  formatearFechaSolicitudSinHora,
+} from '@libs/shared/data-access-user/src';
+import {
   CapturarSolicitud,
   DatosParaMovilizacionNacional,
   FilaSolicitud,
   PagoDeDerechos,
-  SolicitudData } from '../../models/220201/capturar-solicitud.model';
+  SolicitudData
+} from '../../models/220201/capturar-solicitud.model';
 import { DatosForma, RadioOpcion } from '../../models/220201/certificado-zoosanitario.model';
 import { DetallasDatos, Sensible } from '../../../../shared/models/datos-de-la-solicitue.model';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
@@ -858,7 +860,7 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy, AfterView
         .subscribe({
           next: (datos) => {
             if (datos?.datos) {
-              this.obtenerSanidadAgropecuariaList(datos.datos.cve_aduana || '');              
+              this.obtenerSanidadAgropecuariaList(datos.datos.cve_aduana || '');
               this.obtenerVeterinarioList(datos.datos.establecimiento_TIF || '');
               this.obtenerPuntoInspeccionList(datos.datos.oficina_inspeccion_sanidad_agropecuaria || '');
               //Regimen
@@ -918,7 +920,7 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy, AfterView
                   numeroCertificadoInternacional: String(mercancia.numero_certificado) || '',
                   fraccionArancelaria: mercancia.fraccion_arancelaria_corto || '',
                   descripcionFraccion: mercancia.descripcion_fracción_arancelaria || '',
-                  idDescripcionFraccion: mercancia.id_fraccion_gubernamental || 0, 
+                  idDescripcionFraccion: mercancia.id_fraccion_gubernamental || 0,
                   nico: mercancia.clave_nico || '',
                   descripcionNico: mercancia.descripcion_nico || '',
                   descripcionUso: mercancia.descripcion_uso || '',
@@ -1169,8 +1171,30 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy, AfterView
   guardarParcial(): void {
 
     const FORMULARIO = this.datosDelaSolicitud.value;
+    console.warn('FORMULARIOO', this.cuerpoTabla);
 
-    
+    const FILAPRODUCTO = this.cuerpoTabla.map((fila) =>
+      (fila.detalleProductos || []).map((producto) => ({
+        numero_lote_detalle: producto.numeroDeLote || '',
+        color_pelaje_detalle: '',
+        edad_animal_detalle: '',
+        fase_desarrollo_detalle: '',
+        funcion_zootecnica_detalle: '',
+        numeroidentificacion_detalle: '',
+        raza_detalle: '',
+        id_sexo_detalle: '',
+        nombre_cientifico_detalle: '',
+        nombre_mercancia_detalle: '',
+        fecha_sacrificio: producto.fechaProduccionSacrificio || '',
+        fecha_elaboracion: producto.fechaElaboracionEmpaqueProceso || '',
+        fecha_caducidad: producto.fechaCaducidadProducto || '',
+        fecha_elaboracion_fin: producto.fechaFinElaboracionEmpaqueProceso || '',
+        fecha_caducidad_fin: producto.fechaFinCaducidadProducto || '',
+        fecha_sacrificio_fin: producto.fechaFinProduccionSacrificio || ''
+      }))
+    );
+
+    console.warn('FORMULARIO-2', FILAPRODUCTO);
     // eslint-disable-next-line complexity
     const FILAS: Mercancia[] = this.cuerpoTabla.map((fila) => ({
       tipo_mercancia: this.datosDelaSolicitud.get('tipoMercancia')?.value === 'no' ? 'TICERM.SOA' : 'TICERM.AN',
@@ -1194,45 +1218,11 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy, AfterView
       id_planta_autorizada: fila.plantaAutorizadaOrigen || '',
       clave_paises_origen: fila.paisDeOrigen || '',
       clave_paises_procedencia: fila.paisDeProcedencia || '',
-      lista_detalle_mercancia: [
-        ...(fila.sensibles?.map((detalle) => ({
-          numero_lote_detalle: detalle.NumeroLote || '',
-          color_pelaje_detalle: detalle.ColorPelaje || '',
-          edad_animal_detalle: detalle.EdadAnimal || '',
-          fase_desarrollo_detalle: detalle.FaseDesarrollo || '',
-          funcion_zootecnica_detalle: detalle.FuncionZootecnica || '',
-          numeroidentificacion_detalle: detalle.NumeroIdentificacion || '',
-          raza_detalle: detalle.Raza || '',
-          id_sexo_detalle: detalle.Sexo || '',
-          nombre_cientifico_detalle: detalle.NombreCientifico || '',
-          nombre_mercancia_detalle: detalle.NombreMercancia || '',
-          fecha_sacrificio: '',
-          fecha_elaboracion: '',
-          fecha_caducidad: '',
-          fecha_elaboracion_fin: '',
-          fecha_caducidad_fin: '',
-          fecha_sacrificio_fin: '',
-        })) || []),
-        ...(fila.detalleProductos?.map((detalleProducto) => ({
-          numero_lote_detalle: detalleProducto.numeroDeLote || '',
-          color_pelaje_detalle: '',
-          edad_animal_detalle: '',
-          fase_desarrollo_detalle: '',
-          funcion_zootecnica_detalle: '',
-          numeroidentificacion_detalle: '',
-          raza_detalle: '',
-          id_sexo_detalle: '',
-          nombre_cientifico_detalle: '',
-          nombre_mercancia_detalle: '',
-          fecha_sacrificio: '',
-          fecha_elaboracion: convertDate(detalleProducto.fechaElaboracionEmpaqueProceso ?? '') || '',
-          fecha_caducidad: convertDate(detalleProducto.fechaCaducidadProducto ?? '') || '',
-          fecha_elaboracion_fin: convertDate(detalleProducto.fechaFinElaboracionEmpaqueProceso ?? '') || '',
-          fecha_caducidad_fin: convertDate(detalleProducto.fechaFinCaducidadProducto ?? '') || '',
-          fecha_sacrificio_fin: convertDate(detalleProducto.fechaFinProduccionSacrificio ?? '') || '',
-        })) || [])
-      ]
+      lista_detalle_mercancia: FILAPRODUCTO.shift() || [],
+      numero_partida: Number(fila.noPartida) || 0,
+      descripcion_tipo_requisito: fila.descripcionTipoRequisito || ''
     }));
+
 
     const SOLICITUDPARCIAL: GuardaSolicitud = {
       id_solicitud: null,
@@ -1314,14 +1304,14 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy, AfterView
     };
     this.registroSolicitudService.guardaSolicitudParcial(220201, SOLICITUDPARCIAL).subscribe();
   }
-  
+
   // eslint-disable-next-line class-methods-use-this, complexity
   guardarTotal(): void {
     // Lógica para guardar la solicitud de forma completa
     const FORMULARIO = this.datosDelaSolicitud.value;
     // eslint-disable-next-line complexity
     const FILAS: Mercancia[] = this.cuerpoTabla.map((fila) => ({
-      tipo_mercancia:  this.datosDelaSolicitud.get('tipoMercancia')?.value === 'no' ? 'TICERM.SOA' : 'TICERM.AN',
+      tipo_mercancia: this.datosDelaSolicitud.get('tipoMercancia')?.value === 'no' ? 'TICERM.SOA' : 'TICERM.AN',
       tipo_requisito: Number(fila.tipoRequisito) || 0,
       requisito: fila.requisito || '',
       numero_certificado: fila.numeroCertificadoInternacional || '',
@@ -1459,9 +1449,11 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy, AfterView
           }
         }
       }
-      
-    );   
+
+    );
   }
+
+
 
 
   /**
