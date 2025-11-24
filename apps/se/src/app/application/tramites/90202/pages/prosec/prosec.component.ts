@@ -1,8 +1,20 @@
-import { Component, ViewChild } from '@angular/core';
+import { AVISO, ERROR_FORMA_ALERT, ListaPasosWizard, PASOS, esValidObject, getValidDatos} from '@libs/shared/data-access-user/src';
+import { AutorizacionProsecStore, ProsecState } from '../../estados/autorizacion-prosec.store';
+import { Component, EventEmitter, OnDestroy, OnInit, ViewChild } from '@angular/core';
+
+import { Subject, map, takeUntil } from 'rxjs';
+
 import { DatosPasos } from '@libs/shared/data-access-user/src/core/models/shared/components.model';
-import { ListaPasosWizard } from '@libs/shared/data-access-user/src';
-import { PASOS_PROSEC_90202 } from '../../constants/pasos.enum';
+import { PasoUnoComponent } from '../paso-uno/paso-uno.component';
+import { ToastrService } from 'ngx-toastr';
+
+import { AUtorizacionProsecQuery } from '../../estados/autorizacion-prosec.query';
+import { GuardarMappingAdapter } from '../../adapters/guardar-mapping.adapter';
+import { ProsecService } from '../../services/prosec.service';
+import { RegistroSolicitudService } from '@libs/shared/data-access-user/src';
+
 import { WizardComponent } from '@libs/shared/data-access-user/src/tramites/components/wizard/wizard.component';
+
 
 /**
  * Interfaz para definir la estructura de los botones de acción.
@@ -21,53 +33,143 @@ interface AccionBoton {
   selector: 'app-prosec',
   templateUrl: './prosec.component.html',
 })
-export class ProsecComponent {
-
-    /**
-   * ID de la solicitud.
-   */
-  idSolicitudState: number | null = 90202;
-  /**
-   * Lista de pasos del asistente.
-   * Se obtiene de una constante definida en otro archivo.
-   */
-  pasos: ListaPasosWizard[] = PASOS_PROSEC_90202;
-
-  /**
-   * Indice actual del paso en el asistente.
-   * Se inicializa en 1.
-   */
+export class ProsecComponent implements OnInit, OnDestroy {
+    private representacionFederalReady = false;
+  pasos: ListaPasosWizard[] = PASOS;
   indice: number = 1;
-
-  /**
-   * Título del asistente.
-   */
   @ViewChild(WizardComponent) wizardComponent!: WizardComponent;
-
-  /**
-   * Título del asistente.
-   */
   datosPasos: DatosPasos = {
     nroPasos: this.pasos.length,
     indice: this.indice,
     txtBtnAnt: 'Anterior',
     txtBtnSig: 'Continuar',
   };
+  idSolicitudState: number | null = 90202; 
+  cargarArchivosEvento = new EventEmitter<void>();
+  activarBotonCargaArchivos: boolean = false;
+  seccionCargarDocumentos: boolean = true;
+  idSolicitud: number = 0;
+  public solicitudState!: ProsecState;
+  cargaEnProgreso: boolean = true;
+  tramiteId: string = '90202';
+  destroyNotifier$: Subject<void> = new Subject();
+  TEXTOS = AVISO;
+  @ViewChild('pasoUnoRef') pasoUnoComponent!: PasoUnoComponent;
+  public formErrorAlert = ERROR_FORMA_ALERT;
+  esFormaValido: boolean = false;
+  infoError = 'alert-danger text-center';
 
-  /**
-   * Maneja la acción del botón en el asistente.
-   * Cambia el paso actual según la acción del botón.
-   *
-   * @param e - Objeto que contiene la acción y el valor del botón.
-   */
+  constructor(
+    private toastrService: ToastrService,
+    private registroSolicitudService: RegistroSolicitudService,
+    private store: AutorizacionProsecStore,
+    public tramiteQuery: AUtorizacionProsecQuery,
+    private prosecService: ProsecService // <-- Inject ProsecService
+  ) {}
+
+  ngOnInit(): void {
+    this.tramiteQuery.selectProsec$
+      .pipe(
+        takeUntil(this.destroyNotifier$),
+        map((seccionState) => {
+          this.solicitudState = seccionState;
+        })
+      ).subscribe();
+
+    // Call API for representacionesFederales and patch into store
+    // Replace with actual values as needed
+    const ID_SOLICITUD = this.solicitudState?.idSolicitud?.toString() || '';
+    const ID_PROGRAMA_AUTORIZADO = '9419';
+    const FECHA_PROSEC = Date.now().toString();
+    this.prosecService.obtenerRepresentacionFederal(ID_SOLICITUD, ID_PROGRAMA_AUTORIZADO, FECHA_PROSEC)
+      .pipe(takeUntil(this.destroyNotifier$))
+      .subscribe({
+        next: (response: { representacionFederal?: string }) => {
+          if (response && response.representacionFederal) {
+            this.store.setRepresentacionFederal(response.representacionFederal);
+            this.representacionFederalReady = true;
+          }
+        }
+      });
+  }
+
   getValorIndice(e: AccionBoton): void {
-    if (e.valor > 0 && e.valor < 5) {
-      this.indice = e.valor;
-      if (e.accion === 'cont') {
-        this.wizardComponent.siguiente();
-      } else {
-        this.wizardComponent.atras();
+    if (e.accion === 'cont') {
+      let isValid = true;
+      if (this.indice === 1 && this.pasoUnoComponent) {
+        isValid = this.pasoUnoComponent.validarFormularios();
       }
+      if (!isValid) {
+        this.formErrorAlert = ERROR_FORMA_ALERT;
+        this.esFormaValido = true;
+        this.datosPasos.indice = this.indice;
+        setTimeout(() => window.scrollTo({ top: 0, behavior: 'smooth' }), 0);
+        return;
+      }
+      if (!this.representacionFederalReady) {
+        this.toastrService.error('Esperando datos de Representación Federal del API. Intente nuevamente en unos segundos.');
+        return;
+      }
+      const PAYLOAD = GuardarMappingAdapter.toFormPayload(this.solicitudState);
+      this.registroSolicitudService.postGuardarDatos(this.tramiteId, PAYLOAD).subscribe(response => {
+        const SHOULD_NAVIGATE = response.codigo === '00';
+        if (!SHOULD_NAVIGATE) {
+          this.esFormaValido = true;
+          this.indice = 1;
+          this.datosPasos.indice = 1;
+          this.wizardComponent.indiceActual = 1;
+          setTimeout(() => window.scrollTo({ top: 0, behavior: 'smooth' }), 0);
+          return;
+        }
+        this.esFormaValido = false;
+        if (esValidObject(response) && esValidObject(response.datos)) {
+          const DATOS = response.datos as { id_solicitud?: number };
+          const ID_SOLICITUD = getValidDatos(DATOS.id_solicitud) ? (DATOS.id_solicitud ?? 0) : 0;
+          this.solicitudState.idSolicitud = ID_SOLICITUD;
+          this.store.setIdSolicitud(ID_SOLICITUD);
+        }
+        this.toastrService.success(response.mensaje);
+        this.indice = 2;
+        this.datosPasos.indice = 2;
+        this.wizardComponent.siguiente();
+      });
+    } else {
+      this.indice = e.valor;
+      this.datosPasos.indice = this.indice;
+      this.wizardComponent.atras();
     }
+  }
+
+  manejaEventoCargaDocumentos(carga: boolean): void {
+    this.activarBotonCargaArchivos = carga;
+  }
+
+  cargaRealizada(cargaRealizada: boolean): void {
+    this.seccionCargarDocumentos = cargaRealizada ? false : true;
+  }
+
+  siguiente(): void {
+    this.wizardComponent.siguiente();
+    this.indice = this.wizardComponent.indiceActual + 1;
+    this.datosPasos.indice = this.wizardComponent.indiceActual + 1;
+  }
+
+  anterior(): void {
+    this.wizardComponent.atras();
+    this.indice = this.wizardComponent.indiceActual + 1;
+    this.datosPasos.indice = this.wizardComponent.indiceActual + 1;
+  }
+
+  onClickCargaArchivos(): void {
+    this.cargarArchivosEvento.emit();
+  }
+
+  onCargaEnProgreso(carga: boolean): void {
+    this.cargaEnProgreso = carga;
+  }
+
+  ngOnDestroy(): void {
+    this.destroyNotifier$.next();
+    this.destroyNotifier$.complete();
   }
 }

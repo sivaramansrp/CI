@@ -8,7 +8,7 @@ import { PasoFirmaComponent } from '@libs/shared/data-access-user/src';
 import { PasoTresComponent } from './pages/paso-tres/paso-tres.component';
 import { PasoUnoComponent } from './pages/paso-uno/paso-uno.component';
 import { ProsecComponent } from './pages/prosec/prosec.component';
-import { SectoresYMercanciasComponent } from '../../shared/components/sectores-y-mercancias/sectores-y-mercancias.component';
+import { SectoresYMercanciasComponent } from './components/sectores-y-mercancias/sectores-y-mercancias.component';
 import { ToastrService } from 'ngx-toastr';
 import { provideHttpClient } from '@angular/common/http';
 

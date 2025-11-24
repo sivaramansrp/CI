@@ -1473,8 +1473,8 @@ public convertToStringArray(value: unknown): string[] {
     VALORTABLAMERCANCIA.paisOrigen = this.mercanciaForm.get('paisDeOriginDatos')?.value;
     VALORTABLAMERCANCIA.paisProcedencia = this.mercanciaForm.get('paisDeProcedenciaDatos')?.value;
     VALORTABLAMERCANCIA.usoEspecifico = this.mercanciaForm.get('usoEspecifico')?.value;
-    VALORTABLAMERCANCIA.unidadMedidaComercializacion = this.mercanciaForm.get('cantidadUmcValor')?.value;
-    VALORTABLAMERCANCIA.cantidadUMC = this.mercanciaForm.get('cantidadUmc')?.value;
+    VALORTABLAMERCANCIA.unidadMedidaComercializacion = this.mercanciaForm.get('cantidadUmc')?.value;
+    VALORTABLAMERCANCIA.cantidadUMC = this.mercanciaForm.get('cantidadUmcValor')?.value;
     VALORTABLAMERCANCIA.unidadMedidaTarifa = this.mercanciaForm.get('cantidadUmtValor')?.value;
     VALORTABLAMERCANCIA.cantidadUMT = this.mercanciaForm.get('cantidadUmt')?.value;
     const CLASIFICACIONID = this.mercanciaForm.get('clasificacionProducto')?.value;

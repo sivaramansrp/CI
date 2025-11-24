@@ -1,4 +1,4 @@
-import { FilaPlantas, FilaProducir, FilaProductos, FilaSectors } from '../models/prosec.model';
+import { FilaPlantas, FilaProducir, FilaProductos, FilaSectors } from '../models/prosec.module';
 import { Store, StoreConfig } from '@datorama/akita';
 import { Catalogo } from '@libs/shared/data-access-user/src';
 import { Injectable } from '@angular/core';
@@ -10,7 +10,7 @@ import { Injectable } from '@angular/core';
  * Contiene todas las propiedades necesarias para almacenar la información y el estado de validación de cada sección del formulario.
  * 
  * - modalidad: Modalidad seleccionada en el trámite.
- * - Estado: Lista de estados seleccionados.
+ * - estadoSeleccionar: Lista de estados seleccionados.
  * - RepresentacionFederal: Lista de representaciones federales seleccionadas.
  * - ActividadProductiva: Lista de actividades productivas seleccionadas.
  * - Sector: Lista de sectores seleccionados.
@@ -21,12 +21,7 @@ import { Injectable } from '@angular/core';
  * - sectoresFromValida: Indica si el formulario de sectores es válido.
  */
 export interface ProsecState {
-  /**
-   * @property {number | null} idSolicitud
-   * @description
-   * Identificador único de la solicitud de autorización PROSEC.
-   */
-  idSolicitud: null | number;
+    idSolicitud: number | null;
   /**
    * @property {string} modalidad
    * @description
@@ -35,32 +30,38 @@ export interface ProsecState {
   modalidad: string;
 
   /**
-   * @property {Catalogo[]} Estado
+   * @property {Catalogo[]} estadoSeleccionar
    * @description
    * Lista de estados seleccionados.
    */
-  Estado: Catalogo[];
+  estadoSeleccionar: Catalogo[];
+  Estado: string;
 
   /**
    * @property {Catalogo[]} RepresentacionFederal
    * @description
    * Lista de representaciones federales seleccionadas.
    */
-  RepresentacionFederal: Catalogo[];
+  RepresentacionFederalLista: Catalogo[];
+  RepresentacionFederal: string;
 
   /**
    * @property {Catalogo[]} ActividadProductiva
    * @description
    * Lista de actividades productivas seleccionadas.
    */
-  ActividadProductiva: Catalogo[];
+  ActividadProductiva: string;
+
+  ActividadProductivaLista: Catalogo[];
 
   /**
    * @property {Catalogo[]} Sector
    * @description
    * Lista de sectores seleccionados.
    */
-  Sector: Catalogo[];
+  sectorLista: Catalogo[];
+
+  sector:string;
 
   /**
    * @property {string} Fraccion_arancelaria
@@ -114,16 +115,20 @@ export interface ProsecState {
  * Retorna el estado inicial para el store de autorización PROSEC.
  * Inicializa todas las propiedades del estado con valores por defecto, asegurando que el formulario comience limpio y sin datos previos.
  * 
- * @returns {ProsecState} Estado inicial con valores por defecto para cada campo del trámite PROSEC.
+ * @returns {ProsecState} estadoSeleccionar inicial con valores por defecto para cada campo del trámite PROSEC.
  */
 export function createInitialState(): ProsecState {
   return {
-    idSolicitud: null,
+    idSolicitud:null,
     modalidad: 'Productor directo',
-    Estado: [],
-    RepresentacionFederal: [],
-    ActividadProductiva: [],
-    Sector: [],
+    estadoSeleccionar: [],
+    Estado: '',
+    RepresentacionFederal: '',
+    RepresentacionFederalLista: [],
+    ActividadProductivaLista: [],
+    ActividadProductiva: '',
+    sectorLista: [],
+    sector: '',
     Fraccion_arancelaria: '',
     contribuyentes: '',
     domiciliosFormaValida: false,
@@ -178,27 +183,34 @@ export class AutorizacionProsecStore extends Store<ProsecState> {
   }
 
   /**
-   * @method setEstado
+   * @method setEstadoSeleccionar
    * @description
    * Establece los estados seleccionados en el estado.
-   * @param {Catalogo[]} Estado Lista de estados.
+   * @param {Catalogo[]} estadoSeleccionar Lista de estados.
    * @returns {void}
    */
-  public setEstado(Estado: Catalogo[]): void {
-    this.update((state) => ({ ...state, Estado }));
+  public setEstadoSeleccionar(estadoSeleccionar: Catalogo[]): void {
+    this.update((state) => ({ ...state, estadoSeleccionar }));
   }
 
+  setEstado(Estado: string): void {
+    this.update((state) => ({ ...state, Estado }));
+  }
   /**
-   * @method setRepresentacionFederal
+   * @method setRepresentacionFederalLista
    * @description
    * Establece la representación federal en el estado.
    * @param {Catalogo[]} RepresentacionFederal Lista de representaciones.
    * @returns {void}
    */
-  public setRepresentacionFederal(RepresentacionFederal: Catalogo[]): void {
-    this.update((state) => ({ ...state, RepresentacionFederal }));
+  public setRepresentacionFederalLista(RepresentacionFederalLista: Catalogo[]): void {
+    console.log(" RepresentacionFederal en store:", RepresentacionFederalLista);
+    this.update((state) => ({ ...state, RepresentacionFederalLista }));
   }
 
+  setRepresentacionFederal(RepresentacionFederal: string): void {
+    this.update((state) => ({ ...state, RepresentacionFederal }));
+  }
   /**
    * @method setActividadProductiva
    * @description
@@ -206,10 +218,14 @@ export class AutorizacionProsecStore extends Store<ProsecState> {
    * @param {Catalogo[]} ActividadProductiva Lista de actividades.
    * @returns {void}
    */
-  public setActividadProductiva(ActividadProductiva: Catalogo[]): void {
+  public setActividadProductiva(ActividadProductiva: string): void {
+    console.log(" ActividadProductiva en store:", ActividadProductiva);
     this.update((state) => ({ ...state, ActividadProductiva }));
   }
 
+  setActividadProductivaLista(ActividadProductivaLista: Catalogo[]): void {
+    this.update((state) => ({ ...state, ActividadProductivaLista }));
+  }
   /**
    * @method setSector
    * @description
@@ -217,10 +233,13 @@ export class AutorizacionProsecStore extends Store<ProsecState> {
    * @param {Catalogo[]} Sector Lista de sectores.
    * @returns {void}
    */
-  public setSector(Sector: Catalogo[]): void {
-    this.update((state) => ({ ...state, Sector }));
+  public setSector(sector: string): void {
+    this.update((state) => ({ ...state, sector }));
   }
 
+  setsectorLista(sectorLista: Catalogo[]): void {
+    this.update((state) => ({ ...state, sectorLista }));
+  }
   /**
    * @method setFraccionArancelaria
    * @description
@@ -330,13 +349,10 @@ export class AutorizacionProsecStore extends Store<ProsecState> {
   public setProductorDatos(productorDatos: FilaProductos[]): void {
     this.update((state) => ({ ...state, productorDatos }));
   }
-
-  /**
-   * @method setIdSolicitud
-   * @description Establece el identificador de la solicitud.
-   * @param {number} idSolicitud - Nuevo identificador de la solicitud.
+   /**
+   * Actualiza el estado con el nuevo valor de `idSolicitud`.
    */
-  public setIdSolicitud(idSolicitud: number): void {
+   setIdSolicitud(idSolicitud: number): void {
     this.update((state) => ({
       ...state,
       idSolicitud,

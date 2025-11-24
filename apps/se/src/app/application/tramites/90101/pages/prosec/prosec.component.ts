@@ -1,10 +1,11 @@
-import { ACCIONBOTON, LISTAPASOWIZARD } from '../../models/prosec.module';
-import { AccionBoton, DatosPasos, RegistroSolicitudService, esValidObject, getValidDatos } from '@ng-mf/data-access-user';
+import { AccionBoton, DatosPasos, LoginQuery, RegistroSolicitudService, esValidObject, getValidDatos } from '@ng-mf/data-access-user';
 import { AutorizacionProsecStore, ProsecState } from '../../estados/autorizacion-prosec.store';
-import { Component, EventEmitter, OnInit, ViewChild } from '@angular/core';
+import { Component, EventEmitter, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { ERROR_FORMA_ALERT, PASOS } from '../../constantes/prosec.module';
-import { AUtorizacionProsecQuery } from '../../queries/autorizacion-prosec.query';
+import { Subject, map, takeUntil } from 'rxjs';
+import { AUtorizacionProsecQuery } from '../../estados/autorizacion-prosec.query';
 import { GuardarMappingAdapter } from '../../adapters/guardar-mapping.adapter';
+import { LISTAPASOWIZARD } from '../../models/prosec.model';
 import { PasoUnoComponent } from '../paso-uno/paso-uno.component';
 import { ToastrService } from 'ngx-toastr';
 import { WizardComponent } from '@ng-mf/data-access-user';
@@ -21,7 +22,7 @@ import { WizardComponent } from '@ng-mf/data-access-user';
   templateUrl: './prosec.component.html',
   styleUrl: './prosec.component.scss'
 })
-export class ProsecComponent implements OnInit {
+export class ProsecComponent implements OnInit, OnDestroy {
   /**
    * @property {LISTAPASOWIZARD[]} pasos
    * @description
@@ -41,8 +42,7 @@ export class ProsecComponent implements OnInit {
    * @description
    * Referencia al componente hijo `WizardComponent` para controlar la navegación de pasos.
    */
-  @ViewChild(WizardComponent)
-  wizardComponent!: WizardComponent;
+  @ViewChild("wizard") wizardComponent!: WizardComponent;
 
   /**
    * @property {PasoUnoComponent} pasoUnoComponent
@@ -158,13 +158,32 @@ esMostrarAlerta: boolean = false;
      */
     cargarArchivosEvento = new EventEmitter<void>();
 
+  /**
+     * @property {Subject<void>} destroyed$
+     * @description Sujeto utilizado para manejar la destrucción de suscripciones y evitar fugas de memoria.
+     */
+    private destroyed$ = new Subject<void>();
+    
+  // Valor de RFC de ejemplo
+  loginRfc: string = '';
+
 
 constructor(
     private toastrService: ToastrService,
     private registroSolicitudService: RegistroSolicitudService,
     public tramiteQuery: AUtorizacionProsecQuery,
-    public tramite260218Store: AutorizacionProsecStore
-  ) {}
+    public tramite260218Store: AutorizacionProsecStore,
+    private loginQuery: LoginQuery,
+  ) {
+    this.loginQuery.selectLoginState$
+      .pipe(
+        takeUntil(this.destroyed$),
+        map((seccionState) => {
+          this.loginRfc = seccionState.rfc;
+        })
+      )
+      .subscribe();
+  }
 
 
   ngOnInit(): void {
@@ -534,6 +553,17 @@ static generarAlertaDeError(mensajes:string): string {
 </div>
 `;
 return ALERTA;
+  }
+
+  /**
+   * @method ngOnDestroy
+   * @description
+   * Método que se ejecuta cuando el componente se destruye.
+   * Se utiliza para completar el observable `destroyed$` y evitar fugas de memoria.
+   */
+  ngOnDestroy(): void {
+    this.destroyed$.next();
+    this.destroyed$.complete();
   }
 
 }
