@@ -36,7 +36,6 @@
                           [required]="item.esRequerido ?? false"
                           [readonly]="item.soloLectura"
                           [ngClass]="esValido(item.campo) ? 'required' : ''"
-                          [attr.maxlength]="item.maxlength"
                           (change)="eventoDeCambioDeValor($event, item.campo)"
                           (keypress)="filtrarCaracteres($event, item.inputFilter)"
                         />
