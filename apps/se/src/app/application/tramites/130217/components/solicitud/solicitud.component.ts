@@ -81,7 +81,7 @@ export class SolicitudComponent implements OnInit, OnDestroy {
   /**
    * Datos de configuración de la tabla obtenidos mediante servicio.
    */
-  public getEstablecimientoTableData: any = [];
+  public getEstablecimientoTableData = [];
 
   /**
    * Fila seleccionada en la tabla dinámica.

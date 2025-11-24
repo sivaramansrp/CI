@@ -2,8 +2,8 @@ import { AlertComponent, BtnContinuarComponent, CrosslistComponent, InicioSesion
 import { CommonModule } from '@angular/common';
 import { ControlPermisosPreviosExportacionComponent } from './pages/control-permisos-previos-exportacion/control-permisos-previos-exportacion.component';
 import { ControlPermisosPreviosExportacionRoutingModule } from './control-permisos-previos-exportacion-routing.module';
-import { DatosDelTramiteComponent } from '../../shared/components/datos-del-tramite/datos-del-tramite.component';
 import { DatosDeLaMercanciaComponent } from '../../shared/components/datos-de-la-mercancia/datos-de-la-mercancia.component';
+import { DatosDelTramiteComponent } from '../../shared/components/datos-del-tramite/datos-del-tramite.component';
 import { NgModule } from '@angular/core';
 import { PaisProcendenciaComponent } from '../../shared/components/pais-procendencia/pais-procendencia.component';
 import { PartidasDeLaMercanciaComponent } from '../../shared/components/partidas-de-la-mercancia/partidas-de-la-mercancia.component';

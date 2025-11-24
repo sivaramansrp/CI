@@ -9,9 +9,9 @@ import { DatosPasos, JSONResponse, ListaPasosWizard, Notificacion, WizardCompone
 import { Subject, take, takeUntil } from 'rxjs';
 import { Tramite130217State, Tramite130217Store } from '../../../../estados/tramites/tramite130217.store';
 import { ControlPermisosPreviosExportacionService } from '../../services/control-permisos-previos-exportacion.service';
+import { PasoUnoComponent } from '../paso-uno/paso-uno.component';
 import { ToastrService } from 'ngx-toastr';
 import { Tramite130217Query } from '../../../../estados/queries/tramite130217.query';
-import { PasoUnoComponent } from '../paso-uno/paso-uno.component';
 
  /**
    * Selector para usar este componente dentro de otras partes de la aplicación.
