@@ -1,7 +1,8 @@
-import { Component, Inject, OnDestroy, OnInit } from '@angular/core';
+import { Component, Inject, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { ConsultaioQuery, ConsultaioState } from '@ng-mf/data-access-user';
 import { Subject, map, takeUntil } from 'rxjs';
 import { ControlPermisosPreviosExportacionService } from '../../services/control-permisos-previos-exportacion.service';
+import { SolicitudComponent } from '../../components/solicitud/solicitud.component';
 
 /**
  * Componente que representa el primer paso del trámite 130217.
@@ -38,6 +39,12 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
   public consultaState!:ConsultaioState;
 
   /**
+   * Referencia al componente SolicitudComponent.
+   * Se utiliza para acceder a las funcionalidades del componente de solicitud.
+   */ 
+  @ViewChild(SolicitudComponent, { static: false}) solicitudComponent!: SolicitudComponent;
+
+  /**
    * Constructor del componente PasoUnoComponent.
    *
    * @param controlPermisosService Servicio inyectado para gestionar permisos previos de exportación.
@@ -68,30 +75,30 @@ ngOnInit(): void {
           this.consultaState = seccionState;
       })).subscribe();
     if(this.consultaState.update) {
-      this.guardarDatosFormulario();
+      // this.guardarDatosFormulario();
     } else {
       this.esDatosRespuesta = true;
     }
 }
 
-/**
-   * Carga datos desde un archivo JSON y actualiza el store con la información obtenida.
-   * Luego reinicializa el formulario con los valores actualizados desde el store.
-   */
-  guardarDatosFormulario(): void {
-    this.controlPermisosService
-      .getRegistroTomaMuestrasMercanciasData().pipe(
-        takeUntil(this.destroyNotifier$)
-      )
-      .subscribe((resp) => {
-        if(resp){
-        this.esDatosRespuesta = true;
-        this.controlPermisosService.actualizarEstadoFormulario(resp);
-        }else {
-          this.esDatosRespuesta = false;
-        }
-      });
-  }
+// /**
+//    * Carga datos desde un archivo JSON y actualiza el store con la información obtenida.
+//    * Luego reinicializa el formulario con los valores actualizados desde el store.
+//    */
+//   guardarDatosFormulario(): void {
+//     this.controlPermisosService
+//       .getRegistroTomaMuestrasMercanciasData().pipe(
+//         takeUntil(this.destroyNotifier$)
+//       )
+//       .subscribe((resp) => {
+//         if(resp){
+//         this.esDatosRespuesta = true;
+//         this.controlPermisosService.actualizarEstadoFormulario(resp);
+//         }else {
+//           this.esDatosRespuesta = false;
+//         }
+//       });
+//   }
 
   /**
    * Selecciona una pestaña específica.

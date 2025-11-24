@@ -1,4 +1,4 @@
-import { BtnContinuarComponent, CrosslistComponent, InicioSesionService, InputRadioComponent, SolicitanteComponent, TablaDinamicaComponent, TituloComponent, WizardComponent } from '@libs/shared/data-access-user/src';
+import { AlertComponent, BtnContinuarComponent, CrosslistComponent, InicioSesionService, InputRadioComponent, NotificacionesComponent, PasoCargaDocumentoComponent, PasoFirmaComponent, SolicitanteComponent, TablaDinamicaComponent, TituloComponent, WizardComponent } from '@libs/shared/data-access-user/src';
 import { CommonModule } from '@angular/common';
 import { ControlPermisosPreviosExportacionComponent } from './pages/control-permisos-previos-exportacion/control-permisos-previos-exportacion.component';
 import { ControlPermisosPreviosExportacionRoutingModule } from './control-permisos-previos-exportacion-routing.module';
@@ -7,8 +7,6 @@ import { DatosDelTramiteComponent } from '../../shared/components/datos-del-tram
 import { NgModule } from '@angular/core';
 import { PaisProcendenciaComponent } from '../../shared/components/pais-procendencia/pais-procendencia.component';
 import { PartidasDeLaMercanciaComponent } from '../../shared/components/partidas-de-la-mercancia/partidas-de-la-mercancia.component';
-import { PasoDosComponent } from './pages/paso-dos/paso-dos.component';
-import { PasoTresComponent } from './pages/paso-tres/paso-tres.component';
 import { PasoUnoComponent } from './pages/paso-uno/paso-uno.component';
 import { ReactiveFormsModule } from '@angular/forms';
 import { RepresentacionComponent } from '../../shared/components/representacion/representacion.component';
@@ -30,15 +28,17 @@ import { ToastrService } from 'ngx-toastr';
     InputRadioComponent,
     SolicitanteComponent,
     ReactiveFormsModule,
-    PasoTresComponent,
-    PasoDosComponent,
     DatosDelTramiteComponent,
     DatosDeLaMercanciaComponent,
     PartidasDeLaMercanciaComponent ,
     TablaDinamicaComponent,
     PaisProcendenciaComponent,
     RepresentacionComponent,
-    CrosslistComponent
+    CrosslistComponent,
+    NotificacionesComponent,
+    AlertComponent,
+    PasoCargaDocumentoComponent,
+    PasoFirmaComponent
   ],
   providers:[ToastrService, InicioSesionService]
 })
