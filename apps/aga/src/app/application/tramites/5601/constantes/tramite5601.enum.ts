@@ -129,8 +129,7 @@ export const FORMULARIO_DETALLES = [
     tipoInput: 'textarea',
     desactivado: false,
     soloLectura: false,
-    validadores: [{ tipo: 'required' }],
-    marcadorDePosicion: '',
+    validadores: [{ tipo: 'required' }, { tipo: 'maxlength', valor: 4000, mensaje: 'Por favor, no escriba más de 4000 caracteres.' }],
     valorPredeterminado: '',
     marginTop: 0
   },
@@ -143,8 +142,7 @@ export const FORMULARIO_DETALLES = [
     tipoInput: 'textarea',
     desactivado: false,
     soloLectura: false,
-    validadores: [],
-    marcadorDePosicion: '',
+    validadores: [{ tipo: 'maxlength', valor: 4000, mensaje: 'Por favor, no escriba más de 4000 caracteres.' }],
     valorPredeterminado: '',
     marginTop: 0
   }       
@@ -229,8 +227,7 @@ export const MERCANCIA_DETALLES = [
       tipoInput: 'textarea',
       desactivado: false,
       soloLectura: false,
-      validadores: [{ tipo: 'required' }],
-      marcadorDePosicion: '',
+      validadores: [{ tipo: 'required' }, { tipo: 'maxlength', valor: 4000, mensaje: 'Por favor, no escriba más de 4000 caracteres.' }],
       valorPredeterminado: '',
       marginTop: 0,
       habilitado: true
@@ -244,8 +241,7 @@ export const MERCANCIA_DETALLES = [
       tipoInput: 'textarea',
       desactivado: false,
       soloLectura: false,
-      validadores: [{ tipo: 'required' }],
-      marcadorDePosicion: '',
+      validadores: [{ tipo: 'required' }, { tipo: 'maxlength', valor: 4000, mensaje: 'Por favor, no escriba más de 4000 caracteres.' }],
       valorPredeterminado: '',
       marginTop: 0,
       habilitado: true
