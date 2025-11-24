@@ -20,6 +20,20 @@ export interface TercerosFabricanteState {
    * Datos del proveedor.
    */
   Proveedor: TablaDatos[];
+
+  /**
+   * Datos del proveedor.
+   */
+  fabricantePais: Catalogo | null;
+
+  /**
+   * Datos del proveedor.
+   */
+  proveedorPais: Catalogo | null;
+  /**
+   * Datos del formulador.
+   */
+  formuladorPais: Catalogo | null;
 }
 
 export function createInitialState(): TercerosFabricanteState {
@@ -31,6 +45,9 @@ export function createInitialState(): TercerosFabricanteState {
     Fabricante: [],
     Formulador: [],
     Proveedor: [],
+    fabricantePais: null,
+    proveedorPais: null,
+    formuladorPais: null,
   };
 }
 @Injectable({
@@ -104,6 +121,40 @@ export class TercerosFabricanteStore extends Store<TercerosFabricanteState> {
     this.update((state) => ({
       ...state,
       Proveedor: proveedor,
+    }));
+  }
+
+  /**
+   * Establece los datos del proveedor en el estado del store.
+   *
+   * @param proveedor Arreglo de datos del proveedor.
+   */
+  public setFabricantePais(fabricantePais: Catalogo): void {
+    this.update((state) => ({
+      ...state,
+      fabricantePais: fabricantePais,
+    }));
+  }
+
+  /**
+   * Establece los datos del proveedor en el estado del store.
+   *
+   */
+  public setProveedorPais(proveedorPais: Catalogo): void {
+    this.update((state) => ({
+      ...state,
+      proveedorPais: proveedorPais, 
+    }));
+  }
+
+  /**
+   * Establece los datos del formulador en el estado del store.
+   *
+   */
+  public setFormuladorPais(formuladorPais: Catalogo): void {
+    this.update((state) => ({
+      ...state,
+      formuladorPais: formuladorPais,
     }));
   }
 }

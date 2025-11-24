@@ -906,8 +906,10 @@ export class DatosMercanciaComponent implements OnInit, AfterViewInit, OnChanges
         this.elementosDeshabilitados = ['descripcionFraccion', 'cantidadUmt'];
         break;
       case 260203:
+        this.detalleMercancia = true;
         this.elementosAnadidos = ['especifique','especifiqueEstado'];
         this.elementosDeshabilitados = ['descripcionFraccion', 'cantidadUmt'];
+        this.elementosNoValidos = ['formaFarmaceutica','denominacionDistintiva'];
         break;
       case 260204:
         this.elementosAnadidos = ['especifique','especifiqueForma'];
@@ -1392,7 +1394,8 @@ public convertToStringArray(value: unknown): string[] {
   // eslint-disable-next-line class-methods-use-this
   public isValid(control: AbstractControl, campo?: string): boolean | null {
     if (control instanceof FormGroup && campo) {
-      return control.controls[campo].errors && control.controls[campo].touched;
+      const FORM_CONTROL = control.controls[campo];
+      return FORM_CONTROL ? FORM_CONTROL.errors && FORM_CONTROL.touched : null;
     }
     return control.errors && control.touched;
   }

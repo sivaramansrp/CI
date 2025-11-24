@@ -1,4 +1,4 @@
-<div class="container col-12">
+<div class="col-md-12">
   <form [formGroup]="formaDetalleMercancia" class="col-12">
     <div class="row">
       <div class="col-md-10 ml-2">
@@ -56,7 +56,7 @@
     </div>
 
     <div class="row">
-      <div class="col-6 ml-1">
+      <div class="col-md-6">
         <label class="form-label text-start" for="tipoDeEnvase">
           Presentación farmacéutica o tipo de envase*:
         </label>
@@ -75,21 +75,20 @@
       <div class="pull-right">
         <button
           type="button"
+          name="agregarMercancias"
+          class="btn btn-primary ms-2"
+          (click)="agregarMercancias()"
+        >
+          Agregar detalle
+        </button>
+        <button
+          type="button"
           name="eliminarMercancias"
           class="btn btn-danger ms-2"
           (click)="eliminarMercancias()"
           [disabled]="!this.tablaMercanciasLista.length"
         >
-          Eliminar
-        </button>
-        
-        <button
-          type="button"
-          name="agregarMercancias"
-          class="btn btn-primary ms-2"
-          (click)="agregarMercancias()"
-        >
-          Agregar
+          Eliminar detalle
         </button>
       </div>
     </div>

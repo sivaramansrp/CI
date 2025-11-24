@@ -1,8 +1,8 @@
 {
     "options": [
-      { "label": "Inicial", "value": "Inicial" }
+      { "label": "Inicial", "value": "TISOL.I" }
     ],
-    "defaultSelect": "Inicial"
+    "defaultSelect": "TISOL.I"
 }
   
   
