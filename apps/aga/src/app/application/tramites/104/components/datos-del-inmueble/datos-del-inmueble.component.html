@@ -43,7 +43,7 @@
 <div class=" text-end mt-5">
     <button class="btn btn-primary  me-2" data-bs-toggle="modal" data-bs-target="#modalAgregar"  [disabled]="consultaState.readonly">Agregar</button>
     <button class="btn btn-default me-2"  [disabled]="consultaState.readonly || !isSingleRowSelected" (click)="editarEstablecimiento()">Modificar</button>
-    <button class="btn btn-primary"  [disabled]="consultaState.readonly || !rowSelected" (click)="eliminarEstablecimiento()">Eliminar</button>
+    <button class="btn btn-primary"  [disabled]="consultaState.readonly || !rowSelected" (click)="eliminarMercancia()">Eliminar</button>
 </div>
 
 <div class="modal" tabindex="-1" [ngClass]="{'show': mostrarAlerta}"
@@ -76,10 +76,13 @@
                             <div class="col-md-4">
                                 <div class="form-group">
                                     <label for="calleInput" class="form-label">Calle*:</label>
-                                    <input type="text" class="form-control" id="calleInput" formControlName="calle" />
-                                        <div *ngIf="formularioDireccion.get('calle')?.touched && formularioDireccion.get('calle')?.hasError('required')" class="text-danger mt-1 small">
-                                            Este campo es obligatorio
-                                        </div>
+                                    <input type="text" class="form-control" id="calleInput" formControlName="calle"/>
+                                    <div *ngIf="formularioDireccion.get('calle')?.touched && formularioDireccion.get('calle')?.hasError('maxlength')" class="text-danger mt-1 small">
+                                        Por favor, no escriba más de 100 caracteres.
+                                    </div>
+                                    <div *ngIf="formularioDireccion.get('calle')?.touched && formularioDireccion.get('calle')?.hasError('required')" class="text-danger mt-1 small">
+                                        Este campo es obligatorio
+                                    </div>
                                 </div>
                             </div>
                             <div class="col-md-4">
@@ -90,6 +93,9 @@
                                          <div *ngIf="formularioDireccion.get('numeroExterior')?.touched && formularioDireccion.get('numeroExterior')?.hasError('required')" class="text-danger mt-1 small">
                                             Este campo es obligatorio
                                         </div>
+                                         <div *ngIf="formularioDireccion.get('numeroExterior')?.touched && formularioDireccion.get('numeroExterior')?.hasError('maxlength')" class="text-danger mt-1 small">
+                                        Por favor, no escriba más de 55 caracteres.
+                                    </div>
                                 </div>
                             </div>
                             <div class="col-md-4">
@@ -97,6 +103,9 @@
                                     <label for="numeroInteriorInput" class="form-label">Número interior:</label>
                                     <input type="text" class="form-control" id="numeroInteriorInput"
                                         formControlName="numeroInterior" />
+                                            <div *ngIf="formularioDireccion.get('numeroInterior')?.touched && formularioDireccion.get('numeroInterior')?.hasError('maxlength')" class="text-danger mt-1 small">
+                                        Por favor, no escriba más de 55 caracteres.
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -152,6 +161,9 @@
                                          <div *ngIf="formularioDireccion.get('codigoPostal')?.touched && formularioDireccion.get('codigoPostal')?.hasError('required')" class="text-danger mt-1 small">
                                             Este campo es obligatorio
                                         </div>
+                                         <div *ngIf="formularioDireccion.get('codigoPostal')?.touched && formularioDireccion.get('codigoPostal')?.hasError('maxlength')" class="text-danger mt-1 small">
+                                        Por favor, no escriba más de 12 caracteres.
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -168,3 +180,9 @@
         </div>
     </div>
 </div>
+<lib-notificaciones
+  *ngIf="nuevaNotificacion"
+  [notificacionInput]="nuevaNotificacion"
+  (confirmacionModal)="onEliminarConfirmacion($event)">
+</lib-notificaciones>
+
