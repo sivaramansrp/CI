@@ -373,6 +373,11 @@ export class ContenedorDePasosComponent implements OnInit {
     if(value){
       this.mostrarAlerta = false;
       this.requiresPaymentData = true;
+       if(!this.pasoUnoComponent.datosSolicitud?.validarFormularioDatos() && this.requiresPaymentData) {
+          this.confirmarSinPagoDeDerechos = 2;
+        }else {
+          this.confirmarSinPagoDeDerechos = 3;
+        }
     } else {
       this.mostrarAlerta = false;
       this.confirmarSinPagoDeDerechos = 4;

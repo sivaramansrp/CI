@@ -35,8 +35,8 @@ export class RegistroSolicitudService {
   }
 
   parcheOpcionesPrellenadas<T>(tramite: number, idSolicitud: number): Observable<BaseResponse<T>> {
-    // const ENDPOINT = `${this.host}${API_POST_PARCHE_PRELLENADAS(tramite, idSolicitud)}`;
-    const ENDPOINT = '/assets/json/260210/prellenadasDatos.json';
+     const ENDPOINT = `${this.host}${API_POST_PARCHE_PRELLENADAS(tramite, idSolicitud)}`;
+    //const ENDPOINT = '/assets/json/260210/prellenadasDatos.json';
     return this.http.get<BaseResponse<T>>(ENDPOINT);
   }
   
