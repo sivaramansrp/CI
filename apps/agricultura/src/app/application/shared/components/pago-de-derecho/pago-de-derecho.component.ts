@@ -158,16 +158,15 @@ export class PagoDeDerechoComponent implements OnDestroy, OnInit, AfterViewInit,
     }
     this.sharedService.dataPagoDerechos$.pipe(takeUntil(this.destroyNotifier$)).subscribe((data) => {
       if (data) {
-        console.warn('Prellenado de Pago de Derechos recibido en PagoDeDerechoComponent:', data);
         this.pagoForm.patchValue({
-          exentoPago: data.exento_pago || '',
+          exentoPago: data.ide_motivo_exento_pago || '',
           justificacion: '',
           claveReferencia: data.cve_referencia_bancaria,
           cadenaDependencia: data.cadena_pago_dependencia,
-          banco: data.cve_banco,
+          banco: data.cve_banco || '',
           llavePago: data.llave_pago || '',
           importePago: data.imp_pago,
-          fechaPago: data.fec_pago
+          fechaPago: data.fec_pago || ''
         });
       }
     });

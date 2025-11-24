@@ -38,7 +38,7 @@ import { CommonModule } from '@angular/common';
 import { ConsultaioQuery } from '@ng-mf/data-access-user';
 import { ModalComponent } from '../../../../shared/components/modal/modal.component';
 
-import { PrellenadoMovilizacion, PrellenadoSolicitud, PrellenadoTercerosRelacionados } from '../../models/220201/prellenado-solicitud.model';
+import { PrellenadoMovilizacion, PrellenadoPagoDerechos, PrellenadoSolicitud, PrellenadoTercerosRelacionados } from '../../models/220201/prellenado-solicitud.model';
 
 import { RegistroSolicitudService } from '../../services/220201/registro-solicitud/registro-solicitud.service';
 import { SubProductosContenedoraComponent } from '../sub-productos-contenedora/sub-productos-contenedora.component';
@@ -1015,7 +1015,7 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy, AfterView
         .pipe(takeUntil(this.destroyNotifier$))
         .subscribe({
           next: (response) => {
-            this.sharedService.enviarMovilizacionPrellenado(response.datos as PrellenadoMovilizacion);
+            this.sharedService.enviarPagoDerechosPrellenado(response.datos as PrellenadoPagoDerechos);
           },
           error: () => {
             this.nuevaNotificacion = {
@@ -1173,7 +1173,7 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy, AfterView
     
     // eslint-disable-next-line complexity
     const FILAS: Mercancia[] = this.cuerpoTabla.map((fila) => ({
-      tipo_mercancia:'TICERM.AN',
+      tipo_mercancia: this.datosDelaSolicitud.get('tipoMercancia')?.value === 'no' ? 'TICERM.SOA' : 'TICERM.AN',
       tipo_requisito: Number(fila.tipoRequisito) || 0,
       requisito: fila.requisito || '',
       numero_certificado: fila.numeroCertificadoInternacional || '',
@@ -1321,7 +1321,7 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy, AfterView
     const FORMULARIO = this.datosDelaSolicitud.value;
     // eslint-disable-next-line complexity
     const FILAS: Mercancia[] = this.cuerpoTabla.map((fila) => ({
-      tipo_mercancia: 'TICERM.AN',
+      tipo_mercancia:  this.datosDelaSolicitud.get('tipoMercancia')?.value === 'no' ? 'TICERM.SOA' : 'TICERM.AN',
       tipo_requisito: Number(fila.tipoRequisito) || 0,
       requisito: fila.requisito || '',
       numero_certificado: fila.numeroCertificadoInternacional || '',
