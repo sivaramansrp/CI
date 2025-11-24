@@ -2,7 +2,7 @@ import { AfterViewInit,Input,OnInit } from '@angular/core';
 import { AlertComponent, InputCheckComponent, REGEX_LOCALIDAD, REGEX_SOLO_DIGITOS } from '@libs/shared/data-access-user/src';
 import { Component, ElementRef, EventEmitter, Output, ViewChild } from '@angular/core';
 
-import { AbstractControl, FormBuilder, FormControl } from '@angular/forms';
+import { FormBuilder, FormControl } from '@angular/forms';
 import { ID_PROCEDIMIENTO, OPCIONES_DE_BOTON_DE_RADIO } from '../../enums/domicilio-del-establecimiento.enum';
 import { ConsultaioQuery} from "@ng-mf/data-access-user";
 
@@ -42,6 +42,8 @@ import { Tramite260912Query } from '../../estados/tramite-260912.query';
 
 import { Validators } from '@angular/forms';
 
+import{ ManifiestosComponent} from '../../../../shared/components/manifiestos-declaraciones/manifiestos-declaraciones.component'
+
 
 /**
  * Componente para gestionar el domicilio del establecimiento.
@@ -78,7 +80,8 @@ import { Validators } from '@angular/forms';
     TablaDinamicaComponent,
     InputRadioComponent,
     InputCheckComponent,
-    DatosMercanciaContenedoraComponent
+    DatosMercanciaContenedoraComponent,
+    ManifiestosComponent
   ],
   /** @description Servicios específicos provistos por este componente */
   providers: [DomicilioDelEstablecimientoService],

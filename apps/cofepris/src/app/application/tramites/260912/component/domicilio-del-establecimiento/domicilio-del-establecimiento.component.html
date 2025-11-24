@@ -602,32 +602,8 @@
           </div>
         </div>
     </div>
-
-    <div class="row mt-2">
-      <div class="col-md-12">
-        <ng-titulo titulo="Manifiestos y declaraciones" />
-        <div class="form-check bg-light p-0">
-          <div class="alert alert-info content-with-checkbox py-6">
-            <lib-input-check 
-              [id]="'manifiesto'" 
-              [label]="''" 
-              [required]="true"
-              formControlName="manifests"
-                  [isDisabled]="esFormularioSoloLectura || !!nicoTablaForm.get('representacion')?.disabled"
-              (change)="onManifestsChange()"
-            ></lib-input-check>
-            <span class="fw-bold align-middle"> *</span>
-            <div>{{ manifests }}</div>
-          </div>
-        </div>
-        <div *ngIf="!domicilio.get('manifests')?.value && domicilio.get('manifests')?.touched" class="text-danger">
-          <small>
-            Este campo es obligatorio
-          </small>
-        </div>
-      </div>
-    </div>
-  <div>
+ <app-manifiestos></app-manifiestos>
+   
     <form [formGroup]="representanteLegal">
       <h6>
         Los datos o anexos pueden contener información confidencial ¿Está de
