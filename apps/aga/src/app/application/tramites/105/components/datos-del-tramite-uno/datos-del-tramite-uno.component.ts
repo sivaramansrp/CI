@@ -1,4 +1,5 @@
-import { Catalogo, ConsultaioQuery, REGEX_LLAVE_DE_PAGO_DE_DERECHO, TablaDinamicaComponent, TablaSeleccion, TableComponent, TituloComponent } from '@ng-mf/data-access-user';
+import { Catalogo, ConsultaioQuery, REGEX_LLAVE_DE_PAGO_DE_DERECHO, TablaDinamicaComponent, TablaSeleccion, TableComponent, TituloComponent,  Notificacion, TipoNotificacionEnum, CategoriaMensaje } from '@ng-mf/data-access-user';
+import { NotificacionesComponent } from '@libs/shared/data-access-user/src/tramites/components/notificaciones/notificaciones.component';
 import { Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { ACUSE_DATOS, AgentestableDatos, FRACCIONES_TABLEDOS_TABLE_BODY_DATA, OPCIONES_DE_BOTON_DE_RADIO, tableDatos } from '../../constantes/datos-del-tramite.enum';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
@@ -17,10 +18,17 @@ interface TableBodyData {
 @Component({
   selector: 'app-datos-del-tramite-uno',
   standalone: true,
-  imports: [CommonModule,
+  imports: [
+    CommonModule,
     InputRadioComponent,
     TableComponent,
-    TituloComponent, CatalogoSelectComponent, ReactiveFormsModule, InputCheckComponent, TablaDinamicaComponent],
+    TituloComponent,
+    CatalogoSelectComponent,
+    ReactiveFormsModule,
+    InputCheckComponent,
+    TablaDinamicaComponent,
+    NotificacionesComponent
+  ],
   templateUrl: './datos-del-tramite-uno.component.html',
   styleUrl: './datos-del-tramite-uno.component.scss',
 })
@@ -390,6 +398,12 @@ export class DatosDelTramiteUnoComponent implements OnInit, OnDestroy {
     }
   }
 
+      /**
+       * Notificación que se muestra al usuario.
+       */
+    public nuevaNotificacion: Notificacion | undefined;
+  
+
   /**
    * @property opcionSeleccionada
    * @description Almacena la opción seleccionada en los checkboxes.
@@ -445,6 +459,35 @@ export class DatosDelTramiteUnoComponent implements OnInit, OnDestroy {
     }
   }
 
+   /**
+     * @method abrirElimninarConfirmationopup
+     * Abre un popup de confirmación para eliminar los registros seleccionados.
+     * Si no hay registros seleccionados, no realiza ninguna acción.
+     */
+    abrirElimninarConfirmationopup(): void {
+       this.nuevaNotificacion = {
+        tipoNotificacion: TipoNotificacionEnum.ALERTA,
+        categoria: CategoriaMensaje.ALERTA,
+        modo: 'modal',
+        titulo: '',
+        mensaje: 'La fraccion arancelaria fue agregada correctamente.',
+        cerrar: false,
+        txtBtnAceptar: 'Aceptar',
+        txtBtnCancelar: '',
+      };
+
+    }
+  /**
+   * Maneja la respuesta del modal de confirmación de eliminación
+   */
+  aceptarConfirmacion(confirmado: boolean) {
+    this.agregarForm.get('descripcion')?.enable();
+    const MERCANCIA = this.agregarForm.value;
+    this.mercanciTablaDatos.push(MERCANCIA);
+    this.mercanciTablaDatos = [...this.mercanciTablaDatos];
+    this.agregarForm.reset();
+    this.cerrarModal();
+  }
   /**
    * Alterna el estado de habilitación de un conjunto de controles en un formulario.
    *
@@ -615,6 +658,7 @@ export class DatosDelTramiteUnoComponent implements OnInit, OnDestroy {
    * @description Agrega una mercancía a la tabla de mercancías y reinicia el formulario.
    */
   agregarMercancias(): void {
+    
     if (!this.agregarForm.valid) {
       // Mark all fields as touched to show validation errors
       Object.values(this.agregarForm.controls).forEach(control => {
@@ -622,12 +666,16 @@ export class DatosDelTramiteUnoComponent implements OnInit, OnDestroy {
       });
       return;
     }
-    this.agregarForm.get('descripcion')?.enable();
-    const MERCANCIA = this.agregarForm.value;
-    this.mercanciTablaDatos.push(MERCANCIA);
-    this.mercanciTablaDatos = [...this.mercanciTablaDatos];
-    this.agregarForm.reset();
-    this.cerrarModal();
+    else{
+      this.cerrarModal();
+     this.abrirElimninarConfirmationopup();
+    }
+    // this.agregarForm.get('descripcion')?.enable();
+    // const MERCANCIA = this.agregarForm.value;
+    // this.mercanciTablaDatos.push(MERCANCIA);
+    // this.mercanciTablaDatos = [...this.mercanciTablaDatos];
+    // this.agregarForm.reset();
+    // this.cerrarModal();
   }
 
   /**

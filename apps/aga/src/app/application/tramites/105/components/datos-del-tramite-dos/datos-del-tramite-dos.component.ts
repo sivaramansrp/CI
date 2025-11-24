@@ -486,9 +486,9 @@ export class DatosDelTramiteDosComponent implements OnInit, OnDestroy {
     });
 
     this.agenteForm = this.fb.group({
-      nombres: ['', [Validators.required, Validators.maxLength(200), Validators.pattern(REGEX_LLAVE_DE_PAGO_DE_DERECHO)]],
-      primerApellido: ['', [Validators.required, Validators.maxLength(200), Validators.pattern(REGEX_LLAVE_DE_PAGO_DE_DERECHO)]],
-      segundoApellido: ['', [Validators.required, Validators.maxLength(200), Validators.pattern(REGEX_LLAVE_DE_PAGO_DE_DERECHO)]],
+      nombres: ['', [Validators.required, Validators.maxLength(200)]],
+      primerApellido: ['', [Validators.required, Validators.maxLength(200)]],
+      segundoApellido: ['', [Validators.required, Validators.maxLength(200)]],
       numeroPatente: ['', [Validators.required, Validators.maxLength(4)]],
     });
 
