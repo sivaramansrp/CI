@@ -253,6 +253,22 @@ export class DeLaMuestraComponent implements OnInit, OnDestroy {
   }
 
   /**
+   * Valida el formulario y fuerza la visualización de errores en todos los controles.
+   * @returns {boolean} `true` si el formulario está inicializado y es válido; `false` en caso contrario.
+   */
+  validarFormulario(): boolean {
+    // Si el formulario no está inicializado, considerarlo inválido.
+    if (!this.Informaciondela) {
+      return false;
+    }
+
+    // Marcar todos los controles como tocados para mostrar mensajes de validación.
+    this.Informaciondela.markAllAsTouched();
+
+    // Devolver el estado de validez del formulario.
+    return this.Informaciondela.valid;
+  }
+  /**
    * Método del ciclo de vida `ngOnDestroy()`.
    * Este método se ejecuta cuando el componente es destruido y realiza las siguientes acciones:
    *
