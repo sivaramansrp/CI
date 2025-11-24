@@ -106,6 +106,6 @@ export const TERCEROS_RELACIONADOS_TABLA_BODY_DATOS = {
  * Arreglo que contiene los identificadores de procedimientos para los que se habilitan campos adicionales en los formularios de terceros relacionados.
  * Utilizado para determinar si ciertos campos deben estar habilitados según el trámite seleccionado.
  */
-export const TERCEROS_RELACIONADOS_DATOS_INICIALES = [ 260601,260101 ]
+export const TERCEROS_RELACIONADOS_DATOS_INICIALES = [ 260601,260101,260214 ]
 
 export const DEFAULT_TABLA_ORDENS = [260201]
