@@ -18,6 +18,14 @@ import { SolicitudComponent } from '../../components/solicitud/solicitud.compone
   selector: 'app-paso-uno',
   templateUrl: './paso-uno.component.html',
 })
+/**
+ * @class PasoUnoComponent
+ * @implements OnInit, OnDestroy
+ * @description
+ * Componente que gestiona el primer paso del trámite 130107.
+ * Incluye la lógica para manejar la navegación entre subtítulos o secciones
+ * dentro del primer paso del trámite.
+ */
 export class PasoUnoComponent implements OnInit, OnDestroy {
   /**
    * @property consultaState

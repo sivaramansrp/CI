@@ -15,6 +15,8 @@ import {
   MENSAJE_CORREGIR_ERRORES,
   MSG_REGISTRO_EXITOSO,
   PANTA_PASOS,
+  TITULO_PASO_DOS,
+  TITULO_PASO_TRES,
   TITULO_PASO_UNO,
 } from '../../constantes/importaciones-agropecuarias.enum';
 import { Subject, take, takeUntil } from 'rxjs';
@@ -82,6 +84,24 @@ export class TodosPasosComponent implements OnDestroy{
    * @type {string}
    */
   public titulo: string = TITULO_PASO_UNO;
+
+  /**
+   * @property pasoDosTitulo
+   * @description
+   * Título del segundo paso en el wizard.
+   * 
+   * @type {string}
+   */
+  pasoDosTitulo: string = TITULO_PASO_DOS;
+
+  /**
+   * @property pasoTresTitulo
+   * @description
+   * Título del tercer paso en el wizard.
+   * 
+   * @type {string}
+   */
+  pasoTresTitulo: string = TITULO_PASO_TRES;
 
   /**
    * @property wizardComponent

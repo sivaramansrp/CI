@@ -11,11 +11,11 @@ import {
 import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ID_PROCEDIMIENTO, OPINIONES_SOLICITUD, PRODUCTO_OPCION } from '../../constantes/importaciones-agropecuarias.enum';
+import { Subject, map, takeUntil } from 'rxjs';
 import {
   Tramite130107State,
   Tramite130107Store,
 } from '../../../../estados/tramites/tramite130107.store';
-import { Subject, map, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { ConsultaioQuery } from '@ng-mf/data-access-user';
 import { DatosDeLaMercanciaComponent } from '../../../../shared/components/datos-de-la-mercancia/datos-de-la-mercancia.component';
@@ -173,15 +173,23 @@ export class SolicitudComponent implements OnInit, OnDestroy {
    */
   datosInputFields = [
     {
+      /** label del campo de entrada. */
       label: 'Régimen al que se destinará la mercancía',
+      /** placeholder del campo de entrada. */
       placeholder: 'Seleccione un documento',
+      /** Indica si el campo es obligatorio. */       
       required: true,
+      /** Nombre del control asociado al campo en el formulario reactivo. */       
       controlName: 'regimen',
     },
     {
+      /** label del campo de entrada. */
       label: 'Clasificación del régimen',
+      /** placeholder del campo de entrada. */
       placeholder: 'Seleccione un documento',
+      /** Indica si el campo es obligatorio. */
       required: true,
+      /** Nombre del control asociado al campo en el formulario reactivo. */
       controlName: 'clasificacion',
     },
   ];
