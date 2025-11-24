@@ -15,6 +15,14 @@ import { Tramite130115Query } from '../../../estados/queries/tramite130115.query
 })
 
 export class ImportacionVehiculosNuevosService {
+  /**
+   * Crea una nueva instancia del servicio ImportacionVehiculosNuevosService.
+   * 
+   * @param http Servicio HttpClient para realizar solicitudes HTTP.
+   * @param tramite130115Store Almacén para gestionar el estado del trámite 130115.
+   * @param catalogoServices Servicio para acceder a los catálogos de datos.
+   * @param query Consulta para obtener información del trámite 130115.
+   */
   constructor(private http: HttpClient,private tramite130115Store: Tramite130115Store, private catalogoServices: CatalogoServices, private query: Tramite130115Query) {}
   
   /**

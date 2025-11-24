@@ -139,8 +139,17 @@ export class SolicitudComponent implements OnInit, OnDestroy {
    */
   catalogosArray: Catalogo[][] = solicitudeSelectVal;
 
+  /**
+   * Arreglo que contiene el catálogo de clasificaciones de régimen.
+   * Cada elemento es de tipo `Catalogo`.
+   * Utilizado para mostrar las opciones disponibles de clasificación de régimen en la solicitud.
+   */
   catalogoClasificacionRegimen: Catalogo[] = [];
 
+  /**
+   * Arreglo que contiene los diferentes regímenes disponibles en el catálogo.
+   * Cada elemento es de tipo `Catalogo`.
+   */
   catalogoRegimenes: Catalogo[] = [];
 
   /**
@@ -229,12 +238,23 @@ export class SolicitudComponent implements OnInit, OnDestroy {
       
   
   
-    /**
-     * Referencia al componente `PartidasDeLaMercanciaComponent` dentro de la vista.
-     * Permite acceder a las propiedades y métodos públicos del componente hijo desde el componente padre.
-     */
-    @ViewChild(PartidasDeLaMercanciaComponent)
-    partidasDeLaMercanciaComponent!: PartidasDeLaMercanciaComponent;
+  /**
+   * Referencia al componente `PartidasDeLaMercanciaComponent` dentro de la vista.
+   * Permite acceder a las propiedades y métodos públicos del componente hijo desde el componente padre.
+   */
+  @ViewChild(PartidasDeLaMercanciaComponent) partidasDeLaMercanciaComponent!: PartidasDeLaMercanciaComponent;
+  
+  /**
+   * Identificador del pedimento asociado al trámite actual.
+   * 
+   * @remarks
+   * Este valor representa el código único del pedimento utilizado en el proceso de solicitud.
+   * 
+   * @example
+   * // Acceso al identificador del pedimento
+   * console.log(this.idPedimento); // "130115"
+   */
+  idPedimento: string = "130115";
   
 
   /**
@@ -323,7 +343,7 @@ export class SolicitudComponent implements OnInit, OnDestroy {
  * @returns {void}
  */
   getFraccionCatalogo(): void {
-    this.importacionVehiculosNuevosService.getFraccionCatalogoService("130115").subscribe((data) => {
+    this.importacionVehiculosNuevosService.getFraccionCatalogoService(this.idPedimento).subscribe((data) => {
       this.fraccionCatalogo = data?.map(item => ({
         ...item,
         descripcion: `${item.clave} - ${item.descripcion}`
@@ -354,6 +374,21 @@ export class SolicitudComponent implements OnInit, OnDestroy {
    * jest.spyOnInicializa los formularios reactivos `formDelTramite` y `mercanciaForm`.
    */
 
+/**
+ * Inicializa y configura los formularios reactivos utilizados en el componente de solicitud.
+ * 
+ * Este método crea y asigna los formularios principales del trámite, mercancia, partidas de la mercancia,
+ * modificación de partidas, país y representación, estableciendo sus controles, valores iniciales y validadores.
+ * Los valores iniciales se obtienen del estado actual de la sección (`seccionState`).
+ * 
+ * Además, suscribe el componente al estado de la solicitud y calcula los totales de cantidad y valor en USD.
+ * 
+ * @remarks
+ * - Cada formulario contiene validaciones específicas según los requisitos del trámite.
+ * - Algunos validadores personalizados son utilizados para reglas de negocio particulares.
+ * 
+ * @returns {void} No retorna ningún valor.
+ */
  inicializarFormularios(): void {  
     this.suscribirseAEstadoDeSolicitud(); 
       this.formDelTramite = this.fb.group({
@@ -561,6 +596,13 @@ export class SolicitudComponent implements OnInit, OnDestroy {
     this.formularioTotalCount(String(CANTIDAD_TOTAL), String(VALOR_TOTAL_USD));
   }
 
+  /**
+   * Maneja el evento de cambio en las fechas seleccionadas.
+   *
+   * Actualiza el estado del store `tramite130115Store` con las nuevas fechas seleccionadas.
+   *
+   * @param evento - Un arreglo de cadenas que representa las fechas seleccionadas.
+   */
   onFechasSeleccionadasChange(evento: string[]): void {
     this.tramite130115Store.actualizarEstado({ fechasSeleccionadas: evento });
    }
@@ -695,7 +737,7 @@ this.tramite130115Store.actualizarEstado({
    */
   fetchEntidadFederativa(): void {
     this.importacionVehiculosNuevosService
-    .getEntidadesFederativasCatalogo("130115")
+    .getEntidadesFederativasCatalogo(this.idPedimento)
     .pipe(takeUntil(this.destroyed$))
     .subscribe((data) => {
       this.entidadFederativa = data;
@@ -708,7 +750,7 @@ this.tramite130115Store.actualizarEstado({
    */
   listaDePaisesDisponibles(): void {
     this.importacionVehiculosNuevosService
-    .getBloqueService("130115")
+    .getBloqueService(this.idPedimento)
     .pipe(takeUntil(this.destroyed$))
     .subscribe((data) => {
       this.elementosDeBloque = data;
@@ -720,7 +762,7 @@ this.tramite130115Store.actualizarEstado({
    */
   fetchPaisesPorBloque(_bloqueId: number): void {
     this.importacionVehiculosNuevosService
-    .getPaisesPorBloqueService("130115", String(_bloqueId))
+    .getPaisesPorBloqueService(this.idPedimento, String(_bloqueId))
     .pipe(takeUntil(this.destroyed$))
     .subscribe((data) => {
       this.paisesPorBloque = data;
@@ -778,7 +820,7 @@ this.tramite130115Store.actualizarEstado({
    * @param FRACCION_ID 
    */
   getUnidadesMedidaTarifaria(FRACCION_ID: string): void {
-    this.importacionVehiculosNuevosService.getUMTService("130115", FRACCION_ID).subscribe((data) => {
+    this.importacionVehiculosNuevosService.getUMTService(this.idPedimento, FRACCION_ID).subscribe((data) => {
       this.unidadCatalogo = data as Catalogo[];
       if (this.unidadCatalogo.length > 0) {
         this.mercanciaForm.get('unidadMedida')?.setValue(this.unidadCatalogo[0]?.clave || '');
@@ -792,7 +834,7 @@ this.tramite130115Store.actualizarEstado({
  * @param cveEntidad 
  */
   getRepresentacionFederalCatalogo(cveEntidad: string): void {
-    this.importacionVehiculosNuevosService.getRepresentacionFederalCatalogo("130115", cveEntidad).subscribe((data) => {
+    this.importacionVehiculosNuevosService.getRepresentacionFederalCatalogo(this.idPedimento, cveEntidad).subscribe((data) => {
       this.representacionFederal = data as Catalogo[];
     });
   }
@@ -817,26 +859,26 @@ this.tramite130115Store.actualizarEstado({
     this.destroyed$.complete();
   }  
   /**
-     * Valida que un número tenga como máximo tres decimales.
-     */
-    static validarNumeroTresDecimales(
-      control: AbstractControl
-    ): ValidationErrors | null {
-      const VALOR = control.value;
-      if (VALOR === null || VALOR === undefined || VALOR === '') {
-        return null;
-      }
-  
-      if (!/^\d+(\.\d+)?$/.test(VALOR)) {
-        return { noEsNumero: true };
-      }
-  
-      if (/^\d+\.\d{4,}$/.test(VALOR)) {
-        return { maximoTresDecimales: true };
-      }
-  
+ * Valida que un número tenga como máximo tres decimales.
+ */
+  static validarNumeroTresDecimales(
+    control: AbstractControl
+  ): ValidationErrors | null {
+    const VALOR = control.value;
+    if (VALOR === null || VALOR === undefined || VALOR === '') {
       return null;
     }
+
+    if (!/^\d+(\.\d+)?$/.test(VALOR)) {
+      return { noEsNumero: true };
+    }
+
+    if (/^\d+\.\d{4,}$/.test(VALOR)) {
+      return { maximoTresDecimales: true };
+    }
+
+    return null;
+  }
   
     /**
      * Valida que un string no contenga el carácter de ángulo derecho (›).

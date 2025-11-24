@@ -577,11 +577,25 @@ export class CatalogoServices {
     return this.http.get<BaseResponse<Catalogo[]>>(ENDPOINT);
   }
 
+  /**
+   * Obtiene la lista de clasificaciones de régimen para un trámite y clave de clasificación específicos.
+   *
+   * @param tramite - El identificador del trámite para el cual se solicitan las clasificaciones de régimen.
+   * @param cveClasificacion - La clave de la clasificación que se desea consultar.
+   * @returns Un observable que emite la respuesta base con un arreglo de objetos de tipo Catalogo.
+   */
   getRegimenClasificacion(tramite: string, cveClasificacion: string): Observable<BaseResponse<Catalogo[]>> {
     const ENDPOINT = `${this.host}${REGIMEN_CLASSIFICACIONES(tramite).replace(CLASIFICACION, cveClasificacion)}`;
     return this.http.get<BaseResponse<Catalogo[]>>(ENDPOINT);
   }
 
+  /**
+   * Obtiene la lista de clasificaciones de régimen 10 para un trámite y clave de clasificación específicos.
+   *
+   * @param tramite - El identificador del trámite para el cual se solicita la clasificación.
+   * @param cveClasificacion - La clave de la clasificación a consultar.
+   * @returns Un observable que emite una respuesta base con un arreglo de objetos de tipo Catalogo.
+   */
   getRegimenClasificacion10(tramite: string, cveClasificacion: string): Observable<BaseResponse<Catalogo[]>> {
     const ENDPOINT = `${this.host}${REGIMEN_CLASSIFICACIONES_10(tramite).replace(CLASIFICACION, cveClasificacion)}`;
     return this.http.get<BaseResponse<Catalogo[]>>(ENDPOINT);

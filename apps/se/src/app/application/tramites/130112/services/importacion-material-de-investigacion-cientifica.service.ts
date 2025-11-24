@@ -211,4 +211,75 @@ export class ImportacionMaterialDeInvestigacionCientificaService {
       unidadMedidaClave: item.unidadMedida
     }));
   }
+
+  /**
+   * Construye la información de la mercancía a partir del estado del trámite.
+   * @param item Estado del trámite
+   * @returns Objeto con la información de la mercancía construida
+   */
+  buildMercancia(item: Tramite130112State): unknown {
+    return {
+      cantidadComercial: 12,
+      cantidadTarifaria: Number(item.cantidad),
+      valorFacturaUSD: Number(item.valorFacturaUSD),
+      descripcion: item.descripcion,
+      condicionMercancia: item.producto,
+      usoEspecifico: item.usoEspecifico,
+      justificacionImportacionExportacion: item.justificacionImportacionExportacion,
+      observaciones: item.observaciones,
+      unidadMedidaTarifaria: { clave: item.unidadMedida },
+      fraccionArancelaria: { cveFraccion: item.fraccion },
+      partidasMercancia: this.getPayloadDatos(item)
+    };
+  }
+
+  /** Construye la información del productor.
+   * @returns Objeto con la información del productor
+   */
+  buildProductor(): unknown {
+    return {
+      tipo_persona: true,
+      nombre: "Juan",
+      apellido_materno: "López",
+      apellido_paterno: "Norte",
+      razon_social: "Aceros Norte",
+      descripcion_ubicacion: "Calle Acero, No. 123, Col. Centro",
+      rfc: "AAL0409235E6",
+      pais: "SIN"
+    };
+  }
+
+  /**
+   * Construye la información del solicitante.
+   * @returns Objeto con la información del solicitante
+   */
+  buildSolicitante(): unknown {
+    return {
+      rfc: "AAL0409235E6",
+      nombre: "Juan Pérez",
+      es_persona_moral: true,
+      certificado_serial_number: ""
+    };
+  }
+
+  /** Construye la información de la representación federal a partir del estado del trámite.
+   * @param item Estado del trámite
+   * @returns Objeto con la información de la representación federal construida
+   */
+  buildRepresentacionFederal(item: Tramite130112State): unknown {
+    return {
+      cve_entidad_federativa: item.entidad,
+      cve_unidad_administrativa: item.representacion
+    };
+  }
+
+  /** Construye la información de las entidades federativas a partir del estado del trámite.
+   * @param item Estado del trámite
+   * @returns Objeto con la información de las entidades federativas construida
+   */
+  buildEntidadesFederativas(item: Tramite130112State): unknown {
+    return {
+      cveEntidad: item.entidad
+    };
+  }
 }

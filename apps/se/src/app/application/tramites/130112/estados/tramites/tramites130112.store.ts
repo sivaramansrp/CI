@@ -10,6 +10,12 @@ import { PartidasDeLaMercanciaModelo } from '../../../../shared/models/partidas-
  */
 export interface Tramite130112State {
 
+  /**
+   * Representa el estado de la gestión para el trámite 130112.
+   * Contiene todos los campos y datos necesarios para el manejo del formulario,
+   * la tabla dinámica de partidas de la mercancía, y la selección de opciones
+   * relevantes en el proceso de solicitud.
+   */
   idSolicitud: number | null;
   /**
    * Producto seleccionado en el formulario.

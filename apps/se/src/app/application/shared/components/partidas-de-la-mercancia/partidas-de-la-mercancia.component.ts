@@ -255,8 +255,24 @@ export class PartidasDeLaMercanciaComponent implements OnChanges, OnInit {
    */
   MENSAJES_TEXTOS = MENSAJES;
 
+  /**
+   * Indica si se debe mostrar el mensaje de advertencia cuando la mercancía es requerida.
+   * 
+   * @remarks
+   * Cuando este valor es `true`, se mostrará un mensaje informando al usuario que debe ingresar información de la mercancía.
+   * 
+   * @defaultValue false
+   */
   @Input() mostrarMensajeMercanciaRequerida: boolean = false;
 
+  /**
+   * Indica si se debe mostrar un mensaje que informa que la fracción arancelaria es requerida.
+   * 
+   * @remarks
+   * Cuando este valor es `true`, se mostrará un mensaje al usuario indicando que debe ingresar la fracción arancelaria.
+   * 
+   * @defaultValue false
+   */
   @Input() mostrarMensajeFraccionArancelariaRequerida: boolean = false;
   /**
    * Constructor para inicializar el componente e inyectar dependencias.

@@ -230,8 +230,18 @@ export class SolicitudComponent implements OnInit, OnDestroy {
   public nuevaNotificacion!: Notificacion;
 
   
+  /**
+   * Arreglo que contiene los elementos del catálogo de clasificación de régimen.
+   * Cada elemento es de tipo `Catalogo` y representa una opción disponible para la selección en el formulario de solicitud.
+   */
   catalogoClasificacionRegimen: Catalogo[] = [];
 
+  /**
+   * Arreglo que contiene los diferentes regímenes disponibles en el catálogo.
+   * Cada elemento es de tipo `Catalogo`.
+   * 
+   * @type {Catalogo[]}
+   */
   catalogoRegimenes: Catalogo[] = [];
 
   /**
@@ -245,6 +255,11 @@ export class SolicitudComponent implements OnInit, OnDestroy {
    */
   @ViewChild(PartidasDeLaMercanciaComponent) partidasDeLaMercanciaComponent!: PartidasDeLaMercanciaComponent;
 
+  /**
+   * Arreglo que contiene las fracciones y descripciones de las partidas de la mercancía.
+   * Cada elemento es un objeto del tipo `Catalogo`, que representa una opción seleccionable
+   * en el catálogo correspondiente a las partidas de mercancía.
+   */
   fraccionDescripcionPartidasDeLaMercancia: Catalogo[] = []
 
   /**
@@ -286,9 +301,7 @@ export class SolicitudComponent implements OnInit, OnDestroy {
     this.inicializarEstadoFormulario();
     this.opcionesDeBusqueda();
     this.fetchEntidadFederativa();
-    // this.fetchRepresentacionFederal();
     this.listaDePaisesDisponibles();
-    // this.listaDeFraccionDescripcion();
     this.getRegimenes();
     this.getFraccionArancelaria();
     this.getUMTCatalogo();
@@ -797,8 +810,17 @@ this.tramite130112Store.actualizarEstado({
     });
   }
 
+  /**
+   * Obtiene la descripción de la fracción y las partidas de la mercancía asociadas a un ID específico.
+   * 
+   * Este método llama al servicio `importacionMaterialDeInvestigacionCientificaService` para recuperar
+   * la información relacionada con la fracción y las partidas de la mercancía, utilizando el identificador
+   * proporcionado. Los datos obtenidos se asignan a la propiedad `fraccionDescripcionPartidasDeLaMercancia`.
+   * 
+   * @param ID - Identificador de la fracción o partida de la mercancía para la cual se desea obtener la descripción.
+   */
   getFraccionDescripcionPartidasDeLaMercancia(ID: string): void {
-    this.importacionMaterialDeInvestigacionCientificaService.getFraccionDescripcionPartidasDeLaMercanciaService("130113", ID)
+    this.importacionMaterialDeInvestigacionCientificaService.getFraccionDescripcionPartidasDeLaMercanciaService(this.idProcedimiento.toString(), ID)
       .subscribe((data)=>{
         this.fraccionDescripcionPartidasDeLaMercancia = data as Catalogo[];
     });

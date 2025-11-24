@@ -209,54 +209,18 @@ export class ImportacionMaterialDeInvestigacionCientificaComponent {
   }
 
   guardar(item: Tramite130112State): Promise<JSONResponse> {
-    const MERCANCIA = this.importacionMaterialDeInvestigacionCientificaService.getPayloadDatos(item);
     const PAYLOAD = {
       "tipoDeSolicitud": "guardar",
       "tipo_solicitud_pexim": item.defaultSelect,
-      "mercancia": {
-        "cantidadComercial": 12,
-        "cantidadTarifaria": Number(item.cantidad),
-        "valorFacturaUSD": Number(item.valorFacturaUSD),
-        "condicionMercancia": item.producto,
-        "descripcion": item.descripcion,
-        "usoEspecifico": item.usoEspecifico,
-        "justificacionImportacionExportacion": item.justificacionImportacionExportacion,
-        "observaciones": item.observaciones,
-        "unidadMedidaTarifaria": {
-          "clave": item.unidadMedida
-        },
-        "fraccionArancelaria": {
-          "cveFraccion": item.fraccion
-        },
-        "partidasMercancia": MERCANCIA,
-      },
+      "mercancia": this.importacionMaterialDeInvestigacionCientificaService.buildMercancia(item),
       "id_solcitud": item.idSolicitud || 0,
       "idTipoTramite":this.idProcedimiento,
       "cve_regimen": item.regimen,
       "cve_clasificacion_regimen": item.clasificacion,
-      "productor": {
-        "tipo_persona": true,
-        "nombre": "Juan",
-        "apellido_materno": "López",
-        "apellido_paterno": "Norte",
-        "razon_social": "Aceros Norte",
-        "descripcion_ubicacion": "Calle Acero, No. 123, Col. Centro",
-        "rfc": "AAL0409235E6",
-        "pais": "SIN"
-      },
-      "solicitante": {
-        "rfc": "AAL0409235E6",
-        "nombre": "Juan Pérez",
-        "es_persona_moral": true,
-        "certificado_serial_number": "string"
-      },
-      "representacion_federal": {
-        "cve_entidad_federativa": item.entidad,
-        "cve_unidad_administrativa": "0203"
-      },
-      "entidades_federativas": {
-        "cveEntidad": item.entidad
-      },
+      "productor": this.importacionMaterialDeInvestigacionCientificaService.buildProductor(),
+      "solicitante": this.importacionMaterialDeInvestigacionCientificaService.buildSolicitante(),
+      "representacion_federal": this.importacionMaterialDeInvestigacionCientificaService.buildRepresentacionFederal(item),
+      "entidades_federativas":this.importacionMaterialDeInvestigacionCientificaService.buildEntidadesFederativas(item),
       "lista_paises": item.fechasSeleccionadas ?? []
     };
     return new Promise((resolve, reject) => {
