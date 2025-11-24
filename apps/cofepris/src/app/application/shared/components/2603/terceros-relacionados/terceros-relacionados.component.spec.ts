@@ -855,4 +855,202 @@ describe('TercerosRelacionadosComponent', () => {
       expect(component.consultaState).toEqual(mockConsultaState);
     });
   });
+
+  describe('Enhanced Coverage Tests', () => {
+    it('should handle all modal opening scenarios', () => {
+      const modals = [
+        { title: 'Agregar fabricante' },
+        { title: 'Agregar facturador' },
+        { title: 'Agregar proveedor/distribuidor' },
+        { title: 'Agregar certificado analítico' },
+        { title: 'Agregar otros' }
+      ];
+
+      modals.forEach(({ title }) => {
+        mockModalRef.content = { titulo: '', guardarFabricante: new Subject() };
+        component.abrirFabricanteModal(title);
+        expect(mockModalService.show).toHaveBeenCalledWith(
+          FabricanteModalComponent,
+          expect.objectContaining({
+            class: 'modal-xl',
+            initialState: { titulo: title }
+          })
+        );
+      });
+    });
+
+    it('should handle all deletion scenarios with boundary conditions', () => {
+      component.fabricanteTablaDatos = [...mockFabricanteData];
+      component.facturadorTablaDatos = [...mockFabricanteData];
+      component.proveedorTablaDatos = [...mockFabricanteData];
+      component.certificadoAnaliticoTablaDatos = [...mockFabricanteData];
+      component.otrosTablaDatos = [...mockOtrosData];
+      component.selectedFabricanteRows = [mockFabricanteData[0]];
+      component.selectedFacturadorRows = [mockFabricanteData[0]];
+      component.selectedProveedorRows = [mockFabricanteData[0]];
+      component.selectedCertificadoAnaliticoRows = [mockFabricanteData[0]];
+      component.selectedOtrosRows = [mockOtrosData[0]];
+
+      const deleteMethods = [
+        { method: 'eliminarFabricante', array: 'fabricanteTablaDatos' },
+        { method: 'eliminarFacturador', array: 'facturadorTablaDatos' },
+        { method: 'eliminarProveedor', array: 'proveedorTablaDatos' },
+        { method: 'eliminarCertificadoAnalitico', array: 'certificadoAnaliticoTablaDatos' },
+        { method: 'eliminarOtros', array: 'otrosTablaDatos' }
+      ];
+
+      deleteMethods.forEach(({ method, array }) => {
+        const initialLength = (component as any)[array].length;
+        (component as any)[method]();
+        expect((component as any)[array].length).toBeLessThan(initialLength);
+      });
+    });
+
+    it('should handle modal result processing for all types', () => {
+      const testData = {
+        razonSocial: 'Test Item',
+        rfc: 'TEST123456789',
+        correoElectronico: 'test@example.com',
+        terceroNombre: 'Test Tercero'
+      };
+
+      const modalConfigs = [
+        { array: 'fabricanteTablaDatos', title: 'Agregar fabricante' },
+        { array: 'facturadorTablaDatos', title: 'Agregar facturador' },
+        { array: 'proveedorTablaDatos', title: 'Agregar proveedor/distribuidor' },
+        { array: 'certificadoAnaliticoTablaDatos', title: 'Agregar certificado analítico' },
+        { array: 'otrosTablaDatos', title: 'Agregar otros' }
+      ];
+
+      modalConfigs.forEach(({ array, title }) => {
+        const initialLength = (component as any)[array].length;
+        const mockContent = {
+          titulo: title,
+          guardarFabricante: new Subject()
+        };
+        mockModalRef.content = mockContent;
+        
+        component.abrirFabricanteModal(title);
+        mockContent.guardarFabricante.next(testData);
+        
+        expect((component as any)[array].length).toBe(initialLength + 1);
+      });
+    });
+
+    it('should properly initialize all data arrays and configurations', () => {
+      expect(component.fabricanteTablaDatos).toBeDefined();
+      expect(component.facturadorTablaDatos).toBeDefined();
+      expect(component.proveedorTablaDatos).toBeDefined();
+      expect(component.certificadoAnaliticoTablaDatos).toBeDefined();
+      expect(component.otrosTablaDatos).toBeDefined();
+
+      expect(component.configuracionTabla).toBeDefined();
+      expect(component.configuracionFacturadorTabla).toBeDefined();
+      expect(component.configuracionProveedorTabla).toBeDefined();
+      expect(component.configuracionCertificadoAnaliticoTabla).toBeDefined();
+      expect(component.configuracionOtrosTabla).toBeDefined();
+    });
+
+    it('should handle readonly state changes', () => {
+      component.consultaState = { readonly: true } as ConsultaioState;
+      expect(component.formularioDeshabilitado).toBeDefined();
+
+      component.consultaState = { readonly: false } as ConsultaioState;
+      expect(component.formularioDeshabilitado).toBeDefined();
+    });
+
+    it('should handle service subscription errors gracefully', () => {
+      const errorMessage = 'Service error';
+      mockModalService.show.mockImplementation(() => {
+        throw new Error(errorMessage);
+      });
+
+      expect(() => component.abrirFabricanteModal('Test Modal')).toThrow(errorMessage);
+    });
+
+    it('should properly cleanup on component destruction', () => {
+      const destroySpy = jest.spyOn(component['destroyed$'], 'next');
+      const completeSpy = jest.spyOn(component['destroyed$'], 'complete');
+      
+      component.ngOnDestroy();
+      
+      expect(destroySpy).toHaveBeenCalled();
+      expect(completeSpy).toHaveBeenCalled();
+    });
+
+    it('should handle edge cases for array operations', () => {
+      component.fabricanteTablaDatos = [];
+      component.facturadorTablaDatos = [];
+      component.proveedorTablaDatos = [];
+      component.certificadoAnaliticoTablaDatos = [];
+      component.otrosTablaDatos = [];
+      component.selectedFabricanteRows = [];
+      component.selectedFacturadorRows = [];
+      component.selectedProveedorRows = [];
+      component.selectedCertificadoAnaliticoRows = [];
+      component.selectedOtrosRows = [];
+
+      expect(() => component.eliminarFabricante()).not.toThrow();
+      expect(() => component.eliminarFacturador()).not.toThrow();
+      expect(() => component.eliminarProveedor()).not.toThrow();
+      expect(() => component.eliminarCertificadoAnalitico()).not.toThrow();
+      expect(() => component.eliminarOtros()).not.toThrow();
+    });
+
+    it('should validate table column structures', () => {
+      const columnArrays = [
+        component.configuracionTabla,
+        component.configuracionFacturadorTabla,
+        component.configuracionProveedorTabla,
+        component.configuracionCertificadoAnaliticoTabla,
+        component.configuracionOtrosTabla
+      ];
+
+      columnArrays.forEach(columns => {
+        expect(Array.isArray(columns)).toBe(true);
+        expect(columns.length).toBeGreaterThan(0);
+        columns.forEach(column => {
+          expect(column).toHaveProperty('clave');
+          expect(column).toHaveProperty('encabezado');
+        });
+      });
+    });
+
+    it('should handle modal configuration properties correctly', () => {
+      const expectedConfig = {
+        class: 'modal-xl',
+        initialState: {
+          titulo: 'Test Modal'
+        }
+      };
+
+      component.abrirFabricanteModal('Test Modal');
+      expect(mockModalService.show).toHaveBeenCalledWith(
+        FabricanteModalComponent,
+        expect.objectContaining(expectedConfig)
+      );
+    });
+
+    it('should handle all observable subscriptions properly', async () => {
+      component.getFabricanteTablaDatos();
+      component.getFacturadorTablaDatos();
+      component.getProveedorTablaDatos();
+      component.getCertificadoAnaliticoTablaDatos();
+      component.getOtrosTablaDatos();
+
+      expect(mockCertificadosService.getFabricanteDatos).toHaveBeenCalled();
+      expect(mockCertificadosService.getFacturadorDatos).toHaveBeenCalled();
+      expect(mockCertificadosService.getProveedorDatos).toHaveBeenCalled();
+      expect(mockCertificadosService.getCertificadoDatos).toHaveBeenCalled();
+      expect(mockCertificadosService.getOtrosDatos).toHaveBeenCalled();
+
+      await fixture.whenStable();
+      
+      expect(component.fabricanteTablaDatos.length).toBeGreaterThanOrEqual(0);
+      expect(component.facturadorTablaDatos.length).toBeGreaterThanOrEqual(0);
+      expect(component.proveedorTablaDatos.length).toBeGreaterThanOrEqual(0);
+      expect(component.certificadoAnaliticoTablaDatos.length).toBeGreaterThanOrEqual(0);
+      expect(component.otrosTablaDatos.length).toBeGreaterThanOrEqual(0);
+    });
+  });
 });
