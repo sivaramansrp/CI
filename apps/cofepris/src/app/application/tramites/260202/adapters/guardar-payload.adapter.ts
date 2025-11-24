@@ -71,7 +71,7 @@ export class GuardarAdapter_260202 {
       "datosSCIAN": state.scianConfigDatos.map((datos)=>{
         return {
               "cveScian": datos.clave,
-              "descripcion": datos.descripcion
+              "descripcion": datos.descripcion,
           }
       }),
       "mercancias": (state.tablaMercanciasConfigDatos ?? []).map((mercancia) => {
@@ -102,11 +102,11 @@ export class GuardarAdapter_260202 {
               "cantidadUMTConComas": mercancia.cantidadUmtValor,
               "presentacion": mercancia.presentacion,
               "registroSanitarioConComas": mercancia.numeroRegistroSanitario,
-              "nombreCortoPaisOrigen": mercancia.paisDeOriginDatos?.toString(),
-              "nombreCortoPaisProcedencia": mercancia.paisDeProcedenciaDatos?.toString(),
+              "nombreCortoPaisOrigen": mercancia.paisOrigen.toString(),
+              "nombreCortoPaisProcedencia": mercancia.paisProcedencia.toString(),
               "idTipoProductoTipoTramite": mercancia.tipoProducto,
               "tipoProductoDescripcionOtros": mercancia.especifique,
-              "nombreCortoUsoEspecifico": mercancia.usoEspecifico?.toString(),
+              "nombreCortoUsoEspecifico": mercancia.usoEspecifico.toString(),
               "fechaCaducidadStr": mercancia.fechaCaducidad
           }
       }),
@@ -525,13 +525,13 @@ export class GuardarAdapter_260202 {
     }
 
     /**
-     * Map an API response (form payload) back into a partial Tramite260210State.
+     * Map an API response (form payload) back into a partial Tramite260202State.
      * This is a best-effort reverse mapping of `toFormPayload` and will only
      * populate commonly used fields. Unknown or complex nested fields are left
      * untouched so callers can merge them as needed.
      *
      * @param response API response object matching the form payload shape
-     * @returns Partial<Tramite260210State>
+     * @returns Partial<Tramite260202State>
      */
     // eslint-disable-next-line complexity
     static fromApiResponse(response: unknown): Partial<Tramite260202State> {
@@ -583,8 +583,8 @@ export class GuardarAdapter_260202 {
      * If the `store` argument is omitted, the method simply returns the mapped partial state.
      *
      * @param response API response
-     * @param store Optional Tramite260210Store instance to apply the patch
-     * @returns Partial<Tramite260210State> (and patches the store when provided)
+     * @param store Optional Tramite260202Store instance to apply the patch
+     * @returns Partial<Tramite260202State> (and patches the store when provided)
      */
     static patchToStore(response: any, store?: Tramite260202Store): Partial<Tramite260202State> {
         const PARTIAL = GuardarAdapter_260202.fromApiResponse(response);
