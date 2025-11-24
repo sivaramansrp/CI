@@ -1169,144 +1169,27 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy, AfterView
    */
   // eslint-disable-next-line complexity
   guardarParcial(): void {
-
-    const FORMULARIO = this.datosDelaSolicitud.value;
-    console.warn('FORMULARIOO', this.cuerpoTabla);
-
-    const FILAPRODUCTO = this.cuerpoTabla.map((fila) =>
-      (fila.detalleProductos || []).map((producto) => ({
-        numero_lote_detalle: producto.numeroDeLote || '',
-        color_pelaje_detalle: '',
-        edad_animal_detalle: '',
-        fase_desarrollo_detalle: '',
-        funcion_zootecnica_detalle: '',
-        numeroidentificacion_detalle: '',
-        raza_detalle: '',
-        id_sexo_detalle: '',
-        nombre_cientifico_detalle: '',
-        nombre_mercancia_detalle: '',
-        fecha_sacrificio: producto.fechaProduccionSacrificio || '',
-        fecha_elaboracion: producto.fechaElaboracionEmpaqueProceso || '',
-        fecha_caducidad: producto.fechaCaducidadProducto || '',
-        fecha_elaboracion_fin: producto.fechaFinElaboracionEmpaqueProceso || '',
-        fecha_caducidad_fin: producto.fechaFinCaducidadProducto || '',
-        fecha_sacrificio_fin: producto.fechaFinProduccionSacrificio || ''
-      }))
-    );
-
-    console.warn('FORMULARIO-2', FILAPRODUCTO);
-    // eslint-disable-next-line complexity
-    const FILAS: Mercancia[] = this.cuerpoTabla.map((fila) => ({
-      tipo_mercancia: this.datosDelaSolicitud.get('tipoMercancia')?.value === 'no' ? 'TICERM.SOA' : 'TICERM.AN',
-      tipo_requisito: Number(fila.tipoRequisito) || 0,
-      requisito: fila.requisito || '',
-      numero_certificado: fila.numeroCertificadoInternacional || '',
-      cve_fraccion: fila.fraccionArancelaria || '',
-      id_fraccion_gubernamental: Number(fila.fraccionArancelaria) || 0,
-      clave_nico: fila.nico || '',
-      descripcion_mercancia: fila.descripcion || '',
-      cantidad_umt: Number(fila.cantidadUMT) || 0,
-      clave_unidad_medida: fila.umc || '',
-      cantidad_umc: Number(fila.cantidadUMC) || 0,
-      clave_unidad_comercial: fila.clave_umt || '',
-      id_especie: Number(fila.especie) || 0,
-      id_uso_mercancia_tipo_tramite: Number(fila.uso) || 0,
-      presentacion: fila.tipoPresentacionDescripcion || '',
-      cantidad_presentacion: Number(fila.presentacion) || 0,
-      id_tipo_presentacion: fila.tipoPresentacion || '',
-      id_tipo_planta: fila.tipoPlanta || '',
-      id_planta_autorizada: fila.plantaAutorizadaOrigen || '',
-      clave_paises_origen: fila.paisDeOrigen || '',
-      clave_paises_procedencia: fila.paisDeProcedencia || '',
-      lista_detalle_mercancia: FILAPRODUCTO.shift() || [],
-      numero_partida: Number(fila.noPartida) || 0,
-      descripcion_tipo_requisito: fila.descripcionTipoRequisito || ''
-    }));
-
-
-    const SOLICITUDPARCIAL: GuardaSolicitud = {
-      id_solicitud: null,
-      datos_solicitud: {
-        clave_regimen: FORMULARIO.regimen.value || '',
-        cve_aduana: FORMULARIO.aduanaIngreso,
-        oficina_inspeccion_sanidad_agropecuaria: FORMULARIO.oficinaInspeccion,
-        punto_inspeccion: FORMULARIO.puntoInspeccion,
-        clave_UCON: FORMULARIO.claveUCON,
-        establecimiento_TIF: FORMULARIO.establecimientoTIF,
-        nombre_veterinario: FORMULARIO.nombreVeterinario,
-        numero_autorizacion: FORMULARIO.numeroGuia,
-        mercancia: FILAS
-      },
-      transporte: {
-        coordenadas: this.datosParaMovilizacionNacional.coordenadas || '',
-        ide_medio_transporte: this.datosParaMovilizacionNacional.medio || '',
-        identificacion_transporte: this.datosParaMovilizacionNacional.transporte || '',
-        id_punto_verificacion: Number(this.datosParaMovilizacionNacional.punto) || 0,
-        razon_social: this.datosParaMovilizacionNacional.nombre || ''
-      },
-      terceros: {
-        terceros_exportador: [{
-          tipo_persona_sol: 'TIPERS.EXP',
-          persona_moral: true,
-          nombre: this.tercerosRelacionados?.nombre || '',
-          apellido_paterno: this.tercerosRelacionados?.primerApellido || '',
-          apellido_materno: this.tercerosRelacionados?.segundoApellido || '',
-          razon_social: this.tercerosRelacionados?.razonSocial || '',
-          pais: this.tercerosRelacionados?.pais || '',
-          descripcion_ubicacion: this.tercerosRelacionados?.coloniaDescripcion || '',
-          lada: this.tercerosRelacionados?.lada || '',
-          telefonos: this.tercerosRelacionados?.telefono || '',
-          correo: this.tercerosRelacionados?.correo || ''
-        }],
-        terceros_destinatario: [{
-          tipo_persona_sol: 'TIPERS.DES',
-          persona_moral: true,
-          num_establ_tif: '',
-          nom_establ_tif: '',
-          nombre: this.tercerosRelacionados?.nombre || '',
-          apellido_paterno: this.tercerosRelacionados?.primerApellido || '',
-          apellido_materno: this.tercerosRelacionados?.segundoApellido || '',
-          razon_social: this.tercerosRelacionados?.razonSocial || '',
-          pais: this.tercerosRelacionados?.pais || '',
-          codigo_postal: this.tercerosRelacionados?.codigoPostal || '',
-          cve_entidad: this.tercerosRelacionados?.estado || '',
-          cve_deleg_mun: this.tercerosRelacionados?.municipio || '',
-          cve_colonia: this.tercerosRelacionados?.colonia || '',
-          calle: this.tercerosRelacionados?.calle || '',
-          num_exterior: this.tercerosRelacionados?.numeroExterior || '',
-          num_interior: this.tercerosRelacionados?.numeroInterior || '',
-          lada: this.tercerosRelacionados?.lada || '',
-          telefonos: this.tercerosRelacionados?.telefono || '',
-          correo: this.tercerosRelacionados?.correo || ''
-        }]
-      },
-      pago: {
-        exento_pago: true,
-        ide_motivo_exento_pago: this.pagoDeDerechos?.exentoPago || '',
-        cve_referencia_bancaria: this.pagoDeDerechos?.claveReferencia || '',
-        cadena_pago_dependencia: this.pagoDeDerechos?.cadenaDependencia || '',
-        cve_banco: this.pagoDeDerechos?.banco || '',
-        llave_pago: this.pagoDeDerechos?.llavePago || '',
-        fec_pago: formatearFechaSolicitudSinHora(this.pagoDeDerechos?.fechaPago) || '',
-        imp_pago: Number(this.pagoDeDerechos?.importePago) || 0
-      },
-      solicitante: {
-        rfc: 'AAL0409235E6',
-        nombre: 'AAL0409235E6',
-        es_persona_moral: true,
-        certificado_serial_number: '',
-        rol_capturista: 'SOLICITANTE',
-      },
-      representacion_federal: {
-        cve_entidad_federativa: 'DGO',
-        cve_unidad_administrativa: '1016'
-      }
-    };
-    this.registroSolicitudService.guardaSolicitudParcial(220201, SOLICITUDPARCIAL).subscribe();
+    this.registroSolicitudService.guardaSolicitudParcial(220201, this.construllePayload()).subscribe();
   }
 
   // eslint-disable-next-line class-methods-use-this, complexity
   guardarTotal(): void {
+    this.registroSolicitudService.guardarSolicitud(220201, this.construllePayload()).subscribe(
+      {
+        next: (response) => {
+          if (response && response.datos?.id_solicitud) {
+            this.idSolicitud = response.datos.id_solicitud.toString();
+            this.fitosanitarioStore.setIdSolicitud(response.datos?.id_solicitud);
+            this.solicitudService.emitirIdSolicitud(this.idSolicitud);
+          }
+        }
+      }
+
+    );
+  }
+
+  // eslint-disable-next-line complexity
+  construllePayload(): GuardaSolicitud {
     // Lógica para guardar la solicitud de forma completa
     const FORMULARIO = this.datosDelaSolicitud.value;
     // eslint-disable-next-line complexity
@@ -1332,7 +1215,7 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy, AfterView
       id_planta_autorizada: fila.plantaAutorizadaOrigen || '',
       clave_paises_origen: fila.paisDeOrigen || '',
       clave_paises_procedencia: fila.paisDeProcedencia || '',
-      lista_detalle_mercancia: (fila.sensibles ?? []).map((detalle) => ({
+      lista_detalle_mercancia:  this.datosDelaSolicitud.get('tipoMercancia')?.value === 'yes' ? (fila.sensibles ?? []).map((detalle) => ({
         numero_lote_detalle: detalle.NumeroLote || '',
         color_pelaje_detalle: detalle.ColorPelaje || '',
         edad_animal_detalle: detalle.EdadAnimal || '',
@@ -1349,17 +1232,27 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy, AfterView
         fecha_elaboracion_fin: '',
         fecha_caducidad_fin: '',
         fecha_sacrificio_fin: '',
-      })) || fila.detalleProductos?.map((detalleProducto) => ({
-        numeroDeLote: detalleProducto.numeroDeLote || '',
-        fechaElaboracionEmpaqueProceso: convertDate(detalleProducto.fechaElaboracionEmpaqueProceso ?? '') || '',
-        fechaProduccionSacrificio: convertDate(detalleProducto.fechaProduccionSacrificio ?? '') || '',
-        fechaCaducidadProducto: convertDate(detalleProducto.fechaCaducidadProducto ?? '') || '',
-        fechaFinElaboracionEmpaqueProceso: convertDate(detalleProducto.fechaFinElaboracionEmpaqueProceso ?? '') || '',
-        fechaFinProduccionSacrificio: convertDate(detalleProducto.fechaFinProduccionSacrificio ?? '') || '',
-        fechaFinCaducidadProducto: convertDate(detalleProducto.fechaFinCaducidadProducto ?? '') || '',
+      })) : (fila.detalleProductos ?? []).map((detalleProducto) => ({
+        numero_lote_detalle: detalleProducto.numeroDeLote || '',
+        color_pelaje_detalle: '',
+        edad_animal_detalle: '',
+        fase_desarrollo_detalle: '',
+        funcion_zootecnica_detalle: '',
+        numeroidentificacion_detalle: '',
+        raza_detalle: '',
+        id_sexo_detalle: '',
+        nombre_cientifico_detalle: '',
+        nombre_mercancia_detalle: '',
+        fecha_sacrificio: formatearFechaSolicitudSinHora(detalleProducto.fechaProduccionSacrificio ?? '') || '',
+        fecha_elaboracion: formatearFechaSolicitudSinHora(detalleProducto.fechaElaboracionEmpaqueProceso ?? '') || '',
+        fecha_caducidad: formatearFechaSolicitudSinHora(detalleProducto.fechaCaducidadProducto ?? '') || '',
+        fecha_elaboracion_fin: formatearFechaSolicitudSinHora(detalleProducto.fechaFinElaboracionEmpaqueProceso ?? '') || '',
+        fecha_caducidad_fin: formatearFechaSolicitudSinHora(detalleProducto.fechaFinCaducidadProducto ?? '') || '',
+        fecha_sacrificio_fin: formatearFechaSolicitudSinHora(detalleProducto.fechaFinProduccionSacrificio ?? '') || '',
       }))
     }));
 
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const SOLICITUD: GuardaSolicitud = {
       id_solicitud: null,
       datos_solicitud: {
@@ -1438,22 +1331,8 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy, AfterView
         cve_unidad_administrativa: '1016'
       }
     };
-
-    this.registroSolicitudService.guardarSolicitud(220201, SOLICITUD).subscribe(
-      {
-        next: (response) => {
-          if (response && response.datos?.id_solicitud) {
-            this.idSolicitud = response.datos.id_solicitud.toString();
-            this.fitosanitarioStore.setIdSolicitud(response.datos?.id_solicitud);
-            this.solicitudService.emitirIdSolicitud(this.idSolicitud);
-          }
-        }
-      }
-
-    );
+    return SOLICITUD;
   }
-
-
 
 
   /**
