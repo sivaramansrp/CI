@@ -1,5 +1,10 @@
 import { ConfiguracionColumna, Fabricante, MercanciasDatos, Otros260303 } from "@libs/shared/data-access-user/src";
 
+/**
+ * Pasos principales del trámite, utilizados para controlar el flujo de la solicitud.
+ * Cada objeto representa un paso con su índice, título, estado de actividad y completitud.
+ * @type {Array<{indice: number, titulo: string, activo: boolean, completado: boolean}>}
+ */
 export const PANTA_PASOS = [
     {
       indice: 1,
@@ -22,6 +27,11 @@ export const PANTA_PASOS = [
 ];
 
 
+/**
+ * Configuración de columnas para la tabla de fabricantes.
+ * Cada elemento define el encabezado de la columna y la clave correspondiente del modelo Fabricante.
+ * @type {Array<{encabezado: string, clave: keyof Fabricante}>}
+ */
 export const FABRICANTE_TABLA: Array<{ encabezado: string; clave: keyof Fabricante }> = [
   { encabezado: 'Nombre/denominación o razón social', clave: 'nombre' },
   { encabezado: 'R.F.C', clave: 'rfc' },
@@ -41,6 +51,11 @@ export const FABRICANTE_TABLA: Array<{ encabezado: string; clave: keyof Fabrican
 ];
 
 
+/**
+ * Configuración de columnas para la tabla de otros terceros relacionados.
+ * Cada elemento define el encabezado de la columna y la clave correspondiente del modelo Otros260303.
+ * @type {Array<{encabezado: string, clave: keyof Otros260303}>}
+ */
 export const OTROS_TABLA:Array<{ encabezado: string; clave: keyof Otros260303 }> = [
   { encabezado: 'Tercero nombre descripción', clave: 'tercero' },
   { encabezado: 'Nombre/denominación o razón social', clave: 'nombre' },
@@ -60,17 +75,38 @@ export const OTROS_TABLA:Array<{ encabezado: string; clave: keyof Otros260303 }>
   { encabezado: 'Código postal.', clave: 'cp' },
 ];
 
+/**
+ * Título del primer paso del trámite.
+ * @type {string}
+ */
 export const PASO_UNO = 'Solicitud de Importación de Medicamentos que sean o contengan Estupefacientes o Psicotrópicos';
+/**
+ * Título del segundo paso del trámite.
+ * @type {string}
+ */
 export const PASO_DOS = 'Cargar archivos';
+/**
+ * Título del tercer paso del trámite.
+ * @type {string}
+ */
 export const PASO_TRES = 'Firmar';
 
+/**
+ * Configuración para el campo de fecha de pago.
+ * Incluye el nombre de la etiqueta, si es requerido y si está habilitado.
+ * @type {{labelNombre: string, required: boolean, habilitado: boolean}}
+ */
 export const FECHA_PAGO = {
   labelNombre: 'Fecha de pago',
   required: false,
   habilitado: false,
 };
 
-/** Configuración de la tabla de sectores */
+/**
+ * Configuración de columnas para la tabla de mercancías.
+ * Cada elemento define el encabezado, la función clave y el orden de la columna.
+ * @type {ConfiguracionColumna<MercanciasDatos>[]}
+ */
 export const CONFIGURACION_MERCANCIAS_DATOS : ConfiguracionColumna<MercanciasDatos>[] = [
     { encabezado: 'Clasificación del producto', clave: (item: MercanciasDatos) => item.clasificacion, orden: 1 },
     { encabezado: 'Especificar clasificación del producto', clave: (item: MercanciasDatos) => item.especificar, orden: 2 },
@@ -99,8 +135,10 @@ export const CONFIGURACION_MERCANCIAS_DATOS : ConfiguracionColumna<MercanciasDat
   ];
 
   /**
- * Opciones para los campos de selección tipo radio: "No" y "Sí".
- */
+   * Opciones para los campos de selección tipo radio: "No" y "Sí".
+   * Cada opción contiene una etiqueta y un valor numérico.
+   * @type {Array<{label: string, value: number}>}
+   */
   export const RADIO_OPCIONES = [
     {
       "label": "No",
@@ -113,25 +151,12 @@ export const CONFIGURACION_MERCANCIAS_DATOS : ConfiguracionColumna<MercanciasDat
   ];
 
   /**
-   * Constante para configurar el input de fecha.
-   * Define las propiedades del campo de entrada de fecha.
+   * Configuración para el campo de entrada de fecha.
+   * Define las propiedades del input de fecha: etiqueta, requerido y habilitado.
+   * @type {{labelNombre: string, required: boolean, habilitado: boolean}}
    */
-   export const INPUT_FECHA_CONFIG = {
-        /**
-         * Propiedad labelNombre
-         * Descripción: Etiqueta que se muestra como nombre del campo.
-         */
-        labelNombre: 'Fecha de pago',
-      
-        /**
-         * Propiedad required
-         * Descripción: Indica si el campo es obligatorio.
-         */
-        required: true,
-      
-        /**
-         * Propiedad habilitado
-         * Descripción: Indica si el campo está habilitado para su edición.
-         */
-        habilitado: true,
-      }
+  export const INPUT_FECHA_CONFIG = {
+    labelNombre: 'Fecha de pago',
+    required: true,
+    habilitado: true,
+  }
