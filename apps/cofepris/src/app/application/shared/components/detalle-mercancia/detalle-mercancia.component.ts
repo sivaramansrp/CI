@@ -8,15 +8,18 @@ import {
 import {
   Catalogo,
   CatalogoSelectComponent,
+  CatalogoServices,
   TablaDinamicaComponent,
   TablaSeleccion,
 } from '@libs/shared/data-access-user/src';
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
+import { Observable, Subject, Subscription, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { DETALLE_MERCANCIA_TABLA } from '../../constantes/datos-solicitud.enum';
+import { DatosDomicilioLegalQuery } from '../../estados/queries/datos-domicilio-legal.query';
+import { DatosDomicilioLegalStore } from '../../estados/stores/datos-domicilio-legal.store';
 import { DatosSolicitudService } from '../../services/datos-solicitud.service';
 import { DetalleMercancia } from '../../models/detalle-mercancia.model';
-import { Observable } from 'rxjs';
 
 @Component({
   selector: 'app-detalle-mercancia',
@@ -30,7 +33,7 @@ import { Observable } from 'rxjs';
   templateUrl: './detalle-mercancia.component.html',
   styleUrl: './detalle-mercancia.component.scss',
 })
-export class DetalleMercanciaComponent implements OnInit {
+export class DetalleMercanciaComponent implements OnInit, OnDestroy {
   /**
    * Formulario reactivo para el detalle de la mercancía.
    */
@@ -77,10 +80,25 @@ export class DetalleMercanciaComponent implements OnInit {
    */
   @Output() eliminarMercancia: EventEmitter<DetalleMercancia[]> =
     new EventEmitter<DetalleMercancia[]>(true);
+    /**
+     * Suscripción para manejar observables.
+     */
+    private subscription: Subscription = new Subscription();
+     /**
+   * Identificador del trámite asociado a la ampliación de 3Rs.
+   */
+  tramiteID: string = '260203';
+    /**
+   * Notificador para gestionar la destrucción o desuscripción de observables.
+   */
+  private destroyNotifier$: Subject<void> = new Subject();
 
   constructor(
     private fb: FormBuilder,
-    public datosSolicitudService: DatosSolicitudService
+    public datosSolicitudService: DatosSolicitudService,
+    private catalogoServices: CatalogoServices,
+    private datosDomicilioLegalStore: DatosDomicilioLegalStore,
+    private datosDomicilioLegalQuery: DatosDomicilioLegalQuery,
   ) {
     this.formaDetalleMercancia = this.fb.group({
       formaFormaceutica: ['', Validators.required],
@@ -93,13 +111,27 @@ export class DetalleMercanciaComponent implements OnInit {
     if (this.datosDetalleMercancia) {
       this.formaDetalleMercancia.patchValue(this.datosDetalleMercancia);
     }
-    this.datosSolicitudService.obtenerRespuestaPorUrl(
-      this,
-      'datosFormFormaceutica',
-      '/cofepris/formaFarmaceutica.json'
-    );
+    this.obtenerdatosFormFormaceutica();
+    // this.datosSolicitudService.obtenerRespuestaPorUrl(
+    //   this,
+    //   'datosFormFormaceutica',
+    //   '/cofepris/formaFarmaceutica.json'
+    // );
   }
 
+    /**
+   * Obtiene la lista de sectores para selección.
+   */
+  obtenerdatosFormFormaceutica(): void {
+    this.subscription.add(this.catalogoServices.formaFarmaceuticaCatalogo(this.tramiteID).pipe(
+      takeUntil(this.destroyNotifier$)
+    ).subscribe((data) => {
+      const DATOS = data.datos as Catalogo[];
+      if (data) {
+            this.datosFormFormaceutica = DATOS;
+          }
+    }));
+  }
   /**
    * Valida si el campo de un formulario no contiene errores
    * @param {AbstractControl} control  : Control del formulario
@@ -127,21 +159,32 @@ export class DetalleMercanciaComponent implements OnInit {
    * Valida el formulario, agrega los datos de la mercancía y emite el evento con la información.
    * Luego, restablece el formulario.
    */
-  agregarMercancias(): void {
-    if (this.formaDetalleMercancia.valid) {
-      const DATOS = {
-        ...this.formaDetalleMercancia.value,
-        formaFormaceutica: this.datosFormFormaceutica.find(
-          (ele) =>
-            ele.id.toString() ===
-            this.formaDetalleMercancia.value.formaFormaceutica
-        )?.descripcion,
-      };
+   agregarMercancias(): void {
+  if (this.formaDetalleMercancia.valid) {
+    const SELECTED_FORMA = this.datosFormFormaceutica.find(
+      (ele) => ele.clave === this.formaDetalleMercancia.value.formaFormaceutica
+    );
 
-      this.agregarMercanciaSellecion.emit(DATOS);
-      this.formaDetalleMercancia.reset();
-      //Es necesario restablecer el cuadro de selección a -1 para restablecer el formulario
-      this.formaDetalleMercancia.patchValue({ formaFormaceutica: -1 });
-    }
+    const NEW_DETALLE: DetalleMercancia = {
+      formaFormaceutica: SELECTED_FORMA ? SELECTED_FORMA.descripcion : '',
+      numeroDeRegistro: this.formaDetalleMercancia.value.numeroDeRegistro,
+      marcasDistintivas: this.formaDetalleMercancia.value.marcasDistintivas,
+      tipoDeEnvase: this.formaDetalleMercancia.value.tipoDeEnvase,
+    };
+
+    this.datosTablaDetalleMercancia = new Observable((observer) => {
+      const CURRENT_DATA = (this.datosTablaDetalleMercancia as any)?.source?.value || [];
+      observer.next([...CURRENT_DATA, NEW_DETALLE]);
+      observer.complete();
+    });
+
+    this.formaDetalleMercancia.reset();
+    this.formaDetalleMercancia.patchValue({ formaFormaceutica: '' });
   }
+}
+    ngOnDestroy(): void {
+    this.destroyNotifier$.next();
+    this.destroyNotifier$.complete();
+  }
+
 }
