@@ -90,13 +90,6 @@ export class ConsultarequerimientosComponent implements OnInit, OnChanges, OnDes
    ngOnChanges(changes: SimpleChanges): void {
      if (changes['requerimientos'] && changes['requerimientos'].currentValue?.length > 0) {
        this.getRequerimientos();
-     }else{
-      this.requerimientoService
-      .getRequerimientos()
-      .pipe(takeUntil(this.unsubscribe$))
-      .subscribe((data) => {
-        this.datosTablaRequerimientos = data;
-      });
      }
    }
 
@@ -120,7 +113,7 @@ export class ConsultarequerimientosComponent implements OnInit, OnChanges, OnDes
       fechaCreacion: req.fecha_creacion,
       fechaGeneracion: req.fecha_emision,
       fechaAtencion: req.fecha_atencion,
-      estatus: req.estadoRequerimiento ?? '', 
+      estatus: req.estado_requerimiento ?? '', 
       urlPdf: '' 
     }));
   }
