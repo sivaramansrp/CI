@@ -4,7 +4,13 @@ import { NO_ERRORS_SCHEMA } from '@angular/core';
 import { HttpClientModule } from '@angular/common/http';
 import { ImportacionEquipoAnticontaminanteService } from '../../services/importacion-equipo-anticontaminante.service';
 import { Subject, of } from 'rxjs';
-import { ConsultaioQuery } from '@ng-mf/data-access-user';
+import { ConsultaioQuery, SolicitanteComponent } from '@ng-mf/data-access-user';
+import { PartidasDeLaMercanciaComponent } from '../../../../shared/components/partidas-de-la-mercancia/partidas-de-la-mercancia.component';
+import { SolicitudComponent } from '../../components/solicitud/solicitud.component';
+import { DatosDelTramiteComponent } from '../../../../shared/components/datos-del-tramite/datos-del-tramite.component';
+import { DatosDeLaMercanciaComponent } from '../../../../shared/components/datos-de-la-mercancia/datos-de-la-mercancia.component';
+import { RepresentacionComponent } from '../../../../shared/components/representacion/representacion.component';
+import { PaisProcendenciaComponent } from '../../../../shared/components/pais-procendencia/pais-procendencia.component';
 
 describe('PasoUnoComponent', () => {
   let component: PasoUnoComponent;
@@ -24,9 +30,9 @@ describe('PasoUnoComponent', () => {
       },
     };
     await TestBed.configureTestingModule({
-      declarations: [PasoUnoComponent],
+      declarations: [PasoUnoComponent, SolicitudComponent],
       schemas: [NO_ERRORS_SCHEMA],
-      imports: [HttpClientModule],
+      imports: [HttpClientModule, SolicitanteComponent, PaisProcendenciaComponent,PartidasDeLaMercanciaComponent, DatosDelTramiteComponent,DatosDeLaMercanciaComponent,RepresentacionComponent],
       providers: [
         { provide: ImportacionEquipoAnticontaminanteService, useValue: importacionEquipoAnticontaminanteServiceSpy },
         { provide: ConsultaioQuery, useValue: consultaQuerySpy },
@@ -37,7 +43,6 @@ describe('PasoUnoComponent', () => {
   beforeEach(() => {
     fixture = TestBed.createComponent(PasoUnoComponent);
     component = fixture.componentInstance;
-    fixture.detectChanges();
   });
 
   it('should create', () => {

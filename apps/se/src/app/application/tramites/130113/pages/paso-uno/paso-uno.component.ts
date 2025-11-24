@@ -2,7 +2,6 @@ import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { ConsultaioQuery, ConsultaioState } from '@ng-mf/data-access-user';
 import { Subject, map, takeUntil } from 'rxjs';
 import { ImportacionEquipoAnticontaminanteService } from '../../services/importacion-equipo-anticontaminante.service';
-import { PartidasDeLaMercanciaComponent } from '../../components/partidas-de-la-mercancia/partidas-de-la-mercancia.component';
 import { SolicitudComponent } from '../../components/solicitud/solicitud.component';
 /**
  * @descripcion

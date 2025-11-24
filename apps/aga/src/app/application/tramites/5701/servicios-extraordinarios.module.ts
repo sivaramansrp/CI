@@ -46,7 +46,7 @@ import { RouterModule } from '@angular/router';
 import { ServiciosExtraordinariosRoutingModule } from './servicios-extraordinarios-routing.module';
 import { SolicitudComponent } from './components/solicitud/solicitud.component';
 import { SolicitudPageComponent } from './pages/solicitud-page/solicitud-page.component';
-
+import { PasoFirmaComponent } from '@libs/shared/data-access-user/src';
 @NgModule({
   declarations: [
     SolicitudPageComponent,
@@ -91,6 +91,7 @@ import { SolicitudPageComponent } from './pages/solicitud-page/solicitud-page.co
     forwardRef(() => TablePaginationComponent),
     forwardRef(() => PaginadorTablaComponent),
     ToastrModule.forRoot(),
+    PasoFirmaComponent
   ],
   exports: [PasoUnoComponent],
   providers: [ToastrService, CatalogosService, BsModalService],

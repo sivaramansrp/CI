@@ -1,8 +1,7 @@
 import { FilaData, FilaData2, ListaClave } from '../../../models/fila-modal';
 import { Store, StoreConfig } from '@datorama/akita';
-import { Injectable } from '@angular/core';
-
 import { Destinatario } from '../../../models/destinatario.model';
+import { Injectable } from '@angular/core';
 
 /**
  * Interfaz que define el estado de la solicitud 260702.
@@ -169,6 +168,24 @@ export interface Solicitud260702State {
   /** Datos de la tabla de destinatarios */
     tableData2: Destinatario[];
 
+      /**
+       * El valor de nicoTabla.
+       */
+      nicoTabla: FilaData[],
+    
+      /**
+       * El valor de mercanciaTabla.
+       */
+      mercanciaTabla: FilaData2[],
+/**
+ * Método para actualizar la descripción del SCIAN en el estado.
+ */
+descripcionDelScian: string;
+    
+  formValidity?: {
+    datosDelSolicitude?: boolean;
+  }
+continuarTriggered?: boolean;
 }
 
 /**
@@ -339,6 +356,23 @@ export function createInitialSolicitudState(): Solicitud260702State {
     tableData: [],
     /** Datos de la tabla de destinatarios */
     tableData2: [],
+    /**
+     * Método para actualizar la descripción del SCIAN en el estado.
+     */
+    descripcionDelScian: '',
+    
+      /**
+   * El valor de nicoTabla.
+   */
+    nicoTabla: [],
+
+    /**
+   * El valor de mercanciaTabla.
+   */
+    mercanciaTabla: [],
+    
+    formValidity: {},
+    continuarTriggered:false
   };
 }
 /**
@@ -363,6 +397,21 @@ export class Solicitud260702Store extends Store<Solicitud260702State> {
       tipoOperacion,
     }));
   }
+
+     /** Actualiza el estado con la nueva tabla de información Nico. */
+      setNicoTabla(nicoTabla: FilaData[]): void {
+        this.update((state) => ({
+              ...state,
+              nicoTabla,
+          }));
+      }
+  
+      setMercanciasTabla(mercanciaTabla: FilaData2[]): void {
+        this.update((state) => ({
+              ...state,
+              mercanciaTabla,
+          }));
+      }
 
   /**
    * Método para actualizar la clave de referencia en el estado.
@@ -942,5 +991,40 @@ export class Solicitud260702Store extends Store<Solicitud260702State> {
       ...state,
       tableData2,
     }));
+  }
+
+  /**
+   *  Método para actualizar la descripción del SCIAN en el estado.
+   * @param descripcionDelScian Descripción del SCIAN a establecer.
+   */
+  setDescripcionDelScian(descripcionDelScian: string): void {
+    this.update((state) => ({
+      ...state,
+      descripcionDelScian,
+    }));
+  }
+
+  /**
+ * Actualiza el estado de validez de un formulario específico dentro del trámite.
+ * @param formName Nombre del formulario a actualizar.
+ * @param isValid Indica si el formulario es válido o no.
+ */
+  setFormValidity(formName: string, isValid: boolean): void {
+    this.update((state) => ({
+      ...state,
+      formValidity: {
+        ...state.formValidity,
+        [formName]: isValid,
+      },
+    }));
+  }
+
+
+   /**
+ * Establece el estado del botón continuar para activar o desactivar las validaciones del formulario.
+ * @param continuarTriggered Indica si el botón continuar ha sido activado.
+ */
+  public setContinuarTriggered(continuarTriggered: boolean): void {
+    this.update((state) => ({ ...state, continuarTriggered }));
   }
 }

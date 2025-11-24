@@ -458,8 +458,8 @@
           <div class="pl-0">
             <div class="col-md-4">
               <div class="form-group">
-                <app-catalogo-select [catalogo]="paisDropdownData" [label]="'Pais'" [required]="true" for="pais" [markTouched]="agregarFabricanteFormGroup.controls?.['pais']?.touched ?? false"
-                  id="pais" formControlName="pais"></app-catalogo-select>
+                <app-catalogo-select [catalogo]="paisDropdownData" [label]="'Pais'" [required]="true" for="pais" [markTouched]="markPaisTouched(agregarFabricanteFormGroup)"
+                  id="pais" formControlName="pais" (selectionChange)="onPaisChange($event, 'setFabricantePais')"></app-catalogo-select>
               </div>
             </div>
 
@@ -988,8 +988,8 @@
           <div class="pl-0">
             <div class="col-md-4">
               <div class="form-group">
-                <app-catalogo-select [catalogo]="paisDropdownData" [label]="'Pais'" [required]="true" for="pais"
-                  id="pais" formControlName="pais" [markTouched]="agregarFormuladorFormGroup?.controls?.['pais']?.touched ?? false"></app-catalogo-select>
+                <app-catalogo-select [catalogo]="paisDropdownData" [label]="'Pais'" [required]="true" for="pais" (selectionChange)="onPaisChange($event, 'setFormuladorPais')"
+                  id="pais" formControlName="pais" [markTouched]="markPaisTouched(agregarFormuladorFormGroup)"></app-catalogo-select>
               </div>
             </div>
 
@@ -1509,8 +1509,8 @@
           <div class="pl-0">
             <div class="col-md-4">
               <div class="form-group">
-                <app-catalogo-select [catalogo]="paisDropdownData" [label]="'Pais'" [required]="true" for="pais"
-                  id="pais" formControlName="pais" [markTouched]="agregarProveedorFormGroup?.controls?.['pais']?.touched ?? false"></app-catalogo-select>
+                <app-catalogo-select [catalogo]="paisDropdownData" [label]="'Pais'" [required]="true" for="pais" (selectionChange)="onPaisChange($event, 'setProveedorPais')"
+                  id="pais" formControlName="pais" [markTouched]="markPaisTouched(agregarProveedorFormGroup)"></app-catalogo-select>
               </div>
             </div>
 

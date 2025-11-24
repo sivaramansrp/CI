@@ -1,4 +1,5 @@
 import { Store, StoreConfig } from '@datorama/akita';
+import { Catalogo } from '@libs/shared/data-access-user/src';
 import { Injectable } from '@angular/core';
 
 /**
@@ -8,7 +9,10 @@ import { Injectable } from '@angular/core';
 export interface Tramite120404State{
     asignacionRadio:boolean,
     asignacionsolitud:string,
-    numTramite:string  
+    numTramite:string,
+    anosDatos: Catalogo[];
+    idSolicitud: number;
+    showBuscar: boolean;
 }
 
 /**
@@ -20,7 +24,10 @@ export function createInitialState(): Tramite120404State {
     return {
         asignacionRadio: false,
         asignacionsolitud: '',
-        numTramite: ''
+        numTramite: '',
+        anosDatos: [],
+        idSolicitud: 0,
+        showBuscar: false,
     }
 }
 /**
@@ -42,10 +49,37 @@ export function createInitialState(): Tramite120404State {
      *
      * @param datos Datos parciales a actualizar en la tienda.
   */
-  public establecerDatos(datos: Partial<Tramite120404State>): void {
+public establecerDatos(datos: Partial<Tramite120404State>): void {
+  this.update((state) => ({
+    ...state,
+    ...datos,
+  }));
+}
+
+/**
+ * Método para actualizar años de datos en la tienda.
+ * Recibe un array de catálogos y actualiza la propiedad anosDatos.
+ *
+ * @param anos Array de catálogos a establecer.
+ */
+  public setAnosDatos(anos: Catalogo[]): void {
     this.update((state) => ({
       ...state,
-      ...datos,
+      anosDatos: anos,
     }));
-}
   }
+
+  /**
+ * Método para actualizar años de datos en la tienda.
+ * Recibe un array de catálogos y actualiza la propiedad anosDatos.
+ *
+ * @param anos Array de catálogos a establecer.
+ */
+  public setBuscarSection(showBuscar: boolean): void {
+    this.update((state) => ({
+      ...state,
+      showBuscar: showBuscar,
+    }));
+  }
+
+}

@@ -1,6 +1,6 @@
 import { AlertComponent, CatalogoSelectComponent, Notificacion, NotificacionesComponent, Pedimento, REGEX_CURP, TablaDinamicaComponent, TablaSeleccion, TituloComponent } from '@libs/shared/data-access-user/src';
 import { Catalogo, CatalogosSelect } from '@ng-mf/data-access-user';
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, Input, OnChanges, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Solicitud260702State, Solicitud260702Store } from '../../../estados/stores/shared2607/tramites260702.store';
 import { TEXTOS, TIPO_PERSONA_RADIO_OPTIONS } from '../../../constantes/constantes.enum';
@@ -36,7 +36,7 @@ import { TercerosRelacionadosComponent } from '../../../../shared/components/ter
   templateUrl: './terceros-relacionados.component.html',
   styleUrl: './terceros-relacionados.component.scss',
 })
-export class TercerosrelacionadosComponent implements OnInit, OnDestroy {
+export class TercerosrelacionadosComponent implements OnInit, OnDestroy, OnChanges {
   /** Constantes de texto utilizadas en el componente */
   TEXTOS = TEXTOS;
 
@@ -129,6 +129,17 @@ filasSeleccionadasDestinatario: Set<number> = new Set();
 
   /** Datos de los fabricantes para 260702 */
   fabricanteDatos: Destinatario[] = [];
+  /**
+   * Identificador del procedimiento que se recibe como entrada desde el componente padre.
+   */
+   @Input() idProcedimiento!: number;
+
+    /**
+   * Indica si se ha activado el evento de continuar.
+   * Este valor se utiliza para controlar el flujo de la solicitud
+   * dependiendo de si el usuario ha decidido continuar con el proceso.
+   */
+   @Input() isContinuarTriggered: boolean = false;
   
 
   /**
@@ -143,7 +154,8 @@ filasSeleccionadasDestinatario: Set<number> = new Set();
     private registrarsolicitudmcp: RegistrarSolicitudMcpService,
     private solicitud260702Store: Solicitud260702Store,
     private solicitud260702Query: Solicitud260702Query,
-    private consultaioQuery: ConsultaioQuery
+    private consultaioQuery: ConsultaioQuery,
+    private service: RegistrarSolicitudMcpService,
   ) {
     /**
      * Se suscribe al estado de `Consultaio` para obtener información actualizada del estado del formulario.
@@ -162,6 +174,8 @@ filasSeleccionadasDestinatario: Set<number> = new Set();
       )
       .subscribe();
     this.crearFormTransporte();
+   
+    
   }
 
   /**
@@ -222,6 +236,16 @@ filasSeleccionadasDestinatario: Set<number> = new Set();
     this.inicializarEstadoFormulario();
   }
 
+
+  /**
+ * Detecta cambios en las propiedades de entrada del componente y ejecuta validaciones cuando se activa el botón continuar.
+ * Utiliza Promise.resolve() para asegurar que la validación se ejecute en el próximo ciclo del event loop.
+ */
+  ngOnChanges(): void {
+    if (this.isContinuarTriggered) {
+     this.destinatarioForm.markAllAsTouched();
+    }
+  }
   /**
    * Evalúa si se debe inicializar o cargar datos en el formulario.
    * Además, obtiene la información del catálogo de mercancía.
@@ -322,13 +346,22 @@ filasSeleccionadasDestinatario: Set<number> = new Set();
   /**
    * Obtiene los datos del catálogo de países.
    */
-  getPaisData(): void {
-    this.registrarsolicitudmcp
+  getPaisData(): void { 
+     if (this.idProcedimiento) {
+    this.service
+      .obtenerPaises(this.idProcedimiento?.toString())
+      .pipe(takeUntil(this.destroyed$))
+      .subscribe((data): void => {
+        this.paisData.catalogos = data.datos as Catalogo[];
+      });
+    } else {
+      this.service
       .getPaisData()
       .pipe(takeUntil(this.destroyed$))
-      .subscribe((data: Catalogo[]) => {
+      .subscribe((data): void => {
         this.paisData.catalogos = data as Catalogo[];
       });
+    }
   }
 
   /**
@@ -406,18 +439,6 @@ onGuardar(): void {
   this.esFormularioVisible = false;
   this.selectedRow = null;
 }
-  /**
-   * Obtiene el nombre del país a partir de su ID.
-   * @param paisId ID del país.
-   * @returns Nombre del país o 'N/A' si no se encuentra.
-   */
-  private getPaisName(paisId: string): string {
-    const PAIS_ENCONTRADO = this.paisData.catalogos.find(
-      (catalogo) => catalogo.id === Number(paisId)
-    );
-    return PAIS_ENCONTRADO ? PAIS_ENCONTRADO.descripcion : 'N/A';
-  }
-
   /**
    * Maneja el cambio de filas seleccionadas en la tabla.
    * @param filasSeleccionadas Filas seleccionadas.

@@ -1,4 +1,10 @@
 import {
+  AlertComponent,
+  CargaDocumentoComponent,
+  TituloComponent,
+  Usuario,
+} from '@ng-mf/data-access-user';
+import {
   Component,
   EventEmitter,
   Input,
@@ -9,7 +15,6 @@ import {
 import { Subject, map, takeUntil } from 'rxjs';
 import { RegistroSolicitudService } from '../../services/220202/registro-solicitud/registro-solicitud.service';
 import { TEXTOS_REQUISITOS } from '../../constantes/220202/fitosanitario.enums';
-import { Usuario } from '@ng-mf/data-access-user';
 
 /**
  * Componente para mostrar el subtítulo del asistente.
@@ -21,10 +26,11 @@ import { Usuario } from '@ng-mf/data-access-user';
 @Component({
   selector: 'app-paso-dos',
   templateUrl: './paso-dos.component.html',
-  styleUrls: ['./paso-dos.component.scss']
+  styleUrls: ['./paso-dos.component.scss'],
+  standalone: true,
+  imports: [CargaDocumentoComponent, AlertComponent, TituloComponent],
 })
 export class PasoDosComponent implements OnInit, OnDestroy {
-
   /**
    * Objeto con los textos de los requisitos.
    * @property {object} TEXTOS_REQUISITOS - Textos para los requisitos del certificado zoosanitario. --220201
@@ -37,7 +43,7 @@ export class PasoDosComponent implements OnInit, OnDestroy {
    */
   public destroyNotifier$ = new Subject<void>();
 
-    /**
+  /**
    * Id del tipo de trámite actual.
    */
   @Input() idTipoTRamite!: string;
@@ -80,11 +86,7 @@ export class PasoDosComponent implements OnInit, OnDestroy {
   /** Emite un boleano sobre la carga del archivo */
   @Output() cargaEnProgresoChange = new EventEmitter<boolean>();
 
-  constructor(
-    private registroSolicitudService: RegistroSolicitudService
-  ) {
-    
-  }
+  constructor(private registroSolicitudService: RegistroSolicitudService) {}
 
   /**
    * @description Inicializa el componente.
@@ -142,5 +144,4 @@ export class PasoDosComponent implements OnInit, OnDestroy {
     this.destroyNotifier$.next();
     this.destroyNotifier$.complete();
   }
-
 }

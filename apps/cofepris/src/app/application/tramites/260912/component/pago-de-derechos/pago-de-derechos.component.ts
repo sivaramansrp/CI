@@ -23,10 +23,8 @@ import { TituloComponent } from '@libs/shared/data-access-user/src';
  * Basada en la estructura real que retorna el servicio.
  */
 interface Banco {
-  /** Nombre del banco utilizado en el template */
-  name: string;
-  /** Propiedades adicionales que pueda tener el objeto banco */
-  [key: string]: unknown;
+  id: number;
+  descripcion: string;
 }
 
 /**
@@ -164,39 +162,44 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy, OnChanges {
       });
 
    this.pagoDeDerechosForm = this.fb.group(
-  {
-    claveDeReferencia: [
-      this.estadoSeleccionado?.claveDeReferencia ?? '',
-      [Validators.maxLength(50)]
-    ],
-    cadenaPagoDependencia: [
-      this.estadoSeleccionado?.cadenaPagoDependencia ?? '',
-      [Validators.maxLength(50)]
-    ],
-    clave: [
-      this.estadoSeleccionado?.clave ?? ''
-    ],
-    llaveDePago: [
-      this.estadoSeleccionado?.llaveDePago ?? '',
-      [Validators.pattern(REGEX_LLAVE_DE_PAGO)]
-    ],
-    fecPago: [
-      this.estadoSeleccionado?.fecPago ?? '',
-      [PagoDeDerechosComponent.fechaLimValidator()]
-    ],
-    impPago: [
-      this.estadoSeleccionado?.impPago ?? '',
-      [Validators.maxLength(30), Validators.pattern(REGEX_IMPORTE_PAGO), PagoDeDerechosComponent.noComaValidator()]
-    ]
-  },
-  {
-    validators: [PagoDeDerechosComponent.camposDependientesValidator()]
-  }
-);
+    {
+      claveDeReferencia: [
+        this.estadoSeleccionado?.claveDeReferencia ?? '',
+        [Validators.maxLength(50)]
+      ],
+      cadenaPagoDependencia: [
+        this.estadoSeleccionado?.cadenaPagoDependencia ?? '',
+        [Validators.maxLength(50)]
+      ],
+      clave: [
+        this.estadoSeleccionado?.clave ?? ''
+      ],
+      llaveDePago: [
+        this.estadoSeleccionado?.llaveDePago ?? '',
+        [Validators.pattern(REGEX_LLAVE_DE_PAGO)]
+      ],
+      fecPago: [
+        this.estadoSeleccionado?.fecPago ?? '',
+        [PagoDeDerechosComponent.fechaLimValidator()]
+      ],
+      impPago: [
+        this.estadoSeleccionado?.impPago ?? '',
+        [
+          Validators.maxLength(30), 
+          Validators.pattern(REGEX_IMPORTE_PAGO), 
+          PagoDeDerechosComponent.noComaValidator(),
+          PagoDeDerechosComponent.numeroEnteroValidator(),
+          PagoDeDerechosComponent.maxDecimalesValidator()
+        ]
+      ]
+    },
+    {
+      validators: [PagoDeDerechosComponent.camposDependientesValidator()]
+    }
+  );
+}
 
-  }
-
-  /**
+/**
  * Validador que obliga a completar todos los campos si al menos uno está lleno.
  * Aplica el error 'required' solo si algún campo tiene valor y otros no.
  */
@@ -264,10 +267,8 @@ public static camposDependientesValidator(): ValidatorFn {
     this.servicio.onBancoList()
       .pipe(takeUntil(this.destroyed$))
       .subscribe(data => {
-       this.bancoList = ((data as unknown) as Banco[]).map(item => ({
-         ...item
-       })) as Banco[];
-      });
+     this.bancoList = data as Banco[];
+    });
   }
 
   /**
@@ -306,6 +307,53 @@ public static camposDependientesValidator(): ValidatorFn {
   }
 
   /**
+   * Validador personalizado para campos numéricos enteros.
+   * Valida que el valor contenga solo números enteros.
+   * @returns Función validadora que retorna error si no es un número entero válido
+   */
+  public static numeroEnteroValidator(): ValidatorFn {
+    return (control: AbstractControl): ValidationErrors | null => {
+      const VALUE = control.value;
+      if (!VALUE) {
+        return null;
+      }
+      
+      const NUMERICREGEX = /^\d+(\.\d+)?$/;
+      if (!NUMERICREGEX.test(VALUE.toString())) {
+        return { numeroInvalido: true };
+      }
+      
+      return null;
+    };
+  }
+
+  /**
+   * Validador personalizado para campos con máximo 2 decimales.
+   * Valida que el valor tenga como máximo 2 decimales.
+   * @returns Función validadora que retorna error si tiene más de 2 decimales
+   */
+  public static maxDecimalesValidator(): ValidatorFn {
+    return (control: AbstractControl): ValidationErrors | null => {
+      const VALUE = control.value;
+      if (!VALUE) {
+        return null;
+      }
+      
+      const STRINGVALUE = VALUE.toString();
+      
+     
+      if (STRINGVALUE.includes('.')) {
+        const DECIMALPART = STRINGVALUE.split('.')[1];
+        if (DECIMALPART && DECIMALPART.length > 2) {
+          return { maxDecimales: true };
+        }
+      }
+      
+      return null;
+    };
+  }
+
+  /**
    * Verifica si un control específico del formulario es inválido.
    * @param controlName - Nombre del control a verificar
    * @returns true si el control es inválido y ha sido tocado o modificado
@@ -327,6 +375,16 @@ public static camposDependientesValidator(): ValidatorFn {
     const VALOR = CTRL.value;
     this.tramite260912Store.setTramite260912State({ [campo]: VALOR });
     this.mostrarErroresDeCampoPago = false;
+  }
+
+  /**
+   * Valida el campo de importe con las reglas específicas.
+   * @param field - Nombre del campo a validar
+   */
+  public validarImporte(field: string): void {
+    const CTRL = this.pagoDeDerechosForm.get(field);
+    if (!CTRL) { return; }
+    CTRL.updateValueAndValidity({ emitEvent: false });
   }
 
   /**

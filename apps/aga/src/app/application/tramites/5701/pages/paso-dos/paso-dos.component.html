@@ -5,13 +5,13 @@
     ></lib-notificaciones>
   </div>
 
-  <div class="col-md-12">
-    <carga-documento
-      [idTipoTRamite]="'5701'"
+  <carga-documento
+      [idTipoTRamite]="idTipoTRamite"
+      [datosUsuario]="datosUsuario"
+      [idSolicitud]="idSolicitud"
       [cargaArchivosEvento]="reenviarEvento"
-      [regresarSeccionCargarDocumentoEvento]="reenviarRegresarSeccion"
       (cargaRealizada)="documentosCargados($event)"
       (activarBotonCargaArchivos)="manejarEventoCargaDocumento($event)"
+      (cargaEnProgreso)="onCargaEnProgreso($event)"
     ></carga-documento>
-  </div>
 </div>

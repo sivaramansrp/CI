@@ -221,6 +221,9 @@ export interface Mercancia {
 
   /** Volumen */
   volumen: number | null;
+
+  /** Decripcion modificada */
+  descripcion_alterna_modificada: boolean | null;
 }
 
 /**

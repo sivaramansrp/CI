@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { ConsultaioQuery } from '@ng-mf/data-access-user';
 import { ReactiveFormsModule } from '@angular/forms';
 
-import { ConfiguracionColumna, TablaDinamicaComponent } from '@libs/shared/data-access-user/src';
+import { ConfiguracionColumna, TablaDinamicaComponent,TablePaginationComponent } from '@libs/shared/data-access-user/src';
 import { Asociados } from '../../models/datos-de-la-solicitud.model';
 import { EstablecimientoService } from '../../services/establecimiento.service';
 
@@ -20,7 +20,7 @@ import { TRAMITES_ASOCIADOS } from '../../constantes/aviso-de-funcionamiento.enu
 @Component({
   selector: 'app-tramites-asociados-seccion',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, TablaDinamicaComponent],
+  imports: [CommonModule, ReactiveFormsModule, TablaDinamicaComponent, TablePaginationComponent],
   templateUrl: './tramites-asociados-seccion.component.html',
   styleUrl: './tramites-asociados-seccion.component.scss',
 })

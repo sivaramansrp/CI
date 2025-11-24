@@ -48,3 +48,16 @@ import { PartidasDeLaMercanciaModelo } from '../models/partidas-de-la-mercancia.
    * 
    */
   export const PARTIDAS_SELECCIONADAS_REQUIRED = [130105];
+
+  /**
+ * @const MENSAJES
+ * @description Contiene los mensajes utilizados en el trámite de importación de material de investigación científica.
+ * @property {string} MENSAJES_MERCANCIA_REQUERIDA - Mensaje mostrado cuando no se ha agregado ninguna mercancía.
+ * @property {string} MENSAJES_FRACCION_ARANCELARIA_REQUERIDA - Mensaje mostrado cuando no se ha capturado una fracción arancelaria.
+ */
+export const MENSAJES = {
+  MENSAJES_MERCANCIA_REQUERIDA:
+    'Para continuar con el trámite, debes agregar por lo menos una mercancía.',
+  MENSAJES_FRACCION_ARANCELARIA_REQUERIDA:
+    'Debes capturar una fracción arancelaria en el campo de texto para que se realice la búsqueda y se carguen los datos del catálogo del componente de la lista desplegable.',
+};

@@ -100,4 +100,7 @@ export class Tramite260103Query extends Query<Tramite260103State> {
     const UPDATED = CURRENT.filter(f => f.id !== id);
     this.store.update({ destinatarioTableDatos: UPDATED });
   }
+    public getDestinatarioFinalTablaDatos$ = this.select(
+    (state) => state.destinatarioFinalTablaDatos
+  );
 }

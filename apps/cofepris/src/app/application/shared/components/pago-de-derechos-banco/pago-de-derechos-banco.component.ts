@@ -275,4 +275,12 @@ export class PagoDeDerechosBancoComponent implements OnInit, OnDestroy {
   
     return FECHA_INGRESADA > FECHA_ACTUAL ? { fechaFuturaInvalida: true } : null;
   }
+
+  /**
+ * Valida el formulario principal de pago de derechos banco.
+ * Retorna true si el formulario es válido, false en caso contrario.
+ */
+public validarFormularios(): boolean {
+  return this.formSolicitud?.valid ?? false;
+}
 }

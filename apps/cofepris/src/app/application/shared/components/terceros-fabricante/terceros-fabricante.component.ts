@@ -547,10 +547,21 @@ eliminarProveedor(): void {
   private destroyNotifier$: Subject<void> = new Subject();
 
   /**
+ * Verifica si el control 'pais' dentro de un FormGroup ha sido tocado (touched).
+ * @param formGroup Grupo de formulario que contiene el control 'pais'.
+ * @returns `true` si el control 'pais' ha sido tocado; de lo contrario `false`.
+ */
+  public markPaisTouched!: ((formGroup: FormGroup) => boolean);
+
+  /**
    * Ciclo de vida que se ejecuta al iniciar el componente.
    * Obtiene los datos para los selectores desde el servicio y inicializa los formularios.
    */
   ngOnInit(): void {
+
+    this.markPaisTouched = (formGroup: FormGroup): boolean => {
+      return Boolean(formGroup?.get('pais')?.touched);
+    };
     
     /**
      * Obtiene los datos para los selectores desde el servicio de terceros.
@@ -1985,6 +1996,21 @@ this.editFabricanteIndex = this.fabricanteRowData.findIndex(
    */
   public esValido(campo: string, form: FormGroup): boolean | null {
     return this.validacionesService.isValid(form, campo);
+  }
+
+  /**
+ * Llama dinámicamente al método correspondiente del store para actualizar el país seleccionado.
+ * @param event Objeto de tipo Catalogo que representa el país seleccionado.
+ * @param metodoNombre Nombre del método del store que se debe invocar.
+ */
+  onPaisChange(event: Catalogo, metodoNombre: keyof TercerosFabricanteStore): void {
+    if (event) {
+    (
+      this.tercerosFabricanteStore[metodoNombre] as (
+        value: Catalogo
+      ) => void
+    )(event);
+    }
   }
 
   /**
