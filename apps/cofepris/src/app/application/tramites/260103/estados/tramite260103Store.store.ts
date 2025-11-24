@@ -1,5 +1,5 @@
 
-import { DatosSolicitudFormState, MercanciaForm, TablaOpcionConfig, TablaScianConfig } from '../../../shared/components/shared26010/models/datos-solicitud.model';
+import { DatosSolicitudFormState, MercanciaForm,TablaMercanciaClaveConfig, TablaOpcionConfig, TablaScianConfig, } from '../../../shared/components/shared26010/models/datos-solicitud.model';
 import { Destinatario, Fabricante } from '../../../shared/components/shared26010/models/terceros-relacionados.model';
 import { Store, StoreConfig } from '@datorama/akita';
 import { Injectable } from '@angular/core';
@@ -22,6 +22,8 @@ export interface Tramite260103State {
 
   /** Lista de fabricantes registrados */
   fabricanteTablaDatos: Fabricante[];
+
+    tablaMercanciaClaveConfigDatos: TablaMercanciaClaveConfig[];
 
   /** Estado del formulario con datos generales de la solicitud */
   datosSolicitudFormState: DatosSolicitudFormState;
@@ -134,6 +136,7 @@ export function createInitialState(): Tramite260103State {
       importePago: '',
     },
     tabSeleccionado: 1,
+    tablaMercanciaClaveConfigDatos: [],
   };
 }
 
@@ -302,4 +305,12 @@ export class Tramite260103Store extends Store<Tramite260103State> {
       cumplimiento,
     }));
   }
+    public updateTablaMercanciaClaveConfigDatos(
+      tablaMercanciaClaveConfigDatos: TablaMercanciaClaveConfig[]
+    ): void {
+      this.update((state) => ({
+        ...state,
+        tablaMercanciaClaveConfigDatos,
+      }));
+    }
 }
