@@ -384,7 +384,8 @@ export class ImportadorEnDestinoComponent implements OnInit, OnDestroy {
         this.importadorState.cpImportador,
         [
           Validators.required,
-          Validators.maxLength(9)
+          Validators.maxLength(9),
+          Validators.pattern(/^[0-9]{5,9}$/)
         ],
       ],
       PaisImportador: [
