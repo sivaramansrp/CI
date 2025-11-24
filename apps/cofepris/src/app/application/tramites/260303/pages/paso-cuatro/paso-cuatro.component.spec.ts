@@ -1,23 +1,22 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { PasoCuatroComponent } from './paso-cuatro.component';
-import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 
 describe('PasoCuatroComponent', () => {
   let component: PasoCuatroComponent;
-  let fixture: ComponentFixture<PasoCuatroComponent>;
 
-  beforeEach(async () => {
-    await TestBed.configureTestingModule({
-      declarations: [PasoCuatroComponent],
-      schemas: [CUSTOM_ELEMENTS_SCHEMA]
-    }).compileComponents();
-
-    fixture = TestBed.createComponent(PasoCuatroComponent);
-    component = fixture.componentInstance;
-    fixture.detectChanges();
+  beforeEach(() => {
+    component = new PasoCuatroComponent();
   });
 
-  it('should create', () => {
+  it('should create the component', () => {
     expect(component).toBeTruthy();
+  });
+
+  it('should have firma as empty string by default', () => {
+    expect(component.firma).toBe('');
+  });
+
+  it('should set firma when obtieneFirma is called', () => {
+    component.obtieneFirma('test-firma');
+    expect(component.firma).toBe('test-firma');
   });
 });

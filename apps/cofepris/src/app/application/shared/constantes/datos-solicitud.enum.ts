@@ -208,12 +208,12 @@ export const PRODUCTO_TABLA = [
   {
     encabezado: 'Unidad de medida de comercialización (UMC)',
     clave: (ele: TablaMercanciasDatos): string | undefined =>
-      ele.unidadMedidaComercializacion, // Reemplaza 'ele.unidadMedidaComercializacion' con la clave correcta
+      ele.cantidadUMC, // Reemplaza 'ele.unidadMedidaComercializacion' con la clave correcta
     orden: 10,
   },
   {
     encabezado: 'Cantidad UMC',
-    clave: (ele: TablaMercanciasDatos): string => ele.cantidadUMC, // Reemplaza 'ele.cantidadUMC' con la clave correcta
+    clave: (ele: TablaMercanciasDatos): string | undefined => ele.cantidadUmcValor, // Reemplaza 'ele.cantidadUMC' con la clave correcta
     orden: 11,
   },
   {
@@ -873,7 +873,7 @@ export const SIN_ACCION_AL_INICIAR = [260304];
  * @type {number[]}
  */
 export const PROCEDIMIENTOS_PARA_COLONIA_O_EQUIVALENTE = [
-  260207, 260208, 260209, 260219, 260214,
+  260207, 260208, 260209, 260219, 260214,260904
 ];
 
 /**

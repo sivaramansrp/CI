@@ -56,6 +56,10 @@ export class TableComponent implements OnInit, OnChanges {
   * Si no se pasa ningún valor desde el componente padre, tomará el valor predeterminado como verdadero
   */
   @Output() seleccionCambio = new EventEmitter<boolean>(); 
+  /**
+   * Emite el cuerpo de la tabla actualizado cuando cambia la selección
+   */
+  @Output() bodyChange = new EventEmitter<TableBodyData[]>();
   
 
   /**
@@ -142,6 +146,7 @@ export class TableComponent implements OnInit, OnChanges {
     item ? { ...item, selected: CHECKED } : item
   );
   this.emitirCambioSeleccion();
+  this.bodyChange.emit(this.tableData.tableBody);
 }
 
 /**
@@ -161,6 +166,7 @@ onRowSelectionChange(row?: TableBodyData): void {
 private emitirCambioSeleccion(): void {
   const HAS_SELECTION = this.tableData.tableBody?.some(item => item?.selected) || false;
   this.seleccionCambio.emit(HAS_SELECTION);
+  this.bodyChange.emit(this.tableData.tableBody);
 }
  
 }

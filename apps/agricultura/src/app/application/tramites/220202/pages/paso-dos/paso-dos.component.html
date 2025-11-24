@@ -11,6 +11,7 @@
     (cargaRealizada)="documentosCargados($event)"
     (activarBotonCargaArchivos)="manejarEventoCargaDocumento($event)"
     (cargaEnProgreso)="onCargaEnProgreso($event)"
+    [idSolicitud]="this.idSolicitud"
     [esDocumentosAgricultura]="true">
   </carga-documento>
 </div>

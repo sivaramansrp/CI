@@ -1,6 +1,6 @@
-import { Catalogo, ConsultaioQuery, TablaDinamicaComponent, TablaSeleccion, TableComponent, TituloComponent } from '@ng-mf/data-access-user';
+import { Catalogo, ConsultaioQuery, REGEX_LLAVE_DE_PAGO_DE_DERECHO, TablaDinamicaComponent, TablaSeleccion, TableComponent, TituloComponent } from '@ng-mf/data-access-user';
 import { Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
-import { ACUSE_DATOS, FRACCIONES_TABLEDOS_TABLE_BODY_DATA, OPCIONES_DE_BOTON_DE_RADIO, tableDatos } from '../../constantes/datos-del-tramite.enum';
+import { ACUSE_DATOS, AgentestableDatos, FRACCIONES_TABLEDOS_TABLE_BODY_DATA, OPCIONES_DE_BOTON_DE_RADIO, tableDatos } from '../../constantes/datos-del-tramite.enum';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Solicitud105State, Tramite105Store, } from '../../estados/tramite105.store';
 import { Subject, Subscription, map, takeUntil } from 'rxjs';
@@ -27,6 +27,18 @@ interface TableBodyData {
 
 
 export class DatosDelTramiteUnoComponent implements OnInit, OnDestroy {
+
+  /**
+   * Limita el campo codigoPostal a 12 dígitos y actualiza el valor en el formulario.
+   */
+  onCodigoPostalInput(event: Event): void {
+    const input = event.target as HTMLInputElement;
+    if (input && input.value.length > 12) {
+      input.value = input.value.slice(0, 12);
+    }
+    this.datosDelTramite.get('codigoPostal')?.setValue(input.value);
+    this.setValoresStore(this.datosDelTramite, 'codigoPostal', 'setCodigoPostal');
+  }
 
   /**
    * Constructor de la clase DatosDelTramiteUnoComponent.
@@ -358,7 +370,7 @@ export class DatosDelTramiteUnoComponent implements OnInit, OnDestroy {
       localidad: [{ value: this.solicitudState?.localidad, disabled: true }, Validators.required],
       colonia: [{ value: this.solicitudState?.colonia, disabled: true }],
       entidadFederativaDos: [{ value: this.solicitudState?.entidadFederativaDos, disabled: true }],
-      calle: [{ value: this.solicitudState?.calle, disabled: true }, Validators.required],
+      calle: [{ value: this.solicitudState?.calle, disabled: true }, [Validators.required,Validators.pattern(REGEX_LLAVE_DE_PAGO_DE_DERECHO)]],
       numeroExterior: [{ value: this.solicitudState?.numeroExterior, disabled: true }, Validators.required],
       numeroInterior: [{ value: this.solicitudState?.numeroInterior, disabled: true }],
       ubicacionDescripcion: [{ value: this.solicitudState?.ubicacionDescripcion, disabled: true }],
@@ -604,10 +616,16 @@ export class DatosDelTramiteUnoComponent implements OnInit, OnDestroy {
    */
   agregarMercancias(): void {
     if (!this.agregarForm.valid) {
+      // Mark all fields as touched to show validation errors
+      Object.values(this.agregarForm.controls).forEach(control => {
+        control.markAsTouched();
+      });
       return;
-    }this.agregarForm.get('descripcion')?.enable();
+    }
+    this.agregarForm.get('descripcion')?.enable();
     const MERCANCIA = this.agregarForm.value;
-    this.mercanciTablaDatos.push(MERCANCIA)
+    this.mercanciTablaDatos.push(MERCANCIA);
+    this.mercanciTablaDatos = [...this.mercanciTablaDatos];
     this.agregarForm.reset();
     this.cerrarModal();
   }

@@ -6,8 +6,11 @@
  */
 import { ASIGNACION, TEXTOS_BUSCAR } from '../../constants/asignacion.enum';
 import { AVISO_CONTRNIDO, DatosPasos, WizardComponent } from '@ng-mf/data-access-user';
-import { Component, ViewChild } from '@angular/core';
+import { Component, EventEmitter, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { Subject, map, takeUntil } from 'rxjs';
+import { Tramite120404State, Tramite120404Store } from '../../estados/store/tramite120404.store';
 import { ListaPasosWizard } from '@ng-mf/data-access-user';
+import { Tramite120404Query } from '../../estados/queries/tramite120404.query';
 
 interface AccionBoton {
   /**
@@ -25,7 +28,7 @@ interface AccionBoton {
   templateUrl: './asignciondirecta-page.component.html',
   styleUrls: ['./asignciondirecta-page.component.scss'],
 })
-export class AsignciondirectaPageComponent {
+export class AsignciondirectaPageComponent implements OnInit, OnDestroy {
   /**
    * Lista de pasos del wizard.
    */
@@ -91,6 +94,55 @@ export class AsignciondirectaPageComponent {
  * - Reutilizar el contenido del aviso en distintos componentes.
  */
 avisoContrnido = AVISO_CONTRNIDO.aviso;
+
+/** Estado actual del trámite 120404 que contiene toda la información de la solicitud. */
+public solicitudState!: Tramite120404State;
+
+/**
+   * Evento que se emite para cargar archivos.
+   * Este evento se utiliza para notificar a otros componentes que se debe realizar una acción de
+   */
+  cargarArchivosEvento = new EventEmitter<void>();
+
+/**
+ * Indica si el botón para cargar archivos está habilitado.
+ */
+  activarBotonCargaArchivos: boolean = false;
+
+   /**
+ * Indica si la sección de carga de documentos está activa.
+ * Se inicializa en true para mostrar la sección de carga de documentos al inicio.
+ */
+  seccionCargarDocumentos: boolean = true;
+
+  /**
+   * Indica si la carga de archivos está en progreso.
+   */
+  cargaEnProgreso: boolean = true;
+
+  /** Subject para notificar la destrucción del componente. */
+  private destroyNotifier$: Subject<void> = new Subject();
+
+  constructor(
+    private store: Tramite120404Store,
+    private query: Tramite120404Query
+  ) {
+    //
+  }
+
+ /**
+ * @method ngOnInit
+ * @description
+ * Método de inicialización del componente `AsignciondirectaPageComponent`.
+ */
+  ngOnInit(): void {
+    this.query.selectTramite120404$.pipe(
+      takeUntil(this.destroyNotifier$),
+      map((data) => {
+        this.solicitudState = data;
+      })
+    ).subscribe();
+  }
 
   /**
    * Método para manejar el evento de intento de búsqueda desde componentes hijos.
@@ -209,5 +261,51 @@ avisoContrnido = AVISO_CONTRNIDO.aviso;
   private validateStep3(): boolean {
     const ISVALID = true;
      return ISVALID;
+  }
+
+      /**
+   * Emite un evento para cargar archivos.
+   * {void} No retorna ningún valor.
+   */
+  onClickCargaArchivos(): void {
+    this.cargarArchivosEvento.emit();
+  }
+
+/**
+  * Método para manejar el evento de carga de documentos.
+  * Actualiza el estado del botón de carga de archivos.
+  *  carga - Indica si la carga de documentos está activa o no.
+  * {void} No retorna ningún valor.
+  */
+  manejaEventoCargaDocumentos(carga: boolean): void {
+    this.activarBotonCargaArchivos = carga;
+  }
+
+  /**
+   * Método para manejar el evento de carga de documentos.
+   * Actualiza el estado de la sección de carga de documentos.
+   *  cargaRealizada - Indica si la carga de documentos se realizó correctamente.
+   * {void} No retorna ningún valor.
+   */
+  cargaRealizada(cargaRealizada: boolean): void {
+    this.seccionCargarDocumentos = cargaRealizada ? false : true;
+  }
+
+  /** Actualiza el estado de carga en progreso. */
+  onCargaEnProgreso(carga: boolean): void {
+    this.cargaEnProgreso = carga;
+  }
+
+  /**
+   * Método del ciclo de vida de Angular que se llama justo antes de que el componente sea destruido.
+   *
+   * Este método emite un valor a través del observable `destroyNotifier$` para notificar a los suscriptores
+   * que el componente está siendo destruido, y luego completa el observable para liberar recursos.
+   *
+   * @returns {void} No retorna ningún valor.
+   */
+  ngOnDestroy(): void {
+    this.destroyNotifier$.next();
+    this.destroyNotifier$.complete();
   }
 }
