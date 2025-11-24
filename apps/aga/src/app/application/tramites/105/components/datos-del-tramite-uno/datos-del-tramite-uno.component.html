@@ -257,3 +257,8 @@
     </div>
   </div>
 </div>
+<lib-notificaciones
+  *ngIf="nuevaNotificacion"
+  [notificacionInput]="nuevaNotificacion"
+  (confirmacionModal)="aceptarConfirmacion($event)">
+</lib-notificaciones>
