@@ -1,14 +1,11 @@
-import { Tramite130217State, Tramite130217Store } from '../../../estados/tramites/tramite130217.store';
 import { Catalogo, CatalogoServices, JSONResponse } from '@ng-mf/data-access-user';
 import { Observable, map } from 'rxjs';
-import { BaseResponse } from '@libs/shared/data-access-user/src/core/models/shared/base-response.model';
+import { Tramite130217State, Tramite130217Store } from '../../../estados/tramites/tramite130217.store';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { MostrarPartidas } from '@libs/shared/data-access-user/src';
-import { Tramite130217Query } from '../../../estados/queries/tramite130217.query';
-import { PartidasDeLaMercanciaModelo } from '../../../shared/models/partidas-de-la-mercancia.model';
-import { ProductoResponse } from '../../../shared/constantes/vehiculos-adaptados.enum';
 import { PROC_130217 } from '../servers/api-route';
+import { ProductoResponse } from '../../../shared/constantes/vehiculos-adaptados.enum';
+import { Tramite130217Query } from '../../../estados/queries/tramite130217.query';
 
 @Injectable({
   providedIn: 'root',

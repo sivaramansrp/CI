@@ -5,7 +5,9 @@
 import { Catalogo, ConsultaioQuery, REGEX_NUMERO_DECIMAL_ENTERO, REG_X } from '@ng-mf/data-access-user';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { ID_PROCEDIMIENTO, OPINIONES_SOLICITUD, PRODUCTO_OPCION } from '../../enums/accion-botton.enum';
 import { Subject, map, takeUntil } from 'rxjs';
+import { Tramite130217State, Tramite130217Store } from '../../../../estados/tramites/tramite130217.store';
 import { ConfiguracionColumna } from '@ng-mf/data-access-user';
 import { ControlPermisosPreviosExportacionService } from '../../services/control-permisos-previos-exportacion.service';
 import { HttpClient } from '@angular/common/http';
@@ -15,8 +17,6 @@ import { ProductoOpción } from '../../../../shared/constantes/vehiculos-adaptad
 import { TEXTOS } from '../../../../shared/constantes/representacion-federal.enum';
 import { TablaSeleccion } from '@libs/shared/data-access-user/src/core/enums/tabla-seleccion.enum';
 import { Tramite130217Query } from '../../../../estados/queries/tramite130217.query';
-import { Tramite130217State, Tramite130217Store } from '../../../../estados/tramites/tramite130217.store';
-import { ID_PROCEDIMIENTO, OPINIONES_SOLICITUD, PRODUCTO_OPCION } from '../../enums/accion-botton.enum';
 
 /**
  * Componente para gestionar la solicitud de mercancías.
@@ -119,7 +119,9 @@ export class SolicitudComponent implements OnInit, OnDestroy {
       required: true,
       controlName: 'clasificacion',
     },
-  ];  /**
+  ];
+  
+  /**
    * Matriz de catálogos adicionales para el formulario.
    */
   catalogosArray: Catalogo[][] = [[], []];
@@ -474,7 +476,8 @@ export class SolicitudComponent implements OnInit, OnDestroy {
     if (this.filaSeleccionada) {
       this.tramite130217Store.actualizarEstado({mostrarTabla:true});
       this.tramite130217Store.actualizarEstado({filaSeleccionada:this.filaSeleccionada});
-    }  }
+    }
+  }
 
   /**
    * Valida todos los formularios y la selección de filas.

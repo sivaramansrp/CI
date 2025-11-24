@@ -2,13 +2,11 @@ import { AlertComponent, BtnContinuarComponent, CrosslistComponent, InicioSesion
 import { CommonModule } from '@angular/common';
 import { ControlPermisosPreviosExportacionComponent } from './pages/control-permisos-previos-exportacion/control-permisos-previos-exportacion.component';
 import { ControlPermisosPreviosExportacionRoutingModule } from './control-permisos-previos-exportacion-routing.module';
-import { DatosDeLaMercanciaComponent } from '../../shared/components/datos-de-la-mercancia/datos-de-la-mercancia.component';
 import { DatosDelTramiteComponent } from '../../shared/components/datos-del-tramite/datos-del-tramite.component';
+import { DatosDeLaMercanciaComponent } from '../../shared/components/datos-de-la-mercancia/datos-de-la-mercancia.component';
 import { NgModule } from '@angular/core';
 import { PaisProcendenciaComponent } from '../../shared/components/pais-procendencia/pais-procendencia.component';
 import { PartidasDeLaMercanciaComponent } from '../../shared/components/partidas-de-la-mercancia/partidas-de-la-mercancia.component';
-import { PasoDosComponent } from './pages/paso-dos/paso-dos.component';
-import { PasoTresComponent } from './pages/paso-tres/paso-tres.component';
 import { PasoUnoComponent } from './pages/paso-uno/paso-uno.component';
 import { ReactiveFormsModule } from '@angular/forms';
 import { RepresentacionComponent } from '../../shared/components/representacion/representacion.component';
@@ -30,8 +28,6 @@ import { ToastrService } from 'ngx-toastr';
     InputRadioComponent,
     SolicitanteComponent,
     ReactiveFormsModule,
-    PasoTresComponent,
-    PasoDosComponent,
     DatosDelTramiteComponent,
     DatosDeLaMercanciaComponent,
     PartidasDeLaMercanciaComponent ,

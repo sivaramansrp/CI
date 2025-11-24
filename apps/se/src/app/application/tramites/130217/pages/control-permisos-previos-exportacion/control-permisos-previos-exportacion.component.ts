@@ -2,16 +2,16 @@
  * Importamos los módulos necesarios y constantes.
  * Estos incluyen datos relacionados con el asistente de pasos (wizard) y las enumeraciones específicas de la aplicación. 
  */
-import { Component, EventEmitter, ViewChild } from '@angular/core';
-import { DatosPasos, ListaPasosWizard, Notificacion, WizardComponent, JSONResponse, doDeepCopy, esValidObject, getValidDatos } from '@libs/shared/data-access-user/src';
 import { AccionBoton, FORM_ERROR_ALERT } from '../../enums/accion-botton.enum';
-import { PASOS_EXPORTACION, MSG_REGISTRO_EXITOSO, CALCULATE_ALERT_ERROR } from '../../constants/control-permisos-previos-exportacion.enum';
-import { Tramite130217State, Tramite130217Store } from '../../../../estados/tramites/tramite130217.store';
-import { PasoUnoComponent } from '../paso-uno/paso-uno.component';
-import { Tramite130217Query } from '../../../../estados/queries/tramite130217.query';
-import { ToastrService } from 'ngx-toastr';
+import { CALCULATE_ALERT_ERROR, MSG_REGISTRO_EXITOSO, PASOS_EXPORTACION } from '../../constants/control-permisos-previos-exportacion.enum';
+import { Component, EventEmitter, OnDestroy, ViewChild } from '@angular/core';
+import { DatosPasos, JSONResponse, ListaPasosWizard, Notificacion, WizardComponent, doDeepCopy, esValidObject, getValidDatos } from '@libs/shared/data-access-user/src';
 import { Subject, take, takeUntil } from 'rxjs';
+import { Tramite130217State, Tramite130217Store } from '../../../../estados/tramites/tramite130217.store';
 import { ControlPermisosPreviosExportacionService } from '../../services/control-permisos-previos-exportacion.service';
+import { ToastrService } from 'ngx-toastr';
+import { Tramite130217Query } from '../../../../estados/queries/tramite130217.query';
+import { PasoUnoComponent } from '../paso-uno/paso-uno.component';
 
  /**
    * Selector para usar este componente dentro de otras partes de la aplicación.
@@ -21,7 +21,7 @@ import { ControlPermisosPreviosExportacionService } from '../../services/control
   selector: 'app-control-permisos-previos-exportacion',
   templateUrl: './control-permisos-previos-exportacion.component.html',
 })
-export class ControlPermisosPreviosExportacionComponent {
+export class ControlPermisosPreviosExportacionComponent implements OnDestroy {
   /**
    * Lista de pasos requeridos para el asistente,
    * inicializados desde una constante predefinida.
