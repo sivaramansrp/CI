@@ -1,26 +1,24 @@
 /* Importación de componentes, servicios, formularios y datos necesarios para el manejo del trámite 130106 */
 /* Incluye componentes UI, validaciones, operadores RxJS, estados y datos JSON relacionados */
-import { Catalogo, NotificacionesComponent, ConfiguracionColumna, REGEX_DECIMAL, REGEX_NUMERO_ENTERO_POSITIVO, REGEX_NUMERO_ENTERO, REGEX_NUMERO_ENTERO_14_3 } from '@libs/shared/data-access-user/src';
-import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { AbstractControl, FormBuilder, FormGroup, ReactiveFormsModule, ValidationErrors, Validators } from '@angular/forms';
-import { Subject, forkJoin, map, takeUntil } from 'rxjs';
-import { DatosDelTramiteComponent } from "../../../../shared/components/datos-del-tramite/datos-del-tramite.component";
-import { DatosDeLaMercanciaComponent } from "../../../../shared/components/datos-de-la-mercancia/datos-de-la-mercancia.component";
-import { PaisProcendenciaComponent } from "../../../../shared/components/pais-procendencia/pais-procendencia.component";
-import { RepresentacionComponent } from "../../../../shared/components/representacion/representacion.component";
+import { Catalogo, ConfiguracionColumna, NotificacionesComponent, REGEX_DECIMAL,REGEX_NUMERO_ENTERO, REGEX_NUMERO_ENTERO_14_3, REGEX_NUMERO_ENTERO_POSITIVO, } from '@libs/shared/data-access-user/src';
+import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { ConsultaioQuery, Notificacion } from '@ng-mf/data-access-user';
-import { HttpClient } from '@angular/common/http';
 import { DATOS_INPUT_FIELDS, ProductoOpción } from '../../../../shared/constantes/vehiculos-adaptados.enum';
-import { TEXTOS } from '../../../../shared/constantes/representacion-federal.enum';
-import { TablaSeleccion } from '@libs/shared/data-access-user/src/core/enums/tabla-seleccion.enum';
+import { Solicitud130106State, Tramite130106Store } from '../../../../estados/tramites/tramite130106.store';
+import { Subject, map, takeUntil } from 'rxjs';
+import { DatosDeLaMercanciaComponent } from "../../../../shared/components/datos-de-la-mercancia/datos-de-la-mercancia.component";
+import { DatosDelTramiteComponent } from "../../../../shared/components/datos-del-tramite/datos-del-tramite.component";
 import { PARTIDASDELAMERCANCIA_TABLA } from '../../../../shared/constantes/partidas-de-la-mercancia.enum';
+import { PaisProcendenciaComponent } from "../../../../shared/components/pais-procendencia/pais-procendencia.component";
 import { PartidasDeLaMercanciaComponent } from '../../../../shared/components/partidas-de-la-mercancia/partidas-de-la-mercancia.component';
 import { PartidasDeLaMercanciaModelo } from '../../../../shared/models/partidas-de-la-mercancia.model';
 import PartidasdelaTable from '@libs/shared/theme/assets/json/130202/partidas-de-la.json';
-import unidadOptions from '@libs/shared/theme/assets/json/130202/unidad_da.json';
-import { Solicitud130106State, Tramite130106Store } from '../../../../estados/tramites/tramite130106.store';
-import { Tramite130106Query } from '../../../../estados/queries/tramite130106.query';
+import { RepresentacionComponent } from "../../../../shared/components/representacion/representacion.component";
 import { Solocitud130106Service } from '../../service/service130106.service';
+import { TEXTOS } from '../../../../shared/constantes/representacion-federal.enum';
+import { TablaSeleccion } from '@libs/shared/data-access-user/src/core/enums/tabla-seleccion.enum';
+import { Tramite130106Query } from '../../../../estados/queries/tramite130106.query';
 /**
  * Componente Angular que representa la sección "Datos de la solicitud" del trámite 130106.
  * 
@@ -126,11 +124,12 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
   /**
    * @description Campos de entrada configurables para detalles adicionales.
    */
-
   datosInputFields = DATOS_INPUT_FIELDS;
 
+  // Catálogo de regímenes disponibles.
   catalogoRegimenes: Catalogo[] = [];
 
+  // Catálogo de clasificaciones de régimen disponibles.
   catalogoClasificacionRegimen: Catalogo[] = [];
   /**
    * @description Matriz de catálogos adicionales para el formulario.

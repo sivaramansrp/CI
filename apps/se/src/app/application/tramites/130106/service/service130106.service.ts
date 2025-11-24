@@ -1,12 +1,11 @@
+import { Catalogo, CatalogoServices, JSONResponse } from '@libs/shared/data-access-user/src';
+import { Observable, map } from 'rxjs';
+import { Solicitud130106State, Tramite130106Store } from '../../../estados/tramites/tramite130106.store';
 import { ENVIRONMENT } from '../../../../environments/environment';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { map, Observable } from 'rxjs';
-
-import { Solicitud130106State, Tramite130106Store } from '../../../estados/tramites/tramite130106.store';
-import { Catalogo, CatalogoServices, JSONResponse } from '@libs/shared/data-access-user/src';
-import { ProductoResponse } from '../../../shared/constantes/vehiculos-adaptados.enum';
 import { PROC_130106 } from '../servers/api-routes';
+import { ProductoResponse } from '../../../shared/constantes/vehiculos-adaptados.enum';
 import { Tramite130106Query } from '../../../estados/queries/tramite130106.query';
 
 @Injectable({

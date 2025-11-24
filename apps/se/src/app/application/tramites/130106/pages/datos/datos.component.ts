@@ -8,8 +8,8 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { ConsultaioQuery, ConsultaioState, SolicitanteComponent } from '@ng-mf/data-access-user';
 import { Subject, map, takeUntil } from 'rxjs';
-import { Solocitud130106Service } from '../../service/service130106.service';
 import { DatosDeLaSolicitudComponent } from '../../components/datos-de-la-solicitud/datos-de-la-solicitud.component';
+import { Solocitud130106Service } from '../../service/service130106.service';
 
 /**
  * compo doc
@@ -71,7 +71,7 @@ export class DatosComponent implements OnInit {
       this.esDatosRespuesta = true;
     }
   }
-  
+
   /**
    * Método para actualizar el índice del subtítulo seleksccionado.
    * 

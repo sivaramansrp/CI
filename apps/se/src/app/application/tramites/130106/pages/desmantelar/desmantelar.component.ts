@@ -1,17 +1,16 @@
-import { AVISO, DatosPasos, doDeepCopy, esValidObject, getValidDatos, JSONResponse, Notificacion, PASOS } from '@libs/shared/data-access-user/src';
-import { Component, ViewChild } from '@angular/core';
-import { AccionBoton } from '@libs/shared/data-access-user/src/core/models/140103/cancelacion.model';
-import { ListaPasosWizard } from '@libs/shared/data-access-user/src';
-import { OCTA_TEMPO } from '@libs/shared/data-access-user/src/core/services/130102/octava-temporal.enum';
-import { WizardComponent } from '@libs/shared/data-access-user/src';
-import { Solicitud130106State, Tramite130106Store } from '../../../../estados/tramites/tramite130106.store';
+import { AVISO, DatosPasos, JSONResponse, Notificacion, PASOS, doDeepCopy, esValidObject, getValidDatos,} from '@libs/shared/data-access-user/src';
 import { CALCULATE_ALERT_ERROR, FORM_ERROR_ALERT, MSG_REGISTRO_EXITOSO } from '../../constantes/desmantelar.enum';
-import { Solocitud130106Service } from '../../service/service130106.service';
-import { take } from 'rxjs';
+import { Component, ViewChild } from '@angular/core';
+import { Solicitud130106State, Tramite130106Store } from '../../../../estados/tramites/tramite130106.store';
+import { AccionBoton } from '@libs/shared/data-access-user/src/core/models/140103/cancelacion.model';
 import { DatosComponent } from '../datos/datos.component';
 import { ListaPasoWizard } from '../../../110222/models/peru-certificado.module';
+import { ListaPasosWizard } from '@libs/shared/data-access-user/src';
+import { OCTA_TEMPO } from '@libs/shared/data-access-user/src/core/services/130102/octava-temporal.enum';
+import { Solocitud130106Service } from '../../service/service130106.service';
 import { ToastrService } from 'ngx-toastr';
-
+import { WizardComponent } from '@libs/shared/data-access-user/src';
+import { take } from 'rxjs';
 
 
 @Component({
@@ -177,10 +176,10 @@ export class DesmantelarComponent {
    * La llamada al servicio actualmente está comentada.
    */
   guardar(item: Solicitud130106State, e: AccionBoton): Promise<JSONResponse> {
-    if (!this.solicitudState) {
-      console.error('solicitudState is undefined in guardar()');
-      return Promise.reject('solicitudState is undefined');
-    }
+    // if (!this.solicitudState) {
+    //   console.error('solicitudState is undefined in guardar()');
+    //   return Promise.reject('solicitudState is undefined');
+    // }
     const MERCANCIA = this.solocitud130106Service.getPayloadDatos(item);
     const PAYLOAD = {
       "tipoDeSolicitud": "guardar",
