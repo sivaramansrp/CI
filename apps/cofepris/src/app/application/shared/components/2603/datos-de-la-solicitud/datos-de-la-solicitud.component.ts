@@ -12,7 +12,7 @@ import {
   Validators
 } from '@angular/forms';
 
-import { ConsultaioState, REGEX_VALID_UMC, SOLO_REGEX_NUMEROS } from '@ng-mf/data-access-user';
+import { ConsultaioState, REGEX_VALID_UMC, REG_X, SOLO_REGEX_NUMEROS } from '@ng-mf/data-access-user';
 
 import {
   Catalogo,
@@ -234,6 +234,14 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
       if (DENOMINACION_CONTROL) {
         DENOMINACION_CONTROL.enable();
         DENOMINACION_CONTROL.updateValueAndValidity();
+      }
+    });
+    // Siempre mantener estos campos deshabilitados en el formulario de representante legal
+    ['nombreORazon', 'apellidoPaterno', 'apellidoMaterno'].forEach(campo => {
+      const CONTROL_REPRESENTANTE = this.representanteLegalForm?.get(campo);
+      if (CONTROL_REPRESENTANTE) {
+        CONTROL_REPRESENTANTE.disable();
+        CONTROL_REPRESENTANTE.updateValueAndValidity();
       }
     });
   }
@@ -557,6 +565,13 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
   mostrarEspecifique = false;
 
   /**
+   * Devuelve todos los valores del formulario de representante legal, incluyendo los campos deshabilitados.
+   */
+  public getRepresentanteLegalFormData(): Record<string, unknown> {
+    return this.representanteLegalForm.getRawValue() as Record<string, unknown>;
+  }
+
+  /**
    * Constructor para el componente DatosDeLaSolicitudComponent.
    */
   constructor(
@@ -571,14 +586,15 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
   }
 
   /**
-   * Gancho del ciclo de vida que se llama después de que Angular ha inicializado todas las propiedades enlazadas a datos de un componente.
-   * 
-   * Este método realiza las siguientes acciones:
-   * - Se suscribe al observable `selectSolicitud$` de `tramite2603Query` para actualizar la propiedad `solicitudState`
-   *   con el estado más reciente de la sección, asegurando que la suscripción se limpie adecuadamente utilizando `takeUntil` con `destroyNotifier$`.
-   * - Inicializa los datos de las tablas y catálogos llamando a `inicializarTablaYCatalogoDatos`.
-   * - Crea formularios para "Establecimiento", "Representante Legal", "SCIAN" y "Mercancías" invocando sus respectivos métodos:
-   *   `crearElstablecimientoForm`, `crearRepresentanteLegalForm`, `cerrarSCIANForm` y `cerrarMercanciasForm`.
+   * Método del ciclo de vida Angular que se ejecuta tras la inicialización de las propiedades enlazadas del componente.
+   *
+   * Realiza la configuración inicial del componente, incluyendo:
+   * - Suscripción a los catálogos clave y estado mediante los servicios correspondientes, asegurando la limpieza de suscripciones con `takeUntil` y `destroyNotifier$`.
+   * - Inicialización de variables y banderas de estado.
+   * - Llamada a métodos para inicializar formularios y catálogos: `inicializarFormulario`, `inicializarTablaYCatalogoDatos`, `crearElstablecimientoForm`, `crearRepresentanteLegalForm`, `cerrarSCIANForm`, `cerrarMercanciasForm`, `deshabilitarFormularios`, y `crearProductoTerminadoForm`.
+   * - Refuerzo del estado deshabilitado de los campos `nombreORazon`, `apellidoPaterno` y `apellidoMaterno` en el formulario de representante legal.
+   *
+   * @returns {void}
    */
   ngOnInit(): void {
     // Cargar claveCatalogo desde servicio con takeUntil
@@ -615,6 +631,17 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
     this.cerrarMercanciasForm();
     this.deshabilitarFormularios();
     this.crearProductoTerminadoForm();
+
+    // Refuerza el estado deshabilitado de los campos de representante legal después de la creación del formulario
+    if (this.representanteLegalForm) {
+      ['nombreORazon', 'apellidoPaterno', 'apellidoMaterno'].forEach(campo => {
+        const CONTROL_REPRESENTANTE = this.representanteLegalForm.get(campo);
+        if (CONTROL_REPRESENTANTE) {
+          CONTROL_REPRESENTANTE.disable();
+          CONTROL_REPRESENTANTE.updateValueAndValidity();
+        }
+      });
+    }
   }
 
   /**
@@ -644,7 +671,7 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
     this.productoTerminadoForm = this.fb.group({
       nombre: ['', Validators.required],
       descripcion: ['', Validators.required],
-      cantidad: ['', [Validators.required, Validators.pattern(/^[0-9]+$/)]],
+      cantidad: ['', [Validators.required, Validators.pattern(REG_X.SOLO_NUMEROS)]],
     });
   }
 
@@ -984,6 +1011,14 @@ public crearElstablecimientoForm(): void {
       nombreORazon: [{ value: this.solicitudState.nombreORazon, disabled: true }, Validators.required],
       apellidoPaterno: [{ value: this.solicitudState.apellidoPaterno, disabled: true }, Validators.required],
       apellidoMaterno: [{ value: this.solicitudState.apellidoMaterno, disabled: true }],
+    });
+    // Refuerza el estado deshabilitado por defecto
+    ['nombreORazon', 'apellidoPaterno', 'apellidoMaterno'].forEach(campo => {
+      const CONTROL_REPRESENTANTE = this.representanteLegalForm.get(campo);
+      if (CONTROL_REPRESENTANTE) {
+        CONTROL_REPRESENTANTE.disable();
+        CONTROL_REPRESENTANTE.updateValueAndValidity();
+      }
     });
   }
 /**
