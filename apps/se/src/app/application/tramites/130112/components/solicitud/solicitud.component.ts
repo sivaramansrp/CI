@@ -119,12 +119,12 @@ export class SolicitudComponent implements OnInit, OnDestroy {
    *  Catálogo con valores de fracción arancelaria.
    */
 
-  fraccionCatalogo: Catalogo[] = fractionValues;
+  fraccionCatalogo: Catalogo[] = [];
 
   /**
    *  Catálogo con opciones de unidad de medida.
    */
-  unidadCatalogo: Catalogo[] = unidadOptions;
+  unidadCatalogo: Catalogo[] = [];
 
   /**
    *  Campos de entrada configurables para detalles adicionales.
@@ -229,13 +229,38 @@ export class SolicitudComponent implements OnInit, OnDestroy {
    */
   public nuevaNotificacion!: Notificacion;
 
+  
+  /**
+   * Arreglo que contiene los elementos del catálogo de clasificación de régimen.
+   * Cada elemento es de tipo `Catalogo` y representa una opción disponible para la selección en el formulario de solicitud.
+   */
+  catalogoClasificacionRegimen: Catalogo[] = [];
+
+  /**
+   * Arreglo que contiene los diferentes regímenes disponibles en el catálogo.
+   * Cada elemento es de tipo `Catalogo`.
+   * 
+   * @type {Catalogo[]}
+   */
+  catalogoRegimenes: Catalogo[] = [];
+
+  /**
+   *  jest.spyOnIndica si las partidas seleccionadas son inválidas. 
+   */
+  isInvalidaPartidas: boolean = false;
 
   /**
    * Referencia al componente `PartidasDeLaMercanciaComponent` dentro de la vista.
    * Permite acceder a las propiedades y métodos públicos del componente hijo desde el componente padre.
    */
-  @ViewChild(PartidasDeLaMercanciaComponent)
-  partidasDeLaMercanciaComponent!: PartidasDeLaMercanciaComponent;
+  @ViewChild(PartidasDeLaMercanciaComponent) partidasDeLaMercanciaComponent!: PartidasDeLaMercanciaComponent;
+
+  /**
+   * Arreglo que contiene las fracciones y descripciones de las partidas de la mercancía.
+   * Cada elemento es un objeto del tipo `Catalogo`, que representa una opción seleccionable
+   * en el catálogo correspondiente a las partidas de mercancía.
+   */
+  fraccionDescripcionPartidasDeLaMercancia: Catalogo[] = []
 
   /**
    * Constructor del componente.
@@ -267,18 +292,20 @@ export class SolicitudComponent implements OnInit, OnDestroy {
    */
   ngOnInit(): void {
     this.tramite130112Store.actualizarEstado({
-    solicitud: 'Inicial',
-    producto: 'Nuevo',
-    defaultSelect: 'Inicial',
-    defaultProducto: 'Nuevo'
+      solicitud: 'TISOL.I',
+      producto: 'CONDMER.N',
+      defaultSelect: 'TISOL.I',
+      defaultProducto: 'CONDMER.N'
   });
 
     this.inicializarEstadoFormulario();
     this.opcionesDeBusqueda();
     this.fetchEntidadFederativa();
-    this.fetchRepresentacionFederal();
     this.listaDePaisesDisponibles();
-    this.listaDeFraccionDescripcion();
+    this.getRegimenes();
+    this.getFraccionArancelaria();
+    this.getUMTCatalogo();
+    this.enCambioDeBloque(105);
     this.tramite130112Query.select(state => state.tableBodyData)
     .pipe(takeUntil(this.destroyed$))
     .subscribe((data) => {
@@ -460,7 +487,7 @@ export class SolicitudComponent implements OnInit, OnDestroy {
           this.opcionesSolicitud = data.options;
           this.tramite130112Store.actualizarEstado({
             solicitud: data.options[0]?.value || '',
-            defaultSelect: data.defaultSelect || 'Inicial',
+            defaultSelect: data.defaultSelect || 'TISOL.I',
           });
         },
         error: (error) =>
@@ -474,8 +501,8 @@ export class SolicitudComponent implements OnInit, OnDestroy {
         next: (data) => {
           this.productoOpciones = data.options;
           this.tramite130112Store.actualizarEstado({
-            producto: data.options[0]?.value || 'Nuevo',
-            defaultProducto: data.options[0]?.value || 'Nuevo',
+            producto: data.options[0]?.value || 'CONDMER.N',
+            defaultProducto: data.options[0]?.value || 'CONDMER.N',
           });
         },
       });
@@ -626,17 +653,66 @@ this.tramite130112Store.actualizarEstado({
       });
     }
   }
+
   /**
    * Método para obtener la lista de entidades federativas.
    */
   fetchEntidadFederativa(): void {
     this.importacionMaterialDeInvestigacionCientificaService
-      .getEntidadFederativa()
+      .getEntidadesFederativasCatalogo(this.idProcedimiento.toString())
       .pipe(takeUntil(this.destroyed$))
       .subscribe((data) => {
         this.entidadFederativa = data;
-      });
+    });
   }
+
+  /**
+   * Obtiene los catálogos de regímenes y clasificaciones de régimen desde el servicio.
+   * Actualiza las propiedades del componente con los datos obtenidos.
+   */
+  getRegimenes(): void {
+    this.importacionMaterialDeInvestigacionCientificaService.getRegimenes('130112').subscribe((data) => {
+      this.catalogoRegimenes = data;
+      this.getClasificacionRegimen();
+    });
+  }
+
+  /**
+   * Obtiene el catálogo de clasificaciones de régimen desde el servicio.
+   * Actualiza las propiedades del componente con los datos obtenidos.
+   */
+  getClasificacionRegimen(): void {
+    this.importacionMaterialDeInvestigacionCientificaService.getRegimenClasificacion('130112', "01").subscribe((data) => {
+      this.catalogoClasificacionRegimen = data;
+
+      this.catalogoRegimenes = [...this.catalogoRegimenes, ...data];
+      this.catalogosArray = [this.catalogoRegimenes, this.catalogoClasificacionRegimen];
+    });
+  }
+
+  /**  
+   * Obtiene el catálogo de fracciones arancelarias desde el servicio.
+    * Actualiza la propiedad del componente con los datos obtenidos.
+    */
+ getFraccionArancelaria(): void {
+   this.importacionMaterialDeInvestigacionCientificaService.getFraccionesArancelarias('130112').subscribe((data) => {
+     this.fraccionCatalogo = data?.map(item => ({
+             ...item,
+             descripcion: `${item.clave} - ${item.descripcion}`
+           }));
+         });
+ }
+
+ /**  
+  * Obtiene el catálogo de unidades de medida desde el servicio.
+  * Actualiza la propiedad del componente con los datos obtenidos.
+  */
+ getUMTCatalogo(): void {
+   this.importacionMaterialDeInvestigacionCientificaService.getUMTCatalogo('130112').subscribe((data) => {
+     this.unidadCatalogo = data || [];
+   });
+ }
+
   /**
    * Método para obtener la lista de representaciones federales.
    */
@@ -653,22 +729,10 @@ this.tramite130112Store.actualizarEstado({
    */
   listaDePaisesDisponibles(): void {
     this.importacionMaterialDeInvestigacionCientificaService
-      .getListaDePaisesDisponibles()
+    .getBloque('130110')
       .pipe(takeUntil(this.destroyed$))
       .subscribe((data) => {
         this.elementosDeBloque = data;
-      });
-  }
-
-  /**
-   * Método para obtener la lista de fracciones de la descripción de las partidas de la mercancía.
-   */
-  listaDeFraccionDescripcion(): void {
-    this.importacionMaterialDeInvestigacionCientificaService
-      .getFraccionDescripcionPartidasDeLaMercancia()
-      .pipe(takeUntil(this.destroyed$))
-      .subscribe((data) => {
-        this.fraccionDescription = data;
       });
   }
 
@@ -678,14 +742,14 @@ this.tramite130112Store.actualizarEstado({
    */
   fetchPaisesPorBloque(_bloqueId: number): void {
     this.importacionMaterialDeInvestigacionCientificaService
-      .getPaisesPorBloque(_bloqueId)
-      .pipe(takeUntil(this.destroyed$))
-      .subscribe((data) => {
-        this.paisesPorBloque = data;
-        this.selectRangoDias = this.paisesPorBloque.map(
-          (pais: Catalogo) => pais.descripcion
-        );
-      });
+      .getPaisesPorBloque('130110', String(_bloqueId))
+            .pipe(takeUntil(this.destroyed$))
+            .subscribe((data) => {
+              this.paisesPorBloque = data;
+              this.selectRangoDias = this.paisesPorBloque.map(
+                (pais: Catalogo) => pais.descripcion
+              );
+            });
   }
   /**
    * Maneja el cambio de bloque seleccionado.
@@ -720,6 +784,46 @@ this.tramite130112Store.actualizarEstado({
        this.mercanciaForm.get('unidadMedida')?.setValue('1'); 
        this.tramite130112Store.actualizarEstado({ 'unidadMedida': '1' });
     }
+
+  if ($event.campo === 'entidad') {
+    const VALOR = this.frmRepresentacionForm.get('entidad')?.value;
+    this.getRepresentacionFederalCatalogo(VALOR);
+  }
+
+    if ($event.campo === 'fraccionTigiePartidasDeLaMercancia') {
+      const VALOR = this.partidasDelaMercanciaForm.get('fraccionTigiePartidasDeLaMercancia')?.value;
+      this.getFraccionDescripcionPartidasDeLaMercancia(VALOR);
+    }
+  }
+
+  onFechasSeleccionadasChange(evento: string[]): void {
+    this.tramite130112Store.actualizarEstado({ fechasSeleccionadas: evento });
+   }
+
+  /**
+ *  Obtiene el catálogo de representaciones federales basado en la entidad seleccionada.
+ * @param cveEntidad 
+ */
+  getRepresentacionFederalCatalogo(cveEntidad: string): void {
+    this.importacionMaterialDeInvestigacionCientificaService.getRepresentacionFederalCatalogo(this.idProcedimiento.toString(), cveEntidad).subscribe((data) => {
+      this.representacionFederal = data as Catalogo[];
+    });
+  }
+
+  /**
+   * Obtiene la descripción de la fracción y las partidas de la mercancía asociadas a un ID específico.
+   * 
+   * Este método llama al servicio `importacionMaterialDeInvestigacionCientificaService` para recuperar
+   * la información relacionada con la fracción y las partidas de la mercancía, utilizando el identificador
+   * proporcionado. Los datos obtenidos se asignan a la propiedad `fraccionDescripcionPartidasDeLaMercancia`.
+   * 
+   * @param ID - Identificador de la fracción o partida de la mercancía para la cual se desea obtener la descripción.
+   */
+  getFraccionDescripcionPartidasDeLaMercancia(ID: string): void {
+    this.importacionMaterialDeInvestigacionCientificaService.getFraccionDescripcionPartidasDeLaMercanciaService(this.idProcedimiento.toString(), ID)
+      .subscribe((data)=>{
+        this.fraccionDescripcionPartidasDeLaMercancia = data as Catalogo[];
+    });
   }
 
   /**
