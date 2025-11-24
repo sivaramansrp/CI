@@ -108,7 +108,7 @@ export class DomicilioDelEstablecimientoComponent implements OnInit, OnDestroy, 
    */
   @Input() tipoTramite: string = '';
 
-  @Input() emitirSeleccionEstablecimiento : boolean = false;
+  @Input() emitirSeleccionEstablecimiento : boolean = true;
 
 
  /**
