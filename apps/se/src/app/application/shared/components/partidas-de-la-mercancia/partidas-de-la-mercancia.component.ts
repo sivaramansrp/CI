@@ -1,5 +1,5 @@
 
-import { ALERTARCHIVOMSG, PARTIDASDELAMERCANCIA_TABLA, TEXTOS } from '../../constantes/partidas-de-la-mercancia.enum';
+import { ALERTARCHIVOMSG, MENSAJES, PARTIDASDELAMERCANCIA_TABLA, TEXTOS } from '../../constantes/partidas-de-la-mercancia.enum';
 import { AlertComponent, ConfiguracionColumna, Notificacion, NotificacionesComponent, TipoNotificacionEnum } from '@ng-mf/data-access-user';
 import { Catalogo, CatalogoSelectComponent } from '@libs/shared/data-access-user/src';
 import { Component, ElementRef, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges, ViewChild } from '@angular/core';
@@ -249,6 +249,31 @@ export class PartidasDeLaMercanciaComponent implements OnChanges, OnInit {
      * @type {boolean}
      */
     @Input() isFraccionTIGIE: boolean = false;
+
+  /**
+   * Constante que contiene los mensajes de texto utilizados en el componente.
+   */
+  MENSAJES_TEXTOS = MENSAJES;
+
+  /**
+   * Indica si se debe mostrar el mensaje de advertencia cuando la mercancía es requerida.
+   * 
+   * @remarks
+   * Cuando este valor es `true`, se mostrará un mensaje informando al usuario que debe ingresar información de la mercancía.
+   * 
+   * @defaultValue false
+   */
+  @Input() mostrarMensajeMercanciaRequerida: boolean = false;
+
+  /**
+   * Indica si se debe mostrar un mensaje que informa que la fracción arancelaria es requerida.
+   * 
+   * @remarks
+   * Cuando este valor es `true`, se mostrará un mensaje al usuario indicando que debe ingresar la fracción arancelaria.
+   * 
+   * @defaultValue false
+   */
+  @Input() mostrarMensajeFraccionArancelariaRequerida: boolean = false;
   /**
    * Constructor para inicializar el componente e inyectar dependencias.
    * FormBuilder para crear formularios reactivos.

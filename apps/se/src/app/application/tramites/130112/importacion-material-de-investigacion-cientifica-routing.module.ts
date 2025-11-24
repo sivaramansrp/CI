@@ -2,6 +2,7 @@ import { RouterModule, Routes } from '@angular/router';
 import { NgModule } from '@angular/core';
 
 import { ImportacionMaterialDeInvestigacionCientificaComponent } from './pages/importacion-material-de-investigacion-cientifica/importacion-material-de-investigacion-cientifica.component';
+import { IniciarTramiteResolver } from '@libs/shared/data-access-user/src';
 
 /**
  * @descripcion
@@ -10,6 +11,12 @@ import { ImportacionMaterialDeInvestigacionCientificaComponent } from './pages/i
  */
 const ROUTES: Routes = [
   {
+     canActivate: [IniciarTramiteResolver],
+        data: {
+          iniciarConfig: {
+            procedureId: '130112',
+          },
+        },
     path: 'importacion-material-de-investigacion-cientifica',
     component: ImportacionMaterialDeInvestigacionCientificaComponent,
   },

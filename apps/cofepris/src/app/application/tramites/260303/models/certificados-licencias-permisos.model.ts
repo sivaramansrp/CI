@@ -1,5 +1,12 @@
 import { Catalogo} from "@libs/shared/data-access-user/src";
 
+/**
+ * Respuesta del catálogo de estados.
+ * @interface EstadoCatalogResponse
+ * @property {number} code - Código de respuesta.
+ * @property {Catalogo[]} data - Datos del catálogo de estados.
+ * @property {string} message - Mensaje de respuesta.
+ */
 export interface EstadoCatalogResponse {
   code: number;
   data: Catalogo[];

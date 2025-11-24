@@ -1,10 +1,10 @@
+import { Catalogo, JSONResponse } from '@libs/shared/data-access-user/src';
 import { FRACCION_DESCRIPCION, GUARDAR_SOLICITUD, OBTENER_CURP, RFC_BUSCAR_REPRESENTANTE_LEGAL, UNIDAD_MEDIDA } from '../../servers/api-route';
 import { Observable, combineLatest, map } from 'rxjs';
 import { AvisocalidadQuery } from '../../estados/queries/aviso-calidad.query';
 import { DatosDomicilioLegalQuery } from '../../estados/queries/datos-domicilio-legal.query';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { JSONResponse } from '@libs/shared/data-access-user/src';
 import { TercerosFabricanteQuery } from '../../estados/queries/terceros-fabricante.query';
 import { TramitePagoBancoQuery } from '../../estados/queries/pago-banco.query';
 
@@ -107,9 +107,9 @@ export class Shared2605Service {
     const DATOS_SCIAN = Shared2605Service.buildDatosScian(data);
     const MERCANCIAS = Shared2605Service.buildMercancias(data);
     const REPRESENTANTE_LEGAL = Shared2605Service.buildRepresentanteLegal(data);
-    const PROVEEDOR_TABLA = Shared2605Service.buildTercerosTablaDatos(data['Proveedor'] as Array<{ tbodyData?: Array<unknown> }>);
-    const FORMULADOR_TABLA = Shared2605Service.buildTercerosTablaDatos(data['Formulador'] as Array<{ tbodyData?: Array<unknown> }>);
-    const FABRICANTE_TABLA = Shared2605Service.buildTercerosTablaDatos(data['Fabricante'] as Array<{ tbodyData?: Array<unknown> }>);
+    const PROVEEDOR_TABLA = Shared2605Service.buildTercerosTablaDatos(data['Proveedor'] as Array<{ tbodyData?: Array<unknown> }>, data['proveedorPais'] as Catalogo);
+    const FORMULADOR_TABLA = Shared2605Service.buildTercerosTablaDatos(data['Formulador'] as Array<{ tbodyData?: Array<unknown> }>, data['formuladorPais'] as Catalogo);
+    const FABRICANTE_TABLA = Shared2605Service.buildTercerosTablaDatos(data['Fabricante'] as Array<{ tbodyData?: Array<unknown> }>, data['fabricantePais'] as Catalogo);
     const PAGO_DERECHOS = Shared2605Service.buildPagoDerechos(data);
 
     return {
@@ -135,7 +135,7 @@ export class Shared2605Service {
       solicitud: {
         discriminatorValue: discriminatorValue,
         declaracionesSeleccionadas: true,
-        regimen: "General",
+        regimen: "",
         informacionConfidencial: true
       },
       establecimiento: ESTABLECIMIENTO,
@@ -231,8 +231,8 @@ export class Shared2605Service {
       },
       "original": "",
       "avisoFuncionamiento": true,
-      "numeroLicencia": "123456"
-      // "aduanas": "ALTAMIRA"
+      "numeroLicencia": "123456",
+      "aduanas": data['aduanaId'] || [],
     }
   }
 
@@ -304,9 +304,11 @@ export class Shared2605Service {
       "cantidadUMTConComas": item['cantidadUmt'] as string || "",
       "presentacion": "Frasco x 100 tabletas",
       "registroSanitarioConComas": item['numeroRegistroSanitario'] as string || "",
-      "nombreCortoPaisOrigen": Array.isArray(item['paisOrigen']) ? item['paisOrigen'].join(', ') : String(item['paisOrigen'] ?? ''),
-      "nombreCortoPaisProcedencia": Array.isArray(item['paisProcedenciaUltimoPuerto']) ? item['paisProcedenciaUltimoPuerto'].join(', ') : String(item['paisProcedenciaUltimoPuerto'] ?? ''),
-      "tipoProductoDescripcionOtros": "Analgésico",
+      "nombreCortoPaisOrigen": data['paisOrigenId'] || [],
+      "nombreCortoPaisProcedencia": data['paisProcedenciaId'] || [],
+      "paisesFormulaProducto": data['paisElaboraId'] || [],
+      "paisesFabricaIngredienteActivo": data['paisIngredienteActivoId'] || [],
+      "tipoProductoDescripcionOtros": "Analgésico", 
       "nombreCortoUsoEspecifico": item['usoEspecifico'] as string || "",
       "fechaCaducidadStr": "31/12/2026"
     }));
@@ -344,14 +346,14 @@ export class Shared2605Service {
  *          su información estructurada, listo para integrarse en el payload de la solicitud.
  *          Si no se encuentran datos válidos, se retorna un arreglo vacío.
  */
-  static buildTercerosTablaDatos(data: Array<{ tbodyData?: Array<unknown> }>): Record<string, unknown>[] {
+  static buildTercerosTablaDatos(data: Array<{ tbodyData?: Array<unknown> }>, pais: Catalogo): Record<string, unknown>[] {
     return data
       .filter(row => Array.isArray(row.tbodyData))
       .map(row => {
         const ITEM = row.tbodyData as Array<unknown>;
 
         return {
-          idPersonaSolicitud: "1",
+          idPersonaSolicitud: "",
           ideTipoTercero: "TIPERS.FAB",
           personaMoral: "1",
           booleanExtranjero: "0",
@@ -373,7 +375,7 @@ export class Shared2605Service {
             calle: ITEM[5],
             numeroExterior: ITEM[6],
             numeroInterior: ITEM[7],
-            pais: { clave: ITEM[8], nombre: "" },
+            pais: { clave: ITEM[8], nombre: pais?.descripcion || "" },
             colonia: { clave: ITEM[9], nombre: "" },
             delegacionMunicipio: { clave: ITEM[10], nombre: "" },
             localidad: { clave: ITEM[11], nombre: "" },

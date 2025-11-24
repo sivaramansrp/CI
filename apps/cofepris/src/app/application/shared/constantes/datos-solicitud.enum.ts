@@ -208,12 +208,12 @@ export const PRODUCTO_TABLA = [
   {
     encabezado: 'Unidad de medida de comercialización (UMC)',
     clave: (ele: TablaMercanciasDatos): string | undefined =>
-      ele.unidadMedidaComercializacion, // Reemplaza 'ele.unidadMedidaComercializacion' con la clave correcta
+      ele.cantidadUMC, // Reemplaza 'ele.unidadMedidaComercializacion' con la clave correcta
     orden: 10,
   },
   {
     encabezado: 'Cantidad UMC',
-    clave: (ele: TablaMercanciasDatos): string => ele.cantidadUMC, // Reemplaza 'ele.cantidadUMC' con la clave correcta
+    clave: (ele: TablaMercanciasDatos): string | undefined => ele.cantidadUmcValor, // Reemplaza 'ele.cantidadUMC' con la clave correcta
     orden: 11,
   },
   {
@@ -661,7 +661,7 @@ export const TABLA_OPCION_DATA: TablaOpcionConfig[] = [
  */
 export const PROCEDIMIENTOS_NO_PARA_ELEMENTO_COLAPSABLE = [
   260206, 260214, 260216, 260205, 260217, 260218, 260102, 260301, 260208,
-  260207, 260209, 260201, 260219, 260302, 260304, 260103,260203
+  260207, 260209, 260201, 260219, 260302, 260304, 260103,260203,260213
 ];
 
 /**

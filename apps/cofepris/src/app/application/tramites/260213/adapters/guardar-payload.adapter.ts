@@ -42,8 +42,8 @@ export class GuardarAdapter_260213 {
           "discriminatorValue": 260213,
           "declaracionesSeleccionadas": state.datosSolicitudFormState.manifesto,
           "regimen": state.datosSolicitudFormState.regimen,
-          "aduanaAIFA": "",
-          "informacionConfidencial": state.datosSolicitudFormState.publico === 'si' ? true : false
+          "aduanaAIFA": "", 
+          "informacionConfidencial": state.datosSolicitudFormState.publico === 'Si' ? true : false
       },
       "establecimiento": {
           "rfcResponsableSanitario": state.datosSolicitudFormState.rfcSanitario,
@@ -52,7 +52,7 @@ export class GuardarAdapter_260213 {
           "domicilio": {
               "codigoPostal": state.datosSolicitudFormState.codigoPostal,
               "entidadFederativa": {
-                  "clave": ""
+                  "clave": state.datosSolicitudFormState.estado
               },
               "descripcionMunicipio": state.datosSolicitudFormState.municipioAlcaldia,
               "informacionExtra": state.datosSolicitudFormState.localidad,
@@ -69,21 +69,24 @@ export class GuardarAdapter_260213 {
       "datosSCIAN": state.scianConfigDatos.map((datos)=>{
         return {
               "cveScian": datos.clave,
-              "descripcion": datos.descripcion
+              "descripcion": datos.descripcion,
+              "selected": true
           }
       }),
       "mercancias": (state.tablaMercanciasConfigDatos ?? []).map((mercancia) => {
         return {
-              "idMercancia": "",
+              "idMercancia": null,
               "idClasificacionProducto": mercancia.claveClasificacionProductoObj?.clave,
               "nombreClasificacionProducto": mercancia.claveClasificacionProductoObj?.descripcion,
               "ideSubClasificacionProducto": mercancia.especificarClasificacionObj?.clave,
               "nombreSubClasificacionProducto": mercancia.especificarClasificacionObj?.descripcion,
               "descDenominacionEspecifica": mercancia.denominacionEspecificaProducto,
               "descDenominacionDistintiva": mercancia.denominacionDistintiva,
-              "descripcionMercancia": "",
-              "formaFarmaceuticaDescripcionOtros": mercancia.formaFarmaceutica,
-              "estadoFisicoDescripcionOtros": mercancia.estadoFisico,
+              "descripcionMercancia": mercancia.denominacionComun,
+              "idFormaFarmaceutica": mercancia.formaFarmaceutica,
+              "formaFarmaceuticaDescripcionOtros": mercancia.especifiqueForma,
+              "idEstadoFisico": mercancia.estadoFisico,
+              "estadoFisicoDescripcionOtros": mercancia.especifiqueEstado,
               "fraccionArancelaria": {
                   "clave": mercancia.fraccionArancelaria,
                   "descripcion": mercancia.descripcionFraccion
@@ -91,17 +94,21 @@ export class GuardarAdapter_260213 {
               "unidadMedidaComercial": {
                   "descripcion": mercancia.cantidadUMCObj?.descripcion
               },
-              "cantidadUMCConComas": mercancia.cantidadUMC,
+              "cantidadUMCConComas": mercancia.cantidadUmcValor,
               "unidadMedidaTarifa": {
                   "descripcion": mercancia.cantidadUMT
               },
               "cantidadUMTConComas": mercancia.cantidadUmtValor,
               "presentacion": mercancia.presentacion,
               "registroSanitarioConComas": mercancia.numeroRegistroSanitario,
-              "nombreCortoPaisOrigen": mercancia.paisDeOriginDatos?.toString(),
+            //   "nombreCortoPaisOrigen": mercancia.paisOrigenDatosClave,
+            //   "nombreCortoPaisProcedencia": mercancia.paisProcedenciaDatosClave,
+            "nombreCortoPaisOrigen": mercancia.paisDeOriginDatos?.toString(),
               "nombreCortoPaisProcedencia": mercancia.paisDeProcedenciaDatos?.toString(),
-              "tipoProductoDescripcionOtros": mercancia.tipoProducto,
-              "nombreCortoUsoEspecifico": mercancia.usoEspecifico?.toString(),
+              "idTipoProductoTipoTramite": mercancia.tipoProducto,
+              "tipoProductoDescripcionOtros": mercancia.especifique,
+              //"nombreCortoUsoEspecifico": mercancia.usoEspecificoDatosClave,
+               "nombreCortoUsoEspecifico": mercancia.usoEspecifico?.toString(),
               "fechaCaducidadStr": mercancia.fechaCaducidad
           }
       }),
@@ -320,8 +327,8 @@ export class GuardarAdapter_260213 {
           "claveDeReferencia": state.pagoDerechos.claveReferencia,
           "cadenaPagoDependencia": state.pagoDerechos.cadenaDependencia,
           "banco": {
-              "clave": state.pagoDerechos.bancoObject?.clave || "",
-              "descripcion": state.pagoDerechos.bancoObject?.descripcion || ""
+              "clave": state.pagoDerechos.bancoObject?.clave,
+              "descripcion": state.pagoDerechos.bancoObject?.descripcion
           },
           "llaveDePago": state.pagoDerechos.llavePago,
           "fecPago": state.pagoDerechos.fechaPago,
