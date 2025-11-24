@@ -52,7 +52,7 @@ describe('PasoTresComponent', () => {
     component.obtieneFirma('valid-signature');
 
     expect(tramiteFolioServiceMock.obtenerTramite).toHaveBeenCalledWith(19);
-    expect(routerMock.navigate).toHaveBeenCalledWith(['/pago/catalogos/acuse']);
+    expect(routerMock.navigate).toHaveBeenCalledWith(['pago/tecnologicos/acuse']);
   });
 
   it('should handle error when obtieneFirma is called and obtenerTramite fails', () => {

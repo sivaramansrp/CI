@@ -203,6 +203,7 @@
               maxlength="22"
               (blur)="validarCantidadDecimal($event)"
               formControlName="cantidad"
+              [ngClass]="isValid(mercanciaForm, 'cantidad') ? 'required' : ''" 
             />
             @if(mercanciaForm.controls['cantidad'].invalid ) {
             <div class="d-grid">
@@ -257,7 +258,8 @@
               maxlength="22"
               class="form-control"
               (blur)="validarMercanciaDecimal($event)"
-              formControlName="valorMercancia"
+              formControlName="valorMercancia" 
+               [ngClass]="isValid(mercanciaForm, 'valorMercancia') ? 'required' : ''" 
             />
             @if(mercanciaForm.get('valorMercancia')?.invalid ) {
             <div class="d-grid">
@@ -289,6 +291,7 @@
               class="mb-4 w-100 form-control h-50 no-resize"
               formControlName="complementoDescripcion"
               rows="2"
+               [ngClass]="isValid(mercanciaForm, 'complementoDescripcion') ? 'required' : ''" 
             ></textarea>
             @if(mercanciaForm.controls['complementoDescripcion'].invalid ) {
             <div class="d-grid">
@@ -321,6 +324,7 @@
               class="form-control"
               formControlName="marcaBruta"
               maxlength="36"
+               [ngClass]="isValid(mercanciaForm, 'marcaBruta') ? 'required' : ''" 
             />
             @if(mercanciaForm.controls['marcaBruta'].invalid &&
             mercanciaForm.controls['marcaBruta'].touched) {
@@ -434,6 +438,7 @@
               class="form-control"
               formControlName="numeroFactura"
               maxlength="36"
+              [ngClass]="isValid(mercanciaForm, 'numeroFactura') ? 'required' : ''"
             />
             @if(mercanciaForm.controls['numeroFactura'].invalid &&
             mercanciaForm.controls['numeroFactura'].touched) {
@@ -489,7 +494,7 @@
       >
         Cancelar
       </button>
-      <button type="button" class="btn btn-primary" (click)="activarModal()">
+      <button type="button" class="btn btn-primary" (click)="acceptar(false)">
         Agregar
       </button>
     </div>

@@ -88,14 +88,16 @@ export class TareasTramiteComponent implements OnInit, OnDestroy, OnChanges {
    * suscribe - Se suscribe al observable del servicio para obtener los datos.
    */
   getTareas(): void {
-    this.datosTablaTareasTramite = this.tareasSolicitud.map((doc => ({
-      id: doc.id_bitacora,
-      nombreTarea: doc.tarea,
-      nombreUsuarioAsignado: doc.nombre_usuario,
-      claveUsuarioAsignado: doc.id_usuario,
-      fechaAsignacion: doc.fecha_evento_inicio,
-      fechaAtencion: doc.fecha_evento_fin
-    })));
+    this.datosTablaTareasTramite = this.tareasSolicitud
+      .filter(doc => doc.fecha_evento_fin !== null)
+      .map((doc => ({
+        id: doc.id_bitacora,
+        nombreTarea: doc.tarea,
+        nombreUsuarioAsignado: doc.nombre_usuario,
+        claveUsuarioAsignado: doc.id_usuario,
+        fechaAsignacion: doc.fecha_evento_inicio,
+        fechaAtencion: doc.fecha_evento_fin
+      })));
   }
   /**
    * Método `ngOnDestroy()`.

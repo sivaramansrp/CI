@@ -41,6 +41,8 @@ export interface MercanciasInfo {
   umc: string;
   estadoFisicoOtro?: string;
   objetoImportacionOtro?: string;
+  paisDeOriginDatosObj?: Array<{ clave: string; descripcion: string }>;
+  paisDeProcedenciaDatosObj?: Array<{ clave: string; descripcion: string }>;
 }
 
 export interface PermisoModel {
@@ -292,4 +294,4 @@ export interface PermisoModel {
    * @module app/application/shared/models/datos-domicilio-legal.model
    * @compodoc
    */
-  export const NOMBRES_CAMPOS = [260512,260513,260516];
+  export const NOMBRES_CAMPOS = [260512,260513,260516,260515];

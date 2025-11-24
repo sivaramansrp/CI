@@ -55,10 +55,12 @@
         (establecimientoFormValidity)="datosEstabelicimientoFormValidityChange($event)"
         (domicilioFormValidity)="domicilioFormValidityChange($event)"
         (manifiestosFormValidity)="manifiestosFormValidityChange($event)"
-        (representanteLegalFormValidity)="representanteLegalFormValidityChange($event)"></app-datos-de-la>
+        (representanteLegalFormValidity)="representanteLegalFormValidityChange($event)"
+        [isContinuarTriggered]="isContinuarTriggered"></app-datos-de-la>
         }
       @case (3) {
-        <app-terceros-fabricante #TercerosRelacionadosComponent [idProcedimiento]="idProcedimiento" (tableValidEvent)="onTableValidEvent($event)"></app-terceros-fabricante>
+        <app-terceros-fabricante #TercerosRelacionadosComponent [idProcedimiento]="idProcedimiento" (tableValidEvent)="onTableValidEvent($event)"
+        [isContinuarTriggered]="isContinuarTriggered"></app-terceros-fabricante>
         }
       @case (4) {
       <app-pago-de-derechos-banco [idProcedimiento]="idProcedimiento"></app-pago-de-derechos-banco>

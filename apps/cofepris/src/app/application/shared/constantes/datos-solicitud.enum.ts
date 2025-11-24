@@ -23,7 +23,7 @@ import {
 export const OPCION_TABLA = [
   {
     encabezado: 'Fecha creación',
-    clave: (ele: TablaOpcionConfig): string => ele.fechaCreacion,
+    clave: (ele: TablaOpcionConfig): string | number | undefined => ele.fecha_creacion,
     orden: 1,
   },
   {
@@ -33,7 +33,7 @@ export const OPCION_TABLA = [
   },
   {
     encabezado: 'Cantidad',
-    clave: (ele: TablaOpcionConfig): string => ele.cantidad,
+    clave: (ele: TablaOpcionConfig): number | string => ele.cantidad,
     orden: 3,
   },
   {
@@ -208,12 +208,12 @@ export const PRODUCTO_TABLA = [
   {
     encabezado: 'Unidad de medida de comercialización (UMC)',
     clave: (ele: TablaMercanciasDatos): string | undefined =>
-      ele.unidadMedidaComercializacion, // Reemplaza 'ele.unidadMedidaComercializacion' con la clave correcta
+      ele.cantidadUMC, // Reemplaza 'ele.unidadMedidaComercializacion' con la clave correcta
     orden: 10,
   },
   {
     encabezado: 'Cantidad UMC',
-    clave: (ele: TablaMercanciasDatos): string => ele.cantidadUMC, // Reemplaza 'ele.cantidadUMC' con la clave correcta
+    clave: (ele: TablaMercanciasDatos): string | undefined => ele.cantidadUmcValor, // Reemplaza 'ele.cantidadUMC' con la clave correcta
     orden: 11,
   },
   {
@@ -661,7 +661,7 @@ export const TABLA_OPCION_DATA: TablaOpcionConfig[] = [
  */
 export const PROCEDIMIENTOS_NO_PARA_ELEMENTO_COLAPSABLE = [
   260206, 260214, 260216, 260205, 260217, 260218, 260102, 260301, 260208,
-  260207, 260209, 260201, 260219, 260302, 260304, 260103,260203
+  260207, 260209, 260201, 260219, 260302, 260304, 260103,260203,260213
 ];
 
 /**
@@ -796,7 +796,7 @@ export const REPRESENTANTE_LEGAL = [260208];
  */
 export const BANCO = [
   260104, 260208, 260209, 260207, 260201, 260219, 260302, 260304, 260103, 260205, 260216,
-  260217, 260218, 260214, 260301, 260102, 260202, 260101,260210,260206,260514,260515
+  260217, 260218, 260214, 260301, 260102, 260202, 260101,260210,260206,260514,260515,260903,260904,260917
 ];
 
 export const REQUIRED_BANCO = [260902];
@@ -873,7 +873,7 @@ export const SIN_ACCION_AL_INICIAR = [260304];
  * @type {number[]}
  */
 export const PROCEDIMIENTOS_PARA_COLONIA_O_EQUIVALENTE = [
-  260207, 260208, 260209, 260219, 260214,
+  260207, 260208, 260209, 260219, 260214,260904
 ];
 
 /**
@@ -1085,7 +1085,7 @@ export const PROCEDIMIENTOS_PARA_TEXTO_ADJUNTAR = [260217, 260218, 260301];
  * Arreglo de identificadores de procedimientos para los cuales se debe ocultar el botón "Agregar".
  * Si el procedimiento actual coincide con alguno de estos valores, el botón no será mostrado en la interfaz.
  */
-export const PROCEDIMIENTOS_PARA_OCULTAR_EL_BOTON_AGREGAR = [260904,260911,260912,260203,260204, 260205, 260206,260213, 260216, 260208, 260210, 260218, 260201, 260202]
+export const PROCEDIMIENTOS_PARA_OCULTAR_EL_BOTON_AGREGAR = [260904,260911,260912,260203,260204, 260205, 260206,260213, 260216, 260208, 260201, 260202, 260218, 260210,260904]
 
 /**
  * Constante que representa el código AIFA.

@@ -1,12 +1,14 @@
 import {
   Catalogo,
   CatalogoSelectComponent,
+  Notificacion,
   TituloComponent,
 } from '@libs/shared/data-access-user/src';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ConsultaioQuery } from '@ng-mf/data-access-user';
 
 import {
+  FormBuilder,
   FormControl,
   FormGroup,
   ReactiveFormsModule,
@@ -76,6 +78,24 @@ export class DatosParaMovilizacionNacionalComponent implements OnInit, OnDestroy
   esFormularioSoloLectura: boolean = true;
 
   /**
+ * Representa una nueva notificación que será utilizada en el componente.
+ * @type {Notificacion}
+ */
+  public nuevaNotificacion!: Notificacion;
+  /**
+ * @property moduloEmergente
+ * @description Indica si el módulo emergente está activo.
+ * @type {boolean}
+ * @default false
+ */
+  public moduloEmergente: boolean = false;
+
+  /**
+* bandera para indicar que el formulario fue tocado
+*/
+  markTouched: boolean = false;
+
+  /**
    * @constructor
    * @param {AgriculturaApiService} agriculturaApiService - Servicio HttpClient para realizar peticiones.
    * Este servicio se utiliza para obtener las listas de opciones para los selectores del formulario y para actualizar el estado de la forma.
@@ -84,14 +104,31 @@ export class DatosParaMovilizacionNacionalComponent implements OnInit, OnDestroy
     private readonly agriculturaApiService: AgriculturaApiService,
     private consultaioQuery: ConsultaioQuery,
     public catalogosService: CatalogosService,
+    private readonly fb: FormBuilder,
 
   ) {
+    this.forma = this.fb.group({
+      transporte: ['', Validators.required],
+      identificacion: [''],
+      puntoVerificacion: [''],
+      empresaTransportista: ['', Validators.required],
+    })
     this.agriculturaApiService
       .getAllDatosForma()
       .pipe(takeUntil(this.destroyNotifier$))
       .subscribe((datos) => {
         this.formulariodataStore = datos.movilizacion;
+        if (this.formulariodataStore) {
+          this.forma.patchValue(this.formulariodataStore, { emitEvent: false });
+          this.forma.patchValue({
+            transporte: this.formulariodataStore.transporte,
+            identificacion: this.formulariodataStore.identificacion,
+            puntoVerificacion: this.formulariodataStore.puntoVerificacion,
+            empresaTransportista: this.formulariodataStore.empresaTransportista,
+          })
+        }
       });
+
     this.consultaioQuery.selectConsultaioState$
       .pipe(
         takeUntil(this.destroyNotifier$),
@@ -118,12 +155,12 @@ export class DatosParaMovilizacionNacionalComponent implements OnInit, OnDestroy
         },
         Validators.required
       ),
-      medioTransporte: new FormControl({
-        value: this.formulariodataStore.medioTransporte || '',
+      identificacion: new FormControl({
+        value: this.formulariodataStore.identificacion || '',
         disabled: this.esFormularioSoloLectura,
       }),
-      guiaIdentificacion: new FormControl({
-        value: this.formulariodataStore.guiaIdentificacion || '',
+      puntoVerificacion: new FormControl({
+        value: this.formulariodataStore.puntoVerificacion || '',
         disabled: this.esFormularioSoloLectura,
       }),
       empresaTransportista: new FormControl(
@@ -134,21 +171,6 @@ export class DatosParaMovilizacionNacionalComponent implements OnInit, OnDestroy
         Validators.required
       ),
     });
-    // Se suscribe a los cambios de estado del formulario para actualizar su validez
-    this.forma.statusChanges
-      .pipe(takeUntil(this.destroyNotifier$))
-      .subscribe((_changes) => {
-        const FORMA_VALIDA_ACTUALIZADA = {
-          movilizacionValidacion: false,
-        };
-        FORMA_VALIDA_ACTUALIZADA.movilizacionValidacion = this.forma.valid
-          ? true
-          : false;
-        this.agriculturaApiService.actualizarFormaValida(
-          FORMA_VALIDA_ACTUALIZADA
-        );
-      });
-
     // Obtiene las listas de opciones (medio de transporte y puntos de verificación)
     this.obtenerTodosLosDatosDeOpciones();
   }
@@ -196,6 +218,23 @@ export class DatosParaMovilizacionNacionalComponent implements OnInit, OnDestroy
         this.puntoList = data.datos ?? [];
       }
     );
+  }
+
+  /**
+ * @description Valida todos los campos del formulario y marca los campos como touched
+ * para mostrar los errores de validación en los componentes app-catalogo-select
+ * @method validarFormulario
+ * @returns { valido: boolean; mensaje?: string } true si el formulario es válido, false en caso contrario
+ */
+  public validarFormulario(): { valido: boolean; mensaje?: string } {
+    this.markTouched = true;
+    this.forma.markAllAsTouched();
+    this.forma.updateValueAndValidity();
+    // Retornar si el formulario es válido
+    if (!this.forma.valid) {
+      return { valido: false };
+    }
+    return { valido: true };
   }
 
   /**

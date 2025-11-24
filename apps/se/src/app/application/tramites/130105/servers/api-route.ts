@@ -38,6 +38,8 @@ export const PROC_130105 = {
     BUSCAR: `${BASE_URL}${API}${PROCEDURE}/solicitud/buscar-mercancias`,
     /** Ruta para guardar los datos del formulario */
     GUARDAR: `${BASE_URL}${API}${PROCEDURE}/solicitud/guardar`,
+    /** Ruta para mostrar las partidas de la solicitud */
+    MOSTAR_PARTIDAS : `${BASE_URL}${API}${PROCEDURE}/solicitud/mostar/partidas?idSolicitud=`,
     /** Ruta para consultar una solicitud por ID */
     CONSULTA_SOLICITUDE: (id: string | number) : string => `${BASE_URL}${API}${PROCEDURE}${TRAMITE}/consulta/${id}`,
     /** Ruta para obtener opiniones de un trámite */

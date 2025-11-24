@@ -1,8 +1,8 @@
 {
-    "options": [
-      { "label": "Nuevo", "value": "Nuevo" },
-      { "label": "Usado", "value": "Usado" }
-    ],
-    "defaultSelect": "Nuevo"
-  }
+  "options": [
+    { "label": "Nuevo", "value": "CONDMER.N" },
+    { "label": "Usado", "value": "CONDMER.U" }
+  ],
+  "defaultSelect": "Nuevo"
+}
   

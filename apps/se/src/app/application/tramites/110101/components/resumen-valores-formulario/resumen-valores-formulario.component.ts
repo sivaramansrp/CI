@@ -97,7 +97,6 @@ export class ResumenValoresFormularioComponent implements OnChanges {
       ptcValorNoOriginarios: DATOS?.pct_valor_no_originarios,
       ptcPesoTotalFibras: DATOS?.pct_peso_total_fibras,
       ptcPesoTotalMercancia: DATOS?.pct_peso_total_mercancia,
-      calAprobadaDictaminador: DATOS?.cal_aprobada_dictaminador,
       precioFrancoFabrica: DATOS?.precio_franco_fabrica,
       valorTransaccion: DATOS?.valor_transaccion,
       valorTransaccionFOB: DATOS?.valor_transaccion_fob,

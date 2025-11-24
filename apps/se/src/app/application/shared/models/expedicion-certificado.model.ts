@@ -6,24 +6,21 @@
  */
 export interface LicitacionesDisponibles {
     /**
+     * ID de la asignación.
+     */
+    idAsignacion?: number;
+
+    idSolicitud?: number;
+
+    /**
      * Número de la licitación.
      */
-    numeroDeLicitacion: string;
-
-    /**
-     * Fecha de la licitación.
-     */
-    fechaDeLicitacion: string;
-
-    /**
-     * Descripción de la licitación.
-     */
-    descripcion: string;
+    numeroLicitacion: string;
 
     /**
      * Monto adjudicado en la licitación.
      */
-    montoAdjudicado: string;
+    montoAdjudicado: number;
 
     /**
      * Fecha de inicio de vigencia de la licitación.
@@ -31,9 +28,44 @@ export interface LicitacionesDisponibles {
     fechaInicioVigencia: string;
 
     /**
-     * Fecha de fin de vigencia de la licitación.
+     * Fecha de fin de vigencia aprobada de la licitación.
      */
-    fechaFinVigencia: string;
+    fechaFinVigenciaAprobada: string;
+
+    /**
+     * Nombre del producto.
+     */
+    nombreProducto: string;
+
+    /**
+     * Fecha del concurso.
+     */
+    fechaConcurso: string;
+
+    // Campos mantenidos para compatibilidad con el código existente
+    /**
+     * Número de la licitación (alias para numeroLicitacion).
+     * @deprecated Use numeroLicitacion instead
+     */
+    numeroDeLicitacion?: string;
+
+    /**
+     * Fecha de la licitación (alias para fechaConcurso).
+     * @deprecated Use fechaConcurso instead
+     */
+    fechaDeLicitacion?: string;
+
+    /**
+     * Descripción de la licitación (alias para nombreProducto).
+     * @deprecated Use nombreProducto instead
+     */
+    descripcion?: string;
+
+    /**
+     * Fecha de fin de vigencia de la licitación (alias para fechaFinVigenciaAprobada).
+     * @deprecated Use fechaFinVigenciaAprobada instead
+     */
+    fechaFinVigencia?: string;
 }
 
 /**
@@ -112,22 +144,22 @@ export interface DetalledelaLicitacion{
 export const CONFIGURACION_ACCIONISTAS_TABLA = [
     {
         encabezado: 'Número de licitación',
-        clave: (ele: LicitacionesDisponibles):string => ele.numeroDeLicitacion,
+        clave: (ele: LicitacionesDisponibles):string => ele.numeroLicitacion || ele.numeroDeLicitacion || '',
         orden: 1
       },
       {
         encabezado: 'Fecha de evento de licitación pública',
-        clave: (ele: LicitacionesDisponibles):string => ele.fechaDeLicitacion,
+        clave: (ele: LicitacionesDisponibles):string => ele.fechaConcurso || ele.fechaDeLicitacion || '',
         orden: 2
       },
       {
         encabezado: 'Descripción del producto ',
-        clave: (ele: LicitacionesDisponibles):string => ele.descripcion,
+        clave: (ele: LicitacionesDisponibles):string => ele.nombreProducto || ele.descripcion || '',
         orden: 3
       },
       {
         encabezado: 'Monto adjudicado',
-        clave: (ele: LicitacionesDisponibles):string => ele.montoAdjudicado,
+        clave: (ele: LicitacionesDisponibles):string => ele.montoAdjudicado?.toString() || '0',
         orden: 4
       },
       {
@@ -137,7 +169,7 @@ export const CONFIGURACION_ACCIONISTAS_TABLA = [
       },
       {
         encabezado: 'Fecha fin vigencia',
-        clave: (ele: LicitacionesDisponibles):string => ele.fechaFinVigencia,
+        clave: (ele: LicitacionesDisponibles):string => ele.fechaFinVigenciaAprobada || ele.fechaFinVigencia || '',
         orden: 6
       }
 ]

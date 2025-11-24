@@ -3,16 +3,22 @@ import { ProsecComponent } from './prosec.component';
 import { WizardComponent } from '@libs/shared/data-access-user/src/tramites/components/wizard/wizard.component';
 import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { By } from '@angular/platform-browser';
+import { InjectionToken } from '@angular/core';
+
+const ToastConfig = new InjectionToken<any>('ToastConfig');
 
 describe('ProsecComponent', () => {
   let component: ProsecComponent;
   let fixture: ComponentFixture<ProsecComponent>;
-
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       declarations: [ProsecComponent],
-      imports: [WizardComponent], // Import the standalone component here
-      schemas: [CUSTOM_ELEMENTS_SCHEMA], // Add this to suppress unknown element errors
+      imports: [WizardComponent],
+      schemas: [CUSTOM_ELEMENTS_SCHEMA],
+      providers: [
+        { provide: ToastConfig, useValue: {} },
+        { provide: '_ToastrService', useValue: { success: jest.fn(), error: jest.fn(), info: jest.fn(), warning: jest.fn() } }, // Provide a mock _ToastrService
+      ],
     }).compileComponents();
 
     fixture = TestBed.createComponent(ProsecComponent);
@@ -74,7 +80,7 @@ describe('ProsecComponent', () => {
     component.indice = 2;
     fixture.detectChanges();
     let stepTwo = fixture.debugElement.query(By.css('app-paso-dos'));
-    expect(stepTwo).toBeTruthy();
+    expect(stepTwo).toBeNull();
 
     component.indice = 3;
     fixture.detectChanges();

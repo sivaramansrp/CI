@@ -1,4 +1,5 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
+import { ConsultaioQuery, RegistroSolicitudService } from '@ng-mf/data-access-user';
 import {
   DatosDeTablaSeleccionados,
   DatosSolicitudFormState,
@@ -16,10 +17,11 @@ import {
   Tramite260210State,
   Tramite260210Store,
 } from '../../estados/tramite260210Store.store';
-import { map, takeUntil } from 'rxjs';
+import { distinctUntilChanged, map, takeUntil } from 'rxjs';
+import { BaseResponse } from '@libs/shared/data-access-user/src/core/models/shared/base-response.model';
 import { CommonModule } from '@angular/common';
-import { ConsultaioQuery } from '@ng-mf/data-access-user';
 import { DatosDeLaSolicitudComponent } from '../../../../shared/components/datos-de-la-solicitud/datos-de-la-solicitud.component';
+import { GuardarMappingAdapter } from '../../adapters/guardar-mapping.adapter';
 import { ID_PROCEDIMIENTO } from '../../constants/medicos-uso.enum';
 import { Subject } from 'rxjs';
 import { Tramite260210Query } from '../../estados/tramite260210Query.query';
@@ -27,10 +29,10 @@ import { ViewChild } from '@angular/core';
 
 /**
  * @component ContenedorDeDatosSolicitudComponent
- * @description Container component that orchestrates user interactions
- * for entering and managing “datos de la solicitud” (request data).
- * Integrates the `DatosDeLaSolicitudComponent` and synchronizes data
- * with the global state managed by `Tramite260210Store`.
+ * @description Componente contenedor que orquesta las interacciones del usuario
+ * para ingresar y gestionar "datos de la solicitud".
+ * Integra el `DatosDeLaSolicitudComponent` y sincroniza los datos
+ * con el estado global gestionado por `Tramite260210Store`.
  **/
 @Component({
   selector: 'app-contenedor-de-datos-solicitud',
@@ -38,6 +40,7 @@ import { ViewChild } from '@angular/core';
   imports: [CommonModule, DatosDeLaSolicitudComponent],
   templateUrl: './contenedor-de-datos-solicitud.component.html',
   styleUrl: './contenedor-de-datos-solicitud.component.scss',
+   providers: [RegistroSolicitudService],
 })
 export class ContenedorDeDatosSolicitudComponent implements OnInit, OnDestroy {
   /**
@@ -55,8 +58,8 @@ export class ContenedorDeDatosSolicitudComponent implements OnInit, OnDestroy {
   ];
   /**
    * @property destroyNotifier$
-   * @description Subject used to gracefully unsubscribe from observables
-   * when the component is destroyed.
+   * @description Subject utilizado para cancelar suscripciones de observables
+   * de manera elegante cuando el componente es destruido.
    * @type {Subject<void>}
    * @private
    */
@@ -64,16 +67,16 @@ export class ContenedorDeDatosSolicitudComponent implements OnInit, OnDestroy {
 
   /**
    * @property tramiteState
-   * @description Holds the current state of the “Tramite 260210” process,
-   * retrieved from the store via `Tramite260210Query`.
+   * @description Contiene el estado actual del proceso "Tramite 260210",
+   * recuperado del store a través de `Tramite260210Query`.
    * @type {Tramite260210State}
    */
   public tramiteState!: Tramite260210State;
 
   /**
    * @property opcionConfig
-   * @description Configuration object for the "opcion" table,
-   * including the selection type, table settings, and data array.
+   * @description Objeto de configuración para la tabla de "opciones",
+   * incluye el tipo de selección, configuración de tabla y arreglo de datos.
    */
   public opcionConfig = {
     tipoSeleccionTabla: undefined,
@@ -83,8 +86,8 @@ export class ContenedorDeDatosSolicitudComponent implements OnInit, OnDestroy {
 
   /**
    * @property scianConfig
-   * @description Configuration object for the SCIAN table,
-   * including selection type, table settings, and data array.
+   * @description Objeto de configuración para la tabla SCIAN,
+   * incluye el tipo de selección, configuración de tabla y arreglo de datos.
    */
   public scianConfig = {
     tipoSeleccionTabla: TablaSeleccion.CHECKBOX,
@@ -94,8 +97,8 @@ export class ContenedorDeDatosSolicitudComponent implements OnInit, OnDestroy {
 
   /**
    * @property tablaMercanciasConfig
-   * @description Configuration object for the “mercancías” table,
-   * including selection type, table settings, and data array.
+   * @description Objeto de configuración para la tabla de "mercancías",
+   * incluye el tipo de selección, configuración de tabla y arreglo de datos.
    */
   public tablaMercanciasConfig = {
     tipoSeleccionTabla: TablaSeleccion.CHECKBOX,
@@ -105,45 +108,45 @@ export class ContenedorDeDatosSolicitudComponent implements OnInit, OnDestroy {
 
   /**
    * @property scianConfigDatos
-   * @description Stores the list of SCIAN table configurations
-   * currently in use within the component.
+   * @description Almacena la lista de configuraciones de tabla SCIAN
+   * actualmente en uso dentro del componente.
    * @type {TablaScianConfig[]}
    */
   public scianConfigDatos: TablaScianConfig[] = [];
 
   /**
    * @property tablaMercanciasConfigDatos
-   * @description Stores the list of “mercancías” data objects
-   * currently in use within the component.
+   * @description Almacena la lista de objetos de datos de "mercancías"
+   * actualmente en uso dentro del componente.
    * @type {TablaMercanciasDatos[]}
    */
   public tablaMercanciasConfigDatos: TablaMercanciasDatos[] = [];
 
   /**
    * @property seleccionadoopcionDatos
-   * @description Stores the selected “opcion” data coming from the table.
+   * @description Almacena los datos de "opciones" seleccionados provenientes de la tabla.
    * @type {TablaOpcionConfig[]}
    */
   public seleccionadoopcionDatos: TablaOpcionConfig[] = [];
 
   /**
    * @property seleccionadoScianDatos
-   * @description Stores the selected SCIAN data coming from the table.
+   * @description Almacena los datos SCIAN seleccionados provenientes de la tabla.
    * @type {TablaScianConfig[]}
    */
   public seleccionadoScianDatos: TablaScianConfig[] = [];
 
   /**
    * @property seleccionadoTablaMercanciasDatos
-   * @description Stores the selected “mercancías” data
-   * coming from the respective table.
+   * @description Almacena los datos de "mercancías" seleccionados
+   * provenientes de la tabla respectiva.
    * @type {TablaMercanciasDatos[]}
    */
   public seleccionadoTablaMercanciasDatos: TablaMercanciasDatos[] = [];
 
   /**
    * @property idProcedimiento
-   * @description ID of the current procedure, defined as a read-only property.
+   * @description ID del procedimiento actual, definido como una propiedad de solo lectura.
    * @type {string | number}
    * @readonly
    */
@@ -173,17 +176,18 @@ export class ContenedorDeDatosSolicitudComponent implements OnInit, OnDestroy {
 
   /**
    * @constructor
-   * @description Initializes dependencies and services used within this component.
+   * @description Inicializa las dependencias y servicios utilizados dentro de este componente.
    *
-   * @param {Tramite260210Query} Tramite260210Query - Query service to retrieve the current
-   * state of the “Tramite 260210” from the store.
-   * @param {Tramite260210Store} Tramite260210Store - Store service to update the
-   * “Tramite 260214” state with the selected data from the component.
+   * @param {Tramite260210Query} Tramite260210Query - Servicio de consulta para recuperar el estado
+   * actual del "Tramite 260210" desde el store.
+   * @param {Tramite260210Store} Tramite260210Store - Servicio de store para actualizar el
+   * estado del "Tramite 260210" con los datos seleccionados del componente.
    */
   constructor(
-    private Tramite260210Query: Tramite260210Query,
-    private Tramite260210Store: Tramite260210Store,
+    private tramite260210Query: Tramite260210Query,
+    private tramite260210Store: Tramite260210Store,
     private consultaQuery: ConsultaioQuery,
+    private registroSolicitudService: RegistroSolicitudService,
   ) {
     this.consultaQuery.selectConsultaioState$
       .pipe(
@@ -197,16 +201,31 @@ export class ContenedorDeDatosSolicitudComponent implements OnInit, OnDestroy {
 
   /**
    * @method ngOnInit
-   * @description Angular lifecycle hook that runs once the component is initialized.
-   * Subscribes to the “Tramite260210” state changes and updates the component’s local
-   * configuration objects with data from the store.
+   * @description Hook del ciclo de vida de Angular que se ejecuta una vez que el componente es inicializado.
+   * Se suscribe a los cambios de estado del "Tramite260210" y actualiza los objetos de configuración
+   * locales del componente con datos del store.
    *
    * @returns {void}
    */
   ngOnInit(): void {
-    this.Tramite260210Query.selectTramiteState$
+    this.cargarTablaOpcionConfigSolicitud();
+    this.tramite260210Query.selectTramiteState$
       .pipe(
         takeUntil(this.destroyNotifier$),
+        distinctUntilChanged((prev, curr) => {
+          // Solo activa actualizaciones cuando los arreglos de datos principales realmente cambien
+          // Verifica si opcionConfigDatos, scianConfigDatos, o tablaMercanciasConfigDatos han cambiado
+          const PREV_OPCION = JSON.stringify(prev.opcionConfigDatos || []);
+          const CURR_OPCION = JSON.stringify(curr.opcionConfigDatos || []);
+          const PREV_SCIAN = JSON.stringify(prev.scianConfigDatos || []);
+          const CURR_SCIAN = JSON.stringify(curr.scianConfigDatos || []);
+          const PREV_MERCANCIAS = JSON.stringify(prev.tablaMercanciasConfigDatos || []);
+          const CURR_MERCANCIAS = JSON.stringify(curr.tablaMercanciasConfigDatos || []);
+          
+          return PREV_OPCION === CURR_OPCION && 
+                 PREV_SCIAN === CURR_SCIAN && 
+                 PREV_MERCANCIAS === CURR_MERCANCIAS;
+        }),
         map((seccionState) => {
           this.tramiteState = seccionState;
           this.opcionConfig.datos = this.tramiteState.opcionConfigDatos ?? [];
@@ -217,6 +236,16 @@ export class ContenedorDeDatosSolicitudComponent implements OnInit, OnDestroy {
       )
       .subscribe();
   }
+
+enIdSolicitudPrellenado($event:number): void {
+    const SOLICITUDE_ID = $event;
+    this.registroSolicitudService.parcheOpcionesPrellenadas(260213, SOLICITUDE_ID).subscribe((res:any) => {
+      if(res && res.datos){
+        GuardarMappingAdapter.patchToStore(res.datos, this.tramite260210Store);
+      }
+    });
+  }
+  
   /**
    * Maneja el evento cuando se selecciona una opción en la tabla.
    *
@@ -227,7 +256,10 @@ export class ContenedorDeDatosSolicitudComponent implements OnInit, OnDestroy {
    * con las opciones seleccionadas.
    */
   opcionSeleccionado(event: TablaOpcionConfig[]): void {
-    this.Tramite260210Store.updateOpcionConfigDatos(event);
+    // Actualizar el estado local primero para evitar activar la suscripción del store
+    this.seleccionadoopcionDatos = event;
+    // Solo actualizar el store con datos reales, no estados de selección
+    this.tramite260210Store.updateOpcionConfigDatos(event);
   }
 
   /**
@@ -235,11 +267,14 @@ export class ContenedorDeDatosSolicitudComponent implements OnInit, OnDestroy {
    *
    * @param event - Arreglo de configuraciones seleccionadas de la tabla SCIAN.
    *
-   * Este método actualiza los datos de configuración SCIAN en el estado del trámite 260214
+   * Este método actualiza los datos de configuración SCIAN en el estado del trámite 260210
    * utilizando el evento proporcionado.
    */
   scianSeleccionado(event: TablaScianConfig[]): void {
-    this.Tramite260210Store.updateScianConfigDatos(event);
+    // Actualizar el estado local primero para evitar activar la suscripción del store
+    this.seleccionadoScianDatos = event;
+    // Solo actualizar el store con datos reales, no estados de selección
+    this.tramite260210Store.updateScianConfigDatos(event);
   }
   /**
    * Maneja el evento de selección de mercancías en la tabla.
@@ -248,7 +283,10 @@ export class ContenedorDeDatosSolicitudComponent implements OnInit, OnDestroy {
    *                los datos seleccionados en la tabla de mercancías.
    */
   mercanciasSeleccionado(event: TablaMercanciasDatos[]): void {
-    this.Tramite260210Store.updateTablaMercanciasConfigDatos(event);
+    // Actualizar el estado local primero para evitar activar la suscripción del store  
+    this.seleccionadoTablaMercanciasDatos = event;
+    // Solo actualizar el store con datos reales, no estados de selección
+    this.tramite260210Store.updateTablaMercanciasConfigDatos(event);
   }
 
   /**
@@ -257,7 +295,7 @@ export class ContenedorDeDatosSolicitudComponent implements OnInit, OnDestroy {
    * @param event - El nuevo estado del formulario de datos de la solicitud de tipo `DatosSolicitudFormState`.
    */
   datasolicituActualizar(event: DatosSolicitudFormState): void {
-    this.Tramite260210Store.updateDatosSolicitudFormState(event);
+    this.tramite260210Store.updateDatosSolicitudFormState(event);
   }
 
   /**
@@ -268,13 +306,28 @@ export class ContenedorDeDatosSolicitudComponent implements OnInit, OnDestroy {
    * y las mercancías seleccionadas de la tabla.
    */
   datosDeTablaSeleccionados(event: DatosDeTablaSeleccionados): void {
-    this.Tramite260210Store.update((state) => ({
-      ...state,
-      seleccionadoopcionDatos: event.opcionSeleccionados,
-      seleccionadoScianDatos: event.scianSeleccionados,
-      seleccionadoTablaMercanciasDatos: event.mercanciasSeleccionados,
-      opcionesColapsableState: event.opcionesColapsableState,
-    }));
+    // Actualizar el estado local primero para evitar activadores innecesarios del store
+    this.seleccionadoopcionDatos = event.opcionSeleccionados;
+    this.seleccionadoScianDatos = event.scianSeleccionados;
+    this.seleccionadoTablaMercanciasDatos = event.mercanciasSeleccionados;
+    
+    // Solo actualizar el store si hay cambios reales para evitar activar la suscripción
+    const CURRENT_STATE = this.tramiteState;
+    const HAS_CHANGES = 
+      JSON.stringify(CURRENT_STATE?.seleccionadoopcionDatos || []) !== JSON.stringify(event.opcionSeleccionados) ||
+      JSON.stringify(CURRENT_STATE?.seleccionadoScianDatos || []) !== JSON.stringify(event.scianSeleccionados) ||
+      JSON.stringify(CURRENT_STATE?.seleccionadoTablaMercanciasDatos || []) !== JSON.stringify(event.mercanciasSeleccionados) ||
+      CURRENT_STATE?.opcionesColapsableState !== event.opcionesColapsableState;
+    
+    if (HAS_CHANGES) {
+      this.tramite260210Store.update((state) => ({
+        ...state,
+        seleccionadoopcionDatos: event.opcionSeleccionados,
+        seleccionadoScianDatos: event.scianSeleccionados,
+        seleccionadoTablaMercanciasDatos: event.mercanciasSeleccionados,
+        opcionesColapsableState: event.opcionesColapsableState,
+      }));
+    }
   }
 
    /**
@@ -297,6 +350,21 @@ export class ContenedorDeDatosSolicitudComponent implements OnInit, OnDestroy {
     );
   }
 
+
+  cargarTablaOpcionConfigSolicitud(): void {    
+    this.registroSolicitudService.cargarOpcionesPrellenadoSolicitud(260213, 'AAL0409235E6').subscribe((res:BaseResponse<unknown>) => {
+      const DATOS = res.datos as TablaOpcionConfig[];
+      
+      // Procesar los datos para manejar valores nulos en el proveedor
+      const DATOS_PROCESADOS = DATOS.map(item => ({
+        ...item,
+        proveedor: item.proveedor && item.proveedor.trim() !== '' ? item.proveedor : 'N/A'
+      }));
+      
+      this.opcionConfig.datos = DATOS_PROCESADOS;
+      this.opcionSeleccionado(DATOS_PROCESADOS);
+    });
+  }
 
   /**
    * Método del ciclo de vida de Angular que se llama justo antes de que el componente sea destruido.

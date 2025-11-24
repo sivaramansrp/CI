@@ -279,8 +279,8 @@ const ROUTES: Routes = [
     path: 'importacion-materias-primas-estupefacientes',
     loadChildren: () =>
       import(
-        './tramites/260301/importacion-materias-primas-estupefacientes.module'
-      ).then((m) => m.ImportacionMateriasPrimasEstupefacientesModule),
+        './tramites/260301/certificados-licencias-permisos/certificados-licencias-permisos.module'
+      ).then((m) => m.CertificadosLicenciasPermisosModule),
   },
   {
     path: 'solicitud-permiso',
@@ -306,7 +306,7 @@ const ROUTES: Routes = [
       ),
   },
   {
-    path: 'Permiso-de-importacion',
+    path: 'permiso-de-importacion',
     loadChildren: () =>
       import('./tramites/260512/permiso-de-importacion.module').then(
         (m) => m.PermisoDeImportacionModule

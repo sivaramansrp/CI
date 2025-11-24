@@ -162,4 +162,46 @@ buildTransporte(data:Tramite110209State): unknown {
       }
     }
 
+/** Construye la estructura del certificado de origen a partir del estado dado.  
+ * Devuelve un objeto con los datos procesados según la solicitud. */
+      buildCertificadoOrigen(data: Tramite110209State): unknown {
+        return {
+            "fechaExpedicionStr": data.fechaExpedicion,
+            "fechaVencimientoStr": data.fechaVencimiento,
+            "medioTransporte": data.medioDeTransporte,
+            "observaciones": data.observaciones,
+            "precisa": '',
+            "presenta": '',
+            "paisAsociado": {
+                "cvePais": data.cvePais,
+                "nombre": data.nombre,
+            },
+            "tratadoAsociado": {
+              "nombre": ""
+            },
+            "mercanciasAsociadas": [{
+                    "cantidad": data.cantidad,
+                    "complementoDescripcion": data.descripcion,
+                    "descripcion": data.descripcion,
+                    "fechaFactura": data.fechaFactura,
+                    "fraccionArancelaria": data.mercanciasSeleccionadas.fraccionArancelaria,
+                    "idMercanciaCertificado": data.numeroDeCertificado,
+                    "marca": data.marca,
+                    "masaBruta": '',
+                    "nombreComercial": data.nombre,
+                    "nombreIngles": data.mercanciasSeleccionadas.nombreIngles,
+                    "nombreTecnico": data.mercanciasSeleccionadas.nombreTecnico,
+                    "numeroFactura": data.numeroFactura,
+                    "numeroOrden": data.mercanciasSeleccionadas.numeroDeOrden,
+                    "numeroRegistro": data.numeroDeRegistroFiscal,
+                    "tipoFactura": data.tipoFactura,
+                    "unidadMedidaComercial": data.unidadMedida,
+                    "unidadMedidaDescripcion": data.descripcion,
+                    "unidadMedidaMasaBruta": '',
+                    "valorMercancia": data.valorMercancia
+            }
+          ],
+        }
+      }
+
 }

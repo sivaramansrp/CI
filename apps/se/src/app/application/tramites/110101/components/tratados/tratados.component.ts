@@ -7,7 +7,7 @@ import { ChangeDetectorRef, Component, ElementRef, EventEmitter, Input, OnDestro
 import { EmpaqueResponse, InsumoResponse } from '../../models/response/insumos-empaques-response.model';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Solicitante110101State,Tramite110101Store, createSolicitanteInitialState} from '../../estados/tramites/solicitante110101.store';
-import { Subject, map, takeUntil } from 'rxjs';
+import { Subject, Subscription, map, takeUntil } from 'rxjs';
 import { Catalogo } from '@libs/shared/data-access-user/src';
 import { CatalogoSelectComponent } from '@libs/shared/data-access-user/src/tramites/components/catalogo-select/catalogo-select.component';
 import { CatalogosTramiteService } from '../../services/catalogo.service';
@@ -18,6 +18,7 @@ import { CriterioConfiguracionResponse } from '../../models/response/tratado-con
 import { DatosCriterioResumenResponse } from '../../models/response/tratado-criterio-resumen-response.model';
 import { EvaluacionTratadosService } from '../../services/evaluacion-tratados.service';
 import { EvaluarTratadosResponse } from '../../models/response/tratados-evaluar-response.model';
+import { GenerarDictamenClasificacionService } from '../../../../shared/services/generar-dictamen-clasificacion.service';
 import { MENSAJE_ALERTA_TRATADOS } from '@ng-mf/data-access-user';
 import { Modal } from 'bootstrap';
 import { OtrasInstanciasComponent } from '../otras-instancias/otras-instancias.component';
@@ -224,11 +225,20 @@ export class TratadosComponent implements OnInit, OnDestroy {
   */
   @ViewChild('modalResumenValores', { static: false }) modalElementResumenValores!: ElementRef;
 
+   /**
+   * Referencia al elemento modal para mostrar el Requisito de proceso.
+  */
+  @ViewChild('modalRequisitoProceso', { static: false }) modalRequisitoProceso!: ElementRef;
+
 
   /** Almacena las filas seleccionadas de la tabla */
   public tratadoSeleccionado: EvaluarTratadosResponse[] = [];
-
+  /** Estado de la consulta */
   public consultaState!: ConsultaioState;
+  /** Suscripción para manejo de observables */
+  private subscription!: Subscription;
+  /** Bandera de aladi */
+  public noAceptada!: boolean | null;
     /**
      * Inicializa el TratadosComponent.
      * @param fb - Servicio FormBuilder utilizado para crear y gestionar formularios reactivos.
@@ -248,7 +258,8 @@ export class TratadosComponent implements OnInit, OnDestroy {
     private catalogosTramiteService: CatalogosTramiteService,
     private cd: ChangeDetectorRef,
     private tratadosSolicitudService: TratadosSolicitudService,
-    private evaluacionTratadosService: EvaluacionTratadosService
+    private evaluacionTratadosService: EvaluacionTratadosService,
+    private generarDictamenClasificacionService: GenerarDictamenClasificacionService
   ) { 
     this.consultaioQuery.selectConsultaioState$
       .pipe(
@@ -277,6 +288,12 @@ export class TratadosComponent implements OnInit, OnDestroy {
     this.solicitanteQuery.selectSolicitante$.pipe(takeUntil(this.destroy$),map((seccionState) => {
         this.solicitudeState = seccionState;
     })).subscribe();
+     this.subscription = this.generarDictamenClasificacionService.noAceptada$.subscribe(valor => {
+      this.noAceptada = valor;
+     if (valor !== null) {
+      this.modificarRegistrosAladi();
+     }
+    });
     if (this.solicitudeState.respuestaServicioDatosTabla.length) {
       this.respuestaServicioDatosTabla = this.solicitudeState.respuestaServicioDatosTabla
 
@@ -684,7 +701,7 @@ export class TratadosComponent implements OnInit, OnDestroy {
     { encabezado: "Norma de origen", clave: (item) => item.norma_origen, orden: 4 },
     { encabezado: "Requisito especifico", clave: (item) => item.requisito_especifico, orden: 5 },
     { encabezado: "Calificación sistema", clave: (item) => item.cal_aprobada_sistema ? 'APROBADA' : 'NO APROBADA', orden: 6 },
-    { encabezado: "Calificación dictaminado", clave: (item) => item.cal_aprobada_dictaminador ? 'APROBADA' : 'NO APROBADA', orden: 7 },
+    { encabezado: "Calificación dictaminador", clave: (item) => item.cal_aprobada_dictaminador ? 'APROBADA' : 'NO APROBADA', orden: 7 },
     { encabezado: "Otras instancias", clave: (item) => item.otras_instancias, orden: 8 },
     { encabezado: "Proceso de transformación", clave: (item) => item.proceso_transformacion ?? '', orden: 9 }];
 
@@ -976,8 +993,12 @@ modificarTratado(): void {
   public guardarDatosFormulario(): void {
     this.inicializarFormulario();
     if (this.esFormularioSoloLectura) {
-      this.formularioTratados.disable();
-       this.evaluacionTablaTratados();
+     this.formularioTratados.disable();
+
+    this.evaluacionTablaTratados(() => {
+      this.noAceptada = this.generarDictamenClasificacionService.getNoAceptadaActual();
+      this.modificarRegistrosAladi();
+    });
     } else if (!this.esFormularioSoloLectura) {
       this.formularioTratados.enable();
     }
@@ -1206,7 +1227,7 @@ eliminarTratado(): void {
     categoria: 'danger',
     modo: 'action',
     titulo: '',
-    mensaje: 'Seleccione un pais/tratado/criterio',
+    mensaje: 'Seleccione un país/tratado/criterio',
     cerrar: false,
     tiempoDeEspera: 2000,
     txtBtnAceptar: 'Aceptar',
@@ -1261,7 +1282,24 @@ eliminarTratado(): void {
     categoria: 'danger',
     modo: 'action',
     titulo: '',
-    mensaje: 'No es posible modificar la calificación  ya que la calificación  del sistema es "NO APROBADA"',
+    mensaje: 'No es posible modificar la calificación  ya que la calificación  del sistema es "NO APROBADA".',
+    cerrar: false,
+    tiempoDeEspera: 2000,
+    txtBtnAceptar: 'Aceptar',
+    txtBtnCancelar: '',
+  };
+  }
+
+   /**
+   * Abre el modal de error dictaminador aladi.
+   */
+  abrirModalErrorDictaminadorAladi(): void {
+    this.nuevaNotificacion = {
+    tipoNotificacion: 'alert',
+    categoria: 'danger',
+    modo: 'action',
+    titulo: '',
+    mensaje: 'No es posible modificar la calificación ya que la descripción es "No Aceptada".',
     cerrar: false,
     tiempoDeEspera: 2000,
     txtBtnAceptar: 'Aceptar',
@@ -1292,7 +1330,7 @@ eliminarTratado(): void {
       return;
     }
     const TRATADO = this.tratadoSeleccionado[0];
-    const CRITERIO_ORIGEN = TRATADO.criterio_origen?.trim() ?? '';
+    const CRITERIO_ORIGEN = TRATADO.cve_grupo_criterio?.trim() ?? '';
     const CVE_PAIS = TRATADO.cve_pais?.trim() ?? '';
     const TRATADO_ACUERDO = TRATADO.tratado_acuerdo?.trim() ?? '';
     if (
@@ -1362,7 +1400,7 @@ eliminarTratado(): void {
    * - Si la respuesta es exitosa (`CodigoRespuesta.EXITO`), actualiza `tratadosEvaluacionTablaDatos`.
    * - Si ocurre un error o la respuesta es incorrecta, muestra una notificación de error.
    */
-  evaluacionTablaTratados(): void {
+  evaluacionTablaTratados(callback?: () => void): void {
     this.evaluacionTratadosService.getEvaluarTratados(this.consultaState.id_solicitud)
       .pipe(takeUntil(this.destroy$))
       .subscribe({
@@ -1370,6 +1408,7 @@ eliminarTratado(): void {
           if (response.codigo === CodigoRespuesta.EXITO) {
             this.tratadosEvaluacionTablaDatos = response.datos ?? [];
             this.tratadosActualizados.emit(this.tratadosEvaluacionTablaDatos);
+             callback?.();
           } else {
             window.scrollTo({ top: 0, behavior: 'smooth' });
             this.nuevaNotificacion = {
@@ -1412,7 +1451,7 @@ eliminarTratado(): void {
       return;
     }
 
-    const CRITERIO_ORIGEN = this.tratadoSeleccionado[0].criterio_origen
+    const CRITERIO_ORIGEN = this.tratadoSeleccionado[0].cve_grupo_criterio
     if (CRITERIO_ORIGEN === 'OTROS' || CRITERIO_ORIGEN === 'OTRASINST') {
      
     
@@ -1472,7 +1511,7 @@ eliminarTratado(): void {
       this.abrirModalGlobalAccion();
     }else{
       this.textoRequisitoProceso = this.tratadoSeleccionado[0].descripcion_proceso;
-      this.modalInstance = new Modal(this.modalElementResumenValores.nativeElement);
+      this.modalInstance = new Modal(this.modalRequisitoProceso.nativeElement);
       this.modalInstance?.show();        
     }
   }
@@ -1495,7 +1534,6 @@ eliminarTratado(): void {
    */
   modificarRegistros(): void {
     if (!this.tratadoSeleccionado) {
-      console.warn('No hay tratado seleccionado.');
       return;
     }
 
@@ -1523,6 +1561,34 @@ eliminarTratado(): void {
     this.cerrarDialogo();
   }
 
+/**
+ * @method modificarRegistrosAladi
+ * @description Este método modifica los registros ALADI en la tabla de evaluación de tratados.
+ * Establece como no aprobados los tratados con IDs específicos restringidos.
+ * @returns void
+ */
+  modificarRegistrosAladi():void{
+     if (this.noAceptada === null) {  
+      return;
+    }
+
+   const IDS_RESTRINGIDOS = [102, 103, 104, 105, 106];
+  this.tratadosEvaluacionTablaDatos.forEach(item => {
+    if (IDS_RESTRINGIDOS.includes(item.id_tratado_acuerdo)) {
+      if (this.noAceptada === false) {
+      item.cal_aprobada_dictaminador = false;
+      item.calificacion_dictaminador = 'NO APROBADO';
+      }else{
+        item.cal_aprobada_dictaminador = true;
+        item.calificacion_dictaminador = 'APROBADA';
+      }
+    }
+  });
+  this.noAceptada = null;
+  this.tratadosEvaluacionTablaDatos = [...this.tratadosEvaluacionTablaDatos];
+   this.tratadosActualizados.emit(this.tratadosEvaluacionTablaDatos);
+  }
+
   /**
    * @method limpiarSeleccion
    * @description Limpia la selección de tratados en la tabla de evaluación.
@@ -1542,7 +1608,11 @@ eliminarTratado(): void {
       return;
     }
       
-    if(this.tratadoSeleccionado[0].cal_aprobada_sistema === false){
+    if(this.tratadoSeleccionado[0].calificacion_dictaminador === 'NO APROBADA'){
+      this.abrirModalErrorDictaminadorAladi();
+      return;
+    }
+     if(this.tratadoSeleccionado[0].cal_aprobada_dictaminador === false){
       this.abrirModalErrorDictaminador();
       return;
     }
@@ -1618,5 +1688,6 @@ eliminarTratado(): void {
     this.tramite110101Store.setValidacionFormulario('validacion_tab_tratados_otras_inmstancias', this.validarFormulario() || null);
     this.destroy$.next();
     this.destroy$.complete();
+    this.subscription.unsubscribe();
   }
 }

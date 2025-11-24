@@ -383,17 +383,23 @@ export class PantallasComponent implements OnInit {
           } as Empaque)
           ),
           //Guardado de procesos
-          procesos_solicitados:this.solicitudeState.validacionFraccionArancelaria?.mercancia?.procesos_solicitados?.map(proceso => ({
+         procesos_solicitados: (
+          (this.solicitudeState.proceso_seleccionado?.length
+            ? this.solicitudeState.proceso_seleccionado
+            : this.solicitudeState.validacionFraccionArancelaria?.mercancia?.procesos_solicitados
+          )?.map(proceso => ({
             id_proceso_ceror: proceso.id_proceso_ceror,
             cumple_proceso: proceso.cumple_proceso
-          })) || [],
+          })) || []
+        ),
+
           //Tab mercancia el de fraccion arancelaria
           cve_fraccion: this.solicitudeState.fraccionArancelaria,
           //Al principio se manda en null
-          id_descripcion_alterna_ue: null,
-          id_descripcion_alterna_aelc: null,
-          id_descripcion_alterna_sgp: null,
-          id_descripcion_alterna_ace:  null,
+          id_descripcion_alterna_ue: this.solicitudeState.descripcionUE,
+          id_descripcion_alterna_aelc: this.solicitudeState.descripcionAELC,
+          id_descripcion_alterna_sgp: this.solicitudeState.descripcionSGP,
+          id_descripcion_alterna_ace: this.solicitudeState.descripcionACE,
 
           //Validar fraccion
           peso_es_requerido: this.solicitudeState.validacionFraccionArancelaria.mercancia.peso_es_requerido,
@@ -421,6 +427,7 @@ export class PantallasComponent implements OnInit {
           //Modal insumos
           peso:null,
           volumen: null,
+          descripcion_alterna_modificada: this.solicitudeState.descripcion_alterna_modificada
         }
       }
     };
@@ -430,13 +437,25 @@ export class PantallasComponent implements OnInit {
       .subscribe({
         next: (response) => {
           if (response.codigo === CodigoRespuesta.EXITO) {
+            if (response.datos?.mercancia?.descripciones_alternas_ue?.length || 
+                response.datos?.mercancia?.descripciones_alternas_aelc?.length || 
+                response.datos?.mercancia?.descripciones_alternas_sgp?.length) {
+                this.tramite110101Store.addDescripcionServicioEvaluar(response.datos.mercancia);
+                if(!response.datos?.mercancia.proceso_es_requerido === true){
+                   this.pasoTabsInternos.descripcionesAdicionales(response.datos.mercancia);
+                }
+            }
+
             if(response.datos?.errores?.length && response.datos.errores.length > 0){
                this.mostrarMensajeServicio = true;
-                this.mensajeErrores = response.datos.errores;
+              this.mensajeErrores = response.datos.errores; 
+              this.tramite110101Store.setTabProceso(response.datos?.mercancia.proceso_es_requerido ?? false);
+              this.tramite110101Store.addProcesoSolicitado(response.datos?.mercancia.procesos_solicitados ?? []);
+              this.tramite110101Store.setDescripcionAlternaModificadaResponse(response.datos?.mercancia.descripcion_alterna_modificada);
                 return;
             }
            this.evaluarSolicitudResponse = response.datos ?? {} as ValidarSolicitudResponse;
-           this.tramite110101Store.addTratadosServicioEvaluar(this.evaluarSolicitudResponse.tratados_agregados)
+           this.tramite110101Store.addTratadosServicioEvaluar(this.evaluarSolicitudResponse.tratados_agregados);
             if (onSuccessCallBack) {
             onSuccessCallBack();
            }
@@ -514,10 +533,10 @@ export class PantallasComponent implements OnInit {
         mercancia_asociada_sol: {
           id_solicitud: null,
 
-          id_descripcion_alterna_ue: null,
-          id_descripcion_alterna_aelc: null,
-          id_descripcion_alterna_sgp: null,
-          id_descripcion_alterna_ace: null,
+          id_descripcion_alterna_ue: this.solicitudeState.descripcionUE,
+          id_descripcion_alterna_aelc: this.solicitudeState.descripcionAELC,
+          id_descripcion_alterna_sgp: this.solicitudeState.descripcionSGP,
+          id_descripcion_alterna_ace: this.solicitudeState.descripcionACE,
 
           nombre_comercial: this.solicitudeState.nombreComercial,
           nombre_ingles: this.solicitudeState.nombreIngles,
@@ -649,10 +668,15 @@ export class PantallasComponent implements OnInit {
         cve_declaracion: item.clave,
         aceptado: this.solicitudeState.protesto_verdad ? 1 : 0
       })),
-      procesos: this.solicitudeState.validacionFraccionArancelaria?.mercancia?.procesos_solicitados?.map(proceso => ({
+      procesos : (
+      (this.solicitudeState.proceso_seleccionado?.length
+        ? this.solicitudeState.proceso_seleccionado
+        : this.solicitudeState.validacionFraccionArancelaria?.mercancia?.procesos_solicitados
+      )?.map(proceso => ({
         id_proceso_ceror: proceso.id_proceso_ceror ? proceso.id_proceso_ceror.toString() : null,
         aprobado: proceso.cumple_proceso ?? null
       })) || []
+    ),
     };
 
     this.solicitudService.postSolicitudGuardar(PAYLOAD)

@@ -122,10 +122,10 @@ export const MENSAJE_ALERTA_TRATADOS = {
   MENSAJE_ALERTA: `
 <ul>
   Para seleccionar un tratado y criterio, siga los siguientes pasos:
-  <li>Primero seleccione un país o bloque</li>
-  <li>Después seleccione un tratado o acuerdo</li>
-  <li>Seleccione el criterio para conferir origen</li>
-  <li>Finalmente, agregue su selección a la lista de tratados</li>
+  <li>Primero seleccione un país o bloque.</li>
+  <li>Después seleccione un tratado o acuerdo.</li>
+  <li>Seleccione el criterio para conferir origen.</li>
+  <li>Finalmente, agregue su selección a la lista de tratados.</li>
 </ul>
 `,
 };
@@ -184,7 +184,7 @@ export const ENCABEZADO_TABLA_ACUSE = [
   },
   {
     key: 'documento',
-    valor: 'Documento.',
+    valor: 'Documento',
   },
 ];
 export const ACUSE_SERVICIOS_EXTRAORDINARIOS = {
@@ -198,7 +198,7 @@ export const ACUSE_SERVICIOS_EXTRAORDINARIOS = {
     },
     {
       key: 'documento',
-      valor: 'Documento.',
+      valor: 'Documento',
     },
   ],
   datosTablaAcuse: [
@@ -325,7 +325,78 @@ export const TERCEROS = {
 
 export const URL_PRUEBA = 'assets/pdf/Test03.pdf';
 
+export const TRAMITES_CUATRO_PASOS = ['5701'];
+
 export const PASOS_REQUERIMIENTOS = [
+  {
+    indice: 1,
+    titulo: 'Requerimiento de información',
+    activo: true,
+    completado: true,
+  },
+  {
+    indice: 2,
+    titulo: 'Anexar documentos',
+    activo: false,
+    completado: false,
+  },
+  {
+    indice: 3,
+    titulo: 'Firmar promoción',
+    activo: false,
+    completado: false,
+  },
+];
+
+export const PASOS_REQUERIMIENTOS_DATOS = [
+  {
+    indice: 1,
+    titulo: 'Requerimiento de información',
+    activo: true,
+    completado: true,
+  },
+  {
+    indice: 2,
+    titulo: 'Requerimiento de datos',
+    activo: false,
+    completado: false,
+  },
+  {
+    indice: 3,
+    titulo: 'Firmar promoción',
+    activo: false,
+    completado: false,
+  },
+];
+
+export const PASOS_REQUERIMIENTOS_DATOS_DOCUMENTOS = [
+  {
+    indice: 1,
+    titulo: 'Requerimiento de información',
+    activo: true,
+    completado: true,
+  },
+  {
+    indice: 2,
+    titulo: 'Requerimiento de datos',
+    activo: false,
+    completado: false,
+  },
+  {
+    indice: 3,
+    titulo: 'Anexar documentos',
+    activo: false,
+    completado: false,
+  },
+  {
+    indice: 4,
+    titulo: 'Firmar promoción',
+    activo: false,
+    completado: false,
+  },
+];
+
+export const PASOS_REQUERIMIENTOS_DOCUMENTOS = [
   {
     indice: 1,
     titulo: 'Requerimiento de información',

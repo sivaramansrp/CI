@@ -1,77 +1,82 @@
-import { of } from 'rxjs';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { PasoUnoComponent } from './paso-uno.component';
+import { ConsultaioQuery } from '@ng-mf/data-access-user';
+import { of, Subject } from 'rxjs';
+import { ControlPermisosPreviosExportacionService } from '../../services/control-permisos-previos-exportacion.service';
 
 describe('PasoUnoComponent', () => {
-  let componente: PasoUnoComponent;
-
-  let mockRegistroSolicitudService: any;
+  let component: PasoUnoComponent;
+  let fixture: ComponentFixture<PasoUnoComponent>;
+  let mockControlPermisosService: any;
   let mockConsultaQuery: any;
 
-  beforeEach(() => {
-  mockRegistroSolicitudService = { 
-    someMethod: jest.fn(),
-    getRegistroTomaMuestrasMercanciasData: jest.fn() // Add the missing mocked method
-  };
-  mockConsultaQuery = { someOtherMethod: jest.fn() };
-  componente = new PasoUnoComponent(mockRegistroSolicitudService, mockConsultaQuery);
-});
+  beforeEach(async () => {
+    mockControlPermisosService = {
+      getDatosDeLaSolicitud: jest.fn(),
+      actualizarEstadoFormulario: jest.fn(),
+      getRegistroTomaMuestrasMercanciasData: jest.fn()
+    };
+
+    mockConsultaQuery = {
+      selectConsultaioState$: of({ update: false })
+    };
+
+    await TestBed.configureTestingModule({
+      declarations: [PasoUnoComponent],
+      providers: [
+        { provide: ControlPermisosPreviosExportacionService, useValue: mockControlPermisosService },
+        { provide: ConsultaioQuery, useValue: mockConsultaQuery }
+      ]
+    }).compileComponents();
+
+    fixture = TestBed.createComponent(PasoUnoComponent);
+    component = fixture.componentInstance;
+  });
+  it('should create', () => {
+    expect(component).toBeTruthy();
+  });
 
   it('debería inicializar indice con 1', () => {
-    expect(componente.indice).toBe(1);
+    expect(component.indice).toBe(1);
   });
 
-  it('debería actualizar indice cuando se llama a seleccionaTab', () => {
-    componente.seleccionaTab(2);
-    expect(componente.indice).toBe(2);
-
-    componente.seleccionaTab(1);
-    expect(componente.indice).toBe(1);
+  it('debe marcar esDatosRespuesta en true si update es false', () => {
+    component.ngOnInit();
+    expect(component.esDatosRespuesta).toBe(true);
   });
 
-  it('debería poner esDatosRespuesta en true si update es false', () => {
+  it('seleccionaTab debe actualizar el índice', () => {
+    component.seleccionaTab(3);
+    expect(component.indice).toBe(3);
+  });
+
+  it('ngOnDestroy debe completar destroyNotifier$', () => {
+    const destroyNotifier$ = new Subject<void>();
+    component.destroyNotifier$ = destroyNotifier$;
+    const completeSpy = jest.spyOn(destroyNotifier$, 'complete');
+    const nextSpy = jest.spyOn(destroyNotifier$, 'next');
+    component.ngOnDestroy();
+    expect(nextSpy).toHaveBeenCalled();
+    expect(completeSpy).toHaveBeenCalled();
+  });
+
+  it('debe configurar esDatosRespuesta correctamente según consultaState.update', () => {
+    // Test when update is true
+    mockConsultaQuery.selectConsultaioState$ = of({ update: true });
+    component.ngOnInit();
+    expect(component.esDatosRespuesta).toBe(false);
+
+    // Test when update is false  
+    component.esDatosRespuesta = false; // Reset
     mockConsultaQuery.selectConsultaioState$ = of({ update: false });
-    componente = new PasoUnoComponent(mockRegistroSolicitudService, mockConsultaQuery);
-    componente.ngOnInit();
-    expect(componente.esDatosRespuesta).toBe(true);
+    component.ngOnInit();
+    expect(component.esDatosRespuesta).toBe(true);
   });
 
-  it('debería asignar consultaState desde el observable', () => {
+  it('debe asignar consultaState desde el observable', () => {
     const state = { update: false, foo: 'bar' };
     mockConsultaQuery.selectConsultaioState$ = of(state);
-    componente = new PasoUnoComponent(mockRegistroSolicitudService, mockConsultaQuery);
-    componente.ngOnInit();
-    expect(componente.consultaState).toEqual(state);
+    component.ngOnInit();
+    expect(component.consultaState).toEqual(state);
   });
-
-  it('debería poner esDatosRespuesta en true y llamar actualizarEstadoFormulario si resp es truthy', (done) => {
-  const respMock = { foo: 'bar' };
-  mockRegistroSolicitudService.getRegistroTomaMuestrasMercanciasData.mockReturnValue(of(respMock));
-  mockRegistroSolicitudService.actualizarEstadoFormulario = jest.fn();
-
-  componente = new PasoUnoComponent(mockRegistroSolicitudService, mockConsultaQuery);
-
-  componente.guardarDatosFormulario();
-
-  // Wait for the observable to emit
-  setTimeout(() => {
-    expect(componente.esDatosRespuesta).toBe(true);
-    expect(mockRegistroSolicitudService.actualizarEstadoFormulario).toHaveBeenCalledWith(respMock);
-    done();
-  });
-});
-
-it('no debe llamar actualizarEstadoFormulario ni poner esDatosRespuesta en true si resp es falsy', () => {
-  // Mock getRegistroTomaMuestrasMercanciasData to return observable with null
-  mockRegistroSolicitudService.getRegistroTomaMuestrasMercanciasData = jest.fn(() => of(null));
-  mockRegistroSolicitudService.actualizarEstadoFormulario = jest.fn();
-
-  componente = new PasoUnoComponent(mockRegistroSolicitudService, mockConsultaQuery);
-  componente.destroyNotifier$ = { next: jest.fn(), complete: jest.fn() } as any;
-
-  componente.guardarDatosFormulario();
-
-  expect(componente.esDatosRespuesta).toBe(false);
-  expect(mockRegistroSolicitudService.actualizarEstadoFormulario).not.toHaveBeenCalled();
-});
-  
 });

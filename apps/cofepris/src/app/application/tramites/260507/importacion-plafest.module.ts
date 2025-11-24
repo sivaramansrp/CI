@@ -1,7 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 
-import { AlertComponent, AnexarDocumentosComponent, BtnContinuarComponent, FirmaElectronicaComponent, SolicitanteComponent, TituloComponent, WizardComponent } from '@libs/shared/data-access-user/src';
+import { AlertComponent, AnexarDocumentosComponent, BtnContinuarComponent, FirmaElectronicaComponent, PasoCargaDocumentoComponent, PasoFirmaComponent, SolicitanteComponent, TituloComponent, WizardComponent } from '@libs/shared/data-access-user/src';
 import { DatosComponent } from './pages/datos/datos.component';
 import { DatosDeLaSolicitudComponent } from './components/datos-de-la-solicitud/datos-de-la-solicitud.component';
 import { ImportacionPlafestRoutingModule } from './importacion-plafest-routing.module';
@@ -31,7 +31,9 @@ import { TercerosRelacionados260507Component } from './components/terceros-relac
     SolicitanteComponent,
     DatosDeLaSolicitudComponent,
     TercerosRelacionados260507Component,
-    PagoDeDerechosComponent
+    PagoDeDerechosComponent,
+    PasoCargaDocumentoComponent,
+    PasoFirmaComponent
   ]
 })
 export class ImportacionPlafestModule { }

@@ -45,7 +45,7 @@
           "
           (change)="
             setValoresStore(
-              asignacionOficioNumeroForm,
+              'asignacionOficioNumeroForm',
               'numFolioAsignacionAux',
               'setNumFolioAsignacionAux'
             )
@@ -98,7 +98,7 @@
           class="form-control"
           formControlName="estado"
           (change)="
-            setValoresStore(representacionFederalForm, 'estado', 'setEstado')
+            setValoresStore('representacionFederalForm', 'estado', 'setEstado')
           "
           readonly
         />
@@ -115,7 +115,7 @@
           formControlName="representacionFederal"
           (change)="
             setValoresStore(
-              representacionFederalForm,
+              'representacionFederalForm',
               'representacionFederal',
               'setRepresentacionFederal'
             )
@@ -141,7 +141,7 @@
           formControlName="sumaAprobada"
           (change)="
             setValoresStore(
-              controlMontosAsignacionForm,
+              'controlMontosAsignacionForm',
               'sumaAprobada',
               'setSumaAprobada'
             )
@@ -159,7 +159,7 @@
           formControlName="sumaExpedida"
           (change)="
             setValoresStore(
-              controlMontosAsignacionForm,
+              'controlMontosAsignacionForm',
               'sumaExpedida',
               'setSumaExpedida'
             )
@@ -179,7 +179,7 @@
           formControlName="montoDisponible"
           (change)="
             setValoresStore(
-              controlMontosAsignacionForm,
+              'controlMontosAsignacionForm',
               'montoDisponible',
               'setMontoDisponible'
             )
@@ -204,7 +204,7 @@
           class="form-control"
           formControlName="numOficio"
           (change)="
-            setValoresStore(asignacionDatosForm, 'numOficio', 'setNumOficio')
+            setValoresStore('asignacionDatosForm', 'numOficio', 'setNumOficio')
           "
         />
       </div>
@@ -256,7 +256,7 @@
           formControlName="regimenAduanero"
           (change)="
             setValoresStore(
-              cupoDescripcionForm,
+              'cupoDescripcionForm',
               'regimenAduanero',
               'setRegimenAduanero'
             )
@@ -276,7 +276,7 @@
           formControlName="descripcionProducto"
           (change)="
             setValoresStore(
-              cupoDescripcionForm,
+              'cupoDescripcionForm',
               'descripcionProducto',
               'setDescripcionProducto'
             )
@@ -296,7 +296,7 @@
           formControlName="clasificaionSubproducto"
           (change)="
             setValoresStore(
-              cupoDescripcionForm,
+              'cupoDescripcionForm',
               'clasificaionSubproducto',
               'setClasificaionSubproducto'
             )
@@ -316,7 +316,7 @@
           formControlName="unidadMedidaOficialCupo"
           (change)="
             setValoresStore(
-              cupoDescripcionForm,
+              'cupoDescripcionForm',
               'unidadMedidaOficialCupo',
               'setUnidadMedidaOficialCupo'
             )
@@ -354,7 +354,7 @@
           formControlName="mecanismoAsignacion"
           (change)="
             setValoresStore(
-              cupoDescripcionForm,
+              'cupoDescripcionForm',
               'mecanismoAsignacion',
               'setMecanismoAsignacion'
             )
@@ -371,7 +371,7 @@
           class="form-control"
           formControlName="tratado"
           (change)="
-            setValoresStore(cupoDescripcionForm, 'tratado', 'setTratado')
+            setValoresStore('cupoDescripcionForm', 'tratado', 'setTratado')
           "
           readonly
         />
@@ -390,7 +390,7 @@
             rows="5"
             (change)="
               setValoresStore(
-                cupoDescripcionForm,
+                'cupoDescripcionForm',
                 'fraccionesArancelarias',
                 'setFraccionesArancelarias'
               )
@@ -412,7 +412,7 @@
             rows="5"
             (change)="
               setValoresStore(
-                cupoDescripcionForm,
+                'cupoDescripcionForm',
                 'paisesCupo',
                 'setPaisesCupo'
               )
@@ -434,7 +434,7 @@
             rows="5"
             (change)="
               setValoresStore(
-                cupoDescripcionForm,
+                'cupoDescripcionForm',
                 'observaciones',
                 'setObservaciones'
               )
@@ -456,7 +456,7 @@
             rows="5"
             (change)="
               setValoresStore(
-                cupoDescripcionForm,
+                'cupoDescripcionForm',
                 'descripcionFundamento',
                 'setDescripcionFundamento'
               )
@@ -485,7 +485,7 @@
           size="30"
           (change)="
             setValoresStore(
-              distribucionSaldoForm,
+              'distribucionSaldoForm',
               'montoDisponibleAsignacion',
               'setMontoDisponibleAsignacion'
             )
@@ -508,7 +508,7 @@
           size="30"
           (change)="
             setValoresStore(
-              distribucionSaldoForm,
+              'distribucionSaldoForm',
               'montoExpedir',
               'setMontoExpedir'
             )
@@ -587,7 +587,7 @@
           readonly
           (change)="
             setValoresStore(
-              distribucionSaldoForm,
+              'distribucionSaldoForm',
               'totalExpedir',
               'setTotalExpedir'
             )

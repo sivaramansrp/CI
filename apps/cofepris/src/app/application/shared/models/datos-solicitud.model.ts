@@ -152,6 +152,9 @@ export interface TablaOpcionConfig {
    
    /** Manifestos Casilla de Verificación */
    manifiestosCasillaDeVerificacion: boolean;
+
+   id_solicitud?: number,
+  fecha_creacion?: string,
  }
 
 
@@ -269,6 +272,7 @@ export interface TablaMercanciasDatos {
   unidadMedidaTarifa: string;
   cantidadUMT: string;
   cantidadUmtValor?:string;
+  cantidadUmcValor?:string;
   presentacion: string;
   numeroRegistroSanitario: string;
   paisOrigen: string;
@@ -290,9 +294,12 @@ export interface TablaMercanciasDatos {
   especifiqueEstado?:string;
   especifiqueObligatorio?:string;
   fechaCaducidad?: string;
-    paisDeOriginDatos?: string[];
+  paisDeOriginDatos?: string[];
   paisDeProcedenciaDatos?: string[];
-  id?: number
+  id?: number;
+  usoEspecificoDatosClave?: Array<string>;
+  paisProcedenciaDatosClave?: Array<string>;
+  paisOrigenDatosClave?: Array<string>;
 }
 
 /**

@@ -50,4 +50,14 @@ export interface IniciarAutorizacionResponse {
     numero_folio_alterno: string;
     /** Indica si aplica la ley aduanera 144a */
     aplica_ley_aduanera_144a: boolean;
+    /** Indica si el dictaminador califica como exportador */
+    calificacion_dictaminador_exportador?: boolean | null;
+    /** Indica si el dictaminador califica como exportador JPN */
+    calificacion_dictaminador_exportador_jpn?:boolean | null;
+    /** Indica si la descripción ALADI es correcta */
+    calificacion_descripcion_aladi?: boolean | null;
+    /** Indica si tiene fracción ALADI */
+    mostrar_calificacion_ue?:boolean | null;
+    /** Indica si el dictaminador califica al exportador JPN */
+    mostrar_calificacion_jpn?:boolean | null;
 }

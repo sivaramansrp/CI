@@ -1,4 +1,4 @@
-import { Component, ViewChild } from '@angular/core';
+import { Component, Input, ViewChild } from '@angular/core';
 
 import { DatosDeLaComponent } from '../../../../shared/components/datos-solicitud/datos-solicitud.component';
 import { Tramite260507Store } from '../../../../estados/tramites/260507/tramite260507.store';
@@ -16,6 +16,10 @@ import { Tramite260507Store } from '../../../../estados/tramites/260507/tramite2
   styleUrl: './datos-de-la-solicitud.component.scss'
 })
 export class DatosDeLaSolicitudComponent {
+
+  /** Indica si el botón continuar ha sido activado para ejecutar las validaciones del formulario. */
+    @Input() isContinuarTriggered: boolean = false; 
+    
    /** Referencia al componente 'CertificadoOrigenComponent' en la plantilla.
    * Proporciona acceso a sus métodos y propiedades.
    */

@@ -259,6 +259,23 @@ export class DatosCertificadoDeComponent implements OnDestroy, OnInit,OnChanges 
 
   /**
    * @description
+   * Establece el valor por defecto para el campo idiomaDates después de cargar los datos.
+   */
+  private setDefaultIdiomaValue(): void {
+    if (this.formDatosCertificado && this.idiomaDatos && this.idiomaDatos.length > 0) {
+      const CURRENT_VALUE = this.formDatosCertificado.get('idiomaDates')?.value;
+      if (!CURRENT_VALUE || CURRENT_VALUE === '' || CURRENT_VALUE === -1 || CURRENT_VALUE === '-1') {
+        const DEFAULT_VALUE = this.idiomaDatos[0].id || this.idiomaDatos[0].clave;
+        if (DEFAULT_VALUE) {
+          this.formDatosCertificado.get('idiomaDates')?.setValue(DEFAULT_VALUE, { emitEvent: false });
+          this.setValoresStore('formDatosCertificado', 'idiomaDates', 'setFormDatosCertificado');
+        }
+      }
+    }
+  }
+
+  /**
+   * @description
    * Crea e inicializa el formulario reactivo `formDatosCertificado` con sus controles y validaciones.
    * 
    * @method
@@ -290,7 +307,7 @@ export class DatosCertificadoDeComponent implements OnDestroy, OnInit,OnChanges 
    */
   createForm(): void {
     this.formDatosCertificado = this.fb.group({
-      observacionesDates: [''],
+      observacionesDates: ['', [Validators.maxLength(500)]],
       presenta: [''],
       idiomaDates: ['', this.idoPeam ? [Validators.required, Validators.min(0)] : []],
       EntidadFederativaDates: ['', [Validators.required, Validators.min(0)]],
@@ -310,7 +327,7 @@ export class DatosCertificadoDeComponent implements OnDestroy, OnInit,OnChanges 
    * @param changes - Objeto con pares clave/valor de las propiedades que han cambiado.
    */
   ngOnChanges(changes: SimpleChanges): void {
-    if (changes['datosFormCertificado'] || this.datosFormCertificado) {
+    if (changes['datosFormCertificado'] && this.datosFormCertificado) {
       if (this.formDatosCertificado) {
         this.formDatosCertificado.patchValue(this.datosFormCertificado);
       } else {
@@ -338,7 +355,7 @@ export class DatosCertificadoDeComponent implements OnDestroy, OnInit,OnChanges 
     * emite un evento para indicar si el formulario es válido y otro evento con los datos del campo
     * y su estado asociado en el store.
     */
-  setValoresStore(formGroupName: string, campo: string, storeStateName: string): void {
+  setValoresStore(formGroupName: string, campo: string, storeStateName: string): void {    
     const VALOR = this.formDatosCertificado.get(campo)?.value;
     this.formaValida.emit(this.formDatosCertificado.valid);
     this.formDatosCertificadoEvent.emit({ formGroupName, campo, valor: VALOR, storeStateName });
@@ -380,6 +397,7 @@ export class DatosCertificadoDeComponent implements OnDestroy, OnInit,OnChanges 
       .subscribe(
         (data) => {
           this.idiomaDatos = data.datos as Catalogo[];
+          this.setDefaultIdiomaValue();
         }
       );
     }

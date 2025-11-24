@@ -42,8 +42,8 @@ export class GuardarAdapter_260201 {
           "discriminatorValue": 260201,
           "declaracionesSeleccionadas": state.datosSolicitudFormState.manifesto,
           "regimen": state.datosSolicitudFormState.regimen,
-          "aduanaAIFA": "",
-          "informacionConfidencial": state.datosSolicitudFormState.publico === 'si' ? true : false
+          "aduanaAIFA": "", 
+          "informacionConfidencial": state.datosSolicitudFormState.publico === 'Si' ? true : false
       },
       "establecimiento": {
           "rfcResponsableSanitario": state.datosSolicitudFormState.rfcSanitario,
@@ -69,19 +69,20 @@ export class GuardarAdapter_260201 {
       "datosSCIAN": state.scianConfigDatos.map((datos)=>{
         return {
               "cveScian": datos.clave,
-              "descripcion": datos.descripcion
+              "descripcion": datos.descripcion,
+              "selected": true
           }
       }),
       "mercancias": (state.tablaMercanciasConfigDatos ?? []).map((mercancia) => {
         return {
-              "idMercancia": "",
+              "idMercancia": null,
               "idClasificacionProducto": mercancia.claveClasificacionProductoObj?.clave,
               "nombreClasificacionProducto": mercancia.claveClasificacionProductoObj?.descripcion,
               "ideSubClasificacionProducto": mercancia.especificarClasificacionObj?.clave,
               "nombreSubClasificacionProducto": mercancia.especificarClasificacionObj?.descripcion,
               "descDenominacionEspecifica": mercancia.denominacionEspecificaProducto,
               "descDenominacionDistintiva": mercancia.denominacionDistintiva,
-              "descripcionMercancia": "",
+              "descripcionMercancia": mercancia.denominacionComun,
               "idFormaFarmaceutica": mercancia.formaFarmaceutica,
               "formaFarmaceuticaDescripcionOtros": mercancia.especifiqueForma,
               "idEstadoFisico": mercancia.estadoFisico,
@@ -93,18 +94,18 @@ export class GuardarAdapter_260201 {
               "unidadMedidaComercial": {
                   "descripcion": mercancia.cantidadUMCObj?.descripcion
               },
-              "cantidadUMCConComas": mercancia.cantidadUMC,
+              "cantidadUMCConComas": mercancia.cantidadUmcValor,
               "unidadMedidaTarifa": {
                   "descripcion": mercancia.cantidadUMT
               },
               "cantidadUMTConComas": mercancia.cantidadUmtValor,
               "presentacion": mercancia.presentacion,
               "registroSanitarioConComas": mercancia.numeroRegistroSanitario,
-              "nombreCortoPaisOrigen": mercancia.paisDeOriginDatos?.toString(),
-              "nombreCortoPaisProcedencia": mercancia.paisDeProcedenciaDatos?.toString(),
+              "nombreCortoPaisOrigen": mercancia.paisOrigenDatosClave,
+              "nombreCortoPaisProcedencia": mercancia.paisProcedenciaDatosClave,
               "idTipoProductoTipoTramite": mercancia.tipoProducto,
               "tipoProductoDescripcionOtros": mercancia.especifique,
-              "nombreCortoUsoEspecifico": mercancia.usoEspecifico?.toString(),
+              "nombreCortoUsoEspecifico": mercancia.usoEspecificoDatosClave,
               "fechaCaducidadStr": mercancia.fechaCaducidad
           }
       }),

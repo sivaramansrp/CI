@@ -25,14 +25,14 @@
                     <solicitante></solicitante>
                 }              
                 @case (2) {
-                    <app-datos-de-la-solicitud></app-datos-de-la-solicitud>
+                    <app-datos-de-la-solicitud [idProcedimiento]="idProcedimiento"></app-datos-de-la-solicitud>
                 }
                 @case(3) {
-                    <app-terceros-relacionados></app-terceros-relacionados>
+                    <app-terceros-relacionados [idProcedimiento]="idProcedimiento"></app-terceros-relacionados>
                 }
                
                 @case(4) {
-                   <app-pago-de-derechos></app-pago-de-derechos>
+                   <app-pago-de-derecho [idProcedimiento]="idProcedimiento"></app-pago-de-derecho>
                 }
 
                 @case (5) {

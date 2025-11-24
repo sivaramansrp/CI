@@ -259,7 +259,7 @@ export class CertificadoOrigenComponent
       tratadoAcuerdo: { idTratadoAcuerdo: this.certificadoState.formCertificado['entidadFederativa'] || '105' },
       pais: { cvePais: this.certificadoState.formCertificado['bloque'] || "ARG" },
       fraccionArancelaria: this.certificadoState.formCertificado['fraccionArancelariaForm'] || '',
-      numeroRegistro: this.certificadoState.formCertificado['numeroRegistroForm'] || null,
+      numeroRegistro: this.certificadoState.formCertificado['registroProductoForm'] || null,
       nombreComercial: this.certificadoState.formCertificado['nombreComercialForm'] || '',
       fechaInicio: formatearFechaYyyyMmDd(this.certificadoState.formCertificado['fechaInicioInput'] as string) || "",
       fechaFin: formatearFechaYyyyMmDd(this.certificadoState.formCertificado['fechaFinalInput'] as string) || "",

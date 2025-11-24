@@ -1,10 +1,10 @@
+import { HttpClient } from '@angular/common/http';
+import { HttpCoreService } from '@libs/shared/data-access-user/src';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
+import { PROC_260509 } from '../../servers/api-route';
 import { Solicitud260509State } from '../../../../estados/tramites/260509/tramite260509.store';
 import { Tramite260509Query } from '../../../../estados/queries/260509/tramite260509.query';
-import { HttpCoreService } from '@libs/shared/data-access-user/src';
-import { HttpClient } from '@angular/common/http';
-import { PROC_260509 } from '../../servers/api-route';
 
 @Injectable({
   providedIn: 'root'

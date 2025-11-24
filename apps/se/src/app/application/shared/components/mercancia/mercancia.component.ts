@@ -46,6 +46,7 @@ import {
   REGEX_DESCRIPCION,
   SeccionLibQuery,
   SeccionLibState,
+  ValidacionesFormularioService,
 } from '@libs/shared/data-access-user/src';
 import {
   CatalogoServices,
@@ -190,10 +191,10 @@ export class MercanciaComponent implements OnInit, OnDestroy, OnChanges {
    */
   factura: Catalogo[] = [];
 
-/**
-   * @descripcion
-   * Lista de unidades de medida y clasificación (UMC) disponibles para la marca bruta.
-   */
+  /**
+     * @descripcion
+     * Lista de unidades de medida y clasificación (UMC) disponibles para la marca bruta.
+     */
   umcMarcaBrutaCatalogo: Catalogo[] = [];
 
   /**
@@ -415,8 +416,9 @@ export class MercanciaComponent implements OnInit, OnDestroy, OnChanges {
     private readonly fb: FormBuilder,
     private mercanciaService: MercanciaService,
     private seccionQuery: SeccionLibQuery,
-    public catalogoServices: CatalogoServices
-  ) {}
+    public catalogoServices: CatalogoServices,
+     private validacionesService: ValidacionesFormularioService
+  ) { }
 
   /**
    * @descripcion
@@ -437,7 +439,7 @@ export class MercanciaComponent implements OnInit, OnDestroy, OnChanges {
     this.getTipoFactura();
     this.initActionFormBuild();
   }
-   /** Método público para marcar todos los campos como tocados y mostrar errores */
+  /** Método público para marcar todos los campos como tocados y mostrar errores */
   public markAllFieldsTouched(): void {
     if (this.mercanciaForm) {
       this.mercanciaForm.markAllAsTouched();
@@ -530,7 +532,7 @@ export class MercanciaComponent implements OnInit, OnDestroy, OnChanges {
           ? [Validators.required]
           : null,
       ],
-      marca: [this.datosSeleccionados?.marca ?? null,[Validators.pattern(REGEX_DESCRIPCION)]],
+      marca: [this.datosSeleccionados?.marca ?? null, [Validators.pattern(REGEX_DESCRIPCION)]],
       cantidad: [
         this.datosSeleccionados?.cantidad,
         [
@@ -546,11 +548,11 @@ export class MercanciaComponent implements OnInit, OnDestroy, OnChanges {
           ? [Validators.required]
           : null,
       ],
-        marcaBruta: [
+      marcaBruta: [
         this.datosSeleccionados?.marcaBruta ? this.datosSeleccionados?.marcaBruta : '',
-        MARCA_IDS.includes(this.idProcedimiento)
+        MARCA_BRUTA_IDS.includes(this.idProcedimiento)
           ? [Validators.required]
-          : null,
+          : [],
       ],
       umcMarcaBruta: [
         this.datosSeleccionados?.umcMarcaBruta ? this.datosSeleccionados?.umcMarcaBruta : '',
@@ -612,8 +614,7 @@ export class MercanciaComponent implements OnInit, OnDestroy, OnChanges {
    * Activa la alerta en el modal.
    */
   activarModal(): void {
-    this.mostrarAlerta = true;
-    this.abrirModal();
+    this.acceptar(false);
   }
   /*
    * @descripcion
@@ -641,10 +642,15 @@ export class MercanciaComponent implements OnInit, OnDestroy, OnChanges {
       onlySelf: false,
       emitEvent: false,
     });
-
+    
+    if (this.mercanciaForm.valid) {
+      this.mostrarAlerta = true;
+      this.abrirModal();
+    }
     if (!(agregar && this.mercanciaForm.valid)) {
       return;
     }
+
 
     this.guardarClicado.emit(this.mercanciaForm.value);
     const MERCANIADATO = this.mercanciaForm.getRawValue();
@@ -660,6 +666,16 @@ export class MercanciaComponent implements OnInit, OnDestroy, OnChanges {
         });
     }
   }
+    /**
+     * Valida un campo del formulario.
+     *
+     * @param {FormGroup} form - El formulario reactivo.
+     * @param {string} field - El nombre del campo a validar.
+     * @returns {boolean} `true` si el campo es válido, de lo contrario `false`.
+     */
+    isValid(form: FormGroup, field: string): boolean {
+      return this.validacionesService.isValid(form, field) || false;
+    }
 
   /**
    * Construye un objeto de tipo `Mercancia` a partir de los datos proporcionados,

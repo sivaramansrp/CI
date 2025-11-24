@@ -44,6 +44,19 @@ import { DatosSolicitudService } from '../../../services/datos-solicitud.service
 import { Fabricante } from '../../../models/terceros-relacionados.model';
 import { TERCEROS_RELACIONADOS_DATOS_INICIALES } from '../../../constantes/terceros-fabricante.enum';
 import { TooltipModule } from 'ngx-bootstrap/tooltip';
+
+export function 
+rfcCombinedValidator(control: AbstractControl): ValidationErrors | null {
+  const value = control.value;
+  if (!value) return null;
+  const isFisica = REGEX_RFC_FISICA.test(value);
+  const isMoral = REGEX_RFC_MORAL.test(value);
+
+  if (!isFisica || !isMoral) {
+    return { INVALID_RFC: true };
+  }
+  return null;
+}
  interface OpcionesPublicacion{
   label: string;
   value: string;
@@ -613,7 +626,7 @@ private patchFormWithCatalogObjects(): void {
         Validators.required
       ],
       rfc: [
-        this.obtenerValor('rfc')
+        this.obtenerValor('rfc'),[rfcCombinedValidator]
       ],
       curp: [
         this.obtenerValor('curp'),
@@ -799,6 +812,9 @@ private forzarDeshabilitarPais(): void {
         case 260213:
        this.elementosNoRequeridos = ['codigoPostal','colonia'];
        break;
+       case 260904:
+        this.elementosNoRequeridos = ['codigoPostal','colonia'];
+        break;
         default:
         this.elementosDeshabilitados = [];
         this.elementosNoRequeridos = [];
@@ -1281,11 +1297,11 @@ guardarFabricante(): void {
       NACIONALIDAD === 'Extranjero' &&
       (TIPO_PERSONA === this.tipoPersona.FISICA || TIPO_PERSONA === this.tipoPersona.MORAL)
     ) {
-      RFC_CONTROL.clearValidators();
+     RFC_CONTROL.clearValidators();
     } else {
       RFC_CONTROL.setValidators([
         Validators.required,
-        AgregarFabricanteModificacionComponent.rfcFisicaValidator(TIPO_PERSONA)
+        rfcCombinedValidator
       ]);
     }
     RFC_CONTROL.updateValueAndValidity();
@@ -1333,6 +1349,7 @@ guardarFabricante(): void {
   
 }
 
+
   /**
    * @method changeTipoPersona
    * @description Cambia el estado de los controles del formulario según el tipo de persona seleccionado.
@@ -1355,7 +1372,7 @@ changeTipoPersona(): void {
     } else {
       RFC_CONTROL.setValidators([
         Validators.required,
-        AgregarFabricanteModificacionComponent.rfcFisicaValidator(TIPOPERSONA)
+        rfcCombinedValidator
       ]);
     }
     RFC_CONTROL.updateValueAndValidity();
@@ -1487,7 +1504,9 @@ private resetExcept(excludedControls: string[]): void {
    */
   get mostrarRFC(): boolean {
     return (
-      this.agregarFabricanteForm?.get('nacionalidad')?.value !== 'Extranjero' &&
+      (this.agregarFabricanteForm?.get('nacionalidad')?.value !== 'Extranjero'||((this.agregarFabricanteForm.get('nacionalidad')?.value === 'Nacional' &&
+      this.agregarFabricanteForm.get('tipoPersona')?.value === this.tipoPersona.FISICA )
+      )) &&
       PROCEDIMIENTOS_MUESTRAN_RFC.includes(this.idProcedimiento)
     );
   }

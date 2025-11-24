@@ -221,7 +221,7 @@ export class Tramite260904Store extends Store<Tramite260904State> {
   public updateProveedorTablaDatos(newProveedores: Proveedor[]): void {
     this.update((state) => ({
       ...state,
-      proveedorTablaDatos: [...state.proveedorTablaDatos, ...newProveedores],
+      proveedorTablaDatos: [...newProveedores],
     }));
   }
   /**
@@ -247,7 +247,7 @@ export class Tramite260904Store extends Store<Tramite260904State> {
   public updateFacturadorTablaDatos(newFacturadores: Facturador[]): void {
     this.update((state) => ({
       ...state,
-      facturadorTablaDatos: [...state.facturadorTablaDatos, ...newFacturadores],
+      facturadorTablaDatos: [...newFacturadores],
     }));
   }
 

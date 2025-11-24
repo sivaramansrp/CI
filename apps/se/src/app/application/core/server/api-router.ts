@@ -70,3 +70,21 @@ export const API_GET_DESCARGAR_SOLICITUD = (TRAMITE: string, IDSOLICITUD: string
  * @see https://api-v30.cloud-ultrasist.net/api/sat-t140104/solicitud/buscar
  */
 export const API_BUSCAR_DETALLE_DEL_PERMISO_DATOS = (TRAMITE: string) : string => `sat-t${TRAMITE}/solicitud/buscar`;
+
+/**
+ * API para buscar cupos disponibles.
+ * @see https://api-v30.cloud-ultrasist.net/api/sat-t140104/solicitud/buscar/cupos/disponibles
+ */
+export const API_BUSCAR_CUPOS_DISPONIBLES = (TRAMITE: string) : string => `sat-t${TRAMITE}/solicitud/buscar/cupos/disponibles`;
+
+/**
+ * API para obtener certificados disponibles.
+ * @see https://api-v30.cloud-ultrasist.net/api/sat-t140103/solicitud/obtener/certificados/disponibles
+ */
+export const API_OBTENER_CERTIFICADOS_DISPONIBLES = (TRAMITE: string) : string => `sat-t${TRAMITE}/solicitud/obtener/certificados/disponibles`;
+
+/**
+ * API para obtener detalle de la solicitud.
+ * @see https://api-v30.cloud-ultrasist.net/api/sat-t140103/solicitud/obtener/detalle
+ */
+export const API_OBTENER_DETALLE_SOLICITUD = (TRAMITE: string) : string => `sat-t${TRAMITE}/solicitud/obtener/detalle`;

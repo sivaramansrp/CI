@@ -1,8 +1,9 @@
 
-import { ALERTARCHIVOMSG, PARTIDASDELAMERCANCIA_TABLA, TEXTOS } from '../../constantes/partidas-de-la-mercancia.enum';
+import { ALERTARCHIVOMSG, MENSAJES, PARTIDASDELAMERCANCIA_TABLA, TEXTOS } from '../../constantes/partidas-de-la-mercancia.enum';
 import { AlertComponent, ConfiguracionColumna, Notificacion, NotificacionesComponent, TipoNotificacionEnum } from '@ng-mf/data-access-user';
-import { Component, ElementRef, EventEmitter, Input, OnChanges, Output, SimpleChanges, ViewChild } from '@angular/core';
-import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
+import { Catalogo, CatalogoSelectComponent } from '@libs/shared/data-access-user/src';
+import { Component, ElementRef, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges, ViewChild } from '@angular/core';
+import { FormBuilder, FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { Modal } from 'bootstrap';
 import { PartidasDeLaMercanciaModelo } from '../../models/partidas-de-la-mercancia.model';
@@ -27,12 +28,13 @@ import { TooltipModule } from 'ngx-bootstrap/tooltip';
     TablaDinamicaComponent,
     TooltipModule,
     AlertComponent,
-    NotificacionesComponent
+    NotificacionesComponent,
+    CatalogoSelectComponent
   ],
   templateUrl: './partidas-de-la-mercancia.component.html',
   styleUrl: './partidas-de-la-mercancia.component.scss',
 })
-export class PartidasDeLaMercanciaComponent implements OnChanges {
+export class PartidasDeLaMercanciaComponent implements OnChanges, OnInit {
   /**
    * Textos utilizados en el componente.
    * @type {typeof TEXTOS}
@@ -216,6 +218,62 @@ export class PartidasDeLaMercanciaComponent implements OnChanges {
    * @Input()
    */
   @Input() isInvalidaPartidas: boolean = false;
+  
+   /**
+     * Lista de elementos del catálogo de fracciones arancelarias.
+     * @type {Catalogo[]}
+     */
+    @Input() fraccionDescripcionPartidasDeLaMercancia: Catalogo[] = [];
+
+    /**
+     * @description
+     * Lista de fracciones arancelarias utilizada para modificar
+     * las partidas de la mercancía.  
+     * 
+     * Este arreglo se recibe desde el componente padre y contiene
+     * elementos del catálogo que se usarán para mostrar o seleccionar
+     * la fracción correspondiente dentro del formulario.
+     *
+     * @type {Catalogo[]}
+     */
+    @Input() fraccionModificationPartidasDeLaMercancia: Catalogo[] = [];
+
+    /**
+     * @description
+     * Indica si la fracción arancelaria corresponde a TIGIE.  
+     * 
+     * Este valor es recibido desde el componente padre y permite
+     * habilitar o deshabilitar lógica específica relacionada con
+     * la selección o validación de la fracción TIGIE.
+     *
+     * @type {boolean}
+     */
+    @Input() isFraccionTIGIE: boolean = false;
+
+  /**
+   * Constante que contiene los mensajes de texto utilizados en el componente.
+   */
+  MENSAJES_TEXTOS = MENSAJES;
+
+  /**
+   * Indica si se debe mostrar el mensaje de advertencia cuando la mercancía es requerida.
+   * 
+   * @remarks
+   * Cuando este valor es `true`, se mostrará un mensaje informando al usuario que debe ingresar información de la mercancía.
+   * 
+   * @defaultValue false
+   */
+  @Input() mostrarMensajeMercanciaRequerida: boolean = false;
+
+  /**
+   * Indica si se debe mostrar un mensaje que informa que la fracción arancelaria es requerida.
+   * 
+   * @remarks
+   * Cuando este valor es `true`, se mostrará un mensaje al usuario indicando que debe ingresar la fracción arancelaria.
+   * 
+   * @defaultValue false
+   */
+  @Input() mostrarMensajeFraccionArancelariaRequerida: boolean = false;
   /**
    * Constructor para inicializar el componente e inyectar dependencias.
    * FormBuilder para crear formularios reactivos.
@@ -223,6 +281,55 @@ export class PartidasDeLaMercanciaComponent implements OnChanges {
   constructor(private fb: FormBuilder) {
     //  Constructor del componente
   }
+
+  ngOnInit(): void{
+      // Add only if they do NOT exist
+      this.addControlIfMissing('fraccionTigiePartidasDeLaMercancia');
+      this.addControlIfMissing('fraccionDescripcionPartidasDeLaMercancia');
+
+      this.addControlModificationMissing('fraccionTigiePartidasDeLaMercancia');
+      this.addControlModificationMissing('fraccionDescripcionPartidasDeLaMercancia');
+  }
+
+  /**
+ * @description
+ * Agrega un control al formulario `partidasDelaMercanciaForm` si no existe.
+ * 
+ * Este método valida si el control indicado por su nombre ya está
+ * registrado en el formulario. En caso de que no exista, lo crea con
+ * un `FormControl` vacío.
+ *
+ * @param {string} controlName - Nombre del control a verificar o agregar.
+ */
+  private addControlIfMissing(controlName: string): void {
+  if (!this.partidasDelaMercanciaForm.contains(controlName)) {
+    this.partidasDelaMercanciaForm.addControl(
+      controlName,
+      new FormControl('', [])
+    );
+  }
+}
+
+/**
+ * @description
+ * Agrega un control al formulario `modificarPartidasDelaMercanciaForm`
+ * si no existe.
+ * 
+ * Funciona como la versión original, pero está orientado al formulario
+ * utilizado para modificar partidas de la mercancía. Solo crea el control
+ * si aún no está presente en el formulario.
+ *
+ * @param {string} controlName - Nombre del control que se desea agregar si falta.
+ */
+private addControlModificationMissing(controlName: string): void {
+  if (!this.modificarPartidasDelaMercanciaForm.contains(controlName)) {
+    this.modificarPartidasDelaMercanciaForm.addControl(
+      controlName,
+      new FormControl('', [])
+    );
+  }
+}
+
 
   /**
      * Método del ciclo de vida que se ejecuta cuando cambian las propiedades de entrada del componente.
@@ -284,6 +391,7 @@ export class PartidasDeLaMercanciaComponent implements OnChanges {
    */
   validarYEnviarFormulario(): void {
     this.validarYEnviarFormularioEvent.emit();
+    this.filaSeleccionadaChange.emit(this.tableBodyData);
   }
 
   /**

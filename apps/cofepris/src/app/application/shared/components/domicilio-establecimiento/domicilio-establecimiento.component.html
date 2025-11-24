@@ -168,11 +168,10 @@
             <span>Aviso de funcionamiento <span [ngClass]="{'tiene-error': domicilio.get('avisoCheckbox')?.invalid && domicilio.get('avisoCheckbox')?.touched || (mostrarErrores.avisoCheckbox && domicilio.get('avisoCheckbox')?.value === false)}">*</span></span>
             </label>
          </div>
-         @if (domicilio.get('avisoCheckbox')?.touched && domicilio.get('avisoCheckbox')?.errors?.['required'] || mostrarErrores.avisoCheckbox) {
-         <div class="mensaje-error mt-2">
+         <div *ngIf="domicilio.get('avisoCheckbox')?.touched && domicilio.get('avisoCheckbox')?.errors?.['required'] || mostrarErrores.avisoCheckbox"
+               class="mensaje-error">
             Este campo es obligatorio.
          </div>
-         }
       </div>
       <div class="col-md-4">
          <div class="form-group">
@@ -204,7 +203,7 @@
          </crosslist>
       </div>
         <div
-               *ngIf="seleccionadasAduanasEntradaDatos.length === 0 && mostrarErrores.aduanas"
+               *ngIf="seleccionadasAduanasEntradaDatos.length === 0 && mostrarErrores.aduanasEntradas"
                class="mensaje-error">
                Este campo es obligatorio.
             </div>
@@ -429,13 +428,13 @@
                }
                @if(estadoValidte){
                <div class="form-group">
-                  <app-catalogo-select [catalogo]="estadoFisicoCatalogo" formControlName="estadoFisico" [label]="'Estado físico'" [required]="true"
+                    <app-catalogo-select [catalogo]="estadoFisicoCatalogo" formControlName="estadoFisico" [label]="'Estado físico'" [required]="true"
                   name="estadoFisico" [placeholder]="'Seleccione un valor'" 
                   (change)="setValoresStore(formMercancias, 'estadoFisico', 'setEstadoFisico'); formMercancias.get('estadoFisico')?.markAsTouched();"
                   [isDisabled]="esFormularioSoloLectura ||  (formMercancias.get('estadoFisico')?.disabled ?? false)"  [markTouched]="!!(formMercancias.get('estadoFisico')?.invalid && formMercancias.get('estadoFisico')?.touched)"></app-catalogo-select>
                </div>
                }
-               <div class="form-group mt-2" *ngIf="estadoValidte && formMercancias.get('estadoFisico')?.value === '5'">
+               <div class="form-group mt-2" *ngIf="estadoValidte && formMercancias.get('estadoFisico')?.value === 'ESFIMG.OTR'">
                   <label for="estadoFisicoOtro">
                   Especifique<span  [ngClass]="{'tiene-error':formMercancias.get('estadoFisicoOtro')?.invalid && formMercancias.get('estadoFisicoOtro')?.touched}">*</span>:
                   </label>
@@ -793,7 +792,7 @@
                         @if (colapsableTres) {
                         <div class="panel-collapse collapse in" id="panel-01">
                            <div class="panel-body">
-                              <crosslist [fechas]="seleccionarOrigenDelPaisCuatro" [label]="paisOrigenLabel"
+                              <crosslist [fechas]="idProcedimiento ? paises : seleccionarOrigenDelPaisCuatro" [label]="paisOrigenLabel"
                               [botones]="paisDeProcedenciaBotonesCuatro" [isDisabled]="esFormularioSoloLectura"
                               [fechasSeleccionadas]="seleccionadasPaisProveedor"
                               (fechasSeleccionadasChange)="paisProveedorSeleccionadasChange($event)"
@@ -817,7 +816,7 @@
                         @if (colapsableTress) {
                         <div class="panel-collapse collapse in" id="panel-01">
                            <div class="panel-body">
-                              <crosslist [fechas]="seleccionarOrigenDelPaisCinco" [label]="paisEmbarqueLabel"
+                              <crosslist [fechas]="idProcedimiento ? paises : seleccionarOrigenDelPaisCinco" [label]="paisEmbarqueLabel"
                               [botones]="paisDeProcedenciaBotonesCinco" [isDisabled]="esFormularioSoloLectura"
                               [fechasSeleccionadas]="seleccionadasPaisDeProcedenciaDatos"
                               (fechasSeleccionadasChange)="paisDeProcedenciaSeleccionadasChange($event)"

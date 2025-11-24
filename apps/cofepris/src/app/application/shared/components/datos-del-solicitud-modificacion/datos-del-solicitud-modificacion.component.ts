@@ -21,11 +21,13 @@ import {
   Notificacion,
   NotificacionesComponent,
   Pedimento,
-  REGEX_RFC_FISICA,
+  REGEX_IMPORTE_PAGO,
+  REGEX_RFC,
   REGEX_SOLO_DIGITOS,
   SOLO_REGEX_NUMEROS,
-  
+  TablePaginationComponent,
   TablaSeleccion,
+  TipoNotificacionEnum,
   TituloComponent,
 } from '@libs/shared/data-access-user/src';
 import {
@@ -56,6 +58,7 @@ import {
   FormGroup,
   FormsModule,
   ReactiveFormsModule,
+  ValidatorFn,
   Validators,
 } from '@angular/forms';
 
@@ -78,6 +81,9 @@ import { ManifiestosRepresentanteSeccionComponent } from '../manifiestos-represe
 import { NUEVA_NOTIFICACION, PAIS_DE_ORIGEN_LABEL, PAIS_DE_PROCEDENCIA_LABEL, USO_ESPECIFICO_LABEL } from '../../constantes/datos-domicilio-legal.enum';
 
 import {TablaDinamicaComponent} from '@ng-mf/data-access-user';
+import { TooltipModule } from 'ngx-bootstrap/tooltip';
+
+import { AbstractControl, ValidationErrors } from '@angular/forms';
 /*
  ** component
  */
@@ -99,6 +105,9 @@ import {TablaDinamicaComponent} from '@ng-mf/data-access-user';
     AlertComponent,
     InputCheckComponent,
     NotificacionesComponent,
+    TooltipModule,
+    TablePaginationComponent,
+
   ],
 
   templateUrl: './datos-del-solicitud-modificacion.component.html',
@@ -121,7 +130,25 @@ export class DatosDelSolicitudModificacionComponent
  * @default true
  */
   @Input() mostrarScianBotones: boolean = true;
-  
+
+  /**
+   * @property {number} idProcedimiento
+   * Identificador único del procedimiento asociado a la solicitud.
+   * Este valor es recibido como un input desde el componente padre.
+   *
+   * @decorador @Input
+   */
+  @Input() public idProcedimiento!: number;
+
+
+
+
+noOnlySpacesValidator(control: AbstractControl): ValidationErrors | null {
+  if (typeof control.value === 'string' && control.value.trim() === '') {
+    return { required: true };
+  }
+  return null;
+}
   /**
  * @input mostrarNumeroYFecha
  * @description
@@ -130,6 +157,8 @@ export class DatosDelSolicitudModificacionComponent
  * @default true
  */
   @Input() mostrarNumeroYFecha: boolean = true;
+
+  mensajeDeError: string = '';
 
   @Input() mostrarAlerta: boolean = true; // o false, según lo que necesites
   /**
@@ -187,9 +216,18 @@ export class DatosDelSolicitudModificacionComponent
     cerrar: false,
     tiempoDeEspera: 2000,
     txtBtnAceptar: 'Aceptar',
-    txtBtnCancelar: 'Cancelar',
+    txtBtnCancelar: '',
   };
     this.elementoParaEliminar = i;
+  }
+
+  cerrarModalMercancia(): void {
+    this.modalAddAgentMercanciasInstance.hide();
+    this.formMercancias.reset();
+    this.seleccionadasPaisDeOriginDatos= [];
+  this.seleccionadasPaisDeProcedenciaDatos= [];
+  this.seleccionadasEspecificoDatos= [];
+  this.mensajeDeError= '';
   }
 
   /**
@@ -483,6 +521,9 @@ export class DatosDelSolicitudModificacionComponent
    * Muestra el modal para la clave SCIAN.
    */
   public mostrarModeloClave(): void {
+    this.scianForm.reset();
+    this.scianForm.markAsUntouched();
+    this.mensajeDeError = '';
     this.modalInstance.show();
   }
 
@@ -539,6 +580,8 @@ export class DatosDelSolicitudModificacionComponent
    * Datos de la tabla mercancías.
    */
   public seleccionados: MercanciasInfo[] = [];
+
+  public scianSeleccionados: ScianModel[] = [];
   /**
    * Indica si el formulario está en modo solo lectura.
    * Cuando es `true`, los formularios estarán deshabilitados y no se podrán editar.
@@ -636,6 +679,10 @@ export class DatosDelSolicitudModificacionComponent
 onSeleccionChange(event:any): void {
   this.seleccionados = event;
 }
+
+onScianSeleccionChange(event:any): void {
+  this.scianSeleccionados = event;
+}
 /**
  * @method loadScian
  * @description 
@@ -677,6 +724,7 @@ modificarMercancias(): void {
       seleccionadasPaisDeOriginDatos: DATOS.paisDeOrigen,
       seleccionadasPaisDeProcedenciaDatos: DATOS.paisDeProcedencia,
       seleccionadasEspecificoDatos: DATOS.usoEspecifico,
+      denominacionDistintiva: DATOS.denominacionDistintiva,
     });
     this.seleccionadasPaisDeOriginDatos = Array.isArray(DATOS.paisDeOrigen)
     ?DATOS.paisDeOrigen
@@ -700,10 +748,27 @@ modificarMercancias(): void {
       .pipe(takeUntil(this.destroy$))
       .subscribe((response: ScianModel[]) => {
         response?.forEach((resp: ScianModel) => {
-          this.personaparas = [...this.personaparas, resp];
+          this.datosData = [...this.personaparas, resp];
         })
       });
   }
+
+  eliminarScianSeleccionados(): void {
+    this.scianSeleccionados.forEach(row => {
+      const INDEX = this.datosData.findIndex(
+        item => item.claveScian=== row.claveScian
+      );
+      if (INDEX > -1) {
+        this.datosData.splice(INDEX, 1);
+      }
+    });
+    this.datosData = [...this.datosData];
+    this.scianSeleccionados = [];
+  }
+
+ 
+
+ 
 
   /**
    * Método que agrega los controles 'numeroRegistro' y 'fechaCaducidad' al formulario
@@ -752,6 +817,26 @@ modificarMercancias(): void {
       });
   }
 
+  static numeroUMCDecimalesValidator(): ValidatorFn {
+      return (control: AbstractControl): ValidationErrors | null => {
+        const VALUE = control.value;
+        
+        // Skip validation if empty
+        if (!VALUE) {
+          return null;
+        }
+        
+        // Regex pattern: up to 12 digits before decimal, up to 10 after
+        const PATTERN = /^\d{1,12}(\.\d{1,10})?$/;
+        
+        if (!PATTERN.test(VALUE)) {
+          return { formatoInvalido: true };
+        }
+        
+        return null;
+      };
+    }
+
   /**
    * Método de limpieza del componente.
    * Se utiliza para liberar recursos y evitar fugas de memoria.
@@ -760,17 +845,20 @@ modificarMercancias(): void {
     this.domicilioEstablecimiento = this.fb.group({
       ideGenerica: ['', Validators.required],
       observaciones: [{ value: '', disabled: true }, [Validators.required, Validators.maxLength(2000)]],
-      establecimientoRFCResponsableSanitario: ['', [Validators.required,Validators.pattern(REGEX_RFC_FISICA), Validators.maxLength(13)]],
-      establecimientoRazonSocial:['', Validators.required],
-      establecimientoCorreoElectronico :['', [Validators.required, Validators.email]],
+      establecimientoRFCResponsableSanitario: ['', (this.idProcedimiento !== 260917 && this.idProcedimiento !== 260918)
+        ? [Validators.required, Validators.pattern(REGEX_RFC), Validators.maxLength(13)]
+        : [Validators.pattern(REGEX_RFC), Validators.maxLength(13)]
+    ],
+      establecimientoRazonSocial:['',[Validators.required,this.noOnlySpacesValidator]],
+      establecimientoCorreoElectronico :['', [Validators.required, Validators.email,this.noOnlySpacesValidator]],
       establecimientoEstados :['', Validators.required],
-      descripcionMunicipio: ['', Validators.required],
-      localidad: [''],
+      descripcionMunicipio: ['', [Validators.required,this.noOnlySpacesValidator]],
+      localidad: ['',[Validators.pattern(REGEX_IMPORTE_PAGO)]],
       establishomentoColonias: [''],
-      calle: ['', Validators.required],
-      lada: ['', [Validators.maxLength(5), Validators.pattern(REGEX_SOLO_DIGITOS)]],
-      telefono: ['', [Validators.required, Validators.pattern(REGEX_SOLO_DIGITOS),Validators.maxLength(30)]],
-      establecimientoDomicilioCodigoPostal :['', [Validators.required,Validators.maxLength(12)]]
+      calle: ['', [Validators.required,this.noOnlySpacesValidator]],
+      lada: ['', [ Validators.pattern(REGEX_SOLO_DIGITOS)]],
+      telefono: ['', [Validators.required, Validators.pattern(REGEX_SOLO_DIGITOS),Validators.maxLength(30),  this.noOnlySpacesValidator]],
+      establecimientoDomicilioCodigoPostal :['', [Validators.required,Validators.maxLength(12), Validators.pattern(REGEX_SOLO_DIGITOS), this.noOnlySpacesValidator]],
     });
     this.scianForm = this.fb.group({
       scian: ['', Validators.required],
@@ -778,7 +866,7 @@ modificarMercancias(): void {
     });
 
     this.solicitudEstablecimientoForm = this.fb.group({
-      noLicenciaSanitaria:['',[Validators.maxLength(20)]],
+      noLicenciaSanitaria:[''],
       avisoCheckbox: [false],
       licenciaSanitaria: [{ value: '', disabled: true }],
       regimen: ['', Validators.required],
@@ -788,21 +876,22 @@ modificarMercancias(): void {
     this.formMercancias = this.fb.group({
       clasificacion: ['', Validators.required],
       especificarClasificacionProducto: ['', Validators.required],
-      denominacionEspecifica: ['', Validators.required],
+      denominacionEspecifica: ['', [Validators.required,this.noOnlySpacesValidator]],
       denominacionComun: ['', Validators.required],
       tipoDeProducto: ['', Validators.required],
       estadoFisico: ['', Validators.required],
       estadoFormaFarmaceutica: ['', Validators.required],
       fraccionArancelaria: ['', [Validators.required, Validators.minLength(8),Validators.pattern(SOLO_REGEX_NUMEROS),]],
       descripcionFraccion: [ { value: '', disabled: true }, Validators.required],
-      cantidadUMT: ['', Validators.required],
+      cantidadUMT: ['', [Validators.required,Validators.pattern(SOLO_REGEX_NUMEROS)]],
       UMT: [{ value: '', disabled: true }, Validators.required],
-      cantidadUMC: ['', Validators.required],
+      cantidadUMC: ['', [Validators.required,Validators.pattern(SOLO_REGEX_NUMEROS),DatosDelSolicitudModificacionComponent.numeroUMCDecimalesValidator()]],
       UMC: ['', Validators.required],
-      presentacion: ['', Validators.required],
+      presentacion: ['', [Validators.required, this.noOnlySpacesValidator, Validators.maxLength(250)]],
       seleccionadasPaisDeOriginDatos: ['', Validators.required],
       seleccionadasPaisDeProcedenciaDatos: ['', Validators.required],
       seleccionadasEspecificoDatos: ['', Validators.required],
+      denominacionDistintiva:['', Validators.required],
     });
 
   }
@@ -890,8 +979,10 @@ modificarMercancias(): void {
   cerrarModal(): void {
     if (this.modalInstance) {
       this.modalInstance.hide();
+      this.mensajeDeError = '';
     }
   }
+  
   /**
    * @method abrirModal
    * @description
@@ -956,8 +1047,10 @@ modificarMercancias(): void {
    * Guarda un nuevo dato SCIAN y lo agrega a la tabla.
    */
   guardarScian(): void {
+    this.mensajeDeError = '';
      if (this.scianForm.invalid) {
     this.scianForm.markAllAsTouched();
+    this.mensajeDeError = 'Faltan campos por capturar.';
     return;
   }
     if (this.scianForm.valid) {
@@ -965,15 +1058,13 @@ modificarMercancias(): void {
         claveScian: this.scianForm.get('scian')?.value,
         descripcionScian: this.scianForm.get('descripcionScian')?.value,
       };
+     
+      this.datosData.push(SCIAN_DATA);
+      this.datosData = [...this.datosData];
 
-      // Agregar el nuevo dato a la tabla
-      this.personaparas.push(SCIAN_DATA);
-      this.datosData = [...this.personaparas];
-
-      // Limpiar el formulario
       this.scianForm.reset();
+      this.mensajeDeError = '';
 
-      // Cerrar el modal
       this.closeScianModal();
     }
   }
@@ -1007,6 +1098,7 @@ modificarMercancias(): void {
    */
 
   guardarMarcancia(): void {
+    this.mensajeDeError = '';
     if (this.formMercancias.valid) {
       const MERCANCIA: MercanciasInfo = {
         clasificacion: this.formMercancias.get('clasificacion')?.value,
@@ -1063,8 +1155,14 @@ modificarMercancias(): void {
   this.seleccionadasPaisDeProcedenciaDatos= [];
   this.seleccionadasEspecificoDatos= [];
       this.cerrarModalMercancía();
-    }
+    
+  }else{
+    this.formMercancias.markAllAsTouched();
+    this.mensajeDeError = 'Faltan campos por capturar.';
+     return;
   }
+   
+}
 
   limpiarMercancia(): void { 
   this.abrirModalMercancia();

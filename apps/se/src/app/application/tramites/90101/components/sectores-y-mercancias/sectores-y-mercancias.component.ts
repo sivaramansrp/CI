@@ -12,13 +12,13 @@
  * @import { SECTORCOLUMNS } from '../../../../shared/constantes/prosec/prosec.module';
  */
 
-import { AlertComponent, Catalogo, Notificacion, NotificacionesComponent, SoloNumerosDirective, TablaDinamicaComponent, TituloComponent } from '@ng-mf/data-access-user';
+import { AlertComponent, Catalogo, CatalogoServices, Notificacion, NotificacionesComponent, SoloNumerosDirective, TablaDinamicaComponent, TituloComponent, doDeepCopy } from '@ng-mf/data-access-user';
 import { AutorizacionProsecStore, ProsecState } from '../../estados/autorizacion-prosec.store';
 import { Component, Input, OnDestroy, OnInit, forwardRef } from '@angular/core';
-import { FilaProducir, FilaSectors } from '../../models/prosec.module';
+import { FilaProducir, FilaSectors } from '../../models/prosec.model';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Subject, delay, map, takeUntil, tap } from 'rxjs';
-import { AUtorizacionProsecQuery } from '../../queries/autorizacion-prosec.query';
+import { AUtorizacionProsecQuery } from '../../estados/autorizacion-prosec.query';
 import { CatalogoSelectComponent } from '@libs/shared/data-access-user/src';
 import { CommonModule } from '@angular/common';
 import { ConfiguracionColumna } from '@ng-mf/data-access-user';
@@ -53,6 +53,11 @@ import { TablaSeleccion } from '@ng-mf/data-access-user';
   imports: [ ReactiveFormsModule,AlertComponent, TablaDinamicaComponent, CatalogoSelectComponent, TituloComponent, CommonModule, forwardRef(() => SoloNumerosDirective), NotificacionesComponent ]
 })
 export class SectoresYMercanciasComponent implements OnInit, OnDestroy {
+
+  /**
+   * @property {string} loginRfc - RFC del usuario que ha iniciado sesión.
+   */
+  @Input() loginRfc!: string;
 
   /**
    * @input
@@ -111,13 +116,13 @@ export class SectoresYMercanciasComponent implements OnInit, OnDestroy {
    * @compodoc
    */
   sectorColumnsConfiguracion: ConfiguracionColumna<FilaSectors>[] = [
-    { encabezado: 'Lista de sectores', clave: (fila) => fila.sectorLista, orden: 1 },
-    { encabezado: 'Clave del sector', clave: (fila) => fila.sectorClave, orden: 2 },
+    { encabezado: 'Lista de sectores', clave: (fila) => fila.sector, orden: 1 },
+    { encabezado: 'Clave del sector', clave: (fila) => fila.cvSectorCatalogo, orden: 2 },
   ];
 
   producirColumnConfiguracion: ConfiguracionColumna<FilaProducir>[] = [
-    { encabezado: 'Fracción arancelaria', clave: (fila) => fila.arancelaria, orden: 1 },
-    { encabezado: 'Clave del sector', clave: (fila) => fila.sector, orden: 2 },
+    { encabezado: 'Fracción arancelaria', clave: (fila) => fila.fraccionCompuesta, orden: 1 },
+    { encabezado: 'Clave del sector', clave: (fila) => fila.cveSector, orden: 2 },
   ];
 
   /**
@@ -202,6 +207,8 @@ export class SectoresYMercanciasComponent implements OnInit, OnDestroy {
    */
   public nuevaNotificacion!: Notificacion;
 
+  @Input() tramiteId!: string;
+
   /**
    * @constructor
    * @description
@@ -221,7 +228,8 @@ export class SectoresYMercanciasComponent implements OnInit, OnDestroy {
     private AUtorizacionProsecQuery: AUtorizacionProsecQuery,
     private seccionStore: SeccionLibStore,
     private seccionQuery: SeccionLibQuery,
-    private consultaQuery: ConsultaioQuery
+    private consultaQuery: ConsultaioQuery,
+    private catalogoServices: CatalogoServices
   ) {}
 
   /**
@@ -366,15 +374,24 @@ export class SectoresYMercanciasComponent implements OnInit, OnDestroy {
    * @compodoc
    */
   obtenserListaEstado(): void {
-    this.ProsecService.obtenerMenuDesplegable('sector.json').subscribe({
+    this.catalogoServices.sectoresCatalogo(this.tramiteId).subscribe({
       next: (data) => {
-        this.sector = data as Catalogo[];
+        this.sector = data.datos as Catalogo[];
       },
       error: (error: HttpErrorResponse) => {
         console.error('Error al obtener los datos:', error);
         this.sector = [];
       }
-    });
+  });
+    // this.ProsecService.obtenerMenuDesplegable('sector.json').subscribe({
+    //   next: (data) => {
+    //     this.sector = data as Catalogo[];
+    //   },
+    //   error: (error: HttpErrorResponse) => {
+    //     console.error('Error al obtener los datos:', error);
+    //     this.sector = [];
+    //   }
+    // });
   }
 
   /**
@@ -386,11 +403,14 @@ export class SectoresYMercanciasComponent implements OnInit, OnDestroy {
    * @compodoc
    */
   recuperarDatos(): void {
-    this.ProsecService.obtenerTablaDatos('sectorDatos.json').subscribe(
+    this.ProsecService.obtenerSectoresDatos(this.sectoresYMercancias.get('sector')?.value).subscribe(
       (response) => {
-        if (response && Array.isArray(response)) {
-          this.sectors = response as FilaSectors[];
-          this.AutorizacionProsecStore.setSectorDatos(this.sectors);
+        const API_DATOS = doDeepCopy(response);
+        if(API_DATOS.codigo === '00'){
+          if (API_DATOS && API_DATOS.datos && Array.isArray(API_DATOS.datos.sector_seleccionado)) {
+            this.sectors = [...this.sectors, ...API_DATOS.datos.sector_seleccionado];
+            this.AutorizacionProsecStore.setSectorDatos(this.sectors);
+          }
         }
       }
     );
@@ -405,11 +425,35 @@ export class SectoresYMercanciasComponent implements OnInit, OnDestroy {
    * @returns {void}
    */
   recuperarProducirDatos(): void {
-    this.ProsecService.obtenerTablaDatos('producirDatos.json').subscribe(
+    const PAYLOAD = {
+      "fraccion": this.sectoresYMercancias.get('Fraccion_arancelaria')?.value,
+      "id_conf_programa_se": this.listSelectedView[0]?.idConfProgramaSE,
+      "cve_sector": this.listSelectedView[0]?.cvSectorCatalogo,
+      "id_programa_autorizado": null
+    }
+    this.ProsecService.obtenerFraccionArancelariaDatos(PAYLOAD).subscribe(
       (response) => {
-        if (response && Array.isArray(response)) {
-          this.producir = response as FilaProducir[];
-          this.AutorizacionProsecStore.setProducirDatos(this.producir);
+        const API_DATOS = doDeepCopy(response);
+        if(API_DATOS.codigo === '00'){
+          if(API_DATOS && API_DATOS.datos && API_DATOS.datos.fraccion_seleccionada.length === 0){
+            this.espectaculoAlerta = true;
+            this.nuevaNotificacion = {
+              tipoNotificacion: 'alert',
+              categoria: 'danger',
+              modo: 'action',
+              titulo: '',
+              mensaje: API_DATOS?.datos?.response,
+              cerrar: false,
+              tiempoDeEspera: 2000,
+              txtBtnAceptar: 'Aceptar',
+              txtBtnCancelar: '',
+            };
+            return;
+          }
+          if (API_DATOS && API_DATOS.datos && Array.isArray(API_DATOS.datos.fraccion_seleccionada)) {
+            this.producir = [...this.producir, ...API_DATOS.datos.fraccion_seleccionada];
+            this.AutorizacionProsecStore.setProducirDatos(this.producir);
+          }
         }
       }
     );
@@ -423,8 +467,14 @@ export class SectoresYMercanciasComponent implements OnInit, OnDestroy {
    * @returns {void}
    */
   agregarSector(): void {
-    if( this.sectoresYMercancias.get('sector')?.value.length > 0){
-    this.recuperarDatos();
+    const SECTOR_SELECCIONADO = this.sectoresYMercancias.get('sector')?.value;
+    if(SECTOR_SELECCIONADO.length > 0){
+      if(this.sectors.some(sector => sector.cvSectorCatalogo === SECTOR_SELECCIONADO)){
+        this.espectaculoAlerta = true;
+        this.nuevaNotificacion = this.obtenerConfiguracionDeNotificacion('El sector que intenta ingresar ya existe en la lista de sectores capturados.');
+        return;
+      }
+      this.recuperarDatos();
     }
   }
 
@@ -436,7 +486,7 @@ export class SectoresYMercanciasComponent implements OnInit, OnDestroy {
    * @returns {void}
    */
   agregarProducir(): void {
-    if (this.sectoresYMercancias.get('Fraccion_arancelaria')?.value === '') {
+    if( this.listSelectedView.length === 0 ){
       this.espectaculoAlerta = true;
       this.nuevaNotificacion = {
         tipoNotificacion: 'alert',
@@ -449,6 +499,25 @@ export class SectoresYMercanciasComponent implements OnInit, OnDestroy {
         txtBtnAceptar: 'Aceptar',
         txtBtnCancelar: '',
       };
+      return;
+    }
+    const FRACCION_ARANCELARIA = this.sectoresYMercancias.get('Fraccion_arancelaria')?.value;
+    if (FRACCION_ARANCELARIA === '') {
+      this.espectaculoAlerta = true;
+      this.nuevaNotificacion = {
+        tipoNotificacion: 'alert',
+        categoria: 'danger',
+        modo: 'action',
+        titulo: '',
+        mensaje: 'Debe de ingresar una fracción que corresponda al sector selecciondado.',
+        cerrar: false,
+        tiempoDeEspera: 2000,
+        txtBtnAceptar: 'Aceptar',
+        txtBtnCancelar: '',
+      };
+    } else if(this.producir.some(producir => producir?.fraccionArancelaria?.cveFraccion === FRACCION_ARANCELARIA && producir.cveSector === this.listSelectedView[0]?.cvSectorCatalogo)){
+      this.espectaculoAlerta = true;
+      this.nuevaNotificacion = this.obtenerConfiguracionDeNotificacion('El sector que intenta ingresar ya existe en la lista de sectores capturados.');
     }
     else {
       this.espectaculoAlerta = false;
@@ -665,6 +734,29 @@ export class SectoresYMercanciasComponent implements OnInit, OnDestroy {
       );
       this.listSelectedProducir = [];
     }
+  }
+
+  /**
+   * @method obtenerConfiguracionDeNotificacion
+   * @description Obtiene la configuración de notificación para mostrar mensajes al usuario.
+   *
+   * @param {string} mensaje - El mensaje a mostrar en la notificación.
+   * @param {string} [titulo=''] - El título de la notificación.
+   * @param {string} [categoria=''] - La categoría de la notificación (ej. 'success', 'error').
+   * @param {string} [txtBtnCancelar=''] - El texto del botón de cancelar.
+   * @returns {Notificacion} La configuración de la notificación.
+   */
+  obtenerConfiguracionDeNotificacion(mensaje: string, titulo: string = '', categoria: string = '', txtBtnCancelar: string = ''): Notificacion {
+    return {
+        tipoNotificacion: 'alert',
+        categoria: categoria,
+        modo: 'action',
+        titulo: titulo,
+        mensaje: mensaje,
+        cerrar: false,
+        txtBtnAceptar: 'Aceptar',
+        txtBtnCancelar: txtBtnCancelar,
+      };
   }
 
     /**

@@ -3,7 +3,7 @@ import { DomiciliosDePlantasComponent } from './domicilios-de-plantas.component'
 import { FormBuilder } from '@angular/forms';
 import { ProsecService } from '../../services/prosec.service';
 import { AutorizacionProsecStore, ProsecState } from '../../estados/autorizacion-prosec.store';
-import { AUtorizacionProsecQuery } from '../../queries/autorizacion-prosec.query';
+import { AUtorizacionProsecQuery } from '../../estados/autorizacion-prosec.query';
 import { SeccionLibStore } from '@ng-mf/data-access-user';
 import { SeccionLibQuery } from '@ng-mf/data-access-user';
 import { ConsultaioQuery } from '@ng-mf/data-access-user';

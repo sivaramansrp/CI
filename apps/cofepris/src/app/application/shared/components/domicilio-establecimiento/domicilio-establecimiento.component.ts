@@ -1,9 +1,5 @@
 import {
-  CROSLISTA_DE_PAISES,
-  DEFAULT_CONFIGURACION_VISIBILIDAD,
-  INPUT_FECHA_CADUCIDAD_CONFIG,
-} from "../../constantes/datos-domicilio-legal.enum";
-import {
+  CONDICIONES_JUEGOS_SURTIDOS,
   Catalogo,
   ConfiguracionColumna,
   CrossListLable,
@@ -21,6 +17,11 @@ import {
   doDeepCopy,
   esValidObject,
 } from "@libs/shared/data-access-user/src";
+import {
+  CROSLISTA_DE_PAISES,
+  DEFAULT_CONFIGURACION_VISIBILIDAD,
+  INPUT_FECHA_CADUCIDAD_CONFIG,
+} from "../../constantes/datos-domicilio-legal.enum";
 
  import {AbstractControl,
   FormBuilder,
@@ -69,6 +70,7 @@ import { Shared2605Service } from "../../services/shared2605/shared2605.service"
 import { TablePaginationComponent } from "@ng-mf/data-access-user";
 import { TooltipModule } from "ngx-bootstrap/tooltip";
 
+
 export interface RespuestaTabla {
   code: number;
   data: NicoInfo[];
@@ -111,9 +113,7 @@ public mostrarErrores = {
   muncipio: false,
   calle: false,
   telefono: false,
-  deOrigen: false,
-  deProcedencia: false,
-  aduanas:false ,
+  aduanasEntradas:false ,
   avisoCheckbox: false,
   licenciaSanitaria: false,
 };
@@ -152,7 +152,7 @@ nombresCampos:boolean = false;
  * Bandera que indica si se debe validar el estado dentro del formulario.
  * Se recibe como entrada desde el componente padre y su valor por defecto es verdadero.
  */
-  @Input() estadoValidte: boolean = true;
+  @Input() estadoValidte: boolean = false;
 
    /**
    * @descripcion Notificación para mostrar mensajes al usuario.
@@ -296,28 +296,7 @@ nombresCampos:boolean = false;
    * Datos completos de los establecimientos.
    */
   public fullEstablecimientoBodyData = [];
-  estadoFisicoCatalogo: Catalogo[] = [
-    {
-      id: 1,
-      descripcion: "Selecciona un valor",
-    },
-    {
-      id: 2,
-      descripcion: "Sólido",
-    },
-    {
-      id: 3,
-      descripcion: "Líquido",
-    },
-    {
-      id: 4,
-      descripcion: "Gaseoso",
-    },
-    {
-      id: 5,
-      descripcion: "Otro",
-    },
-  ];
+  estadoFisicoCatalogo: Catalogo[] = [];
   /**
    * Constructor del componente.
    * @param fb
@@ -362,6 +341,19 @@ nombresCampos:boolean = false;
       this.obtenerDataMercanciasDatos();
     }
   }
+
+  /**
+     * Método para obtener el catálogo de estado físico de mercancía.
+     */
+    obtenerEstadoFisicoCatalogo(): void {
+      if (this.idProcedimiento && this.estadoValidte) {
+        this.service.estadoFisicoMercanciaCatalogo(this.idProcedimiento.toString())
+          .pipe(takeUntil(this.destroyNotifier$))
+          .subscribe((response) => {
+            this.estadoFisicoCatalogo = response.datos ?? [];
+          });
+      }
+    }
 
   /**
    * Método para obtener el valor de la fecha seleccionada.
@@ -455,10 +447,10 @@ static codigoPostalValidator(control: AbstractControl): ValidationErrors | null 
       regimen: [this.solicitudState?.regimen],
       aduanasEntradas: [this.solicitudState?.aduanasEntradas, [Validators.required]],
       numeroPermiso: [this.solicitudState?.numeroPermiso],
-      paisDeOriginDatos: [this.solicitudState?.aduanasDeEntrada || []],
-   
+      paisDeOriginDatos: [this.solicitudState?.paisDeOriginDatos || []],
+      paisDeProcedenciaDatos:[this.solicitudState?.paisDeProcedenciaDatos || []]
     });
-
+    this.seleccionadasAduanasEntradaDatos = JSON.parse(JSON.stringify(this.solicitudState?.aduanasDeEntrada || []));
     if (this.isGarantiasOfrecidasVisible) {
       this.domicilio.addControl(
         "garantiasOfrecidas",
@@ -473,7 +465,7 @@ static codigoPostalValidator(control: AbstractControl): ValidationErrors | null 
       );
       this.domicilio.addControl(
         "licenciaSanitaria",
-        this.fb.control(this.solicitudState?.licenciaSanitaria, [Validators.required]),
+        this.fb.control(this.solicitudState?.licenciaSanitaria),
       );
     }
 
@@ -526,7 +518,7 @@ static codigoPostalValidator(control: AbstractControl): ValidationErrors | null 
    */
   public seleccionarAduanasEntrada: string[] = [];
 
-  /** Lista del catálogo de aduanas disponible para su uso en el componente o en formularios relacionados. */
+  /** Lista del catálogo de aduanasEntradas disponible para su uso en el componente o en formularios relacionados. */
   public aduanaCatalogo: Catalogo[] = [];
 
   /**
@@ -569,14 +561,18 @@ static codigoPostalValidator(control: AbstractControl): ValidationErrors | null 
   public seleccionadasAduanasEntradaDatos: string[] = [];
 
   /**
-   * Maneja el evento de cambio para las entradas de aduanas seleccionadas.
+   * Maneja el evento de cambio para las entradas de aduanasEntradas seleccionadas.
    * Actualiza el estado interno y el control del formulario con los eventos proporcionados.
    *
-   * @param events - Un arreglo de cadenas que representan las entradas de aduanas seleccionadas.
+   * @param events - Un arreglo de cadenas que representan las entradas de aduanasEntradas seleccionadas.
    */
   aduanasEntradaSeleccionadasChange(events: string[]): void {
-    this.mostrarErrores.aduanas =false;
+    this.mostrarErrores.aduanasEntradas =false;
     this.seleccionadasAduanasEntradaDatos = events;
+    const ADUANA_IDS = this.aduanaCatalogo
+      .filter(item => events.includes(item.descripcion))
+      .map(item => String(item.clave));
+    this.datosDomicilioLegalStore.setAduanaId(ADUANA_IDS);
     this.domicilio.patchValue({
       aduanasEntradas: events,
     });
@@ -585,6 +581,17 @@ static codigoPostalValidator(control: AbstractControl): ValidationErrors | null 
       "aduanasEntradas",
       "setAduanasDeEntrada",
     );
+
+     const SELECTEDADUANASOBJ = events
+    .map(desc => this.aduanaCatalogo.find(a => a.descripcion === desc))
+    .filter((a): a is Catalogo => Boolean(a))
+    .map(a => ({ clave: a.clave, descripcion: a.descripcion }));
+
+  this.setValoresStore(
+    this.domicilio,
+    "SELECTEDADUANASOBJ",
+    "setAduanasDeEntradaObj"
+  );
   }
 
   /**
@@ -662,12 +669,12 @@ static codigoPostalValidator(control: AbstractControl): ValidationErrors | null 
   public seleccionarlistaMercancias: MercanciasInfo[] = [];
 
   /**
-   * Lista de aduanas de entrada seleccionadas.
+   * Lista de aduanasEntradas de entrada seleccionadas.
    */
   aduanasDeEntradaSeleccionadas: string[] = [];
 
   /**
-   * Lista de aduanas de entrada seleccionadas.
+   * Lista de aduanasEntradas de entrada seleccionadas.
    */
   aduanasDeEntradaDatos: string[] = [];
 
@@ -715,7 +722,7 @@ static codigoPostalValidator(control: AbstractControl): ValidationErrors | null 
   /**
    * Lista de rangos de días seleccionarOrigenDelPais.
    */
-  seleccionarOrigenDelPais: string[] = this.crosListaDePaises;
+  seleccionarOrigenDelPais: string[] = [];
 
   /**
    * Lista de rangos de días seleccionarOrigenDelPaisDuos.
@@ -735,7 +742,7 @@ static codigoPostalValidator(control: AbstractControl): ValidationErrors | null 
   /**
    * Lista de rangos de días seleccionarOrigenDelPaisCinco.
    */
-  seleccionarOrigenDelPaisCinco: string[] = this.crosListaDePaises;
+  seleccionarOrigenDelPaisCinco: string[] = [];
   /**
    * Instancia del Modal de Bootstrap utilizada para controlar la visualización y el comportamiento del cuadro de diálogo modal
    * dentro del componente DomicilioEstablecimientoComponent.
@@ -897,6 +904,7 @@ static codigoPostalValidator(control: AbstractControl): ValidationErrors | null 
     this.obtenerpaisesLista();
     this.obtenerMercanciasDatos();
     this.configurarFormularioDomicillio();
+    this.obtenerEstadoFisicoCatalogo();
     this.formAgente = this.fb.group({
       claveScianModal: [
         this.solicitudState?.claveScianModal,
@@ -911,7 +919,6 @@ static codigoPostalValidator(control: AbstractControl): ValidationErrors | null 
       nombreComercial: [""],
       nombreComun: [""],
       nombreCientifico: [""],
-      usoEspecifico: ["", [Validators.required, Validators.maxLength(1000)]],
       fraccionArancelaria: [
         "",
         [
@@ -1006,6 +1013,13 @@ static codigoPostalValidator(control: AbstractControl): ValidationErrors | null 
       this.formMercancias.addControl(
         "paisDeProcedenciaDatos",
         this.fb.control(this.seleccionadasPaisDeProcedenciaDatos, [Validators.required]),
+      );
+    }
+
+    if(this.tieneUsoEspecifico) {
+      this.formMercancias.addControl(
+        "usoEspecifico",
+        this.fb.control("", [Validators.required, Validators.maxLength(1000)]),
       );
     }
 
@@ -1426,6 +1440,8 @@ static codigoPostalValidator(control: AbstractControl): ValidationErrors | null 
       });
     }
     
+
+
   }
 
   /**
@@ -1455,7 +1471,12 @@ static codigoPostalValidator(control: AbstractControl): ValidationErrors | null 
       .subscribe((data): void => {
         this.paisesCatalogo = data.datos ?? [];
         this.paises = this.paisesCatalogo.map(item => item.descripcion);
+        this.seleccionarOrigenDelPais = this.paises;
+        this.seleccionarOrigenDelPaisCinco = this.paises;
       });
+    } else {
+      this.seleccionarOrigenDelPais = this.crosListaDePaises;
+      this.seleccionarOrigenDelPaisCinco = this.crosListaDePaises;
     }
   }
 
@@ -1623,8 +1644,28 @@ static codigoPostalValidator(control: AbstractControl): ValidationErrors | null 
            this.formMercancias.get("objetoImportacionOtro")?.setValidators([]);
         this.formMercancias.get("objetoImportacionOtro")?.updateValueAndValidity();
       }
-    const VALOR = form.get(campo)?.value;
-    (
+      let VALOR;
+    if (campo === "SELECTEDADUANASOBJ") {
+    VALOR = this.seleccionadasAduanasEntradaDatos
+      .map(desc => this.aduanaCatalogo.find(a => a.descripcion === desc))
+      .filter((a): a is Catalogo => Boolean(a))
+      .map(a => ({ clave: a.clave, descripcion: a.descripcion }));
+  } else if(campo === "SELECTED_PAISES_OBJ"){
+    VALOR = this.seleccionadasPaisDeOriginDatos
+      .map(desc => this.paisesCatalogo.find(a => a.descripcion === desc))
+      .filter((a): a is Catalogo => Boolean(a))
+      .map(a => ({ clave: a.clave, descripcion: a.descripcion }));
+  }
+  else if(campo === "SELECTED_PAISES_PROCEDENCIA_OBJ"){
+    VALOR = this.seleccionadasPaisDeProcedenciaDatos
+      .map(desc => this.paisesCatalogo.find(a => a.descripcion === desc))
+      .filter((a): a is Catalogo => Boolean(a))
+      .map(a => ({ clave: a.clave, descripcion: a.descripcion }));
+  }
+   else {
+    VALOR = form.get(campo)?.value;
+  }
+     (
       this.datosDomicilioLegalStore[metodoNombre] as (
         value: string | number | boolean,
       ) => void
@@ -1650,6 +1691,14 @@ static codigoPostalValidator(control: AbstractControl): ValidationErrors | null 
     this.modalInstance.hide();
 
   }
+  /** Devuelve la descripción de un elemento del catálogo según su clave.
+ * @param lista - Lista de objetos con 'clave' y 'descripcion'.
+ * @param clave - Clave del elemento a buscar; retorna '' si no se encuentra.
+ */
+  public bindDescripcion(lista: Catalogo[],clave: string): string {
+  return lista.find(item => item.clave === clave)?.descripcion || '';
+  }
+
   /**
    * Agrega una nueva mercancía a la lista de mercancías si el formulario es válido.
    *
@@ -1664,17 +1713,32 @@ static codigoPostalValidator(control: AbstractControl): ValidationErrors | null 
     this.tieneFormularioMercanciasEnviado = true;
     if (!this.formMercancias.invalid) {
       const RAW = this.formMercancias.getRawValue();
+      const PAIS_DE_ORIGIN_DATOS_OBJ = (RAW.paisDeOriginDatos || [])
+        .map((desc: string) => this.paisesCatalogo.find(p => p.descripcion === desc))
+        .filter((p: Catalogo): p is Catalogo => Boolean(p))
+        .map((p: Catalogo) => ({ clave: p.clave, descripcion: p.descripcion }));
+
+    const PAIS_DE_PROCEDENCIA_DATOS_OBJ = (RAW.paisDeProcedenciaDatos || [])
+      .map((desc: string) => this.paisesCatalogo.find(p => p.descripcion === desc))
+      .filter((p: Catalogo): p is Catalogo => Boolean(p))
+      .map((p: Catalogo) => ({ clave: p.clave, descripcion: p.descripcion }));
 
       const NUEVA_MERCANCIA: MercanciasInfo = {
         ...RAW,
         cantidadUmt: RAW.cantidadUMT,
         cantidadUmc: RAW.cantidadUMC,
-        umc: RAW.UMC,
+        umc:this.bindDescripcion(this.UMCLista, RAW.UMC),
         unidadMedidaTarifa: RAW.UMT,
-        paisOrigen:RAW.paisDeOriginDatos,
+        paisOrigen:RAW.paisProveedor,
       paisProcedenciaUltimoPuerto:RAW.paisDeProcedenciaDatos,
+      paisProduccionIngredienteActivo: RAW.paisFabrica,
+      paisElaboracionProducto: RAW.paisElaboracion,
       numeroRegistroSanitario:RAW.numeroRegistroSanitario,
-      porcentajeConcentracion:RAW.porcentajeConcentracion
+      porcentajeConcentracion:RAW.porcentajeConcentracion,
+      clasificacionToxicologica:this.bindDescripcion(this.clasificacionToxicologicaLista,RAW.clasificacionToxicologica),
+      objetoImportacion: this.bindDescripcion(this.objetoImportacionLista,RAW.objetoImportacion),
+      paisDeOriginDatosObj: PAIS_DE_ORIGIN_DATOS_OBJ,
+      paisDeProcedenciaDatosObj: PAIS_DE_PROCEDENCIA_DATOS_OBJ
 
     };
       const INDEX = this.listaMercancias.findIndex(
@@ -1817,14 +1881,30 @@ openModal():void {
    */
    paisDeProcedenciaSeleccionadasChange(events: string[]): void {
     this.seleccionadasPaisDeProcedenciaDatos = events;
-    this.formMercancias.patchValue({
+    const IDS = this.paisesCatalogo
+      .filter(item => events.includes(item.descripcion))
+      .map(item => String(item.clave));
+    this.datosDomicilioLegalStore.setPaisProcedenciaId(IDS);
+  this.formMercancias.patchValue({
       paisDeProcedenciaDatos: events,
     });
     this.setValoresStore(
-      this.domicilio,
+      this.formMercancias,
       "paisDeProcedenciaDatos",
       "setPaisDeProcedenciaDatos",
     );
+
+    const SELECTED_PAISES_PROCEDENCIA_OBJ = events
+    .map(desc => this.paisesCatalogo.find(p => p.descripcion === desc))
+    .filter((p): p is Catalogo => Boolean(p))
+    .map(p => ({ clave: p.clave, descripcion: p.descripcion }));
+
+  
+  this.setValoresStore(
+    this.formMercancias,
+    "SELECTED_PAISES_PROCEDENCIA_OBJ",
+    "setPaisDeProcedenciaDatosObj"
+  );
   }
 
   /**
@@ -1837,11 +1917,15 @@ openModal():void {
    */
    paisProveedorSeleccionadasChange(events: string[]): void {
     this.seleccionadasPaisProveedor = events;
+    const IDS = this.paisesCatalogo
+      .filter(item => events.includes(item.descripcion))
+      .map(item => String(item.clave));
+    this.datosDomicilioLegalStore.setPaisOrigenId(IDS);
     this.formMercancias.patchValue({
       paisProveedor: events,
     });
     this.setValoresStore(
-      this.domicilio,
+      this.formMercancias,
       "paisProveedor",
       "setPaisProveedor",
     );
@@ -1857,11 +1941,15 @@ openModal():void {
    */
    paisElaboracionSeleccionadasChange(events: string[]): void {
     this.seleccionadasPaisElaboracion = events;
+    const IDS = this.paisesCatalogo
+      .filter(item => events.includes(item.descripcion))
+      .map(item => String(item.clave));
+    this.datosDomicilioLegalStore.setPaisElaboraId(IDS);
     this.formMercancias.patchValue({
       paisElaboracion: events,
     });
     this.setValoresStore(
-      this.domicilio,
+      this.formMercancias,
       "paisElaboracion",
       "setPaisElaboracion",
     );
@@ -1877,11 +1965,15 @@ openModal():void {
    */
    paisfabricaSeleccionadasChange(events: string[]): void {
     this.seleccionadasPaisfabrica = events;
+    const IDS = this.paisesCatalogo
+      .filter(item => events.includes(item.descripcion))
+      .map(item => String(item.clave));
+    this.datosDomicilioLegalStore.setPaisIngredienteActivoId(IDS);
     this.formMercancias.patchValue({
       paisFabrica: events,
     });
     this.setValoresStore(
-      this.domicilio,
+      this.formMercancias,
       "paisFabrica",
       "setPaisFabrica",
     );
@@ -1897,14 +1989,26 @@ openModal():void {
    */
    paisDeOriginSeleccionadasChange(events: string[]): void {
     this.seleccionadasPaisDeOriginDatos = events;
-    this.formMercancias.patchValue({
+      this.formMercancias.patchValue({
       paisDeOriginDatos: events,
     });
     this.setValoresStore(
-      this.domicilio,
+      this.formMercancias,
       "paisDeOriginDatos",
       "setPaisDeOriginDatos",
     );
+
+    const SELECTED_PAISES_OBJ = events
+    .map(desc => this.paisesCatalogo.find(p => p.descripcion === desc))
+    .filter((p): p is Catalogo => Boolean(p))
+    .map(p => ({ clave: p.clave, descripcion: p.descripcion }));
+
+  this.setValoresStore(
+    this.formMercancias,
+    "SELECTED_PAISES_OBJ",
+    "setPaisDeOriginDatosObj"
+  );
+
   }
 
   /**
@@ -2037,10 +2141,10 @@ onConfirmacionModal(accion: boolean): void {
         cantidadUMT: SELECTED.cantidadUmt || SELECTED.cantidadUmt,
         UMT: SELECTED.unidadMedidaTarifa,
         cantidadUMC: SELECTED.cantidadUmc || SELECTED.cantidadUmc,
-        UMC: SELECTED.umc || SELECTED.umc,
+        UMC: this.bindDescripcion(this.UMCLista, SELECTED.umc),
         porcentajeConcentracion: SELECTED.porcentajeConcentracion,
-        clasificacionToxicologica: SELECTED.clasificacionToxicologica,
-        objetoImportacion: SELECTED.objetoImportacion,
+        clasificacionToxicologica:this.bindDescripcion(this.clasificacionToxicologicaLista,SELECTED.clasificacionToxicologica),
+        objetoImportacion: this.bindDescripcion(this.objetoImportacionLista,SELECTED.objetoImportacion),
         paisDeOriginDatos:SELECTED.paisOrigen,
         paisDeProcedenciaDatos:SELECTED.paisProcedenciaUltimoPuerto,
         estadoFisico: SELECTED.estadoFisico,
@@ -2137,13 +2241,42 @@ onConfirmacionModal(accion: boolean): void {
   'muncipio',
   'calle',
   'telefono',
-  'deOrigen',
-  'deProcedencia',
-  'aduanas'
+  'aduanasEntradas'
 ] as (keyof typeof this.mostrarErrores)[];
-if (this.isAvisoLicenciaVisible) {
-  REQUIREDFIELDS.push('avisoCheckbox', 'licenciaSanitaria',)
-}
+ if (this.isAvisoLicenciaVisible) {
+
+    const AVISOCONTROL = this.domicilio.get('avisoCheckbox');
+    const LICENCIACONTROL = this.domicilio.get('licenciaSanitaria');
+    const AVISO_CHECKED = AVISOCONTROL?.value;
+    const LICENCIA_VALOR = LICENCIACONTROL?.value;
+
+    if (AVISO_CHECKED) {
+      REQUIREDFIELDS.push('avisoCheckbox');
+      AVISOCONTROL?.setValidators([Validators.required]);
+      AVISOCONTROL?.updateValueAndValidity();
+      LICENCIACONTROL?.clearValidators();
+      LICENCIACONTROL?.updateValueAndValidity();
+      this.mostrarErrores.licenciaSanitaria = false;
+      this.mostrarErrores.avisoCheckbox = false;
+    } else if(LICENCIA_VALOR){
+      REQUIREDFIELDS.push('licenciaSanitaria');
+      LICENCIACONTROL?.setValidators([Validators.required]);
+      LICENCIACONTROL?.updateValueAndValidity();
+      AVISOCONTROL?.clearValidators();
+      AVISOCONTROL?.updateValueAndValidity();
+      this.mostrarErrores.licenciaSanitaria = false;
+      this.mostrarErrores.avisoCheckbox = false;
+    } else {
+      REQUIREDFIELDS.push('licenciaSanitaria', 'avisoCheckbox');
+      LICENCIACONTROL?.setValidators([Validators.required]);
+      LICENCIACONTROL?.updateValueAndValidity();
+      AVISOCONTROL?.setValidators([Validators.required]);
+      AVISOCONTROL?.updateValueAndValidity();
+      this.mostrarErrores.licenciaSanitaria = true;
+      this.mostrarErrores.avisoCheckbox = true;
+      ISVALID = false;
+    }
+  }
 REQUIREDFIELDS.forEach((field) => {
     const VALUE = this.domicilio.get(field)?.value;
     this.mostrarErrores[field] = !VALUE;
@@ -2171,7 +2304,7 @@ REQUIREDFIELDS.forEach((field) => {
     this.mercanciasTablaCheck=false;
    }
    if(this.seleccionadasAduanasEntradaDatos.length === 0){
-    this.mostrarErrores.aduanas =true;
+    this.mostrarErrores.aduanasEntradas =true;
      ISVALID = false;
    }
    return ISVALID;

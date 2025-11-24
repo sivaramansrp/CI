@@ -1,5 +1,5 @@
+import { Component, EventEmitter, Output, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
 import { PagoDeDerechosBancoComponent } from '../../../../../shared/components/pago-de-derechos-banco/pago-de-derechos-banco.component';
 
 /**
@@ -23,4 +23,14 @@ export class PagoDeDerechosContenedoraComponent {
    */
   public idProcedimiento: number = 260514;
 
+  @ViewChild(PagoDeDerechosBancoComponent)
+  bancoComponent!: PagoDeDerechosBancoComponent;
+ 
+  /**
+   * Llama al método validarFormularios del componente banco.
+   * Retorna true si el formulario es válido, false en caso contrario.
+   */
+  public validarFormulariosBanco(): boolean {
+    return this.bancoComponent?.validarFormularios() ?? false;
+  }
 }

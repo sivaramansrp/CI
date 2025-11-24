@@ -1,6 +1,6 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
+import { ConfiguracionVisibilidad, DEFAULT_CONFIGURACION_VISIBILIDAD} from '../../constantes/datos.enum';
 import { ConsultaioQuery, ConsultaioState } from '@ng-mf/data-access-user';
-import {ConfiguracionVisibilidad,DEFAULT_CONFIGURACION_VISIBILIDAD} from '../../constantes/datos.enum';
 import { Subject, map, takeUntil } from 'rxjs';
 import { DatosDeLaComponent } from '../../../../shared/components/datos-solicitud/datos-solicitud.component';
 import { DatosDomicilioLegalState } from '../../../../shared/estados/stores/datos-domicilio-legal.store';

@@ -1,11 +1,17 @@
+
 import { Agentes_DATOS, AgentestableDatos, MERCANCIA_TABLEDOS_TABLE_BODY_DATA } from '../../constantes/datos-del-tramite.enum';
 import {
   Catalogo,
+  CategoriaMensaje,
   ConsultaioQuery,
+  Notificacion,
   TablaDinamicaComponent,
   TablaSeleccion,
   TableComponent,
-  TituloComponent
+  TipoNotificacionEnum,
+  TituloComponent,
+  NotificacionesComponent,
+  REGEX_LLAVE_DE_PAGO_DE_DERECHO
 } from '@ng-mf/data-access-user';
 import { Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import {
@@ -62,11 +68,158 @@ interface TableBodyData {
 @Component({
   selector: 'app-datos-del-tramite-dos',
   standalone: true,
-  imports: [CommonModule, TituloComponent, CatalogoSelectComponent, TableComponent, ReactiveFormsModule,TablaDinamicaComponent],
+  imports: [
+    CommonModule,
+    TituloComponent,
+    CatalogoSelectComponent,
+    TableComponent,
+    ReactiveFormsModule,
+    TablaDinamicaComponent,
+    NotificacionesComponent
+  ],
   templateUrl: './datos-del-tramite-dos.component.html',
   styleUrl: './datos-del-tramite-dos.component.scss',
 })
 export class DatosDelTramiteDosComponent implements OnInit, OnDestroy {
+
+  /**
+   * Limita el campo numeroPatente a 4 dígitos y actualiza el valor en el formulario.
+   */
+  onNumeroPatenteInput(event: Event): void {
+    const input = event.target as HTMLInputElement;
+    if (input && input.value.length > 4) {
+      input.value = input.value.slice(0, 4);
+    }
+    this.agenteForm.get('numeroPatente')?.setValue(input.value);
+  }
+  /**
+   * Índice de la mercancía seleccionada en la tabla
+   */
+  /**
+   * Índice de la mercancía seleccionada en la tabla.
+   * Es null si no hay ninguna seleccionada.
+   */
+  public selectedMercanciaIndex: number|null = null;
+
+  /**
+   * Arreglo de filas de mercancía seleccionadas en la tabla.
+   */
+  public selectedMercanciaRows: AgentestableDatos[] = [];
+
+  /**
+   * Indica si el botón de eliminar debe estar habilitado (true si hay al menos una fila seleccionada).
+   */
+  public canDelete: boolean = false;
+
+  /**
+   * Indica si el botón de editar debe estar habilitado (true si hay exactamente una fila seleccionada).
+   */
+  public canEdit: boolean = false;
+  /**
+   * Maneja la selección de una fila de la tabla de mercancías
+   */
+  /**
+   * Índice de la mercancía seleccionada en la tabla
+   */
+    /**
+     * Notificación que se muestra al usuario.
+     */
+  public nuevaNotificacion: Notificacion | undefined;
+
+  /**
+   * Maneja la selección de filas en la tabla de mercancías.
+   *
+   * - Actualiza el arreglo de filas seleccionadas.
+   * - Habilita o deshabilita los botones de eliminar y editar según la cantidad de filas seleccionadas.
+   * - Si hay una sola fila seleccionada, guarda su índice para edición; si no, lo limpia.
+   *
+   * @param rows Arreglo de filas seleccionadas de tipo AgentestableDatos.
+   */
+  onMercanciaRowsSelected(rows: AgentestableDatos[]) {
+    this.selectedMercanciaRows = rows;
+    this.canDelete = rows.length > 0;
+    this.canEdit = rows.length === 1;
+    if (rows.length === 1) {
+      this.selectedMercanciaIndex = this.mercanciTablaDatos.findIndex(item => item === rows[0]);
+    } else {
+      this.selectedMercanciaIndex = null;
+    }
+  }
+
+  /**
+   * Maneja la respuesta del modal de confirmación de eliminación
+   */
+  onEliminarConfirmacion(confirmado: boolean) {
+    if (confirmado) {
+      this.confirmarEliminarMercancia();
+    } else {
+      this.nuevaNotificacion = undefined;
+    }
+  }
+  /**
+   * @method abrirElimninarConfirmationopup
+   * Abre un popup de confirmación para eliminar los registros seleccionados.
+   * Si no hay registros seleccionados, no realiza ninguna acción.
+   */
+  abrirElimninarConfirmationopup(): void {
+    this.nuevaNotificacion = {
+      tipoNotificacion: TipoNotificacionEnum.ALERTA,
+      categoria: CategoriaMensaje.ERROR,
+      modo: 'modal',
+      titulo: '',
+      mensaje: '¿Estás seguro que deseas eliminar los registros marcados?',
+      cerrar: false,
+      txtBtnAceptar: 'Aceptar',
+      txtBtnCancelar: 'Cancelar',
+    };
+  }
+
+  /**
+   * Confirma la eliminación después de aceptar en el popup
+   */
+  confirmarEliminarMercancia() {
+    if (this.selectedMercanciaRows && this.selectedMercanciaRows.length > 0) {
+      this.selectedMercanciaRows.forEach(row => {
+        const idx = this.mercanciTablaDatos.findIndex(item => item === row);
+        if (idx > -1) {
+          this.mercanciTablaDatos.splice(idx, 1);
+        }
+      });
+      this.mercanciTablaDatos = [...this.mercanciTablaDatos];
+      // Clear selection and disable buttons
+    
+      this.canDelete = false;
+      this.canEdit = false;
+      this.nuevaNotificacion = undefined;
+    }
+  }
+
+  /**
+   * Elimina la mercancía seleccionada de la tabla
+   */
+  eliminarMercancia() {
+    if (this.selectedMercanciaRows && this.selectedMercanciaRows.length > 0) {
+      this.abrirElimninarConfirmationopup();
+    }
+  }
+
+  /**
+   * Modifica la mercancía seleccionada (carga los datos en el formulario)
+   */
+  modificarMercancia() {
+    // Solo permitir modificar si canEdit es true (una sola fila seleccionada)
+    if (this.canEdit && this.selectedMercanciaIndex !== null) {
+      const mercancia = this.mercanciTablaDatos[this.selectedMercanciaIndex];
+      this.agenteForm.patchValue(mercancia);
+      // Abrir modal si es necesario
+      const modal = document.getElementById('modalAgregar');
+      if (modal && (window as any).bootstrap?.Modal) {
+        (window as any).bootstrap.Modal.getOrCreateInstance(modal).show();
+      }
+      this.canDelete = false;
+      this.canEdit = false;
+    }
+  }
   /**
    * Formulario principal para los datos del trámite dos.
    * 
@@ -413,7 +566,15 @@ export class DatosDelTramiteDosComponent implements OnInit, OnDestroy {
       return;
     }
     const MERCANCIA = this.agenteForm.value;
-   this.mercanciTablaDatos.push(MERCANCIA as AgentestableDatos);
+    if (this.selectedMercanciaIndex !== null && this.selectedMercanciaIndex > -1) {
+      // Update existing
+      this.mercanciTablaDatos[this.selectedMercanciaIndex] = MERCANCIA as AgentestableDatos;
+      this.selectedMercanciaIndex = null;
+    } else {
+      // Add new
+      this.mercanciTablaDatos.push(MERCANCIA as AgentestableDatos);
+    }
+    this.mercanciTablaDatos = [...this.mercanciTablaDatos];
     this.agenteForm.reset();
     this.cerrarModal();
   }

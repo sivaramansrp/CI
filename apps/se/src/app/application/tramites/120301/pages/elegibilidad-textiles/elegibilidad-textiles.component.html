@@ -37,7 +37,7 @@
       @switch (indice) {
       @case (1) {
       <app-paso-uno #pasoUnoRef (tabChanged)="onTabChanged($event)" (errorValidacion)="alErrorDeValidacion($event)"
-        (mostrarOtraPestanaChange)="onMostrarOtraPestanaChange($event)">
+        (mostrarOtraPestanaChange)="onMostrarOtraPestanaChange($event)" (mensajeError)="onMensajeError($event)">
       </app-paso-uno>
       }
       @case (2) {

@@ -171,6 +171,28 @@
     </div>
    }
 
+   @if (descripcionesMostrar) {
+  <div *ngFor="let grupo of descripcionesPorTipo">
+    <ng-titulo [titulo]="'Descripciones disponibles para ' + grupo.tipo" />
+    <ng-alert [CONTENIDO]="'Favor de seleccionar la descripción que coincide con su mercancía.'"></ng-alert>
+    <div class="col-md-12">
+      <div *ngFor="let desc of grupo.descripciones" class="radio-label-wrap">
+        <input
+          type="radio"
+          [id]="'valorDescripcion' + desc.id"
+        [formControlName]="getFormControlName(grupo.tipo)"
+          [value]="desc.id"
+        (change)="setValoresStoreDescripciones(formulario, getFormControlName(grupo.tipo), 'setValor', getFormControlName(grupo.tipo))"
+        />
+        <span class="etiqueta-de-radio radio-label-margin-left">
+          {{ desc.descripcion }}
+        </span>
+      </div>
+    </div>
+  </div>
+}
+
+
     
     <ng-titulo titulo="Representación federal" />
         <div class="row mb-3">

@@ -7,8 +7,9 @@
  * @language es
  */
 import { AutorizacionProsecStore, ProsecState } from '../estados/autorizacion-prosec.store';
-import { Catalogo, RespuestaCatalogos, SeccionLibStore } from '@ng-mf/data-access-user';
+import { Catalogo, JSONResponse, RespuestaCatalogos, SeccionLibStore } from '@ng-mf/data-access-user';
 import { Observable, map } from 'rxjs';
+import { API_ROUTES } from '../../../shared/servers/api-route';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 
@@ -98,6 +99,25 @@ export class ProsecService {
     this.store.setProducirDatos(DATOS.producirDatos);
     this.store.setPlantasDatos(DATOS.plantasDatos);
     this.store.setProductorDatos(DATOS.productorDatos);
+  }
+
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  obtenerPlantasDatosProsec(body: any): Observable<JSONResponse> {
+    return this.http.post<JSONResponse>(API_ROUTES('/sat-t90101').buscarDomicilios, body)
+  }
+
+  obtenerSectoresDatos(clave: string): Observable<JSONResponse> {
+    return this.http.get<JSONResponse>(API_ROUTES('/sat-t90101').sectoresDatos(clave));
+  }
+
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  obtenerFraccionArancelariaDatos(body: any): Observable<JSONResponse> {
+    return this.http.post<JSONResponse>(API_ROUTES('/sat-t90101').buscarSectorFraccionArancelaria, body)
+  }
+
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  obtenerProductorIndirectoDatos(body: any): Observable<JSONResponse> {
+    return this.http.post<JSONResponse>(API_ROUTES('/sat-t90101').buscarProductorIndirecto, body)
   }
   
 }

@@ -8,14 +8,14 @@
       <div class="mt-5" *ngIf="tabla.nombre === 'Fabricante'">
         <h5>Fabricante*:</h5>
         <div class="table-responsive mt-5">
-          <ng-table [commonTableHeader]="fabricanteHeaderData" [commonTableBody]="fabricanteRowData" (seleccionCambio)="onFabricanteSeleccionCambio($event)" [disableSeleccionTablaCheckBox]="esFormularioSoloLectura"
+          <ng-table [commonTableHeader]="fabricanteHeaderData" (rowSelected)="onFabricanteRowSelected($event)" [commonTableBody]="fabricanteRowData" (seleccionCambio)="onFabricanteSeleccionCambio($event)" [disableSeleccionTablaCheckBox]="esFormularioSoloLectura"
           [isInvalida]="(tercerosForm.touched && fabricanteRowData.length === 0) || isfabricanteInvalida"></ng-table>
         </div>
         <br />
         <div class="d-flex justify-content-end mt-3">
           <div *ngIf="showFabricanteButtons">
-            <button class="btn btn-danger me-2" type="button" [disabled]="esFormularioSoloLectura">Eliminar</button>
-            <button class="btn btn-default me-2" type="button" [disabled]="esFormularioSoloLectura">Modificar</button>
+            <button class="btn btn-danger me-2" type="button" [disabled]="esFormularioSoloLectura" (click)="eliminarFabricante()">Eliminar</button>
+            <button class="btn btn-default me-2" type="button" (click)="modificarFabricante()" [disabled]="esFormularioSoloLectura">Modificar</button>
           </div>
           <button type="button" class="btn btn-primary" (click)="toggleDivFabricante()" [disabled]="esFormularioSoloLectura">
             Agregar
@@ -26,15 +26,15 @@
       <div class="mt-5" *ngIf="tabla.nombre === 'Formulador'">
         <h5>Formulador*:</h5>
         <div class="table-responsive mt-5">
-          <ng-table [commonTableHeader]="formuladorHeaderData" [commonTableBody]="formuladorRowData" (seleccionCambio)="onFormuladorSeleccionCambio($event)" 
+          <ng-table [commonTableHeader]="formuladorHeaderData" (rowSelected)="onFormuladorRowSelected($event)"[commonTableBody]="formuladorRowData" (seleccionCambio)="onFormuladorSeleccionCambio($event)" 
           [disableSeleccionTablaCheckBox]="esFormularioSoloLectura"
           [isInvalida]="(tercerosForm.touched && formuladorRowData.length === 0) || isFormuladorInvalida"></ng-table>
         </div>
         <br />
         <div class="d-flex justify-content-end mt-3">
           <div *ngIf="showFormuladorButtons">
-            <button class="btn btn-danger me-2" type="button" [disabled]="esFormularioSoloLectura">Eliminar</button>
-            <button class="btn btn-default me-2" type="button" [disabled]="esFormularioSoloLectura">Modificar</button>
+            <button class="btn btn-danger me-2" type="button" [disabled]="esFormularioSoloLectura" (click)="eliminarFormulador()" >Eliminar</button>
+            <button class="btn btn-default me-2" type="button" [disabled]="esFormularioSoloLectura" (click)="modificarFormulador()">Modificar</button>
           </div>
           <button type="button" class="btn btn-primary" (click)="toggleDivFormulador()" [disabled]="esFormularioSoloLectura">
             Agregar
@@ -45,14 +45,14 @@
       <div class="mt-5" *ngIf="tabla.nombre === 'Proveedor'">
         <h5>Proveedor*:</h5>
         <div class="table-responsive mt-5">
-          <ng-table [commonTableHeader]="proveedorHeaderData" [commonTableBody]="proveedorRowData"  (seleccionCambio)="onProveedorSeleccionCambio($event)" [disableSeleccionTablaCheckBox]="esFormularioSoloLectura"
+          <ng-table [commonTableHeader]="proveedorHeaderData" (rowSelected)="onProveedorRowSelected($event)" [commonTableBody]="proveedorRowData"  (seleccionCambio)="onProveedorSeleccionCambio($event)" [disableSeleccionTablaCheckBox]="esFormularioSoloLectura"
           [isInvalida]="(tercerosForm.touched && proveedorRowData.length === 0) || isProveedorInvalida"></ng-table>
         </div>
         <br />
         <div class="d-flex justify-content-end mt-3">
           <div *ngIf="showProveedorButtons">
-            <button class="btn btn-danger me-2" type="button" [disabled]="esFormularioSoloLectura">Eliminar</button>
-            <button class="btn btn-default me-2" type="button" [disabled]="esFormularioSoloLectura">Modificar</button>
+            <button class="btn btn-danger me-2" type="button" [disabled]="esFormularioSoloLectura" (click)="eliminarProveedor()" >Eliminar</button>
+            <button class="btn btn-default me-2" type="button" [disabled]="esFormularioSoloLectura"  (click)="modificarProveedor()">Modificar</button>
           </div>
           <button type="button" class="btn btn-primary" (click)="toggleDivProveedor()" [disabled]="esFormularioSoloLectura">
             Agregar
@@ -78,7 +78,7 @@
             <div class="mt-2">
               <app-input-radio [radioOptions]="nacionalidadOptions" [isRequired]="true"
                 formControlName="tercerosNacionalidad" [layout]="'vertical'"
-                (valueChange)="cambiarRadio($event)"></app-input-radio>
+                (valueChange)="cambiarRadio($event,agregarFabricanteFormGroup)"></app-input-radio>
             </div>
           </div>
         </div>
@@ -89,11 +89,11 @@
             <div class="mt-2">
               @if (extranjero) {
               <app-input-radio [radioOptions]="tipoPersonaOptions" [isRequired]="true" formControlName="tipoPersona"
-                [layout]="'vertical'" (valueChange)="cambiarRadioFisica($event)" [showTooltip]="true"
+                [layout]="'vertical'" (valueChange)="cambiarRadioFisica($event, agregarFabricanteFormGroup)" [showTooltip]="true"
                 (change)="onTipoPersonaChange(agregarFabricanteFormGroup)"></app-input-radio>
               } @else {
               <app-input-radio [radioOptions]="tipoPersonaTresOptions" [isRequired]="true" formControlName="tipoPersona"
-                [layout]="'vertical'" (valueChange)="cambiarRadioFisica($event)" [showTooltip]="true"
+                [layout]="'vertical'" (valueChange)="cambiarRadioFisica($event, agregarFabricanteFormGroup)" [showTooltip]="true"
                 (change)="onTipoPersonaChange(agregarFabricanteFormGroup)"></app-input-radio>
 
               }
@@ -101,11 +101,11 @@
           </div>
         </div>
       </div>
-      <hr />
+      
 
       <!-- Alternar entradas según la selección de un botón de opción -->
 
-      <div class="row">
+      <div class="row mt-5">
         @if (nacional && noContribuyente){
         <div class="row">
           <div class="col-md-4">
@@ -113,13 +113,31 @@
               <label for="curp" class="form-label">R.F.C.*:<span class="bi bi-question-circle-fill" tooltip="Registro Federal de Contribuyente" placement="top">
               </span>
               </label>
-              <input type="text" id="rfc" formControlName="rfc" class="form-control" name="rfc" />
+              <input type="text" id="rfc" formControlName="rfc" class="form-control" name="rfc" [ngClass]="esValido('rfc', agregarFabricanteFormGroup) ? 'required' : ''"/>
+              @if (agregarFabricanteFormGroup.controls['rfc'].invalid && agregarFabricanteFormGroup.controls['rfc'].touched) {
+                <div class="d-grid">
+                  @if (agregarFabricanteFormGroup.controls['rfc'].errors?.['required']) {
+                    <span class="mensaje-error">Este campo es obligatorio</span>
+                  } @else if (agregarFabricanteFormGroup.controls['rfc'].errors?.['invalidRFC']) {
+                    <span class="mensaje-error">Existen datos incorrectos que no cumplen con el formato esperado</span>
+                  }
+                </div>
+              }
             </div>
           </div>
           <div class="col-md-4">
             <div class="form-group">
               <label for="curp" class="form-label">C.U.R.P.*: </label>
-              <input type="text" id="curp" formControlName="curp" class="form-control" name="curp" />
+              <input type="text" id="curp" formControlName="curp" class="form-control" name="curp" [ngClass]="esValido('curp', agregarFabricanteFormGroup) ? 'required' : ''"/>
+              @if (agregarFabricanteFormGroup.controls['curp'].invalid && agregarFabricanteFormGroup.controls['curp'].touched) {
+              <div class="d-grid">
+                @if (agregarFabricanteFormGroup.controls['curp'].errors?.['required']) {
+                  <span class="mensaje-error">Este campo es obligatorio</span>
+                } @else if (agregarFabricanteFormGroup.controls['curp'].errors?.['invalidCURP']) {
+                  <span class="mensaje-error">Existen datos incorrectos que no cumplen con el formato esperado</span>
+                }
+              </div>
+            }
             </div>
           </div>
           @if(noContribuyente) {
@@ -136,7 +154,7 @@
               <label for="rfc" class="form-label">R.F.C.*:<span class="bi bi-question-circle-fill" tooltip="Registro Federal de Contribuyente" placement="top">
                 </span>
               </label>
-              <input type="text" id="rfc" formControlName="rfc" class="form-control" name="rfc" />
+              <input type="text" id="rfc" formControlName="rfc" class="form-control" name="rfc" [ngClass]="esValido('rfc', agregarFabricanteFormGroup) ? 'required' : ''"/>
             </div>
             @if (agregarFabricanteFormGroup.controls['rfc'].invalid && agregarFabricanteFormGroup.controls['rfc'].touched) {
               <div class="d-grid">
@@ -156,18 +174,34 @@
           <div class="col-md-4">
             <div class="form-group">
               <label for="rfc" class="form-label">C.U.R.P.*: </label>
-              <input type="text" id="curp" formControlName="curp" class="form-control" name="curp" />
+              <input type="text" id="curp" formControlName="curp" class="form-control" name="curp" [ngClass]="esValido('curp', agregarFabricanteFormGroup) ? 'required' : ''"/>
+              @if (agregarFabricanteFormGroup.controls['curp'].invalid && agregarFabricanteFormGroup.controls['curp'].touched) {
+              <div class="d-grid">
+                @if (agregarFabricanteFormGroup.controls['curp'].errors?.['required']) {
+                  <span class="mensaje-error">Este campo es obligatorio</span>
+                } @else if (agregarFabricanteFormGroup.controls['curp'].errors?.['invalidCURP']) {
+                  <span class="mensaje-error">Existen datos incorrectos que no cumplen con el formato esperado</span>
+                }
+              </div>
+            }
             </div>
           </div>
         </div>
-        <hr />
-        <hr />
-        <h5>Datos personales</h5>
+        
+        
+        <h5 class="mt-5">Datos personales</h5>
         <div class="row d-flex datos-personales-form-container">
           <div class="col-md-4">
             <div class="form-group">
               <label for="nombre" class="form-label">Nombre(s)*: </label>
-              <input type="text" id="nombre" formControlName="nombre" name="nombre" class="form-control" />
+              <input type="text" id="nombre" formControlName="nombre" name="nombre" class="form-control" [ngClass]="esValido('nombre', agregarFabricanteFormGroup) ? 'required' : ''"/>
+              @if (agregarFabricanteFormGroup.controls['nombre'].invalid && agregarFabricanteFormGroup.controls['nombre'].touched) {
+                <div class="d-grid">
+                  @if (agregarFabricanteFormGroup.controls['nombre'].errors?.['required']) {
+                    <span class="mensaje-error">Este campo es obligatorio</span>
+                  }
+                </div>
+              }
             </div>
           </div>
 
@@ -175,7 +209,14 @@
             <div class="form-group">
               <label class="form-label" for="primerApellido">Primer apellido*:</label>
               <input type="text" id="primerApellido" formControlName="primerApellido" name="primerApellido"
-                class="form-control" />
+                class="form-control" [ngClass]="esValido('primerApellido', agregarFabricanteFormGroup) ? 'required' : ''"/>
+                @if (agregarFabricanteFormGroup.controls['primerApellido'].invalid && agregarFabricanteFormGroup.controls['primerApellido'].touched) {
+                <div class="d-grid">
+                  @if (agregarFabricanteFormGroup.controls['primerApellido'].errors?.['required']) {
+                    <span class="mensaje-error">Este campo es obligatorio</span>
+                  }
+                </div>
+              }
             </div>
           </div>
 
@@ -183,7 +224,14 @@
             <div class="form-group">
               <label class="form-label" for="segundoApellido">Segundo apellido*:</label>
               <input type="text" id="segundoApellido" formControlName="segundoApellido" name="segundoApellido"
-                class="form-control" />
+                class="form-control" [ngClass]="esValido('segundoApellido', agregarFabricanteFormGroup) ? 'required' : ''"/>
+                @if (agregarFabricanteFormGroup.controls['segundoApellido'].invalid && agregarFabricanteFormGroup.controls['segundoApellido'].touched) {
+                <div class="d-grid">
+                  @if (agregarFabricanteFormGroup.controls['segundoApellido'].errors?.['required']) {
+                    <span class="mensaje-error">Este campo es obligatorio</span>
+                  }
+                </div>
+              }
             </div>
           </div>
         </div>
@@ -194,7 +242,16 @@
               <label for="curp" class="form-label">R.F.C.*:<span class="bi bi-question-circle-fill fs-4 m-1"
                   title="Title" ata-bs-toggle="tooltip"></span>
               </label>
-              <input type="text" id="rfc" formControlName="rfc" class="form-control" name="rfc" />
+              <input type="text" id="rfc" formControlName="rfc" class="form-control" name="rfc" [ngClass]="esValido('rfc', agregarFabricanteFormGroup) ? 'required' : ''"/>
+              @if (agregarFabricanteFormGroup.controls['rfc'].invalid && agregarFabricanteFormGroup.controls['rfc'].touched) {
+              <div class="d-grid">
+                @if (agregarFabricanteFormGroup.controls['rfc'].errors?.['required']) {
+                  <span class="mensaje-error">Este campo es obligatorio</span>
+                } @else if (agregarFabricanteFormGroup.controls['rfc'].errors?.['invalidRFC']) {
+                  <span class="mensaje-error">Existen datos incorrectos que no cumplen con el formato esperado</span>
+                }
+              </div>
+            }
             </div>
             <div class="d-flex justify-content-end mt-2">
               <button type="button" class="btn btn-primary w-50" (click)="buscar(agregarFabricanteFormGroup)">Buscar</button>
@@ -203,7 +260,16 @@
           <div class="col-md-4">
             <div class="form-group">
               <label for="rfc" class="form-label">C.U.R.P.*: </label>
-              <input type="text" id="curp" formControlName="curp" class="form-control" name="curp" />
+              <input type="text" id="curp" formControlName="curp" class="form-control" name="curp" [ngClass]="esValido('curp', agregarFabricanteFormGroup) ? 'required' : ''"/>
+              @if (agregarFabricanteFormGroup.controls['curp'].invalid && agregarFabricanteFormGroup.controls['curp'].touched) {
+              <div class="d-grid">
+                @if (agregarFabricanteFormGroup.controls['curp'].errors?.['required']) {
+                  <span class="mensaje-error">Este campo es obligatorio</span>
+                } @else if (agregarFabricanteFormGroup.controls['curp'].errors?.['invalidCURP']) {
+                  <span class="mensaje-error">Existen datos incorrectos que no cumplen con el formato esperado</span>
+                }
+              </div>
+            }
             </div>
           </div>
         </div>
@@ -213,7 +279,14 @@
             <div class="form-group">
               <label class="form-label" for="denominacionRazonSocial">Denominación/razón social*:</label>
               <input type="text" class="form-control" id="denominacionRazonSocial"
-                formControlName="denominacionRazonSocial" name="denominacionRazonSocial" />
+                formControlName="denominacionRazonSocial" name="denominacionRazonSocial" [ngClass]="esValido('denominacionRazonSocial', agregarFabricanteFormGroup) ? 'required' : ''"/>
+                @if (agregarFabricanteFormGroup.controls['denominacionRazonSocial'].invalid && agregarFabricanteFormGroup.controls['denominacionRazonSocial'].touched) {
+                <div class="d-grid">
+                  @if (agregarFabricanteFormGroup.controls['denominacionRazonSocial'].errors?.['required']) {
+                    <span class="mensaje-error">Este campo es obligatorio</span>
+                  }
+                </div>
+              }
             </div>
           </div>
         </div>
@@ -223,17 +296,24 @@
             <div class="form-group">
               <label class="form-label" for="denominacionRazonSocial">Denominación/razón social*:</label>
               <input type="text" class="form-control" id="denominacionRazonSocial"
-                formControlName="denominacionRazonSocial" name="denominacionRazonSocial" />
+                formControlName="denominacionRazonSocial" name="denominacionRazonSocial" [ngClass]="esValido('denominacionRazonSocial', agregarFabricanteFormGroup) ? 'required' : ''"/>
             </div>
           </div>
         </div>
         } @if ((extranjero || (nacional && noContribuyente)) && (fisica || !moral)){
-        <h5>Datos personales</h5>
+        <h5 class="mt-5">Datos personales</h5>
         <div class="row d-flex datos-personales-form-container">
           <div class="col-md-4">
             <div class="form-group">
               <label for="nombre" class="form-label">Nombre(s)*: </label>
-              <input type="text" id="nombre" formControlName="nombre" name="nombre" class="form-control" />
+              <input type="text" id="nombre" formControlName="nombre" name="nombre" class="form-control" [ngClass]="esValido('nombre', agregarFabricanteFormGroup) ? 'required' : ''"/>
+              @if (agregarFabricanteFormGroup.controls['nombre'].invalid && agregarFabricanteFormGroup.controls['nombre'].touched) {
+                <div class="d-grid">
+                  @if (agregarFabricanteFormGroup.controls['nombre'].errors?.['required']) {
+                    <span class="mensaje-error">Este campo es obligatorio</span>
+                  }
+                </div>
+              }
             </div>
           </div>
 
@@ -241,7 +321,14 @@
             <div class="form-group">
               <label class="form-label" for="primerApellido">Primer apellido*:</label>
               <input type="text" id="primerApellido" formControlName="primerApellido" name="primerApellido"
-                class="form-control" />
+                class="form-control" [ngClass]="esValido('primerApellido', agregarFabricanteFormGroup) ? 'required' : ''"/>
+                @if (agregarFabricanteFormGroup.controls['primerApellido'].invalid && agregarFabricanteFormGroup.controls['primerApellido'].touched) {
+                <div class="d-grid">
+                  @if (agregarFabricanteFormGroup.controls['primerApellido'].errors?.['required']) {
+                    <span class="mensaje-error">Este campo es obligatorio</span>
+                  }
+                </div>
+              }
             </div>
           </div>
 
@@ -249,17 +336,24 @@
             <div class="form-group">
               <label class="form-label" for="segundoApellido">Segundo apellido*:</label>
               <input type="text" id="segundoApellido" formControlName="segundoApellido" name="segundoApellido"
-                class="form-control" />
+                class="form-control" [ngClass]="esValido('segundoApellido', agregarFabricanteFormGroup) ? 'required' : ''"/>
+                @if (agregarFabricanteFormGroup.controls['segundoApellido'].invalid && agregarFabricanteFormGroup.controls['segundoApellido'].touched) {
+                <div class="d-grid">
+                  @if (agregarFabricanteFormGroup.controls['segundoApellido'].errors?.['required']) {
+                    <span class="mensaje-error">Este campo es obligatorio</span>
+                  }
+                </div>
+              }
             </div>
           </div>
         </div>
         }
 
-        <hr />
-        <hr />
+        
+        
 
         <!-- Contenedor-del-formulario-de-domicilio -->
-        <h5>Domicilio</h5>
+        <h5 class="mt-5">Domicilio</h5>
         <div class="row d-flex domicilio-form-container">
           @if(nacional){
           <div>
@@ -268,7 +362,14 @@
                 <label for="pais" class="form-label">Pais*:
                 </label>
                 <input type="text" id="pais" formControlName="pais" name="pais"
-                  class="form-control" />
+                  class="form-control" [ngClass]="esValido('pais', agregarFabricanteFormGroup) ? 'required' : ''"/>
+                  @if (agregarFabricanteFormGroup.controls['pais'].invalid && agregarFabricanteFormGroup.controls['pais'].touched) {
+                <div class="d-grid">
+                  @if (agregarFabricanteFormGroup.controls['pais'].errors?.['required']) {
+                    <span class="mensaje-error">Este campo es obligatorio</span>
+                  }
+                </div>
+              }
               </div>
             </div>
 
@@ -277,7 +378,14 @@
                 <label for="estadoLocalidad" class="form-label">Estado/localidad*:
                 </label>
                 <input type="text" id="estadoLocalidad" formControlName="estadoLocalidad" name="estadoLocalidad"
-                  class="form-control" />
+                  class="form-control" [ngClass]="esValido('estadoLocalidad', agregarFabricanteFormGroup) ? 'required' : ''"/>
+                   @if (agregarFabricanteFormGroup.controls['estadoLocalidad'].invalid && agregarFabricanteFormGroup.controls['estadoLocalidad'].touched) {
+                <div class="d-grid">
+                  @if (agregarFabricanteFormGroup.controls['estadoLocalidad'].errors?.['required']) {
+                    <span class="mensaje-error">Este campo es obligatorio</span>
+                  }
+                </div>
+              }
               </div>
             </div>
 
@@ -286,17 +394,31 @@
                 <label for="municipioAlcaldia" class="form-label">Municipio/Alcaldía*:
                 </label>
                 <input type="text" id="municipioAlcaldia" formControlName="municipioAlcaldia" name="municipioAlcaldia"
-                  class="form-control" />
+                  class="form-control" [ngClass]="esValido('municipioAlcaldia', agregarFabricanteFormGroup) ? 'required' : ''"/>
+                  @if (agregarFabricanteFormGroup.controls['municipioAlcaldia'].invalid && agregarFabricanteFormGroup.controls['municipioAlcaldia'].touched) {
+                <div class="d-grid">
+                  @if (agregarFabricanteFormGroup.controls['municipioAlcaldia'].errors?.['required']) {
+                    <span class="mensaje-error">Este campo es obligatorio</span>
+                  }
+                </div>
+              }
               </div>
             </div>
-            <hr />
+            
 
             <div class="col-md-4">
               <div class="form-group">
                 <label for="localidad" class="form-label">Localidad*:
                 </label>
                 <input type="text" id="localidad" formControlName="localidad" name="localidad"
-                  class="form-control" />
+                  class="form-control" [ngClass]="esValido('localidad', agregarFabricanteFormGroup) ? 'required' : ''"/>
+                  @if (agregarFabricanteFormGroup.controls['localidad'].invalid && agregarFabricanteFormGroup.controls['localidad'].touched) {
+                <div class="d-grid">
+                  @if (agregarFabricanteFormGroup.controls['localidad'].errors?.['required']) {
+                    <span class="mensaje-error">Este campo es obligatorio</span>
+                  }
+                </div>
+              }
               </div>
             </div>
 
@@ -305,7 +427,14 @@
                 <label for="codigoPostaloEquivalente" class="form-label">Código postal o equivalente*:
                 </label>
                 <input type="text" id="codigoPostaloEquivalente" formControlName="codigoPostaloEquivalente" name="codigoPostaloEquivalente"
-                  class="form-control" />
+                  class="form-control" [ngClass]="esValido('codigoPostaloEquivalente', agregarFabricanteFormGroup) ? 'required' : ''"/>
+                  @if (agregarFabricanteFormGroup.controls['codigoPostaloEquivalente'].invalid && agregarFabricanteFormGroup.controls['codigoPostaloEquivalente'].touched) {
+                <div class="d-grid">
+                  @if (agregarFabricanteFormGroup.controls['codigoPostaloEquivalente'].errors?.['required']) {
+                    <span class="mensaje-error">Este campo es obligatorio</span>
+                  }
+                </div>
+              }
               </div>
             </div>
 
@@ -314,7 +443,14 @@
                 <label for="colonia" class="form-label">Colonia*:
                 </label>
                 <input type="text" id="colonia" formControlName="colonia" name="colonia"
-                  class="form-control" />
+                  class="form-control" [ngClass]="esValido('colonia', agregarFabricanteFormGroup) ? 'required' : ''"/>
+                  @if (agregarFabricanteFormGroup.controls['colonia'].invalid && agregarFabricanteFormGroup.controls['colonia'].touched) {
+                <div class="d-grid">
+                  @if (agregarFabricanteFormGroup.controls['colonia'].errors?.['required']) {
+                    <span class="mensaje-error">Este campo es obligatorio</span>
+                  }
+                </div>
+              }
               </div>
             </div>
           </div>
@@ -322,8 +458,8 @@
           <div class="pl-0">
             <div class="col-md-4">
               <div class="form-group">
-                <app-catalogo-select [catalogo]="paisDropdownData" [label]="'Pais'" [required]="true" for="pais"
-                  id="pais" formControlName="pais"></app-catalogo-select>
+                <app-catalogo-select [catalogo]="paisDropdownData" [label]="'Pais'" [required]="true" for="pais" [markTouched]="markPaisTouched(agregarFabricanteFormGroup)"
+                  id="pais" formControlName="pais" (selectionChange)="onPaisChange($event, 'setFabricantePais')"></app-catalogo-select>
               </div>
             </div>
 
@@ -332,7 +468,14 @@
                 <label for="extranjeroEstado" class="form-label">Estado*:
                 </label>
                 <input type="text" id="extranjeroEstado" formControlName="extranjeroEstado" name="extranjeroEstado"
-                  class="form-control" />
+                  class="form-control" [ngClass]="esValido('extranjeroEstado', agregarFabricanteFormGroup) ? 'required' : ''"/>
+                  @if (agregarFabricanteFormGroup.controls['extranjeroEstado'].invalid && agregarFabricanteFormGroup.controls['extranjeroEstado'].touched) {
+                <div class="d-grid">
+                  @if (agregarFabricanteFormGroup.controls['extranjeroEstado'].errors?.['required']) {
+                    <span class="mensaje-error">Este campo es obligatorio</span>
+                  }
+                </div>
+              }
               </div>
             </div>
 
@@ -360,7 +503,14 @@
               <div class="form-group">
                 <label class="form-label" for="calle">Calle*:<span class="bi bi-question-circle-fill fs-4 m-1"
                     title="Title" ata-bs-toggle="tooltip"></span></label>
-                <input type="text" class="form-control" id="calle" formControlName="calle" name="calle" />
+                <input type="text" class="form-control" id="calle" formControlName="calle" name="calle" [ngClass]="esValido('calle', agregarFabricanteFormGroup) ? 'required' : ''"/>
+                @if (agregarFabricanteFormGroup.controls['calle'].invalid && agregarFabricanteFormGroup.controls['calle'].touched) {
+                <div class="d-grid">
+                  @if (agregarFabricanteFormGroup.controls['calle'].errors?.['required']) {
+                    <span class="mensaje-error">Este campo es obligatorio</span>
+                  }
+                </div>
+              }
               </div>
             </div>
 
@@ -369,7 +519,14 @@
                 <label for="numeroExterior" class="form-label">Número exterior*:
                 </label>
                 <input type="text" id="numeroExterior" formControlName="numeroExterior" class="form-control"
-                  name="numeroExterior" />
+                  name="numeroExterior" [ngClass]="esValido('numeroExterior', agregarFabricanteFormGroup) ? 'required' : ''"/>
+                  @if (agregarFabricanteFormGroup.controls['numeroExterior'].invalid && agregarFabricanteFormGroup.controls['numeroExterior'].touched) {
+                <div class="d-grid">
+                  @if (agregarFabricanteFormGroup.controls['numeroExterior'].errors?.['required']) {
+                    <span class="mensaje-error">Este campo es obligatorio</span>
+                  }
+                </div>
+              }
               </div>
             </div>
           </div>
@@ -403,7 +560,7 @@
                 name="correoElectronico" />
             </div>
           </div>
-          <hr />
+          
 
           <!-- campos -->
           <div class="col-md-3 text-muted text-vertical-align-button">
@@ -417,7 +574,7 @@
               <button type="button" class="btn btn-default" (click)="toggleDivFabricante()">
                 Cancelar
               </button>
-              <button type="button" class="btn btn-primary" (click)="submitFabricanteForm()">
+              <button type="button" class="btn btn-primary" (click)="submitFabricanteForm(agregarFabricanteFormGroup)">
                 Guardar
               </button>
             </div>
@@ -443,7 +600,7 @@
             <div class="mt-2">
               <app-input-radio [radioOptions]="nacionalidadOptions" [isRequired]="true"
                 formControlName="tercerosNacionalidad" [layout]="'vertical'"
-                (valueChange)="cambiarRadio($event)"></app-input-radio>
+                (valueChange)="cambiarRadio($event, agregarFormuladorFormGroup)"></app-input-radio>
             </div>
           </div>
         </div>
@@ -454,11 +611,11 @@
             <div class="mt-2">
               @if (extranjero) {
               <app-input-radio [radioOptions]="tipoPersonaOptions" [isRequired]="true" formControlName="tipoPersona"
-                [layout]="'vertical'" (valueChange)="cambiarRadioFisica($event)" [showTooltip]="true"
+                [layout]="'vertical'" (valueChange)="cambiarRadioFisica($event, agregarFormuladorFormGroup)" [showTooltip]="true"
                 (change)="onTipoPersonaChange(agregarFormuladorFormGroup)"></app-input-radio>
               } @else {
               <app-input-radio [radioOptions]="tipoPersonaTresOptions" [isRequired]="true" formControlName="tipoPersona"
-                [layout]="'vertical'" (valueChange)="cambiarRadioFisica($event)" [showTooltip]="true"
+                [layout]="'vertical'" (valueChange)="cambiarRadioFisica($event, agregarFormuladorFormGroup)" [showTooltip]="true"
                 (change)="onTipoPersonaChange(agregarFormuladorFormGroup)"></app-input-radio>
 
               }
@@ -466,9 +623,9 @@
           </div>
         </div>
       </div>
-      <hr />
+      
 
-      <div class="row">
+      <div class="row mt-5">
         @if (nacional && noContribuyente){
         <div class="row">
           <div class="col-md-4">
@@ -476,13 +633,31 @@
               <label for="curp" class="form-label">R.F.C.*:<span class="bi bi-question-circle-fill" tooltip="Registro Federal de Contribuyente" placement="top">
                 </span>
               </label>
-              <input type="text" id="rfc" formControlName="rfc" class="form-control" name="rfc" />
+              <input type="text" id="rfc" formControlName="rfc" class="form-control" name="rfc" [ngClass]="esValido('rfc', agregarFormuladorFormGroup) ? 'required' : ''"/>
+              @if (agregarFormuladorFormGroup.controls['rfc'].invalid && agregarFormuladorFormGroup.controls['rfc'].touched) {
+              <div class="d-grid">
+                @if (agregarFormuladorFormGroup.controls['rfc'].errors?.['required']) {
+                  <span class="mensaje-error">Este campo es obligatorio</span>
+                } @else if (agregarFormuladorFormGroup.controls['rfc'].errors?.['invalidRFC']) {
+                  <span class="mensaje-error">Existen datos incorrectos que no cumplen con el formato esperado</span>
+                }
+              </div>
+            }
             </div>
           </div>
           <div class="col-md-4">
             <div class="form-group">
               <label for="curp" class="form-label">C.U.R.P.*: </label>
-              <input type="text" id="curp" formControlName="curp" class="form-control" name="curp" />
+              <input type="text" id="curp" formControlName="curp" class="form-control" name="curp" [ngClass]="esValido('curp', agregarFormuladorFormGroup) ? 'required' : ''"/>
+              @if (agregarFormuladorFormGroup.controls['curp'].invalid && agregarFormuladorFormGroup.controls['curp'].touched) {
+              <div class="d-grid">
+                @if (agregarFormuladorFormGroup.controls['curp'].errors?.['required']) {
+                  <span class="mensaje-error">Este campo es obligatorio</span>
+                } @else if (agregarFormuladorFormGroup.controls['curp'].errors?.['invalidCURP']) {
+                  <span class="mensaje-error">Existen datos incorrectos que no cumplen con el formato esperado</span>
+                }
+              </div>
+            }
             </div>
             <div class="d-flex justify-content-end mt-3">
               <button type="button" class="btn btn-primary w-40" (click)="buscar(agregarFormuladorFormGroup)">Buscar</button>
@@ -497,7 +672,16 @@
               <label for="rfc" class="form-label">R.F.C.*:<span class="bi bi-question-circle-fill fs-4 m-1" title="Title"
                   ata-bs-toggle="tooltip"></span>
               </label>
-              <input type="text" id="rfc" formControlName="rfc" class="form-control" name="rfc" />
+              <input type="text" id="rfc" formControlName="rfc" class="form-control" name="rfc" [ngClass]="esValido('rfc', agregarFormuladorFormGroup) ? 'required' : ''"/>
+              @if (agregarFormuladorFormGroup.controls['rfc'].invalid && agregarFormuladorFormGroup.controls['rfc'].touched) {
+              <div class="d-grid">
+                @if (agregarFormuladorFormGroup.controls['rfc'].errors?.['required']) {
+                  <span class="mensaje-error">Este campo es obligatorio</span>
+                } @else if (agregarFormuladorFormGroup.controls['rfc'].errors?.['invalidRFC']) {
+                  <span class="mensaje-error">Existen datos incorrectos que no cumplen con el formato esperado</span>
+                }
+              </div>
+            }
             </div>
             <div class="d-flex justify-content-end mt-2">
               @if(nacional && fisica) {
@@ -508,7 +692,16 @@
           <div class="col-md-4">
             <div class="form-group">
               <label for="rfc" class="form-label">C.U.R.P.*: </label>
-              <input type="text" id="curp" formControlName="curp" class="form-control" name="curp" />
+              <input type="text" id="curp" formControlName="curp" class="form-control" name="curp" [ngClass]="esValido('curp', agregarFormuladorFormGroup) ? 'required' : ''"/>
+              @if (agregarFormuladorFormGroup.controls['curp'].invalid && agregarFormuladorFormGroup.controls['curp'].touched) {
+              <div class="d-grid">
+                @if (agregarFormuladorFormGroup.controls['curp'].errors?.['required']) {
+                  <span class="mensaje-error">Este campo es obligatorio</span>
+                } @else if (agregarFormuladorFormGroup.controls['curp'].errors?.['invalidCURP']) {
+                  <span class="mensaje-error">Existen datos incorrectos que no cumplen con el formato esperado</span>
+                }
+              </div>
+            }
             </div>
           </div>
         </div>
@@ -520,7 +713,16 @@
               <label for="curp" class="form-label">R.F.C.*:<span class="bi bi-question-circle-fill fs-4 m-1"
                   title="Title" ata-bs-toggle="tooltip"></span>
               </label>
-              <input type="text" id="rfc" formControlName="rfc" class="form-control" name="rfc" />
+              <input type="text" id="rfc" formControlName="rfc" class="form-control" name="rfc" [ngClass]="esValido('rfc', agregarFormuladorFormGroup) ? 'required' : ''"/>
+              @if (agregarFormuladorFormGroup.controls['rfc'].invalid && agregarFormuladorFormGroup.controls['rfc'].touched) {
+              <div class="d-grid">
+                @if (agregarFormuladorFormGroup.controls['rfc'].errors?.['required']) {
+                  <span class="mensaje-error">Este campo es obligatorio</span>
+                } @else if (agregarFormuladorFormGroup.controls['rfc'].errors?.['invalidRFC']) {
+                  <span class="mensaje-error">Existen datos incorrectos que no cumplen con el formato esperado</span>
+                }
+              </div>
+            }
             </div>
             <div class="d-flex justify-content-end mt-2">
               <button type="button" class="btn btn-primary w-50" (click)="buscar(agregarFormuladorFormGroup)">Buscar</button>
@@ -529,7 +731,16 @@
           <div class="col-md-4">
             <div class="form-group">
               <label for="rfc" class="form-label">C.U.R.P.*: </label>
-              <input type="text" id="curp" formControlName="curp" class="form-control" name="curp" />
+              <input type="text" id="curp" formControlName="curp" class="form-control" name="curp" [ngClass]="esValido('curp', agregarFormuladorFormGroup) ? 'required' : ''"/>
+              @if (agregarFormuladorFormGroup.controls['curp'].invalid && agregarFormuladorFormGroup.controls['curp'].touched) {
+              <div class="d-grid">
+                @if (agregarFormuladorFormGroup.controls['curp'].errors?.['required']) {
+                  <span class="mensaje-error">Este campo es obligatorio</span>
+                } @else if (agregarFormuladorFormGroup.controls['curp'].errors?.['invalidCURP']) {
+                  <span class="mensaje-error">Existen datos incorrectos que no cumplen con el formato esperado</span>
+                }
+              </div>
+            }
             </div>
           </div>
         </div>
@@ -539,7 +750,14 @@
             <div class="form-group">
               <label class="form-label" for="denominacionRazonSocial">Denominación/razón social*:</label>
               <input type="text" class="form-control" id="denominacionRazonSocial"
-                formControlName="denominacionRazonSocial" name="denominacionRazonSocial" />
+                formControlName="denominacionRazonSocial" name="denominacionRazonSocial" [ngClass]="esValido('denominacionRazonSocial', agregarFormuladorFormGroup) ? 'required' : ''"/>
+                @if (agregarFormuladorFormGroup.controls['denominacionRazonSocial'].invalid && agregarFormuladorFormGroup.controls['denominacionRazonSocial'].touched) {
+                <div class="d-grid">
+                  @if (agregarFormuladorFormGroup.controls['denominacionRazonSocial'].errors?.['required']) {
+                    <span class="mensaje-error">Este campo es obligatorio</span>
+                  }
+                </div>
+              }
             </div>
           </div>
         </div>
@@ -549,17 +767,31 @@
             <div class="form-group">
               <label class="form-label" for="denominacionRazonSocial">Denominación/razón social*:</label>
               <input type="text" class="form-control" id="denominacionRazonSocial"
-                formControlName="denominacionRazonSocial" name="denominacionRazonSocial" />
+                formControlName="denominacionRazonSocial" name="denominacionRazonSocial" [ngClass]="esValido('denominacionRazonSocial', agregarFormuladorFormGroup) ? 'required' : ''"/>
+                @if (agregarFormuladorFormGroup.controls['denominacionRazonSocial'].invalid && agregarFormuladorFormGroup.controls['denominacionRazonSocial'].touched) {
+                <div class="d-grid">
+                  @if (agregarFormuladorFormGroup.controls['denominacionRazonSocial'].errors?.['required']) {
+                    <span class="mensaje-error">Este campo es obligatorio</span>
+                  }
+                </div>
+              }
             </div>
           </div>
         </div>
         } @if (extranjero && fisica){
-        <h5>Datos personales</h5>
+        <h5 class="mt-5">Datos personales</h5>
         <div class="row d-flex datos-personales-form-container">
           <div class="col-md-4">
             <div class="form-group">
               <label for="nombre" class="form-label">Nombre(s)*: </label>
-              <input type="text" id="nombre" formControlName="nombre" name="nombre" class="form-control" />
+              <input type="text" id="nombre" formControlName="nombre" name="nombre" class="form-control" [ngClass]="esValido('nombre', agregarFormuladorFormGroup) ? 'required' : ''"/>
+              @if (agregarFormuladorFormGroup.controls['nombre'].invalid && agregarFormuladorFormGroup.controls['nombre'].touched) {
+                <div class="d-grid">
+                  @if (agregarFormuladorFormGroup.controls['nombre'].errors?.['required']) {
+                    <span class="mensaje-error">Este campo es obligatorio</span>
+                  }
+                </div>
+              }
             </div>
           </div>
 
@@ -567,7 +799,14 @@
             <div class="form-group">
               <label class="form-label" for="primerApellido">Primer apellido*:</label>
               <input type="text" id="primerApellido" formControlName="primerApellido" name="primerApellido"
-                class="form-control" />
+                class="form-control" [ngClass]="esValido('primerApellido', agregarFormuladorFormGroup) ? 'required' : ''"/>
+                @if (agregarFormuladorFormGroup.controls['primerApellido'].invalid && agregarFormuladorFormGroup.controls['primerApellido'].touched) {
+                <div class="d-grid">
+                  @if (agregarFormuladorFormGroup.controls['primerApellido'].errors?.['required']) {
+                    <span class="mensaje-error">Este campo es obligatorio</span>
+                  }
+                </div>
+              }
             </div>
           </div>
 
@@ -575,22 +814,36 @@
             <div class="form-group">
               <label class="form-label" for="segundoApellido">Segundo apellido*:</label>
               <input type="text" id="segundoApellido" formControlName="segundoApellido" name="segundoApellido"
-                class="form-control" />
+                class="form-control" [ngClass]="esValido('segundoApellido', agregarFormuladorFormGroup) ? 'required' : ''"/>
+                @if (agregarFormuladorFormGroup.controls['segundoApellido'].invalid && agregarFormuladorFormGroup.controls['segundoApellido'].touched) {
+                <div class="d-grid">
+                  @if (agregarFormuladorFormGroup.controls['segundoApellido'].errors?.['required']) {
+                    <span class="mensaje-error">Este campo es obligatorio</span>
+                  }
+                </div>
+              }
             </div>
           </div>
         </div>
         }
 
-        <hr />
-        <hr />
+        
+        
 
         @if ((nacional && (fisica || noContribuyente || moral)) || (!fisica && !noContribuyente && !moral)) {
-          <h5>Datos personales</h5>
+        <h5 class="mt-5">Datos personales</h5>
         <div class="row d-flex datos-personales-form-container">
           <div class="col-md-4">
             <div class="form-group">
               <label for="nombre" class="form-label">Nombre(s)*: </label>
-              <input type="text" id="nombre" formControlName="nombre" name="nombre" class="form-control" />
+              <input type="text" id="nombre" formControlName="nombre" name="nombre" class="form-control" [ngClass]="esValido('nombre', agregarFormuladorFormGroup) ? 'required' : ''"/>
+              @if (agregarFormuladorFormGroup.controls['nombre'].invalid && agregarFormuladorFormGroup.controls['nombre'].touched) {
+                <div class="d-grid">
+                  @if (agregarFormuladorFormGroup.controls['nombre'].errors?.['required']) {
+                    <span class="mensaje-error">Este campo es obligatorio</span>
+                  }
+                </div>
+              }
             </div>
           </div>
 
@@ -598,7 +851,14 @@
             <div class="form-group">
               <label class="form-label" for="primerApellido">Primer apellido*:</label>
               <input type="text" id="primerApellido" formControlName="primerApellido" name="primerApellido"
-                class="form-control" />
+                class="form-control" [ngClass]="esValido('primerApellido', agregarFormuladorFormGroup) ? 'required' : ''"/>
+                @if (agregarFormuladorFormGroup.controls['primerApellido'].invalid && agregarFormuladorFormGroup.controls['primerApellido'].touched) {
+                <div class="d-grid">
+                  @if (agregarFormuladorFormGroup.controls['primerApellido'].errors?.['required']) {
+                    <span class="mensaje-error">Este campo es obligatorio</span>
+                  }
+                </div>
+              }
             </div>
           </div>
 
@@ -606,17 +866,24 @@
             <div class="form-group">
               <label class="form-label" for="segundoApellido">Segundo apellido*:</label>
               <input type="text" id="segundoApellido" formControlName="segundoApellido" name="segundoApellido"
-                class="form-control" />
+                class="form-control" [ngClass]="esValido('segundoApellido', agregarFormuladorFormGroup) ? 'required' : ''"/>
+                @if (agregarFormuladorFormGroup.controls['segundoApellido'].invalid && agregarFormuladorFormGroup.controls['segundoApellido'].touched) {
+                <div class="d-grid">
+                  @if (agregarFormuladorFormGroup.controls['segundoApellido'].errors?.['required']) {
+                    <span class="mensaje-error">Este campo es obligatorio</span>
+                  }
+                </div>
+              }
             </div>
           </div>
         </div>
         }
 
-        <hr />
-        <hr />
+        
+        
 
         <!-- Contenedor-del-formulario-de-domicilio -->
-        <h5>Domicilio</h5>
+        <h5 class="mt-5">Domicilio</h5>
         <div class="row d-flex domicilio-form-container">
           @if(nacional){
             <div>
@@ -625,7 +892,14 @@
                   <label for="pais" class="form-label">Pais*:
                   </label>
                   <input type="text" id="pais" formControlName="pais" name="pais"
-                    class="form-control"/>
+                    class="form-control" [ngClass]="esValido('pais', agregarFormuladorFormGroup) ? 'required' : ''"/>
+                    @if (agregarFormuladorFormGroup.controls['pais'].invalid && agregarFormuladorFormGroup.controls['pais'].touched) {
+                <div class="d-grid">
+                  @if (agregarFormuladorFormGroup.controls['pais'].errors?.['required']) {
+                    <span class="mensaje-error">Este campo es obligatorio</span>
+                  }
+                </div>
+              }
                 </div>
               </div>
   
@@ -634,7 +908,14 @@
                   <label for="estadoLocalidad" class="form-label">Estado/localidad*:
                   </label>
                   <input type="text" id="estadoLocalidad" formControlName="estadoLocalidad" name="estadoLocalidad"
-                    class="form-control" />
+                    class="form-control" [ngClass]="esValido('estadoLocalidad', agregarFormuladorFormGroup) ? 'required' : ''"/>
+                    @if (agregarFormuladorFormGroup.controls['estadoLocalidad'].invalid && agregarFormuladorFormGroup.controls['estadoLocalidad'].touched) {
+                <div class="d-grid">
+                  @if (agregarFormuladorFormGroup.controls['estadoLocalidad'].errors?.['required']) {
+                    <span class="mensaje-error">Este campo es obligatorio</span>
+                  }
+                </div>
+              }
                 </div>
               </div>
   
@@ -643,17 +924,31 @@
                   <label for="municipioAlcaldia" class="form-label">Municipio/Alcaldía*:
                   </label>
                   <input type="text" id="municipioAlcaldia" formControlName="municipioAlcaldia" name="municipioAlcaldia"
-                    class="form-control" />
+                    class="form-control" [ngClass]="esValido('municipioAlcaldia', agregarFormuladorFormGroup) ? 'required' : ''"/>
+                    @if (agregarFormuladorFormGroup.controls['municipioAlcaldia'].invalid && agregarFormuladorFormGroup.controls['municipioAlcaldia'].touched) {
+                <div class="d-grid">
+                  @if (agregarFormuladorFormGroup.controls['municipioAlcaldia'].errors?.['required']) {
+                    <span class="mensaje-error">Este campo es obligatorio</span>
+                  }
+                </div>
+              }
                 </div>
               </div>
-              <hr />
+              
   
               <div class="col-md-4">
                 <div class="form-group">
                   <label for="localidad" class="form-label">Localidad*:
                   </label>
                   <input type="text" id="localidad" formControlName="localidad" name="localidad"
-                    class="form-control" />
+                    class="form-control" [ngClass]="esValido('localidad', agregarFormuladorFormGroup) ? 'required' : ''"/>
+                    @if (agregarFormuladorFormGroup.controls['localidad'].invalid && agregarFormuladorFormGroup.controls['localidad'].touched) {
+                <div class="d-grid">
+                  @if (agregarFormuladorFormGroup.controls['localidad'].errors?.['required']) {
+                    <span class="mensaje-error">Este campo es obligatorio</span>
+                  }
+                </div>
+              }
                 </div>
               </div>
   
@@ -662,7 +957,14 @@
                   <label for="codigoPostaloEquivalente" class="form-label">Código postal o equivalente*:
                   </label>
                   <input type="text" id="codigoPostaloEquivalente" formControlName="codigoPostaloEquivalente" name="codigoPostaloEquivalente"
-                    class="form-control" />
+                    class="form-control" [ngClass]="esValido('codigoPostaloEquivalente', agregarFormuladorFormGroup) ? 'required' : ''"/>
+                    @if (agregarFormuladorFormGroup.controls['codigoPostaloEquivalente'].invalid && agregarFormuladorFormGroup.controls['codigoPostaloEquivalente'].touched) {
+                <div class="d-grid">
+                  @if (agregarFormuladorFormGroup.controls['codigoPostaloEquivalente'].errors?.['required']) {
+                    <span class="mensaje-error">Este campo es obligatorio</span>
+                  }
+                </div>
+              }
                 </div>
               </div>
   
@@ -671,7 +973,14 @@
                   <label for="colonia" class="form-label">Colonia*:
                   </label>
                   <input type="text" id="colonia" formControlName="colonia" name="colonia"
-                    class="form-control" />
+                    class="form-control" [ngClass]="esValido('colonia', agregarFormuladorFormGroup) ? 'required' : ''"/>
+                    @if (agregarFormuladorFormGroup.controls['colonia'].invalid && agregarFormuladorFormGroup.controls['colonia'].touched) {
+                <div class="d-grid">
+                  @if (agregarFormuladorFormGroup.controls['colonia'].errors?.['required']) {
+                    <span class="mensaje-error">Este campo es obligatorio</span>
+                  }
+                </div>
+              }
                 </div>
               </div>
             </div>
@@ -679,8 +988,8 @@
           <div class="pl-0">
             <div class="col-md-4">
               <div class="form-group">
-                <app-catalogo-select [catalogo]="paisDropdownData" [label]="'Pais'" [required]="true" for="pais" [isDisabled]="!fisica || !moral || !noContribuyente"
-                  id="pais" formControlName="pais"></app-catalogo-select>
+                <app-catalogo-select [catalogo]="paisDropdownData" [label]="'Pais'" [required]="true" for="pais" (selectionChange)="onPaisChange($event, 'setFormuladorPais')"
+                  id="pais" formControlName="pais" [markTouched]="markPaisTouched(agregarFormuladorFormGroup)"></app-catalogo-select>
               </div>
             </div>
 
@@ -689,7 +998,14 @@
                 <label for="extranjeroEstado" class="form-label">Estado*:
                 </label>
                 <input type="text" id="extranjeroEstado" formControlName="extranjeroEstado" name="extranjeroEstado"
-                  class="form-control" />
+                  class="form-control" [ngClass]="esValido('extranjeroEstado', agregarFormuladorFormGroup) ? 'required' : ''"/>
+                  @if (agregarFormuladorFormGroup.controls['extranjeroEstado'].invalid && agregarFormuladorFormGroup.controls['extranjeroEstado'].touched) {
+                <div class="d-grid">
+                  @if (agregarFormuladorFormGroup.controls['extranjeroEstado'].errors?.['required']) {
+                    <span class="mensaje-error">Este campo es obligatorio</span>
+                  }
+                </div>
+              }
               </div>
             </div>
 
@@ -716,7 +1032,14 @@
               <div class="form-group">
                 <label class="form-label" for="calle">Calle*:<span class="bi bi-question-circle-fill fs-4 m-1"
                     title="Title" ata-bs-toggle="tooltip"></span></label>
-                <input type="text" class="form-control" id="calle" formControlName="calle" name="calle" />
+                <input type="text" class="form-control" id="calle" formControlName="calle" name="calle" [ngClass]="esValido('calle', agregarFormuladorFormGroup) ? 'required' : ''"/>
+                @if (agregarFormuladorFormGroup.controls['calle'].invalid && agregarFormuladorFormGroup.controls['calle'].touched) {
+                <div class="d-grid">
+                  @if (agregarFormuladorFormGroup.controls['calle'].errors?.['required']) {
+                    <span class="mensaje-error">Este campo es obligatorio</span>
+                  }
+                </div>
+              }
               </div>
             </div>
 
@@ -725,7 +1048,14 @@
                 <label for="numeroExterior" class="form-label">Número exterior*:
                 </label>
                 <input type="text" id="numeroExterior" formControlName="numeroExterior" class="form-control"
-                  name="numeroExterior" />
+                  name="numeroExterior" [ngClass]="esValido('numeroExterior', agregarFormuladorFormGroup) ? 'required' : ''"/>
+                  @if (agregarFormuladorFormGroup.controls['numeroExterior'].invalid && agregarFormuladorFormGroup.controls['numeroExterior'].touched) {
+                <div class="d-grid">
+                  @if (agregarFormuladorFormGroup.controls['numeroExterior'].errors?.['required']) {
+                    <span class="mensaje-error">Este campo es obligatorio</span>
+                  }
+                </div>
+              }
               </div>
             </div>
           </div>
@@ -759,7 +1089,7 @@
                 name="correoElectronico" />
             </div>
           </div>
-          <hr />
+          
 
           <!-- campos -->
           <div class="col-md-3 text-muted text-vertical-align-button">
@@ -773,7 +1103,7 @@
               <button type="button" class="btn btn-default" (click)="toggleDivFormulador()">
                 Cancelar
               </button>
-              <button type="button" class="btn btn-primary" (click)="submitFormuladorForm()">
+              <button type="button" class="btn btn-primary" (click)="submitFormuladorForm(agregarFormuladorFormGroup)">
                 Guardar
               </button>
             </div>
@@ -798,7 +1128,7 @@
             <div class="mt-2">
               <app-input-radio [radioOptions]="nacionalidadOptions" [isRequired]="true"
                 formControlName="tercerosNacionalidad" [layout]="'vertical'"
-                (valueChange)="cambiarRadio($event)"></app-input-radio>
+                (valueChange)="cambiarRadio($event, agregarProveedorFormGroup)"></app-input-radio>
             </div>
           </div>
         </div>
@@ -809,11 +1139,11 @@
             <div class="mt-2">
               @if (extranjero) {
               <app-input-radio [radioOptions]="tipoPersonaOptions" [isRequired]="true" formControlName="tipoPersona"
-                [layout]="'vertical'" (valueChange)="cambiarRadioFisica($event)" [showTooltip]="true"
+                [layout]="'vertical'" (valueChange)="cambiarRadioFisica($event, agregarProveedorFormGroup)" [showTooltip]="true"
                 (change)="onTipoPersonaChange(agregarProveedorFormGroup)"></app-input-radio>
               } @else {
               <app-input-radio [radioOptions]="tipoPersonaTresOptions" [isRequired]="true" formControlName="tipoPersona"
-                [layout]="'vertical'" (valueChange)="cambiarRadioFisica($event)" [showTooltip]="true"
+                [layout]="'vertical'" (valueChange)="cambiarRadioFisica($event, agregarProveedorFormGroup)" [showTooltip]="true"
                 (change)="onTipoPersonaChange(agregarProveedorFormGroup)"></app-input-radio>
 
               }
@@ -821,9 +1151,9 @@
           </div>
         </div>
       </div>
-      <hr />
+      
 
-      <div class="row">
+      <div class="row mt-5">
         @if (nacional && noContribuyente){
         <div class="row">
           <div class="col-md-4">
@@ -831,13 +1161,31 @@
               <label for="curp" class="form-label">R.F.C.*:<span class="bi bi-question-circle-fill" tooltip="Registro Federal de Contribuyente" placement="top">
                 </span>
               </label>
-              <input type="text" id="rfc" formControlName="rfc" class="form-control" name="rfc" />
+              <input type="text" id="rfc" formControlName="rfc" class="form-control" name="rfc" [ngClass]="esValido('rfc', agregarProveedorFormGroup) ? 'required' : ''"/>
+              @if (agregarProveedorFormGroup.controls['rfc'].invalid && agregarProveedorFormGroup.controls['rfc'].touched) {
+              <div class="d-grid">
+                @if (agregarProveedorFormGroup.controls['rfc'].errors?.['required']) {
+                  <span class="mensaje-error">Este campo es obligatorio</span>
+                } @else if (agregarProveedorFormGroup.controls['rfc'].errors?.['invalidRFC']) {
+                  <span class="mensaje-error">Existen datos incorrectos que no cumplen con el formato esperado</span>
+                }
+              </div>
+            }
             </div>
           </div>
           <div class="col-md-4">
             <div class="form-group">
               <label for="curp" class="form-label">C.U.R.P.*: </label>
-              <input type="text" id="curp" formControlName="curp" class="form-control" name="curp" />
+              <input type="text" id="curp" formControlName="curp" class="form-control" name="curp" [ngClass]="esValido('curp', agregarProveedorFormGroup) ? 'required' : ''"/>
+              @if (agregarProveedorFormGroup.controls['curp'].invalid && agregarProveedorFormGroup.controls['curp'].touched) {
+              <div class="d-grid">
+                @if (agregarProveedorFormGroup.controls['curp'].errors?.['required']) {
+                  <span class="mensaje-error">Este campo es obligatorio</span>
+                } @else if (agregarProveedorFormGroup.controls['curp'].errors?.['invalidCURP']) {
+                  <span class="mensaje-error">Existen datos incorrectos que no cumplen con el formato esperado</span>
+                }
+              </div>
+            }
             </div>
             <div class="d-flex justify-content-end mt-3">
               <button type="button" class="btn btn-primary w-40" (click)="buscar(agregarProveedorFormGroup)">Buscar</button>
@@ -852,7 +1200,16 @@
               <label for="rfc" class="form-label">R.F.C.*:<span class="bi bi-question-circle-fill fs-4 m-1" title="Registro Federal de Contribuyente"
                   ata-bs-toggle="tooltip"></span>
               </label>
-              <input type="text" id="rfc" formControlName="rfc" class="form-control" name="rfc" />
+              <input type="text" id="rfc" formControlName="rfc" class="form-control" name="rfc" [ngClass]="esValido('rfc', agregarProveedorFormGroup) ? 'required' : ''"/>
+              @if (agregarProveedorFormGroup.controls['rfc'].invalid && agregarProveedorFormGroup.controls['rfc'].touched) {
+              <div class="d-grid">
+                @if (agregarProveedorFormGroup.controls['rfc'].errors?.['required']) {
+                  <span class="mensaje-error">Este campo es obligatorio</span>
+                } @else if (agregarProveedorFormGroup.controls['rfc'].errors?.['invalidRFC']) {
+                  <span class="mensaje-error">Existen datos incorrectos que no cumplen con el formato esperado</span>
+                }
+              </div>
+            }
             </div>
             <div class="d-flex justify-content-end mt-2">
               @if (nacional && fisica){
@@ -864,7 +1221,16 @@
           <div class="col-md-4">
             <div class="form-group">
               <label for="rfc" class="form-label">C.U.R.P.*: </label>
-              <input type="text" id="curp" formControlName="curp" class="form-control" name="curp" />
+              <input type="text" id="curp" formControlName="curp" class="form-control" name="curp" [ngClass]="esValido('curp', agregarProveedorFormGroup) ? 'required' : ''"/>
+              @if (agregarProveedorFormGroup.controls['curp'].invalid && agregarProveedorFormGroup.controls['curp'].touched) {
+              <div class="d-grid">
+                @if (agregarProveedorFormGroup.controls['curp'].errors?.['required']) {
+                  <span class="mensaje-error">Este campo es obligatorio</span>
+                } @else if (agregarProveedorFormGroup.controls['curp'].errors?.['invalidCURP']) {
+                  <span class="mensaje-error">Existen datos incorrectos que no cumplen con el formato esperado</span>
+                }
+              </div>
+            }
             </div>
           </div>
         </div>
@@ -875,7 +1241,16 @@
               <label for="curp" class="form-label">R.F.C.*:<span class="bi bi-question-circle-fill fs-4 m-1"
                   title="Registro Federal de Contribuyente" ata-bs-toggle="tooltip"></span>
               </label>
-              <input type="text" id="rfc" formControlName="rfc" class="form-control" name="rfc" />
+              <input type="text" id="rfc" formControlName="rfc" class="form-control" name="rfc" [ngClass]="esValido('rfc', agregarProveedorFormGroup) ? 'required' : ''"/>
+              @if (agregarProveedorFormGroup.controls['rfc'].invalid && agregarProveedorFormGroup.controls['rfc'].touched) {
+              <div class="d-grid">
+                @if (agregarProveedorFormGroup.controls['rfc'].errors?.['required']) {
+                  <span class="mensaje-error">Este campo es obligatorio</span>
+                } @else if (agregarProveedorFormGroup.controls['rfc'].errors?.['invalidRFC']) {
+                  <span class="mensaje-error">Existen datos incorrectos que no cumplen con el formato esperado</span>
+                }
+              </div>
+            }
             </div>
             <div class="d-flex justify-content-end mt-2">
               <button type="button" class="btn btn-primary w-50" (click)="buscar(agregarProveedorFormGroup)">Buscar</button>
@@ -884,7 +1259,16 @@
           <div class="col-md-4">
             <div class="form-group">
               <label for="rfc" class="form-label">C.U.R.P.*: </label>
-              <input type="text" id="curp" formControlName="curp" class="form-control" name="curp" />
+              <input type="text" id="curp" formControlName="curp" class="form-control" name="curp" [ngClass]="esValido('curp', agregarProveedorFormGroup) ? 'required' : ''"/>
+              @if (agregarProveedorFormGroup.controls['curp'].invalid && agregarProveedorFormGroup.controls['curp'].touched) {
+              <div class="d-grid">
+                @if (agregarProveedorFormGroup.controls['curp'].errors?.['required']) {
+                  <span class="mensaje-error">Este campo es obligatorio</span>
+                } @else if (agregarProveedorFormGroup.controls['curp'].errors?.['invalidCURP']) {
+                  <span class="mensaje-error">Existen datos incorrectos que no cumplen con el formato esperado</span>
+                }
+              </div>
+            }
             </div>
           </div>
         </div>
@@ -894,7 +1278,14 @@
             <div class="form-group">
               <label class="form-label" for="denominacionRazonSocial">Denominación/razón social*:</label>
               <input type="text" class="form-control" id="denominacionRazonSocial"
-                formControlName="denominacionRazonSocial" name="denominacionRazonSocial" />
+                formControlName="denominacionRazonSocial" name="denominacionRazonSocial" [ngClass]="esValido('denominacionRazonSocial', agregarProveedorFormGroup) ? 'required' : ''"/>
+                @if (agregarProveedorFormGroup.controls['denominacionRazonSocial'].invalid && agregarProveedorFormGroup.controls['denominacionRazonSocial'].touched) {
+              <div class="d-grid">
+                @if (agregarProveedorFormGroup.controls['denominacionRazonSocial'].errors?.['required']) {
+                  <span class="mensaje-error">Este campo es obligatorio</span>
+                }
+              </div>
+            }
             </div>
           </div>
         </div>
@@ -904,17 +1295,31 @@
             <div class="form-group">
               <label class="form-label" for="denominacionRazonSocial">Denominación/razón social*:</label>
               <input type="text" class="form-control" id="denominacionRazonSocial"
-                formControlName="denominacionRazonSocial" name="denominacionRazonSocial" />
+                formControlName="denominacionRazonSocial" name="denominacionRazonSocial" [ngClass]="esValido('denominacionRazonSocial', agregarProveedorFormGroup) ? 'required' : ''"/>
+                @if (agregarProveedorFormGroup.controls['denominacionRazonSocial'].invalid && agregarProveedorFormGroup.controls['denominacionRazonSocial'].touched) {
+              <div class="d-grid">
+                @if (agregarProveedorFormGroup.controls['denominacionRazonSocial'].errors?.['required']) {
+                  <span class="mensaje-error">Este campo es obligatorio</span>
+                }
+              </div>
+            }
             </div>
           </div>
         </div>
         } @if (extranjero && fisica){
-        <h5>Datos personales</h5>
+        <h5 class="mt-5">Datos personales</h5>
         <div class="row d-flex datos-personales-form-container">
           <div class="col-md-4">
             <div class="form-group">
               <label for="nombre" class="form-label">Nombre(s)*: </label>
-              <input type="text" id="nombre" formControlName="nombre" name="nombre" class="form-control" />
+              <input type="text" id="nombre" formControlName="nombre" name="nombre" class="form-control" [ngClass]="esValido('nombre', agregarProveedorFormGroup) ? 'required' : ''"/>
+              @if (agregarProveedorFormGroup.controls['nombre'].invalid && agregarProveedorFormGroup.controls['nombre'].touched) {
+              <div class="d-grid">
+                @if (agregarProveedorFormGroup.controls['nombre'].errors?.['required']) {
+                  <span class="mensaje-error">Este campo es obligatorio</span>
+                }
+              </div>
+            }
             </div>
           </div>
 
@@ -922,7 +1327,14 @@
             <div class="form-group">
               <label class="form-label" for="primerApellido">Primer apellido*:</label>
               <input type="text" id="primerApellido" formControlName="primerApellido" name="primerApellido"
-                class="form-control" />
+                class="form-control" [ngClass]="esValido('primerApellido', agregarProveedorFormGroup) ? 'required' : ''"/>
+                @if (agregarProveedorFormGroup.controls['primerApellido'].invalid && agregarProveedorFormGroup.controls['primerApellido'].touched) {
+              <div class="d-grid">
+                @if (agregarProveedorFormGroup.controls['primerApellido'].errors?.['required']) {
+                  <span class="mensaje-error">Este campo es obligatorio</span>
+                }
+              </div>
+            }
             </div>
           </div>
 
@@ -936,16 +1348,23 @@
         </div>
         }
 
-        <hr />
-        <hr />
+        
+        
 
         @if ((nacional && (fisica || noContribuyente || moral)) || (!fisica && !noContribuyente && !moral)) {
-          <h5>Datos personales</h5>
+        <h5 class="mt-5">Datos personales</h5>
         <div class="row d-flex datos-personales-form-container">
           <div class="col-md-4">
             <div class="form-group">
               <label for="nombre" class="form-label">Nombre(s)*: </label>
-              <input type="text" id="nombre" formControlName="nombre" name="nombre" class="form-control"/>
+              <input type="text" id="nombre" formControlName="nombre" name="nombre" class="form-control" [ngClass]="esValido('nombre', agregarProveedorFormGroup) ? 'required' : ''"/>
+              @if (agregarProveedorFormGroup.controls['nombre'].invalid && agregarProveedorFormGroup.controls['nombre'].touched) {
+              <div class="d-grid">
+                @if (agregarProveedorFormGroup.controls['nombre'].errors?.['required']) {
+                  <span class="mensaje-error">Este campo es obligatorio</span>
+                }
+              </div>
+            }
             </div>
           </div>
 
@@ -953,7 +1372,14 @@
             <div class="form-group">
               <label class="form-label" for="primerApellido">Primer apellido*:</label>
               <input type="text" id="primerApellido" formControlName="primerApellido" name="primerApellido"
-                class="form-control" />
+                class="form-control" [ngClass]="esValido('primerApellido', agregarProveedorFormGroup) ? 'required' : ''"/>
+                @if (agregarProveedorFormGroup.controls['primerApellido'].invalid && agregarProveedorFormGroup.controls['primerApellido'].touched) {
+              <div class="d-grid">
+                @if (agregarProveedorFormGroup.controls['primerApellido'].errors?.['required']) {
+                  <span class="mensaje-error">Este campo es obligatorio</span>
+                }
+              </div>
+            }
             </div>
           </div>
 
@@ -961,17 +1387,24 @@
             <div class="form-group">
               <label class="form-label" for="segundoApellido">Segundo apellido*:</label>
               <input type="text" id="segundoApellido" formControlName="segundoApellido" name="segundoApellido"
-                class="form-control" />
+                class="form-control" [ngClass]="esValido('segundoApellido', agregarProveedorFormGroup) ? 'required' : ''"/>
+                @if (agregarProveedorFormGroup.controls['segundoApellido'].invalid && agregarProveedorFormGroup.controls['segundoApellido'].touched) {
+              <div class="d-grid">
+                @if (agregarProveedorFormGroup.controls['segundoApellido'].errors?.['required']) {
+                  <span class="mensaje-error">Este campo es obligatorio</span>
+                }
+              </div>
+            }
             </div>
           </div>
         </div>
         }
 
-        <hr />
-        <hr />
+        
+        
 
         <!-- Contenedor-del-formulario-de-domicilio -->
-        <h5>Domicilio</h5>
+        <h5 class="mt-5">Domicilio</h5>
         <div class="row d-flex domicilio-form-container">
           @if(nacional || (!nacional && !extranjero)){
             <div>
@@ -980,7 +1413,14 @@
                   <label for="pais" class="form-label">Pais*:
                   </label>
                   <input type="text" id="pais" formControlName="pais" name="pais"
-                    class="form-control" />
+                    class="form-control" [ngClass]="esValido('pais', agregarProveedorFormGroup) ? 'required' : ''"/>
+                    @if (agregarProveedorFormGroup.controls['pais'].invalid && agregarProveedorFormGroup.controls['pais'].touched) {
+              <div class="d-grid">
+                @if (agregarProveedorFormGroup.controls['pais'].errors?.['required']) {
+                  <span class="mensaje-error">Este campo es obligatorio</span>
+                }
+              </div>
+            }
                 </div>
               </div>
   
@@ -989,7 +1429,14 @@
                   <label for="estadoLocalidad" class="form-label">Estado/localidad*:
                   </label>
                   <input type="text" id="estadoLocalidad" formControlName="estadoLocalidad" name="estadoLocalidad"
-                    class="form-control" />
+                    class="form-control" [ngClass]="esValido('estadoLocalidad', agregarProveedorFormGroup) ? 'required' : ''"/>
+                    @if (agregarProveedorFormGroup.controls['estadoLocalidad'].invalid && agregarProveedorFormGroup.controls['estadoLocalidad'].touched) {
+              <div class="d-grid">
+                @if (agregarProveedorFormGroup.controls['estadoLocalidad'].errors?.['required']) {
+                  <span class="mensaje-error">Este campo es obligatorio</span>
+                }
+              </div>
+            }
                 </div>
               </div>
   
@@ -998,17 +1445,31 @@
                   <label for="municipioAlcaldia" class="form-label">Municipio/Alcaldía*:
                   </label>
                   <input type="text" id="municipioAlcaldia" formControlName="municipioAlcaldia" name="municipioAlcaldia"
-                    class="form-control" />
+                    class="form-control" [ngClass]="esValido('municipioAlcaldia', agregarProveedorFormGroup) ? 'required' : ''"/>
+                    @if (agregarProveedorFormGroup.controls['municipioAlcaldia'].invalid && agregarProveedorFormGroup.controls['municipioAlcaldia'].touched) {
+              <div class="d-grid">
+                @if (agregarProveedorFormGroup.controls['municipioAlcaldia'].errors?.['required']) {
+                  <span class="mensaje-error">Este campo es obligatorio</span>
+                }
+              </div>
+            }
                 </div>
               </div>
-              <hr />
+              
   
               <div class="col-md-4">
                 <div class="form-group">
                   <label for="localidad" class="form-label">Localidad*:
                   </label>
                   <input type="text" id="localidad" formControlName="localidad" name="localidad"
-                    class="form-control" />
+                    class="form-control" [ngClass]="esValido('localidad', agregarProveedorFormGroup) ? 'required' : ''"/>
+                    @if (agregarProveedorFormGroup.controls['localidad'].invalid && agregarProveedorFormGroup.controls['localidad'].touched) {
+              <div class="d-grid">
+                @if (agregarProveedorFormGroup.controls['localidad'].errors?.['required']) {
+                  <span class="mensaje-error">Este campo es obligatorio</span>
+                }
+              </div>
+            }
                 </div>
               </div>
   
@@ -1017,7 +1478,14 @@
                   <label for="codigoPostaloEquivalente" class="form-label">Código postal o equivalente*:
                   </label>
                   <input type="text" id="codigoPostaloEquivalente" formControlName="codigoPostaloEquivalente" name="codigoPostaloEquivalente"
-                    class="form-control" />
+                    class="form-control" [ngClass]="esValido('codigoPostaloEquivalente', agregarProveedorFormGroup) ? 'required' : ''"/>
+                    @if (agregarProveedorFormGroup.controls['codigoPostaloEquivalente'].invalid && agregarProveedorFormGroup.controls['codigoPostaloEquivalente'].touched) {
+              <div class="d-grid">
+                @if (agregarProveedorFormGroup.controls['codigoPostaloEquivalente'].errors?.['required']) {
+                  <span class="mensaje-error">Este campo es obligatorio</span>
+                }
+              </div>
+            }
                 </div>
               </div>
   
@@ -1026,7 +1494,14 @@
                   <label for="colonia" class="form-label">Colonia*:
                   </label>
                   <input type="text" id="colonia" formControlName="colonia" name="colonia"
-                    class="form-control" />
+                    class="form-control" [ngClass]="esValido('colonia', agregarProveedorFormGroup) ? 'required' : ''"/>
+                    @if (agregarProveedorFormGroup.controls['colonia'].invalid && agregarProveedorFormGroup.controls['colonia'].touched) {
+              <div class="d-grid">
+                @if (agregarProveedorFormGroup.controls['colonia'].errors?.['required']) {
+                  <span class="mensaje-error">Este campo es obligatorio</span>
+                }
+              </div>
+            }
                 </div>
               </div>
             </div>
@@ -1034,8 +1509,8 @@
           <div class="pl-0">
             <div class="col-md-4">
               <div class="form-group">
-                <app-catalogo-select [catalogo]="paisDropdownData" [label]="'Pais'" [required]="true" for="pais"
-                  id="pais" formControlName="pais"></app-catalogo-select>
+                <app-catalogo-select [catalogo]="paisDropdownData" [label]="'Pais'" [required]="true" for="pais" (selectionChange)="onPaisChange($event, 'setProveedorPais')"
+                  id="pais" formControlName="pais" [markTouched]="markPaisTouched(agregarProveedorFormGroup)"></app-catalogo-select>
               </div>
             </div>
 
@@ -1044,7 +1519,14 @@
                 <label for="extranjeroEstado" class="form-label">Estado*:
                 </label>
                 <input type="text" id="extranjeroEstado" formControlName="extranjeroEstado" name="extranjeroEstado"
-                  class="form-control" />
+                  class="form-control" [ngClass]="esValido('extranjeroEstado', agregarProveedorFormGroup) ? 'required' : ''"/>
+                  @if (agregarProveedorFormGroup.controls['extranjeroEstado'].invalid && agregarProveedorFormGroup.controls['extranjeroEstado'].touched) {
+              <div class="d-grid">
+                @if (agregarProveedorFormGroup.controls['extranjeroEstado'].errors?.['required']) {
+                  <span class="mensaje-error">Este campo es obligatorio</span>
+                }
+              </div>
+            }
               </div>
             </div>
 
@@ -1072,7 +1554,14 @@
               <div class="form-group">
                 <label class="form-label" for="calle">Calle*:<span class="bi bi-question-circle-fill fs-4 m-1"
                     title="Title" ata-bs-toggle="tooltip"></span></label>
-                <input type="text" class="form-control" id="calle" formControlName="calle" name="calle" />
+                <input type="text" class="form-control" id="calle" formControlName="calle" name="calle" [ngClass]="esValido('calle', agregarProveedorFormGroup) ? 'required' : ''"/>
+                @if (agregarProveedorFormGroup.controls['calle'].invalid && agregarProveedorFormGroup.controls['calle'].touched) {
+              <div class="d-grid">
+                @if (agregarProveedorFormGroup.controls['calle'].errors?.['required']) {
+                  <span class="mensaje-error">Este campo es obligatorio</span>
+                }
+              </div>
+            }
               </div>
             </div>
 
@@ -1081,7 +1570,14 @@
                 <label for="numeroExterior" class="form-label">Número exterior*:
                 </label>
                 <input type="text" id="numeroExterior" formControlName="numeroExterior" class="form-control"
-                  name="numeroExterior" />
+                  name="numeroExterior" [ngClass]="esValido('numeroExterior', agregarProveedorFormGroup) ? 'required' : ''"/>
+                  @if (agregarProveedorFormGroup.controls['numeroExterior'].invalid && agregarProveedorFormGroup.controls['numeroExterior'].touched) {
+              <div class="d-grid">
+                @if (agregarProveedorFormGroup.controls['numeroExterior'].errors?.['required']) {
+                  <span class="mensaje-error">Este campo es obligatorio</span>
+                }
+              </div>
+            }
               </div>
             </div>
           </div>
@@ -1115,7 +1611,7 @@
                 name="correoElectronico" />
             </div>
           </div>
-          <hr />
+          
 
           <!-- campos -->
           <div class="col-md-3 text-muted text-vertical-align-button">
@@ -1129,7 +1625,7 @@
               <button type="button" class="btn btn-default"(click)="toggleDivProveedor()">
                 Cancelar
               </button>
-              <button type="button" class="btn btn-primary" (click)="submitProveedorForm()">
+              <button type="button" class="btn btn-primary" (click)="submitProveedorForm(agregarProveedorFormGroup)">
                 Guardar
               </button>
             </div>

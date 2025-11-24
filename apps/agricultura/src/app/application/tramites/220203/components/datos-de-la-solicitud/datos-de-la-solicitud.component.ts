@@ -1,15 +1,27 @@
 import { AlertComponent, Catalogo, CatalogoSelectComponent, ConfiguracionColumna, Notificacion, NotificacionesComponent, TablaDinamicaComponent, TablaSeleccion, TituloComponent } from '@libs/shared/data-access-user/src';
 import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
-import { DatoTabla, Fila, FilaSolicitud, RealizarGroup } from '../../models/220203/importacion-de-acuicultura.module';
+import {
+  DatoTabla,
+  DestinatarioForm,
+  FilaSolicitud,
+  FormularioMovilizacion,
+  PagoDeDerechos,
+  RealizarGroup,
+  SolicitudData,
+  TercerosrelacionadosdestinoTable,
+} from '../../models/220203/importacion-de-acuicultura.module';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Observable, Subject, catchError, forkJoin, map, of, takeUntil } from 'rxjs';
 import { AcuiculturaStore } from '../../estados/220203/sanidad-certificado.store';
+import { CatalogosService} from '../../services/220203/catalogos/catalogos.service';
 import { CommonModule } from '@angular/common';
 import { ConsultaioQuery } from '@ng-mf/data-access-user';
 import { ImportacionDeAcuiculturaService } from '../../services/220203/importacion-de-acuicultura.service';
 import { MENSAJE_DOBLE_CLIC } from '../../constantes/220203/importacion-de-acuicultura.enum';
 import { MercanciaSolicitudComponent } from '../mercancia-solicitud/mercancia-solicitud.component';
 import { ModalComponent } from '../../../../shared/components/modal/modal.component';
+import { PrellenadoSolicitud } from '../../models/220203/prellenado-solicitud.model';
+import { RegistroSolicitudService } from '../../services/220203/registro-solicitud/registro-solicitud.service';
 
 /**
  * @fileoverview
@@ -67,10 +79,10 @@ export class DatosDeLaSolicitudComponent implements OnDestroy, OnInit {
   /**
    * Lista de filas seleccionadas en la tabla de mercancías.
    * Mantiene el estado de selección para operaciones de edición y eliminación.
-   * @type {Fila[]}
+   * @type {FilaSolicitud[]}
    * @memberof DatosDeLaSolicitudComponent
    */
-  listSelectedView: Fila[] = [];
+  listSelectedView: FilaSolicitud[] = [];
 
   /**
    * Subject para controlar la destrucción de suscripciones y evitar memory leaks.
@@ -116,20 +128,20 @@ export class DatosDeLaSolicitudComponent implements OnDestroy, OnInit {
   /**
    * Configuración de columnas para la tabla principal de mercancías.
    * Define la estructura, orden y visualización de cada columna en la tabla.
-   * @type {ConfiguracionColumna<Fila>[]}
+   * @type {ConfiguracionColumna<FilaSolicitud>[]}
    * @memberof DatosDeLaSolicitudComponent
    */
-  configuracionColumnas: ConfiguracionColumna<Fila>[] = [
+  configuracionColumnas: ConfiguracionColumna<FilaSolicitud>[] = [
     { encabezado: 'No. partida', clave: (fila) => fila.noPartida, orden: 1 },
     { encabezado: 'Tipo de requisito', clave: (fila) => fila.tipoRequisito, orden: 2 },
     { encabezado: 'Requisito', clave: (fila) => fila.requisito, orden: 3 },
-    { encabezado: 'Número de Certificado Internacional', clave: (fila) => fila.numeroCertificado, orden: 4 },
+    { encabezado: 'Número de Certificado Internacional', clave: (fila) => fila.numeroCertificadoInternacional, orden: 4 },
     { encabezado: 'Fracción arancelaria', clave: (fila) => fila.fraccionArancelaria, orden: 5 },
-    { encabezado: 'Descripción de la fracción', clave: (fila) => fila.descripcionFraccion, orden: 6 },
+    { encabezado: 'Descripción de la fracción', clave: (fila) => fila.descripcionFraccionArancelaria, orden: 6 },
     { encabezado: 'Nico', clave: (fila) => fila.nico, orden: 7 },
     {encabezado:'Descripción Nico', clave: (fila) => fila.descripcionNico, orden: 8},
     { encabezado: 'Descripción', clave: (fila) => fila.descripcion, orden: 9 },
-    { encabezado: 'Unidad de medida de tarifa (UMT)', clave: (fila) => fila.medidadetarifa, orden: 10 },
+    { encabezado: 'Unidad de medida de tarifa (UMT)', clave: (fila) => fila.umt, orden: 10 },
     { encabezado: 'Cantidad UMT', clave: (fila) => fila.cantidadUMT, orden: 11 },
     { encabezado: 'Unidad de medida de comercialización (UMC)', clave: (fila) => fila.umc, orden: 12 },
     { encabezado: 'Cantidad UMC', clave: (fila) => fila.cantidadUMC, orden: 13 },
@@ -145,19 +157,19 @@ export class DatosDeLaSolicitudComponent implements OnDestroy, OnInit {
   /**
    * Datos del cuerpo de la tabla principal de mercancías.
    * Contiene todas las filas de mercancías que se muestran en la tabla.
-   * @type {Fila[]}
+   * @type {FilaSolicitud[]}
    * @memberof DatosDeLaSolicitudComponent
    */
-  cuerpoTablaFila: Fila[] = [];
+  cuerpoTablaFila: FilaSolicitud[] = [];
 
   /**
    * Configuración de columnas para la tabla de solicitudes secundaria.
    * Define la estructura y visualización de la tabla de solicitudes.
-   * @type {ConfiguracionColumna<FilaSolicitud>[]}
+   * @type {ConfiguracionColumna<SolicitudData>[]}
    * @memberof DatosDeLaSolicitudComponent
    */
-  configuracionColumnasoli: ConfiguracionColumna<FilaSolicitud>[] = [
-    { encabezado: 'Fecha Creación', clave: (fila) => fila.fechaCreacion, orden: 1 },
+  configuracionColumnasoli: ConfiguracionColumna<SolicitudData>[] = [
+    { encabezado: 'Fecha Creación', clave: (fila) => fila.fecha_creacion, orden: 1 },
     { encabezado: 'Mercancía', clave: (fila) => fila.mercancia, orden: 2 },
     { encabezado: 'Cantidad', clave: (fila) => fila.cantidad.toString(), orden: 3 },
     { encabezado: 'Proveedor', clave: (fila) => fila.proveedor, orden: 4 },
@@ -169,7 +181,7 @@ export class DatosDeLaSolicitudComponent implements OnDestroy, OnInit {
    * @type {boolean}
    * @memberof DatosDeLaSolicitudComponent
    */
-  colapsable: boolean = false;
+  colapsable: boolean = true;
 
   /**
    * Grupo de formularios reactivo para los datos de la mercancía.
@@ -275,32 +287,21 @@ export class DatosDeLaSolicitudComponent implements OnDestroy, OnInit {
    */
   tableErrorMeassageDispaly: boolean = false;
 
+  /**
+   * @description Lista de establecimientos agropecuarios.
+   * Este array contiene los objetos `Catalogo` que se utilizan para poblar el selector de establecimientos agropecuarios en el formulario.
+   */
+  agropecuariaList: Catalogo[] = [];
+
 
   /**
    * Datos del cuerpo de la tabla principal de solicitudes.
    * Contiene la información de todas las solicitudes registradas.
-   * @type {FilaSolicitud[]}
+   * @type {SolicitudData[]}
    * @memberof DatosDeLaSolicitudComponent
    */
-  cuerpoTabla: FilaSolicitud[] = [
-    {
-      fechaCreacion: '2024-06-01',
-      mercancia: 'Camarón',
-      cantidad: 1000,
-      proveedor: 'Proveedor A'
-    },
-    {
-      fechaCreacion: '2024-06-02',
-      mercancia: 'Tilapia',
-      cantidad: 500,
-      proveedor: 'Proveedor B'
-    },
-    {
-      fechaCreacion: '2024-06-03',
-      mercancia: 'Ostión',
-      cantidad: 750,
-      proveedor: 'Proveedor C'
-    }
+  cuerpoTabla: SolicitudData[] = [
+
   ];
 
   /**
@@ -314,10 +315,10 @@ export class DatosDeLaSolicitudComponent implements OnDestroy, OnInit {
   /**
    * Datos específicos del cuerpo de la tabla de solicitudes.
    * Información detallada de las solicitudes mostradas en la tabla secundaria.
-   * @type {FilaSolicitud[]}
+   * @type {SolicitudData[]}
    * @memberof DatosDeLaSolicitudComponent
    */
-  cuerpoTablaSolicitud: FilaSolicitud[] = [];
+  cuerpoTablaSolicitud: SolicitudData[] = [];
 
   /**
    * Indica si se debe mostrar la barra de desplazamiento en las tablas.
@@ -328,12 +329,24 @@ export class DatosDeLaSolicitudComponent implements OnDestroy, OnInit {
   myScrollbarValue: boolean = true;
 
   /**
+   * @description Subject utilizado para destruir las suscripciones y evitar fugas de memoria cuando el componente se destruye.
+   * @type {Subject<void>}
+   */
+  public destroyNotifier$ = new Subject<void>();
+
+  /**
    * Indica si el formulario está en modo solo lectura.
    * Controla la habilitación/deshabilitación de todos los campos del formulario.
    * @type {boolean}
    * @memberof DatosDeLaSolicitudComponent
    */
   esFormularioSoloLectura: boolean = false;
+
+  /**
+   * @description Formulario principal.
+   * Este `FormGroup` contiene todos los controles del formulario.
+   */
+  forma!: FormGroup;
 
   /**
    * Indica si se debe mostrar la confirmación para eliminar datos de la tabla.
@@ -358,23 +371,54 @@ export class DatosDeLaSolicitudComponent implements OnDestroy, OnInit {
     private readonly fb: FormBuilder,
     private readonly importacionDeAcuiculturaServices: ImportacionDeAcuiculturaService,
     private consultaQuery: ConsultaioQuery,
-    private readonly acuiculturaStore: AcuiculturaStore
+    private readonly acuiculturaStore: AcuiculturaStore,
+    public catalogosService: CatalogosService,
+    public registroSolicitudService: RegistroSolicitudService,
+    public acuiculturaApiService: ImportacionDeAcuiculturaService
   ) {
+    this.obtenerDatosTablaSolicitud();
+    this.getaduanaLista();
+    this.getRegimenLista();
+    this.catalogoOficinas();
     forkJoin([
-       this.obtenerCatalogosTransporte(),
-    this.obtenerCatalogosArancelaria(),
     this.obtenerCatalogosUMC(),
     this.obtenerCatalogosUMT(),
     this.obtenerCatalogosUSO()
     ]).pipe(takeUntil(this.DESTROY_NOTIFIER$))
     .subscribe({
-      next: ([transporte, arancelaria, umc, umt, uso]) => {
+      next: ([umc, umt, uso]) => {
       this.importacionDeAcuiculturaServices.obtenerDatos().pipe(takeUntil(this.DESTROY_NOTIFIER$)).subscribe((datos) => {
+
       this.cuerpoTablaFila = datos.mercanciaGroup;
+
       this.datosMercanciaStore = datos.realizarGroup;
+
       if(this.datosMercanciaFormGroup) {
+        if (datos.realizarGroup.aduanaIngreso !== '' && datos.realizarGroup.aduanaIngreso !== undefined) {
+          this.catalogosService.obtieneCatalogoOficinasInspeccion(220203, datos.realizarGroup.aduanaIngreso)
+            .pipe(
+              takeUntil(this.destroyNotifier$))
+            .subscribe(
+              (data): void => {
+                this.oficinaInspeccionList = data.datos ?? [];
+                if (datos.realizarGroup.oficinaInspeccion !== '' && datos.realizarGroup.oficinaInspeccion !== undefined) {
+                  this.catalogosService.obtieneCatalogoPuntoInspeccion(220203, datos.realizarGroup.oficinaInspeccion)
+                    .pipe(
+                      takeUntil(this.destroyNotifier$))
+                    .subscribe((data): void => {
+                      this.puntoInspeccionList = data.datos ?? [];
+                    });
+                }
+
+              }
+            );
+        }
+
           this.datosMercanciaFormGroup.patchValue({
-            realizarGroup: this.datosMercanciaStore
+            realizarGroup: {
+              ...this.datosMercanciaStore
+
+            }
           });
       }
        this.inicializarEstadoFormulario();
@@ -444,52 +488,10 @@ export class DatosDeLaSolicitudComponent implements OnDestroy, OnInit {
       await this.createFromGroup();
   }
 
-
   /**
-   * Obtiene los datos del catálogo de transporte y puntos de inspección.
-   * Carga las opciones disponibles para aduanas de ingreso y tipos de requisitos.
-   * 
-   * @public
-   * @method obtenerCatalogosTransporte
-   * @memberof DatosDeLaSolicitudComponent
-   * @returns {void}
-   */
-public obtenerCatalogosTransporte(): Observable<Catalogo[]> {
-  return this.importacionDeAcuiculturaServices.obtenerDetallesDelCatalogo('punto.json').pipe(
-    map((data) => {
-      this.aduanaDeIngresoList = data.data as Catalogo[];
-      this.tipoRequisitoList = data.data as Catalogo[];
-      return data.data as Catalogo[];
-    }),
-    catchError((err) => {
-      return of([]); 
-    })
-  );
-}
-
-
-  /**
-   * Obtiene los datos del catálogo de fracciones arancelarias.
-   * Carga las opciones disponibles para oficinas de inspección.
-   * 
-   * @public
-   * @method obtenerCatalogosArancelaria
-   * @memberof DatosDeLaSolicitudComponent
-   * @returns {void}
-   */
-  public obtenerCatalogosArancelaria(): Observable<Catalogo[]> {
-  return this.importacionDeAcuiculturaServices.obtenerDetallesDelCatalogo('punto.json').pipe(
-    map((data) => {
-      this.oficinaInspeccionList = data.data as Catalogo[];
-      return data.data as Catalogo[];
-    }),
-    catchError((err) => {
-      console.error('Error loading arancelaria catalog:', err);
-      return of([]); // fallback to empty array on error
-    })
-  );
-}
-
+  * bandera para indicar que el formulario fue tocado
+  */
+  markTouched: boolean = false;
 
   /**
    * Obtiene los datos del catálogo de Unidades de Medida Comercial (UMC).
@@ -529,7 +531,6 @@ public obtenerCatalogosUMC(): Observable<Catalogo[]> {
     map((data) => {
       this.regimenList = data.data as Catalogo[];
       this.nicoList = data.data as Catalogo[];
-      this.puntoInspeccionList = data.data as Catalogo[];
       return data.data as Catalogo[];
     }),
     catchError((err) => {
@@ -560,6 +561,83 @@ public obtenerCatalogosUMC(): Observable<Catalogo[]> {
         return of([]); // fallback to empty array on error
       })
     );
+  }
+
+  /**
+   * @description Obtiene la lista de aduanas desde un archivo JSON.
+   * @method getaduanaLista
+   * @returns {void}
+   */
+  getaduanaLista(): void {
+    this.catalogosService.obtieneCatalogoAduana(220203) 
+      .pipe(
+        takeUntil(this.DESTROY_NOTIFIER$)
+      ).subscribe(
+      (data): void => {
+        this.aduanaDeIngresoList = data.datos ?? [];
+      }
+    );
+
+  }
+
+    /**
+   * Obtiene la lista para el select de oficina de inspección de sanidad agropecuaria desde el selector.
+   * @method catalogoOficinas
+   */
+  catalogoOficinas(_forma?: FormGroup): void {
+    const VALOR = this.datosMercanciaFormGroup?.get('realizarGroup')?.value || {};
+    this.obtenerSanidadoficinaInspeccionList(VALOR.aduanaIngreso);
+  }
+
+  /**
+   * Obtiene la lista para el select de puntos de inspeccion desde el selector.
+   * @method obtenerPuntoInspeccion
+   */
+  obtenerPuntoInspeccion(_forma?: FormGroup): void {
+    const VALOR = this.datosMercanciaFormGroup?.get('realizarGroup')?.value || {};
+    this.obtenerPuntoInspeccionList(VALOR.oficinaInspeccion);
+  }
+
+    /**
+   * Obtiene la lista para el select de régimen.
+   * @method getRegimenLista
+   */
+  getRegimenLista(clave_regimen:string=''): void {
+
+    this.catalogosService.obtieneCatalogoRegimenesVigentes(220203).pipe(takeUntil(this.destroyNotifier$)).subscribe(data => {
+      this.regimenList = clave_regimen
+        ? (data.datos ?? []).filter((item) => item.clave === clave_regimen)
+        : data.datos ?? [];
+    });
+  }
+
+    /**
+   * Obtiene la lista para el select de punto de inspección.
+   * @method obtenerPuntoInspeccionList
+   */
+  async obtenerPuntoInspeccionList(valor: string): Promise<void> {
+    await this.catalogosService.obtieneCatalogoPuntoInspeccion(220203, valor).pipe(takeUntil(this.destroyNotifier$)).subscribe((data): void => {
+      this.puntoInspeccionList = data.datos ?? [];
+    });
+  }
+
+  /**
+   * Obtiene la lista para el select de sanidad agropecuaria.
+   * @method obtenerSanidadoficinaInspeccionList
+   */
+  async obtenerSanidadoficinaInspeccionList(cveAduana: string): Promise<void> {
+    this.oficinaInspeccionList = [];
+    if(cveAduana && cveAduana !== ''){
+      await this.catalogosService.obtieneCatalogoOficinasInspeccion(220203, cveAduana)
+        .pipe(
+          takeUntil(this.destroyNotifier$)
+        ).subscribe(
+        (data): void => {
+          this.oficinaInspeccionList = data.datos ?? [];
+        }
+      );
+    }
+
   }
 
   /**
@@ -633,11 +711,11 @@ public obtenerCatalogosUMC(): Observable<Catalogo[]> {
    * 
    * @public
    * @method seleccionTabla
-   * @param {Fila[]} event - Array de filas seleccionadas de la tabla
+   * @param {FilaSolicitud[]} event - Array de filas seleccionadas de la tabla
    * @memberof DatosDeLaSolicitudComponent
    * @returns {void}
    */
-  seleccionTabla(event: Fila[]): void {
+  seleccionTabla(event: FilaSolicitud[]): void {
     this.listSelectedView = event;
     this.acuiculturaStore.update(
       (state) => ({
@@ -698,7 +776,7 @@ public obtenerCatalogosUMC(): Observable<Catalogo[]> {
       );
       this.acuiculturaStore.update((state) => ({
         ...state,
-        selectedmercanciaGroupDatos: {} as Fila
+        selectedmercanciaGroupDatos: {} as FilaSolicitud
       }))
       this.listSelectedView = [];
     }
@@ -731,6 +809,8 @@ public obtenerCatalogosUMC(): Observable<Catalogo[]> {
    * @returns {boolean} True si tanto el formulario como la tabla son válidos, false en caso contrario
    */
   public validarFormulario(): boolean {
+    // Marcar los select customizados
+    this.markTouched = true;
     this.tableErrorMeassageDispaly = this.cuerpoTablaFila.length === 0 ? true : false;
     if (this.datosMercanciaFormGroup.invalid) {
       this.datosMercanciaFormGroup.markAllAsTouched();
@@ -757,5 +837,307 @@ public obtenerCatalogosUMC(): Observable<Catalogo[]> {
     this.DESTROY_NOTIFIER$.next();
     this.DESTROY_NOTIFIER$.complete();
   }
+
+  // TODO: recibir el parametro de rfc de la sesion
+  public obtenerDatosTablaSolicitud(): void {
+    this.registroSolicitudService.obtieneDatosSolicitud(220203, 'AAL0409235E6')
+      .pipe(takeUntil(this.DESTROY_NOTIFIER$))
+    .subscribe((data)=>{
+      this.cuerpoTabla = data.datos ?? [];
+    })
+  }
+
+  /**
+   * Maneja la selección de una fila en la tabla de solicitudes.
+   *
+   * Cuando se selecciona una fila, este método actualiza los valores del formulario (forma)
+   * con datos predefinidos relacionados con la solicitud seleccionada, usando los IDs correctos de los catálogos.
+   *
+   * @param event - Objeto de tipo SolicitudFilaTabla que representa la fila seleccionada en la tabla.
+   */
+  seleccionFila(event: SolicitudData): void {
+    if (event && event.id_solicitud) {
+      // TODO: descomentar este codigo cuando los servicios esten bien y borrar el de abajo que tiene hardcode
+      // this.obtenerPrellenadoMovilizacionNacional(event.id_solicitud);
+      // this.obtenerPrellenadoTercerosRelacionados(event.id_solicitud);
+      // this.obtenerPrellenadoPagoDerechos(event.id_solicitud);
+      this.obtenerPrellenadoMovilizacionNacional('202738175');
+      this.obtenerPrellenadoTercerosRelacionados('202738175');
+      this.obtenerPrellenadoPagoDerechos('202738175');
+      this.catalogosService
+        .obtenSolicitudPrellenado(220203, true, '202738175' ?? '')
+        .pipe(takeUntil(this.destroyNotifier$))
+        .subscribe({
+          next: async (datos) => {
+            if (datos?.datos) {
+              await this.obtenerSanidadoficinaInspeccionList(
+                datos.datos.cve_aduana || ''
+              );
+              await this.obtenerPuntoInspeccionList(
+                datos.datos.oficina_inspeccion_sanidad_agropecuaria || ''
+              );
+              //Regimen
+              this.getRegimenLista(datos.datos?.clave_regimen || '');
+              this.datosMercanciaFormGroup.patchValue({
+                aduanaDeIngreso: datos.datos.cve_aduana || '',
+                tipoDeMercancia:
+                  datos.datos.mercancia[0].tipo_mercancia === 'TICERM.SOA'
+                    ? 'no'
+                    : 'yes', //'yes' para animales vivos, 'no' para subproductos
+                oficinaDeInspeccion: datos.datos.oficina_inspeccion_sanidad_agropecuaria || '',
+                puntoDeInspeccion: datos.datos.punto_inspeccion || '',
+                regimen: datos.datos.clave_regimen || '',
+                numeroDeGuia: datos.datos.numero_autorizacion || '',
+                numeroDeCarro: datos.datos.numero_carro_ferrocarril || '',
+              });
+              const GUARDAR_VALORES: RealizarGroup = {
+                aduanaIngreso: datos.datos.cve_aduana,
+                numeroGuia: datos.datos.numero_autorizacion,
+                oficinaInspeccion: datos.datos.oficina_inspeccion_sanidad_agropecuaria,
+                puntoInspeccion: datos.datos.punto_inspeccion,
+                regimen: datos.datos.clave_regimen
+              };
+              (this.acuiculturaApiService.actualizarSoloRealizarGroup as (value: RealizarGroup) => void)(GUARDAR_VALORES);
+            } else {
+              this.datosMercanciaFormGroup.reset();
+            }
+            console.warn('Datos de la solicitud prellenada:', datos);
+            const DETALLE_MERCANCIA =
+              (datos?.datos as PrellenadoSolicitud) || [];
+            if (DETALLE_MERCANCIA.mercancia.length > 0) {
+              const FILAS_SOLICITUD: FilaSolicitud[] = [];
+              DETALLE_MERCANCIA.mercancia.forEach((mercancia) => {
+                const FILAS: FilaSolicitud = {
+                  certificadoInternacional: '',
+                  especie: '',
+                  faseDeDesarrollo: '',
+                  medidadetarifa: '',
+                  numeroCertificado: '',
+                  id: mercancia.id_mercancia_gob,
+                  noPartida: mercancia.numero_partida.toString(),
+                  descripcionTipoRequisito:
+                    mercancia.descripcion_tipo_requisito || '',
+                  tipoRequisito: mercancia.tipo_requisito || '',
+                  requisito: mercancia.requisitos || '',
+                  numeroCertificadoInternacional:
+                    String(mercancia.numero_certificado) || '',
+                  fraccionArancelaria:
+                    mercancia.fraccion_arancelaria_corto || '',
+                  descripcionFraccion:
+                    mercancia.descripcion_fracción_arancelaria || '',
+                  idDescripcionFraccion: mercancia.idDescripcionFraccion || 0, 
+                  nico: mercancia.clave_nico || '',
+                  descripcionNico: mercancia.descripcion_nico || '',
+                  descripcionUso: mercancia.descripcion_uso || '',
+                  umt: mercancia.clave_unidad_comercial || '',
+                  cantidadUMT: mercancia.cantidad_umt.toString() || '0',
+                  umc: mercancia.clave_unidad_medida || '',
+                  descripcionUMT: mercancia.descripcion_umt || '',
+                  descripcionUMC: mercancia.descripcion_umc || '',
+                  cantidadUMC: mercancia.cantidad_umc.toString() || '0',
+                  uso: String(mercancia.id_uso_mercancia_tipo_tramite) || '',
+                  paisDeOrigen: mercancia.clave_paises_origen || '',
+                  paisDeProcedencia: mercancia.clave_paises_procedencia || '',
+                  descripcionPaisDeOrigen: mercancia.nombre_pais_origen || '',
+                  descripcionPaisDeProcedencia: mercancia.nombre_pais_procedencia || '',
+                  certificadoInternacionalElectronico: String(mercancia.numero_certificado) || '',
+                  tipoDeProducto: '',
+                  numeroDeLote: mercancia.numero_lote || '',                  
+                  descripcion: mercancia.descripcion_mercancia || ''
+                };
+                FILAS_SOLICITUD.push(FILAS);
+              });
+
+              this.acuiculturaStore.actualizarMercanciaGroup(FILAS_SOLICITUD);
+            }
+          },
+          error: (error) => {
+            console.error(
+              'Error al obtener los datos de la solicitud prellenada:',
+              error
+            );
+            this.nuevaNotificacion = {
+              tipoNotificacion: 'alert',
+              categoria: 'danger',
+              modo: 'action',
+              titulo: 'Error',
+              mensaje:
+                'Ocurrió un error al obtener los datos de la solicitud. Por favor, intente nuevamente, más tarde.',
+              cerrar: false,
+              tiempoDeEspera: 2000,
+              txtBtnAceptar: 'Aceptar',
+              txtBtnCancelar: '',
+            };
+          },
+        });
+    }
+  }
+
+  /**
+   * Obtiene la lista para el select de sanidad agropecuaria.
+   * @method obtenerSanidadAgropecuariaList
+   */
+  async obtenerSanidadAgropecuariaList(cveAduana: string): Promise<void> {
+    this.agropecuariaList = [];
+    if (cveAduana && cveAduana !== '') {
+      await this.catalogosService
+        .obtieneCatalogoOficinasInspeccion(220202, cveAduana)
+        .pipe(takeUntil(this.destroyNotifier$))
+        .subscribe((data): void => {
+          this.agropecuariaList = data.datos ?? [];
+        });
+    }
+  }
+
+  /**
+   * Metodo que obtiene los datos de la solicitud prellenada para la pestaña
+   * de movilizacion nacional
+   * @param idSolicitud
+   */
+  obtenerPrellenadoMovilizacionNacional(idSolicitud: string): void {
+    // TODO: descomentar este codigo cuando los servicios esten bien y borrar el de abajo que tiene hardcode
+    // this.catalogosService.obtenSolicitudPrellenadoMovilizacionNacional(220203, true, idSolicitud ?? '')
+    this.catalogosService
+      .obtenSolicitudPrellenadoMovilizacionNacional(
+        220203,
+        true,
+        '202738175' ?? ''
+      )
+      .pipe(takeUntil(this.destroyNotifier$))
+      .subscribe({
+        next: (datos) => {
+          if (datos.datos) {
+            const GUARDAR_VALORES: FormularioMovilizacion = {
+              medioDeTransporte: datos.datos.ide_medio_transporte,
+              puntoVerificacion: datos.datos.id_punto_verificacion,
+              nombreEmpresaTransportista: datos.datos.razon_social,
+              identificacionTransporte: datos.datos.identificacion_transporte,
+            };
+            (
+              this.importacionDeAcuiculturaServices.actualizarFormularioMovilizacion as (
+                value: FormularioMovilizacion
+              ) => void
+            )(GUARDAR_VALORES);
+          }
+        },
+      });
+  }
+
+  /**
+   * Metodo que obtiene los datos de la solicitud prellenada para la pestaña
+   * de terceros relacionados
+   * @param idSolicitud
+   */
+  obtenerPrellenadoTercerosRelacionados(idSolicitud: string): void {
+    // TODO: descomentar este codigo cuando los servicios esten bien y borrar el de abajo que tiene hardcode
+    // this.catalogosService.obtenSolicitudPrellenadoTercerosRelacionados(220203, true, idSolicitud ?? '')
+    this.catalogosService
+      .obtenSolicitudPrellenadoTercerosRelacionados(
+        220203,
+        true,
+        '202738175' ?? ''
+      )
+      .pipe(takeUntil(this.destroyNotifier$))
+      .subscribe({
+        next: (datos) => {
+          if (datos.datos) {
+            const ARRAY_TERCEROS_DESTINO: TercerosrelacionadosdestinoTable[] =
+              [];
+            datos.datos.terceros_destinatario.forEach((item) => {
+              const GUARDAR_VALORES_TERCEROS_DESTINO: TercerosrelacionadosdestinoTable =
+                {
+                  tipoMercancia: item.persona_moral ? 'yes' : 'no',
+                  nombre: item.nombre,
+                  primerApellido: item.apellido_paterno,
+                  segundoApellido: item.apellido_materno,
+                  razonSocial: item.razon_social,
+                  pais: item.pais,
+                  codigoPostal: item.codigo_postal,
+                  estado: item.cve_entidad,
+                  municipio: item.cve_deleg_mun,
+                  colonia: item.cve_colonia,
+                  calle: item.calle,
+                  numeroExterior: item.num_exterior,
+                  numeroInterior: item.num_interior,
+                  lada: item.lada,
+                  telefono: item.telefonos,
+                  correo: item.correo,
+                  planta: '',
+                  domicilio: '',
+                  municipioDescripcion: '',
+                  estadoDescripcion: '',
+                  paisDescripcion: '',
+                  coloniaDescripcion: '',
+                };
+              ARRAY_TERCEROS_DESTINO.push(GUARDAR_VALORES_TERCEROS_DESTINO);
+              (
+                this.importacionDeAcuiculturaServices.updateTercerosRelacionado as (
+                  value: TercerosrelacionadosdestinoTable[]
+                ) => void
+              )(ARRAY_TERCEROS_DESTINO);
+            });
+            const ARRAY_TERCEROS_EXPORTADOR: DestinatarioForm[] = [];
+            datos.datos.terceros_exportador.forEach((item) => {
+              const GUARDAR_VALORES_TERCEROS_EXPORTADOR: DestinatarioForm =
+                {
+                  tipoMercancia: item.persona_moral ? 'yes' : 'no',
+                  nombre: item.nombre,
+                  razonSocial: item.razon_social,
+                  pais: item.pais,
+                  telefono: item.telefonos,
+                  domicilio: item.descripcion_ubicacion,
+                  correo: item.correo,
+                  primerApellido: item.apellido_paterno,
+                  segundoApellido: item.apellido_materno,
+                  lada: item.lada,
+                };
+              ARRAY_TERCEROS_EXPORTADOR.push(
+                GUARDAR_VALORES_TERCEROS_EXPORTADOR
+              );
+              (
+                this.importacionDeAcuiculturaServices.updateDatosForma as (
+                  value: DestinatarioForm[]
+                ) => void
+              )(ARRAY_TERCEROS_EXPORTADOR);
+            });
+          }
+        },
+      });
+  }
+
+  /**
+   * Metodo que obtiene los datos de la solicitud prellenada para la pestaña
+   * de pago de derechos
+   * @param idSolicitud
+   */
+  obtenerPrellenadoPagoDerechos(idSolicitud: string): void {
+    // TODO: descomentar este codigo cuando los servicios esten bien y borrar el de abajo que tiene hardcode
+    // this.catalogosService.obtenSolicitudPrellenadoPagoDerechos(220202, true, idSolicitud ?? '')
+    this.catalogosService
+      .obtenSolicitudPrellenadoPagoDerechos(220203, true, '202738175' ?? '')
+      .pipe(takeUntil(this.destroyNotifier$))
+      .subscribe({
+        next: (datos) => {
+          if (datos.datos) {
+            const GUARDAR_VALORES: PagoDeDerechos = {
+              exentoPago: datos.datos.exento_pago,
+              justificacion: datos.datos.ide_motivo_exento_pago,
+              claveReferencia: datos.datos.cve_referencia_bancaria,
+              cadenaDependencia: datos.datos.cadena_pago_dependencia,
+              banco: datos.datos.cve_banco,
+              llavePago: datos.datos.llave_pago,
+              importePago: datos.datos.imp_pago,
+              fechaPago: datos.datos.fec_pago,
+            };
+            (
+              this.importacionDeAcuiculturaServices.actualizarPagoDeDerechos as (
+                value: PagoDeDerechos
+              ) => void
+            )(GUARDAR_VALORES);
+          }
+        },
+      });
+  }
+
 }
 

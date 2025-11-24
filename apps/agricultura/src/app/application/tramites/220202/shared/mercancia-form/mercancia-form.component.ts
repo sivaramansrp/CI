@@ -1,4 +1,11 @@
-import { AbstractControl, FormBuilder, FormGroup, ReactiveFormsModule, ValidationErrors, Validators } from '@angular/forms';
+import {
+  AbstractControl,
+  FormBuilder,
+  FormGroup,
+  ReactiveFormsModule,
+  ValidationErrors,
+  Validators,
+} from '@angular/forms';
 import {
   AnimalesEventos,
   Sensible,
@@ -36,8 +43,8 @@ import {
 import { AgriculturaApiService } from '../../services/220202/agricultura-api.service';
 import { CatalogosService } from '../../services/220202/catalogos/catalogos.service';
 import { FitosanitarioQuery } from '../../queries/fitosanitario.query';
-import { TooltipModule } from 'ngx-bootstrap/tooltip';
 import { RegistroSolicitudService } from '../../services/220202/registro-solicitud/registro-solicitud.service';
+import { TooltipModule } from 'ngx-bootstrap/tooltip';
 
 @Component({
   selector: 'app-mercancia-form',
@@ -48,13 +55,12 @@ import { RegistroSolicitudService } from '../../services/220202/registro-solicit
     TituloComponent,
     ReactiveFormsModule,
     CrosslistComponent,
-    TooltipModule
+    TooltipModule,
   ],
   templateUrl: './mercancia-form.component.html',
-  styleUrls: ['./mercancia-form.component.scss']
+  styleUrls: ['./mercancia-form.component.scss'],
 })
 export class MercanciaFormComponent implements OnInit, OnDestroy {
-
   /**
    * Representa el formulario reactivo utilizado para gestionar los datos de la mercancía
    * en el componente de detalles de animales vivos.
@@ -155,6 +161,7 @@ export class MercanciaFormComponent implements OnInit, OnDestroy {
    * @type {string[]}
    */
   public usoCrossListDatos: string[] = [];
+  public usoCrossListDatosElegidos: string[] = [];
 
   /**
    * Indica si el formulario tiene errores de validación.
@@ -168,17 +175,18 @@ export class MercanciaFormComponent implements OnInit, OnDestroy {
    *
    * Contiene el HTML del mensaje de error a mostrar cuando hay validaciones fallidas.
    */
-  formErrorAlert: string = '<strong>¡Error de registro! </strong> Faltan campos por capturar';
+  formErrorAlert: string =
+    '<strong>¡Error de registro! </strong> Faltan campos por capturar';
 
   /**
-    * Marca para rastrear si se intentó enviar el formulario.
-    * Se utiliza para controlar cuándo mostrar errores de validación en campos deshabilitados.
+   * Marca para rastrear si se intentó enviar el formulario.
+   * Se utiliza para controlar cuándo mostrar errores de validación en campos deshabilitados.
    */
   formSubmissionAttempted: boolean = false;
 
   /**
-    * Marcar para rastrear si se  selecciona "Inspección Ocular"
-    * Se utiliza para ocultar/mostrar el campo "Requisito"
+   * Marcar para rastrear si se  selecciona "Inspección Ocular"
+   * Se utiliza para ocultar/mostrar el campo "Requisito"
    */
   isInspeccionOcularSelected: boolean = false;
 
@@ -186,6 +194,21 @@ export class MercanciaFormComponent implements OnInit, OnDestroy {
    * Arreglo que almacena el catálogo de tipos de requisito.
    */
   tipoRequisitoList: Catalogo[] = [];
+  /**
+   * Arreglo que almacena el catálogo de vida silvestre.
+   */
+  vidaSilvestreLista: Catalogo[] = [];
+
+  /**
+   * Arreglo que almacena la descripcion vida silvestre.
+   */
+  vidaSilvestreListaTextos: string[] = [];
+
+  /**
+   * Arreglo que almacena los elegidos de vida silvestre.
+   */
+  vidaSilvestreElegidos: Catalogo[] = [];
+
   /**
    * @description Lista de paises.
    * Este array contiene los objetos `Catalogo` que se utilizan para poblar el selector de paises en el formulario.
@@ -195,9 +218,8 @@ export class MercanciaFormComponent implements OnInit, OnDestroy {
   /**
    * @description Lista de pais Destino.
    * Este array contiene los objetos `Catalogo` que se utilizan para poblar el selector de pais Destino en el formulario.
-  */
+   */
   catalogosDatosPaisDestinoList: Catalogo[] = [];
-
 
   /**
    * Constructor del componente.
@@ -216,7 +238,7 @@ export class MercanciaFormComponent implements OnInit, OnDestroy {
     private readonly fitosanitarioQuery: FitosanitarioQuery,
     private registroSolicitudService: RegistroSolicitudService,
     private catalogosService: CatalogosService
-  ) { }
+  ) {}
 
   /**
    * Método del ciclo de vida de Angular que se ejecuta al inicializar el componente.
@@ -230,8 +252,8 @@ export class MercanciaFormComponent implements OnInit, OnDestroy {
       .select((state: ListaDeDatosFinal) => state.usoCrossListDatos)
       .pipe(takeUntil(this.destroyNotifier$))
       .subscribe((datos: string[]) => {
-        this.usoCrossListDatos = datos;
-    });
+        this.usoCrossListDatosElegidos = [...datos];
+      });
   }
 
   /**
@@ -241,8 +263,7 @@ export class MercanciaFormComponent implements OnInit, OnDestroy {
   obtenerCatalogos(): void {
     this.obtenerCatalogoRestricciones();
     this.obtenerCtalogosMercancia();
-
-    
+    this.obtieneCatalogoVidaSilvestre();
   }
 
   /**
@@ -255,11 +276,37 @@ export class MercanciaFormComponent implements OnInit, OnDestroy {
    * @returns void
    */
   obtenerCatalogoRestricciones(): void {
-    this.catalogosService.obtieneCatalogoRestricciones(220202)
+    this.catalogosService
+      .obtieneCatalogoRestricciones(220202)
       .pipe(takeUntil(this.destroyNotifier$))
       .subscribe((data): void => {
         this.tipoRequisitoList = data.datos ?? [];
-    });
+      });
+  }
+
+  /**
+   * Obtiene el catálogo de vida silvestre.
+   * Realiza una llamada al servicio de catálogos para crosslist de vida silvestre
+   * asociadas al trámite 220202.
+   * Los datos obtenidos se almacenan en la propiedad tipoRequisitoList.
+   * La suscripción se cancela automáticamente cuando el componente se destruye
+   * mediante el uso de takeUntil.
+   * @returns void
+   */
+  obtieneCatalogoVidaSilvestre(): void {
+    this.catalogosService
+      .obtieneCatalogoVidaSilvestre(220202)
+      .pipe(takeUntil(this.destroyNotifier$))
+      .subscribe({
+        next: (data) => {
+          this.vidaSilvestreLista = data.datos ?? [];
+          if (data.datos !== undefined) {
+            this.vidaSilvestreListaTextos =
+              data.datos.map((dt) => dt.descripcion) ?? [];
+            this.usoCrossListDatos = [...this.usoCrossListDatos];
+          }
+        },
+      });
   }
 
   crearFormulario(): void {
@@ -267,34 +314,73 @@ export class MercanciaFormComponent implements OnInit, OnDestroy {
       id: [0],
       tipoRequisito: ['', Validators.required],
       requisito: ['', Validators.required],
-      numeroCertificadoInternacional: ['', [Validators.required, Validators.maxLength(50), Validators.pattern(REGEX_DESCRIPCION)]],
+      numeroCertificadoInternacional: [
+        '',
+        [
+          Validators.required,
+          Validators.maxLength(50),
+          Validators.pattern(REGEX_DESCRIPCION),
+        ],
+      ],
       fraccionArancelaria: ['', Validators.required],
       descripcionFraccion: [{ value: '', disabled: true }, Validators.required],
+      idDescripcionFraccion: [0],
       nico: ['', Validators.required],
       descripcionNico: [{ value: '', disabled: true }],
       descripcion: [
         '',
-        [Validators.required, Validators.maxLength(1000), Validators.pattern(REGEX_DESCRIPCION)],
+        [
+          Validators.required,
+          Validators.maxLength(1000),
+          Validators.pattern(REGEX_DESCRIPCION),
+        ],
       ],
-      cantidadUMT: ['', [Validators.required, Validators.pattern(NUMERICO_CON_PUNTO_REGEX), MercanciaFormComponent.maxDecimalsValidator, MercanciaFormComponent.maxWholeNumbersValidator]],
+      cantidadUMT: [
+        '',
+        [
+          Validators.required,
+          Validators.pattern(NUMERICO_CON_PUNTO_REGEX),
+          MercanciaFormComponent.maxDecimalsValidator,
+          MercanciaFormComponent.maxWholeNumbersValidator,
+        ],
+      ],
       umt: [{ value: '', disabled: true }, Validators.required],
-      cantidadUMC: ['', [Validators.required, Validators.pattern(NUMERICO_CON_PUNTO_REGEX), MercanciaFormComponent.maxDecimalsValidator, MercanciaFormComponent.maxWholeNumbersValidator]],
+      descripcionUMT: [{ value: '', disabled: true }, Validators.required],
+      cantidadUMC: [
+        '',
+        [
+          Validators.required,
+          Validators.pattern(NUMERICO_CON_PUNTO_REGEX),
+          MercanciaFormComponent.maxDecimalsValidator,
+          MercanciaFormComponent.maxWholeNumbersValidator,
+        ],
+      ],
       umc: ['', Validators.required],
       uso: ['', Validators.required],
       paisDeOrigen: ['', Validators.required],
       paisDeProcedencia: ['', Validators.required],
       tipoDeProducto: [''],
-      numeroDeLote: ['']
+      numeroDeLote: [''],
+      detalleVidaSilvestre: [[]],
     });
 
     if (this.formularioSolicitud) {
       this.mercanciaForm.patchValue({
-        ...this.formularioSolicitud
+        ...this.formularioSolicitud,
       });
-      
+      if (this.formularioSolicitud.detalleVidaSilvestre !== undefined) {
+        this.usoCrossListDatosElegidos =
+          this.formularioSolicitud.detalleVidaSilvestre.map(
+            (detalle) => detalle.nombreCientifico
+          );
+        this.usoCrossListDatos = [...this.usoCrossListDatosElegidos];
+      }
+
       const TIPO_REQUISITO_VALUE = this.formularioSolicitud.tipoRequisito;
       if (TIPO_REQUISITO_VALUE) {
-        const SELECTED_TIPO = this.catalogosDatos.tipoRequisitoList?.find(tipo => tipo.id.toString() === TIPO_REQUISITO_VALUE.toString());
+        const SELECTED_TIPO = this.catalogosDatos.tipoRequisitoList?.find(
+          (tipo) => tipo.id.toString() === TIPO_REQUISITO_VALUE.toString()
+        );
         if (SELECTED_TIPO?.descripcion === 'Inspección Ocular') {
           this.isInspeccionOcularSelected = true;
           const REQUISITO_CONTROL = this.mercanciaForm.get('requisito');
@@ -327,34 +413,30 @@ export class MercanciaFormComponent implements OnInit, OnDestroy {
    * @param event - El objeto de catálogo seleccionado que contiene la información de la fracción arancelaria
    */
   fraccionArancelariaSeleccionada(event: Catalogo): void {
-    this.registroSolicitudService.obtieneFraccionArancelariaDescripcion(220202, event.clave!)
-      .pipe(
-        takeUntil(this.destroyNotifier$)
-      ).subscribe(
-        (data): void => {
-          this.getNicoFraccionArancelariaLista(event);
-          this.getUnidadMedida(event);
-          this.mercanciaForm.patchValue({
-            descripcionFraccion: data.datos?.descripcion ?? 'Sin descripción'
+    this.registroSolicitudService
+      .obtieneFraccionArancelariaDescripcion(220202, event.clave!)
+      .pipe(takeUntil(this.destroyNotifier$))
+      .subscribe((data): void => {
+        this.getNicoFraccionArancelariaLista(event);
+        this.getUnidadMedida(event);
+        this.mercanciaForm.patchValue({
+          descripcionFraccion: data.datos?.descripcion ?? 'Sin descripción',
+          idDescripcionFraccion: data.datos?.id_fraccion ?? 0,
+        });
       });
-        }
-    );
   }
   /**
-    * @description Obtiene la lista de fraccion arancelaria desde un archivo JSON.
-    * @method getFraccionArancelariaLista
-    * @returns {void}
-    */
+   * @description Obtiene la lista de fraccion arancelaria desde un archivo JSON.
+   * @method getFraccionArancelariaLista
+   * @returns {void}
+   */
   getNicoFraccionArancelariaLista(event: Catalogo): void {
-    this.catalogosService.obtieneCatalogoNicoFraccionArancelaria(220202, event.clave!)
-      .pipe(
-        takeUntil(this.destroyNotifier$)
-      ).subscribe(
-        (data): void => {
-
-          this.catalogosDatos.nicoList = data.datos ?? [];
-        }
-    );
+    this.catalogosService
+      .obtieneCatalogoNicoFraccionArancelaria(220202, event.clave!)
+      .pipe(takeUntil(this.destroyNotifier$))
+      .subscribe((data): void => {
+        this.catalogosDatos.nicoList = data.datos ?? [];
+      });
   }
 
   /**
@@ -363,35 +445,35 @@ export class MercanciaFormComponent implements OnInit, OnDestroy {
    * @param event - El objeto de catálogo seleccionado que contiene la información del NICO
    */
   nicoSeleccionado(event: Catalogo): void {
-    this.registroSolicitudService.obtieneNicoDescripcion(220202, this.mercanciaForm.get('fraccionArancelaria')?.value, event.clave!)
-      .pipe(
-        takeUntil(this.destroyNotifier$)
-      ).subscribe(
-        (data): void => {
-          this.mercanciaForm.patchValue({
-            descripcionNico: data.datos ?? 'Sin descripción'
+    this.registroSolicitudService
+      .obtieneNicoDescripcion(
+        220202,
+        this.mercanciaForm.get('fraccionArancelaria')?.value,
+        event.clave!
+      )
+      .pipe(takeUntil(this.destroyNotifier$))
+      .subscribe((data): void => {
+        this.mercanciaForm.patchValue({
+          descripcionNico: data.datos ?? 'Sin descripción',
+        });
       });
-        }
-    );
   }
 
   /**
-  * @description Obtiene la descripcion de unidad de medida.
-  * @method getUnidadMedida
-  * @returns {void}
-  */
+   * @description Obtiene la descripcion de unidad de medida.
+   * @method getUnidadMedida
+   * @returns {void}
+   */
   getUnidadMedida(event: Catalogo): void {
-    this.registroSolicitudService.obtieneUnidadMedida(220202, event.clave!)
-      .pipe(
-        takeUntil(this.destroyNotifier$)
-      ).subscribe(
-        (data): void => {
-
-          this.mercanciaForm.patchValue({
-            umt: data.datos?.descripcion ?? 'Sin descripción'
-          });
-        }
-      );
+    this.registroSolicitudService
+      .obtieneUnidadMedida(220202, event.clave!)
+      .pipe(takeUntil(this.destroyNotifier$))
+      .subscribe((data): void => {
+        this.mercanciaForm.patchValue({
+          umt: data.datos?.clave ?? 'sin clave',
+          descripcionUMT: data.datos?.descripcion ?? 'Sin descripción',
+        });
+      });
   }
 
   /**
@@ -447,18 +529,20 @@ export class MercanciaFormComponent implements OnInit, OnDestroy {
    */
   agregarAnimales(): void {
     this.formSubmissionAttempted = true;
-    
+
     if (this.mercanciaForm.invalid) {
       this.mercanciaForm.markAllAsTouched();
       this.esFormaValido = true;
-    }
-    else {
-      this.agregarDatosFormulario.emit(
-        {
-          formulario: this.mercanciaForm.getRawValue(),
-          tablaDatos: this.sensiblesTablaDatos
-        }
-      );
+    } else {
+      const DATA_FORM = this.mercanciaForm.getRawValue();
+      // this.agregarDatosFormulario.emit(DATA_FORM);
+      this.agregarDatosFormulario.emit({
+        formulario: {
+          ...this.mercanciaForm.getRawValue(),
+          nombresCientificos: this.vidaSilvestreElegidos,
+        },
+        tablaDatos: this.sensiblesTablaDatos,
+      });
       this.cerrar.emit();
       this.esFormaValido = false;
     }
@@ -469,7 +553,9 @@ export class MercanciaFormComponent implements OnInit, OnDestroy {
    * @param control - Control del formulario a validar
    * @returns ValidationErrors si tiene más de 3 decimales, null si es válido
    */
-  static maxDecimalsValidator(control: AbstractControl): ValidationErrors | null {
+  static maxDecimalsValidator(
+    control: AbstractControl
+  ): ValidationErrors | null {
     const VALUE = control.value;
     if (!VALUE) {
       return null;
@@ -487,10 +573,12 @@ export class MercanciaFormComponent implements OnInit, OnDestroy {
 
   /**
    * Validador personalizado para verificar si el número tiene más de 12 números enteros
-   * @param control - Control del formulario a validar  
+   * @param control - Control del formulario a validar
    * @returns ValidationErrors si tiene más de 12 números enteros, null si es válido
    */
-  static maxWholeNumbersValidator(control: AbstractControl): ValidationErrors | null {
+  static maxWholeNumbersValidator(
+    control: AbstractControl
+  ): ValidationErrors | null {
     const VALUE = control.value;
     if (!VALUE) {
       return null;
@@ -516,7 +604,7 @@ export class MercanciaFormComponent implements OnInit, OnDestroy {
     this.destroy$.complete();
   }
 
-      /**
+  /**
    * @description Obtiene la lista de paises desde un archivo JSON.
    * @method getcatalogosDatospaisOrigenLista
    * @returns {void}
@@ -524,38 +612,45 @@ export class MercanciaFormComponent implements OnInit, OnDestroy {
 
   obtenerCtalogosMercancia(): void {
     this.getcatalogosDatospaisOrigenLista();
-    this.getcatalogosDatospaisDestinoLista()
-  }
-
-/**
-  * Realiza una petición para obtener el catálogo de pais Destino.
-*/
-  getcatalogosDatospaisOrigenLista(): void {
-    this.catalogosService.obtieneCatalogoPaises(220202)
-      .pipe(
-        takeUntil(this.destroyNotifier$)
-      ).subscribe(
-      (data): void => {
-        this.catalogosDatos.paisOrigenList = data.datos ?? [];
-      }
-    );
-    
+    this.getcatalogosDatospaisDestinoLista();
   }
 
   /**
    * Realiza una petición para obtener el catálogo de pais Destino.
-  */
-    getcatalogosDatospaisDestinoLista(): void {
-    this.catalogosService.obtieneCatalogoPaisesD(220202)
-      .pipe(
-        takeUntil(this.destroyNotifier$)
-      ).subscribe(
-      (data): void => {
-        this.catalogosDatos.paisDeProcedenciaList = data.datos ?? [];
-      }
-    );
-    
+   */
+  getcatalogosDatospaisOrigenLista(): void {
+    this.catalogosService
+      .obtieneCatalogoPaises(220202)
+      .pipe(takeUntil(this.destroyNotifier$))
+      .subscribe((data): void => {
+        this.catalogosDatos.paisOrigenList = data.datos ?? [];
+      });
   }
 
-}
+  /**
+   * Realiza una petición para obtener el catálogo de pais Destino.
+   */
+  getcatalogosDatospaisDestinoLista(): void {
+    this.catalogosService
+      .obtieneCatalogoPaisesD(220202)
+      .pipe(takeUntil(this.destroyNotifier$))
+      .subscribe((data): void => {
+        this.catalogosDatos.paisDeProcedenciaList = data.datos ?? [];
+      });
+  }
 
+  valoresCrossLista(event: string[]): void {
+    const ELEGIDOS: Catalogo[] = event.map((elemento: string): Catalogo => {
+      const ENCONTRADO = this.vidaSilvestreLista.find(
+        (vida) => vida.descripcion === elemento
+      );
+      if (ENCONTRADO !== undefined) {
+        return ENCONTRADO;
+      }
+      return {} as Catalogo;
+    });
+    if (ELEGIDOS !== undefined) {
+      this.vidaSilvestreElegidos = ELEGIDOS as Catalogo[];
+    }
+  }
+}

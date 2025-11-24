@@ -204,6 +204,7 @@ export class SolicitudPageComponent implements OnInit, OnDestroy {
       )
       .subscribe();
     this.obtenerEstadoSolicitud();
+    this.obtenerRfcLogueado();
   }
 
   /**

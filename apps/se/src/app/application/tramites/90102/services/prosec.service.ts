@@ -1,6 +1,7 @@
 import { AutorizacionProsecStore, ProsecState } from '../estados/autorizacion-prosec.store';
-import { Catalogo, RespuestaCatalogos } from '@ng-mf/data-access-user';
-import { Observable, map } from 'rxjs';
+import { Catalogo, JSONResponse, RespuestaCatalogos } from '@ng-mf/data-access-user';
+import { Observable, catchError, map, throwError } from 'rxjs';
+import { API_ROUTES } from '../../../shared/servers/api-route';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 
@@ -8,7 +9,7 @@ import { Injectable } from '@angular/core';
   providedIn: 'root'
 })
 export class ProsecService {
-  url: string = '../../../../../assets/json/90101/';
+  url: string = '../../../../../assets/json/90102/';
   url2: string = '../../../../../assets/json/90102/';
 
   constructor(private readonly http: HttpClient, 
@@ -24,9 +25,28 @@ export class ProsecService {
     );
   }
 
-  obtenerTablaDatos(fileName: string): Observable<Record<string, unknown>[]> {
-    const JSON_URL = this.url2 + fileName;
-    return this.http.get<Record<string, unknown>[]>(JSON_URL);
+  obtenerEstadoTablaDatos(body: { rfc_solicitante: string; enitdad_federativa: string; planta_idc: string }): Observable<JSONResponse> {
+    return this.http.post<JSONResponse>(API_ROUTES('/sat-t90102', '90102').buscarDomicilios, body).pipe(
+      map((response) => response),
+      catchError(() => {
+        const ERROR = new Error(`Error al obtener información de la tabla de datos en ${API_ROUTES('/sat-t90102', '90102').buscarDomicilios}`);
+        return throwError(() => ERROR);
+      })
+    );
+  }
+  obtenerSectoresTablaDatos(cveSector: string): Observable<JSONResponse> {
+    return this.http.get<JSONResponse>(API_ROUTES('/sat-t90102', '90102').sectoresDatos(cveSector)).pipe(
+      map((response) => response),
+    );
+  }
+  obtenerFraccionesTablaDatos(body: { fraccion: string; id_conf_programa_se: string; cve_sector: string; id_programa_autorizado: string | null }): Observable<JSONResponse> {
+    return this.http.post<JSONResponse>(API_ROUTES('/sat-t90102', '90102').buscarSectorFraccionArancelaria, body).pipe(
+      map((response) => response),
+      catchError(() => {
+        const ERROR = new Error(`Error al obtener información de las fracciones en ${API_ROUTES('/sat-t90102', '90102').buscarSectorFraccionArancelaria}`);
+        return throwError(() => ERROR);
+      })
+    );
   }
       /**
    * Método para actualizar el estado del formulario con los datos proporcionados.
@@ -34,13 +54,13 @@ export class ProsecService {
    */
   actualizarEstadoFormulario(DATOS: ProsecState): void {
     this.autorizacionProsecStore.setModalidad(DATOS.modalidad);
-    this.autorizacionProsecStore.setEstado(DATOS.Estado);
+    this.autorizacionProsecStore.setEstadoSeleccionar(DATOS.estadoSeleccionar);
     this.autorizacionProsecStore.setRepresentacionFederal(DATOS.RepresentacionFederal);
     this.autorizacionProsecStore.setActividadProductiva(DATOS.ActividadProductiva);
-    this.autorizacionProsecStore.setSector(DATOS.Sector);
+    this.autorizacionProsecStore.setSector(DATOS.sector);
     this.autorizacionProsecStore.setFraccionArancelaria(DATOS.Fraccion_arancelaria);
     this.autorizacionProsecStore.setcontribuyentes(DATOS.contribuyentes);
-    this.autorizacionProsecStore.setFormaValida(DATOS.formaValida);
+    this.autorizacionProsecStore.setDomiciliosFormaValida(DATOS.domiciliosFormaValida);
   }
 
   /**

@@ -7,8 +7,8 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 
-import { AcusesRecibidosNotificacion} from '../../models/autorizar-requerimiento/response/notificacion-acuses-recibidos-response.model';
 import { AcusesRecibosResponse, BaseReponseCustomArray } from '../../models/confirmar-notificacion/response/acuses-recibos-response.model';
+import { AcusesRecibidosNotificacion} from '../../models/autorizar-requerimiento/response/notificacion-acuses-recibidos-response.model';
 
 
 @Injectable({

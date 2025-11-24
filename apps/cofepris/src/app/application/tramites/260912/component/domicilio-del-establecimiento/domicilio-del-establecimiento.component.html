@@ -5,7 +5,9 @@
       <div class="row">
         <div class="col-md-4">
           <div class="form-group">
-            <label class="form-label" for="codigoPostal">Código postal*:</label>
+            <label class="form-label" for="codigoPostal">Código postal<span 
+  [ngClass]="{'text-danger': form.get('codigoPostal')?.touched && form.get('codigoPostal')?.invalid}"
+>*</span>:</label>
             <input
               class="form-control"
               type="text"
@@ -16,6 +18,12 @@
               maxlength="12"
               (input)="onCodigoPostalInput($event)"
               (change)="setValorStore(form, 'codigoPostal')"
+              [ngClass]="{
+                'is-invalid':
+                form.get('codigoPostal')?.invalid &&
+                form.get('codigoPostal')?.touched
+              }"
+              
             />
             <div *ngIf="form.get('codigoPostal')?.touched && form.get('codigoPostal')?.invalid" class="text-danger">
               <div *ngIf="form.get('codigoPostal')?.errors?.['required']">
@@ -54,7 +62,9 @@
         <div class="col-md-4">
           <div class="form-group">
             <label class="form-label" for="municipioOAlcaldia"
-            >Municipio o alcaldía*:</label
+            >Municipio o alcaldía<span 
+  [ngClass]="{'text-danger': form.get('municipioOAlcaldia')?.touched && form.get('municipioOAlcaldia')?.invalid}"
+>*</span>:</label
             >
           <input
               class="form-control"
@@ -66,6 +76,12 @@
                   maxlength="120"
                   (input)="onMunicipioOAlcaldiaInput($event)"
                   (change)="setValorStore(form, 'municipioOAlcaldia')"
+                   [ngClass]="{
+                'is-invalid':
+                form.get('municipioOAlcaldia')?.invalid &&
+                form.get('municipioOAlcaldia')?.touched
+              }"
+                   
             />
             <div *ngIf="form.get('municipioOAlcaldia')?.touched && form.get('municipioOAlcaldia')?.invalid" class="text-danger">
               <div *ngIf="form.get('municipioOAlcaldia')?.hasError('required')">
@@ -88,7 +104,9 @@
       <div class="row">
         <div class="col-md-4">
           <div class="form-group">
-            <label class="form-label" for="localidad">Localidad:</label>
+            <label class="form-label" for="localidad">Localidad<span 
+  [ngClass]="{'text-danger': form.get('localidad')?.touched && form.get('localidad')?.invalid}"
+></span>:</label>
              <input
               class="form-control"
               type="text"
@@ -99,6 +117,12 @@
               maxlength="120"
           (input)="onLocalidadInput($event)"
           (change)="setValorStore(form, 'localidad')"
+           [ngClass]="{
+                'is-invalid':
+                form.get('localidad')?.invalid &&
+                form.get('localidad')?.touched
+              }"
+         
         />
         <div *ngIf="form.get('localidad')?.touched && form.get('localidad')?.invalid" class="text-danger">
           <div *ngIf="form.get('localidad')?.hasError('required')">
@@ -174,7 +198,9 @@
       <div class="row">
         <div class="col-md-1">
           <div class="form-group">
-            <label class="form-label" for="lada">Lada:</label>
+            <label class="form-label" for="lada">Lada <span 
+  [ngClass]="{'text-danger': form.get('lada')?.touched && form.get('lada')?.invalid}"
+></span>:</label>
             <input
               class="form-control"
               type="text"
@@ -185,6 +211,11 @@
               maxlength="5"
               (input)="onLadaInput($event)"
               (change)="setValorStore(form, 'lada')"
+              [ngClass]="{
+                'is-invalid':
+                form.get('lada')?.invalid &&
+                form.get('lada')?.touched
+              }"
             />
             <div *ngIf="form.get('lada')?.touched && form.get('lada')?.invalid" class="text-danger">
               <div *ngIf="form.get('lada')?.hasError('required')">
@@ -198,7 +229,9 @@
         </div>
         <div class="col-md-3">
           <div class="form-group">
-            <label class="form-label" for="telefono">Teléfono*:</label>
+            <label class="form-label" for="telefono">Teléfono<span 
+  [ngClass]="{'text-danger': form.get('telefono')?.touched && form.get('telefono')?.invalid}"
+>*</span>:</label>
             <input
               class="form-control"
               type="text"
@@ -209,6 +242,11 @@
               maxlength="30"
               (input)="onTelefonoInput($event)"
               (change)="setValorStore(form, 'telefono')"
+               [ngClass]="{
+                'is-invalid':
+                form.get('telefono')?.invalid &&
+                form.get('telefono')?.touched
+              }"
             />
 
             <div *ngIf="form.get('telefono')?.touched && form.get('telefono')?.invalid" class="text-danger">
@@ -250,7 +288,14 @@
     <div class="mt-3">
     </div>
     <div class="container text-end mt-5">
-  <button class="btn btn-danger btn-space me-2" [disabled]="esFormularioSoloLectura" *ngIf="emitirSeleccionEstablecimiento" (click)="onEliminarScian(selectedScianIndex === null ? null : selectedScianIndex)">Eliminar</button>
+  <button 
+    class="btn btn-danger btn-space me-2" 
+    [disabled]="esFormularioSoloLectura" 
+    *ngIf="!emitirSeleccionEstablecimiento" 
+    (click)="onEliminarScian(selectedScianIndex === null ? null : selectedScianIndex)">
+    Eliminar
+  </button>
+  
   <!-- Modal shown when NO row is selected -->
   <div class="modal fade" id="modalSeleccionaRegistro" tabindex="-1"aria-labelledby="modalSeleccionaRegistroLabel" aria-hidden="true">
     <div class="modal-dialog">
@@ -289,11 +334,11 @@
         class="btn btn-primary me-2" 
         [disabled]="esFormularioSoloLectura"
         (click)="openScianModal()"
-        *ngIf="emitirSeleccionEstablecimiento"
+        *ngIf="!emitirSeleccionEstablecimiento"
       >
         Agregar
       </button>
-  <!-- Modal para agregar nicoTablaDatos -->
+<!-- Modal para agregar nicoTablaDatos -->
   <div class="modal fade" id="modalAddNicoTabla" #modalAddNicoTabla tabindex="-1" aria-labelledby="modalAddNicoTablaLabel" aria-hidden="true">
     <div class="modal-dialog modal-fullscreen">
       <div class="modal-content">
@@ -564,32 +609,8 @@
           </div>
         </div>
     </div>
-
-    <div class="row mt-2">
-      <div class="col-md-12">
-        <ng-titulo titulo="Manifiestos y declaraciones" />
-        <div class="form-check bg-light p-0">
-          <div class="alert alert-info content-with-checkbox py-6">
-            <lib-input-check 
-              [id]="'manifiesto'" 
-              [label]="''" 
-              [required]="true"
-              formControlName="manifests"
-                  [isDisabled]="esFormularioSoloLectura || !!nicoTablaForm.get('representacion')?.disabled"
-              (change)="onManifestsChange()"
-            ></lib-input-check>
-            <span class="fw-bold align-middle"> *</span>
-            <div>{{ manifests }}</div>
-          </div>
-        </div>
-        <div *ngIf="!domicilio.get('manifests')?.value && domicilio.get('manifests')?.touched" class="text-danger">
-          <small>
-            Este campo es obligatorio
-          </small>
-        </div>
-      </div>
-    </div>
-  <div>
+ <app-manifiestos></app-manifiestos>
+   
     <form [formGroup]="representanteLegal">
       <h6>
         Los datos o anexos pueden contener información confidencial ¿Está de
@@ -612,7 +633,7 @@
       <div class="row">
         <div class="col-md-4">
           <div class="form-group">
-            <label class="form-label" for="rfc">RFC <span 
+            <label class="form-label" for="rfc">RFC<span 
               [ngClass]="{'text-danger': representanteLegal.get('rfc')?.touched && representanteLegal.get('rfc')?.invalid}"
             >*</span>:</label>
             <input 

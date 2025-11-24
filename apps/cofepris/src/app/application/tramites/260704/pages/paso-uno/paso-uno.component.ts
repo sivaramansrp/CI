@@ -1,5 +1,6 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ConsultaioQuery, ConsultaioState, FormularioDinamico } from '@ng-mf/data-access-user';
+import { FormBuilder, FormGroup } from '@angular/forms';
 import { ReplaySubject, map, takeUntil } from 'rxjs';
 import { ConsultaService } from '../../service/consulta.service';
 
@@ -16,6 +17,7 @@ import { ConsultaService } from '../../service/consulta.service';
   styles: ``,
 })
 export class PasoUnoComponent implements OnInit, OnDestroy {
+  pasoUnoForm: FormGroup;
  /**
    * Indica si los datos de respuesta están disponibles.
    */
@@ -48,15 +50,24 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
    * Índice de la pestaña actual del asistente.
    */
   indice: number = 1;
+/**
+ * Indica si el formulario es de solo lectura.
+ */
+  public idProcedimiento: number = 260704;
   /**
      * Constructor del componente.
      *
      * Se utiliza para la inyección de dependencias.
      */
-  constructor(private consultaQuery: ConsultaioQuery,
+  constructor(
+    private fb: FormBuilder,
+    private consultaQuery: ConsultaioQuery,
     private consulta: ConsultaService
   ) {
-    // Constructor vacío, no requiere inicialización adicional.
+    this.pasoUnoForm = this.fb.group({
+      folioDeDesistimiento: [''],
+      folioOriginal: ['']
+    });
   }
  /**
    * Método del ciclo de vida de Angular que se ejecuta al inicializar el componente.

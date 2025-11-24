@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, OnChanges, OnDestroy, OnInit, Output, SimpleChanges } from "@angular/core";
+import { Component, ElementRef, EventEmitter, Input, OnChanges, OnDestroy, OnInit, Output, SimpleChanges, ViewChild } from "@angular/core";
 
 import { AbstractControl, FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, ValidationErrors, Validators } from '@angular/forms';
 import { CommonModule } from '@angular/common';
@@ -9,7 +9,9 @@ import { SentidosDisponiblesResponse } from '@libs/shared/data-access-user/src/c
 import { ConfiguracionColumna, TablaDinamicaComponent, TituloComponent, ValidacionesFormularioService } from '@libs/shared/data-access-user/src';
 import { CriteriosResponse } from '@libs/shared/data-access-user/src/core/models/shared/criterios-response.model';
 import { DictamenForm } from '@libs/shared/data-access-user/src/core/models/shared/dictamen-form.model';
+import { GenerarDictamenClasificacionService } from "../../services/generar-dictamen-clasificacion.service";
 import { IniciarAutorizacionResponse } from '@libs/shared/data-access-user/src/core/models/shared/iniciar-autorizar-dictamen-response.model';
+import { Modal } from "bootstrap";
 import { Subject } from 'rxjs';
 
 @Component({
@@ -173,6 +175,44 @@ export class GenerarDictamenClasificacionComponent implements OnInit, OnChanges,
   public evaluarObservacionesDictamen: HistorialObservacione[] = [];
 
   /**
+    * Referencia al elemento modal para Aladi.
+  */
+  @ViewChild('modalAladi', { static: false }) modalElement!: ElementRef;
+
+  
+  /**
+    * Referencia al elemento modal para Aladi.
+  */
+  @ViewChild('modalAladiAceptar', { static: false }) modalAladiAceptar!: ElementRef;
+
+  /**
+   * Instancia del modal de Bootstrap utilizada para abrir y cerrar el diálogo de agregar o editar mercancías.
+   * Se inicializa al abrir el modal y se utiliza para controlar su visibilidad desde el componente.
+   *
+   * @type {Modal}
+   * @private
+   * @memberof DatosMercanciaComponent
+   * @example
+   * this.modalInstance.show();
+   * this.modalInstance.hide();
+  */
+  private modalInstanceNoAceptado!: Modal
+
+  /**
+   * Instancia del modal de Bootstrap utilizada para abrir y cerrar el diálogo de agregar o editar mercancías.
+   * Se inicializa al abrir el modal y se utiliza para controlar su visibilidad desde el componente.
+   *
+   * @type {Modal}
+   * @private
+   * @memberof DatosMercanciaComponent
+   * @example
+   * this.modalInstance.show();
+   * this.modalInstance.hide();
+  */
+  private modalInstanceAceptado!: Modal
+
+
+  /**
    * Configuración de la tabla de observaciones del dictamen.
    *
    * Define las columnas que se mostrarán en la tabla de observaciones del dictamen,
@@ -193,7 +233,8 @@ export class GenerarDictamenClasificacionComponent implements OnInit, OnChanges,
    * @param {FormBuilder} fb - Servicio para la creación de formularios reactivos.
    * @param {ValidacionesFormularioService} validacionesService - Servicio para validaciones personalizadas de formularios.
    */
-  constructor(private fb: FormBuilder, private validacionesService: ValidacionesFormularioService,) {
+  constructor(private fb: FormBuilder, private validacionesService: ValidacionesFormularioService,
+    private generarDictamenClasificacionService: GenerarDictamenClasificacionService) {
   }
   /**
    * @method ngOnInit
@@ -254,6 +295,49 @@ export class GenerarDictamenClasificacionComponent implements OnInit, OnChanges,
       this.dictamenForm.removeControl('cumplimiento');
     }
      this.controlDictaminador.emit(true); 
+  }
+
+  /**
+   * @method onClasificacionChange
+   * @description
+   * Maneja el cambio en la clasificación ALADI.
+   * Actualiza el formulario, configura el estado de no aceptada y cierra el diálogo.
+   * @param {boolean} value - Valor de la clasificación ALADI.
+   * @returns {void}
+ */
+  public onClasificacionChange(value: boolean): void {
+   // Actualizamos el formulario
+    this.dictamenForm.get('clasificacionAladi')?.setValue(value);
+
+    this.generarDictamenClasificacionService.setNoAceptada(value);
+
+    if (value === true) {
+      this.modalInstanceAceptado?.hide();
+    } else {
+      this.modalInstanceNoAceptado?.hide();
+      this.dictamenForm.get('clasificacionAladi')?.setValue(false);
+    }
+  }
+
+  /**
+   * @method abrirModal
+   * @description
+   * Abre el modal de la interfaz.
+   * Inicializa la instancia del modal si no existe y lo muestra.
+   * @returns {void}
+ */
+  public abrirModal(bandera: boolean): void{
+    if(bandera){
+      if (!this.modalInstanceAceptado && this.modalAladiAceptar) {
+       this.modalInstanceAceptado = new Modal(this.modalAladiAceptar.nativeElement);
+      }
+      this.modalInstanceAceptado?.show();
+    }else{
+      if (!this.modalInstanceNoAceptado && this.modalElement) {
+       this.modalInstanceNoAceptado = new Modal(this.modalElement.nativeElement);
+      }
+       this.modalInstanceNoAceptado?.show();
+    }
   }
 
   /**
@@ -343,8 +427,7 @@ export class GenerarDictamenClasificacionComponent implements OnInit, OnChanges,
         fechaFinVigenciaAutorizada: this.dataIniciarDictamen.fecha_fin_vigencia,
       });
       this.evaluarObservacionesDictamen = this.dataIniciarDictamen.historial_observaciones || [];
-      // Lógica para determinar el tipo de calificador
-       this.determinarCalificadorTipo();
+       this.determinarCalificadorTipo(this.dataIniciarDictamen);
     }
 
      if (changes['dataIniciarDictamenAutorizar'] && changes['dataIniciarDictamenAutorizar'].currentValue) {
@@ -355,6 +438,7 @@ export class GenerarDictamenClasificacionComponent implements OnInit, OnChanges,
         fechaInicioVigenciaAutorizada: this.dataIniciarDictamenAutorizar.fecha_inicio_vigencia,
         fechaFinVigenciaAutorizada: this.dataIniciarDictamenAutorizar.fecha_fin_vigencia,
       });
+      this.determinarCalificadorTipo(this.dataIniciarDictamenAutorizar);
     }
 
     if (changes['sentidoInput']) {
@@ -381,23 +465,20 @@ export class GenerarDictamenClasificacionComponent implements OnInit, OnChanges,
 /**
  * Determina el tipo de calificador basado en las variables booleanas
  */
-private determinarCalificadorTipo(): void {
-    if (this.dataIniciarDictamen.tiene_fraccion_aladi) {
-        this.dictamenForm.get('clasificacionUE')?.setValue(null);
-        this.dictamenForm.get('clasificacionJpn')?.setValue(null);
-        this.dictamenForm.get('clasificacionAladi')?.setValue(this.dataIniciarDictamen.calificacion_descripcion_aladi);
-    } else if (this.dataIniciarDictamen.dictaminador_califica_exportador) {
-       this.dictamenForm.get('clasificacionUE')?.setValue(this.dataIniciarDictamen.calificacion_dictaminador_exportador);
-        this.dictamenForm.get('clasificacionJpn')?.setValue(null);
-         this.dictamenForm.get('clasificacionAladi')?.setValue(null);
-    } else if (this.dataIniciarDictamen.dictaminador_califica_exportador_jpn) {
-        this.dictamenForm.get('clasificacionUE')?.setValue(null);
-        this.dictamenForm.get('clasificacionJpn')?.setValue(this.dataIniciarDictamen.calificacion_dictaminador_exportador_jpn);
-        this.dictamenForm.get('clasificacionAladi')?.setValue(null);
-    } else {
-      this.dictamenForm.get('clasificacionUE')?.setValue(null);
-      this.dictamenForm.get('clasificacionJpn')?.setValue(null); 
-      this.dictamenForm.get('clasificacionAladi')?.setValue(null);
+private determinarCalificadorTipo(data: IniciarDictamenResponse | IniciarAutorizacionResponse): void {
+    this.dictamenForm.get('clasificacionUE')?.setValue(null);
+    this.dictamenForm.get('clasificacionJpn')?.setValue(null);
+    this.dictamenForm.get('clasificacionAladi')?.setValue(null);
+    if (this.dataIniciarDictamen?.tiene_fraccion_aladi) {
+        this.dictamenForm.get('clasificacionAladi')?.setValue(data.calificacion_descripcion_aladi);
+    } 
+
+    if ((this.dataIniciarDictamen?.dictaminador_califica_exportador) || (this.dataIniciarDictamenAutorizar?.mostrar_calificacion_ue)) {
+       this.dictamenForm.get('clasificacionUE')?.setValue(data.calificacion_dictaminador_exportador);
+    }
+
+    if ((this.dataIniciarDictamen?.dictaminador_califica_exportador_jpn) || (this.dataIniciarDictamenAutorizar?.mostrar_calificacion_jpn)) {
+        this.dictamenForm.get('clasificacionJpn')?.setValue(data.calificacion_dictaminador_exportador_jpn);
     }
 }
 
@@ -455,6 +536,32 @@ private determinarCalificadorTipo(): void {
    */
   seleccionaTab(i: number): void {
     this.indice = i;
+  }
+
+   /**
+   * Cierra el modal de agregar o editar mercancías.
+   * Utiliza la instancia del modal de Bootstrap para ocultar el diálogo actualmente abierto.
+   *
+   * @example
+   * this.cerrarDialogo();
+   * // El modal se oculta.
+   */
+  cerrarDialogoNoAceptar(): void {
+    this.dictamenForm.get('clasificacionAladi')?.setValue(true);
+    this.generarDictamenClasificacionService.setNoAceptada(true);
+    this.modalInstanceNoAceptado?.hide();
+  }
+
+  /**
+   * Cierra el modal de agregar o editar mercancías.
+   * Utiliza la instancia del modal de Bootstrap para ocultar el diálogo actualmente abierto.
+   *
+   * @example
+   * this.cerrarDialogo();
+   * // El modal se oculta.
+   */
+  cerrarDialogoAceptar():void{
+    this.modalInstanceAceptado?.hide();
   }
 
   /**

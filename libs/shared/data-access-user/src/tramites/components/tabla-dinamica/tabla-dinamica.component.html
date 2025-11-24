@@ -62,6 +62,7 @@
       </tr>
       <!-- Crear las filas de manera dinámica -->
       <ng-container *ngFor="let fila of paginatedDatos; let i = index">
+<!--      TODO: ver si se puede cambiar el click por un dblclick-->
         <tr [ngStyle]="styleCenter ? {'text-align': 'center'} : {}" (click)="onFilaClic(fila)">
 
           <!-- Botón de radio para seleccionar una fila -->

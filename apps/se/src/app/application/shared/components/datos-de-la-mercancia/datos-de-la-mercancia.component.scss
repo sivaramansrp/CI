@@ -36,3 +36,7 @@ textarea {
 .input-error {
   border: 1px solid #dc3545 !important; 
 }
+
+::ng-deep app-catalogo-select select.form-select {
+  max-width: 100% !important;
+}

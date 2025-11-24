@@ -26,6 +26,12 @@ import { FormsModule } from '@angular/forms';
   host: {}
 })
 export class TableComponent implements OnInit, OnChanges {
+  /** 
+ * Emite la fila seleccionada cuando el usuario marca una fila en la tabla.
+ * Permite al componente padre conocer exactamente qué registro fue elegido.
+ * No afecta otros componentes que ya usan este <ng-table>, ya que es un evento adicional.
+ */
+@Output() rowSelected = new EventEmitter<TableBodyData>();
 
   /**
    * Indica si el estado actual es inválido.
@@ -50,6 +56,10 @@ export class TableComponent implements OnInit, OnChanges {
   * Si no se pasa ningún valor desde el componente padre, tomará el valor predeterminado como verdadero
   */
   @Output() seleccionCambio = new EventEmitter<boolean>(); 
+  /**
+   * Emite el cuerpo de la tabla actualizado cuando cambia la selección
+   */
+  @Output() bodyChange = new EventEmitter<TableBodyData[]>();
   
 
   /**
@@ -136,14 +146,18 @@ export class TableComponent implements OnInit, OnChanges {
     item ? { ...item, selected: CHECKED } : item
   );
   this.emitirCambioSeleccion();
+  this.bodyChange.emit(this.tableData.tableBody);
 }
 
 /**
  * Maneja el cambio de selección de una fila individual.
  * Emite el evento seleccionCambio cuando cambia el estado de selección.
  */
-onRowSelectionChange(): void {
+onRowSelectionChange(row?: TableBodyData): void {
   this.emitirCambioSeleccion();
+  if (row) {
+    this.rowSelected.emit({ ...row });
+  }
 }
 
 /**
@@ -152,6 +166,7 @@ onRowSelectionChange(): void {
 private emitirCambioSeleccion(): void {
   const HAS_SELECTION = this.tableData.tableBody?.some(item => item?.selected) || false;
   this.seleccionCambio.emit(HAS_SELECTION);
+  this.bodyChange.emit(this.tableData.tableBody);
 }
  
 }

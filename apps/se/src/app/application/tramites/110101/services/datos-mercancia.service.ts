@@ -104,8 +104,10 @@ export class DatosMercanciaService {
         const FORMDATA = new FormData();
         FORMDATA.append('archivo_csv', archivo, archivo.name);
         FORMDATA.append('tipo_archivo', tipoArchivo);
-        FORMDATA.append('tratados_seleccionados', JSON.stringify(tratadosSeleccionados));
-        const HEADERS = new HttpHeaders();
-        return this.http.post<BaseResponse<ArchivoMercanciaResponse>>(ENDPOINT, FORMDATA, { headers: HEADERS });
+        FORMDATA.append('tratados_seleccionados', new Blob(
+        [JSON.stringify(tratadosSeleccionados)], 
+        { type: 'application/json' }
+        ));
+        return this.http.post<BaseResponse<ArchivoMercanciaResponse>>(ENDPOINT, FORMDATA);
     }
 }

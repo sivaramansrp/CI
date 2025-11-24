@@ -7,7 +7,7 @@ import { ListaPasosWizard } from '@ng-mf/data-access-user';
 import { SolicitudService } from '../../service/solicitud.service';
 import { ToastrService } from 'ngx-toastr';
 import { Tramite80302Query } from '../../../../estados/queries/tramite80302.query';
-import { WizardComponent } from '@ng-mf/data-access-user';
+import { WizardComponent } from '@libs/shared/data-access-user/src';
 
 /**
  * Interfaz que define la estructura de una acción de botón

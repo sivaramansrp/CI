@@ -104,98 +104,59 @@ export class Shared260514Service {
   // eslint-disable-next-line class-methods-use-this
   buildPayload(data: Record<string, unknown>, discriminatorValue: number): Record<string, unknown> {
     const ESTABLECIMIENTO = Shared260514Service.buildEstablecimiento(data);
+    const SOLICITUD = Shared260514Service.buildSolicitud(data, discriminatorValue);
     const DATOS_SCIAN = Shared260514Service.buildDatosScian(data);
     const MERCANCIAS = Shared260514Service.buildMercancias(data);
     const REPRESENTANTE_LEGAL = Shared260514Service.buildRepresentanteLegal(data);
-    const PROVEEDOR_TABLA = Shared260514Service.buildTercerosTablaDatos(data['Proveedor'] as Array<{ tbodyData?: Array<unknown> }>);
-    const FORMULADOR_TABLA = Shared260514Service.buildTercerosTablaDatos(data['Formulador'] as Array<{ tbodyData?: Array<unknown> }>);
-    const FABRICANTE_TABLA = Shared260514Service.buildTercerosTablaDatos(data['Fabricante'] as Array<{ tbodyData?: Array<unknown> }>);
     const PAGO_DERECHOS = Shared260514Service.buildPagoDerechos(data);
 
     
 
     return {
-      solicitante: {
-        rfc: "AAL0409235E6",
-        nombre: "ACEROS ALVARADO S.A. DE C.V.",
-        actividadEconomica: "Fabricación de productos de hierro y acero",
-        correoElectronico: "contacto@acerosalvarado.com",
-        domicilio: {
-          pais: "México",
-          codigoPostal: "06700",
-          estado: "Ciudad de México",
-          municipioAlcaldia: "Cuauhtémoc",
-          localidad: "Centro",
-          colonia: "Roma Norte",
-          calle: "Av. Insurgentes Sur",
-          numeroExterior: "123",
-          numeroInterior: "Piso 5, Oficina A",
-          lada: "",
-          telefono: "123456"
+      "solicitante": {
+        "rfc": "AAL0409235E6",
+        "nombre": "ACEROS ALVARADO S.A. DE C.V.",
+        "actividadEconomica": "Fabricación de productos de hierro y acero",
+        "correoElectronico": "contacto@acerosalvarado.com",
+        "domicilio": {
+          "pais": "México",
+          "codigoPostal": "06700",
+          "estado": "Ciudad de México",
+          "municipioAlcaldia": "Cuauhtémoc",
+          "localidad": "Centro",
+          "colonia": "Roma Norte",
+          "calle": "Av. Insurgentes Sur",
+          "numeroExterior": "123",
+          "numeroInterior": "Piso 5, Oficina A",
+          "lada": "",
+          "telefono": "123456"
         }
       },
-      solicitud: ESTABLECIMIENTO['solicitud'],
-      establecimiento: ESTABLECIMIENTO,
-      datosSCIAN: DATOS_SCIAN,
-      mercancias: MERCANCIAS,
-      representanteLegal: REPRESENTANTE_LEGAL,
-      gridTerceros_TIPERS_PVD: PROVEEDOR_TABLA,
-      gridTerceros_TIPERS_FAB: FABRICANTE_TABLA,
-      gridTerceros_TIPERS_FAC: FORMULADOR_TABLA,
-      gridTerceros_TIPERS_DES: [
-        {
-          "idPersonaSolicitud": "1",
-          "ideTipoTercero": "TIPERS.FAB",
-          "personaMoral": "1",
-          "booleanExtranjero": "0",
-          "booleanFisicaNoContribuyente": "0",
-          "denominacion": "LABORATORIOS PISA S.A. DE C.V.",
-          "razonSocial": "LABORATORIOS PISA S.A. DE C.V.",
-          "rfc": "LPI950101ABC",
-          "curp": "",
-          "nombre": "",
-          "apellidoPaterno": "",
-          "apellidoMaterno": "",
-          "telefono": "5555123456",
-          "correoElectronico": "contacto@pisa.com.mx",
-          "actividadProductiva": "MANUFACTURA",
-          "actividadProductivaDesc": "Fabricación de productos farmacéuticos",
-          "descripcionGiro": "Laboratorio farmacéutico",
-          "numeroRegistro": "REG-001-2024",
-          "domicilio": {
-              "calle": "Av. Industria No. 2000",
-              "numeroExterior": "2000",
-              "numeroInterior": "A",
-              "pais": {
-                  "clave": "MEX",
-                  "nombre": "México"
-              },
-              "colonia": {
-                  "clave": "001",
-                  "nombre": "Industrial"
-              },
-              "delegacionMunicipio": {
-                  "clave": "015",
-                  "nombre": "Cuauhtémoc"
-              },
-              "localidad": {
-                  "clave": "001",
-                  "nombre": "Ciudad de México"
-              },
-              "entidadFederativa": {
-                  "clave": "09",
-                  "nombre": "Ciudad de México"
-              },
-              "informacionExtra": "Zona Industrial Norte",
-              "codigoPostal": "06400",
-              "descripcionColonia": "Industrial Norte"
-          },
-          "idSolicitud": "12345"
-        }
-    ],
-      pagoDeDerechos: PAGO_DERECHOS
+      "solicitud": SOLICITUD,
+      "establecimiento": ESTABLECIMIENTO,
+      "datosSCIAN": DATOS_SCIAN,
+      "mercancias": MERCANCIAS,
+      "representanteLegal": REPRESENTANTE_LEGAL,
+      "pagoDeDerechos": PAGO_DERECHOS
     };
   }
+
+  static buildSolicitud(
+  data: Record<string, unknown>,
+  discriminatorValue: number
+): Record<string, unknown> {
+  return {
+    discriminatorValue, 
+    declaracionesSeleccionadas: Boolean(data['mensaje'] ?? false),
+    regimen: "",
+    aduanaAIFA: "",
+    informacionConfidencial:
+      typeof data['cumplimiento'] === 'string'
+        ? data['cumplimiento'].toLowerCase() === 'si'
+        : Boolean(data['cumplimiento'] ?? false)
+  };
+}
+
 
   /**
  * Construye el objeto que representa los datos del establecimiento, incluyendo
@@ -212,33 +173,27 @@ export class Shared260514Service {
   static buildEstablecimiento(data: Record<string, unknown>): Record<string, unknown> {
     
     return {
-      "RFCResponsableSanitario": data['rfcDel'] || "",
+      "rfcResponsableSanitario": data['rfcDel'] || "",
       "razonSocial": data['denominacionRazonSocial'] || "",
       "correoElectronico": data['correoElectronico'] || "",
       "domicilio": {
-          "codigoPostal": data['codigoPostal'] || "",
-          "entidadFederativa": {
-              "clave": data['estado'] || ""
-          },
-          "descripcionMunicipio": data['muncipio'] || "",
-          "informacionExtra": data['localidad'] || "",
-          "descripcionColonia": data['colonia'] || "",
-          "calle":  data['calle'] || "",
-          "lada": data['lada'] || "",
-          "telefono": data['telefono'] || "",
+      "codigoPostal": data['codigoPostal'] || "",
+      "entidadFederativa": {
+        "clave": data['estado'] || ""
+      },
+      "descripcionMunicipio": data['muncipio'] || "",
+      "informacionExtra": data['localidad'] || "",
+      "descripcionColonia": data['colonia'] || "",
+      "calle":  data['calle'] || "",
+      "lada": data['lada'] || "",
+      "telefono": data['telefono'] || "",
       },
       "original": "",
       "avisoFuncionamiento": data['avisoCheckbox'] || false,
       "numeroLicencia": data['licenciaSanitaria'] || "",
-      "aduanas": data['aduanasDeEntrada']?.toString() || "",
-      "solicitud": {
-        "discriminatorValue": 260514,
-        "declaracionesSeleccionadas": data['mensaje'] || false,
-        "regimen": "General",
-        "informacionConfidencial": typeof data['cumplimiento'] === 'string'
-    ? data['cumplimiento'].toLowerCase() === 'si'
-    : false
-      }
+      "aduanas": Array.isArray(data['aduanasDeEntradaObj'])
+      ? data['aduanasDeEntradaObj'].map((a: { clave?: string }) => a?.clave || "")
+      : [],
     }
   }
 
@@ -325,8 +280,12 @@ export class Shared260514Service {
       "cantidadUMTConComas": item['cantidadUmt'] as string || "",
       "presentacion": "Frasco x 100 tabletas",
       "registroSanitarioConComas": item['numeroRegistroSanitario'] as string || "",
-      "nombreCortoPaisOrigen": item['paisOrigen']?.toString() || "",
-      "nombreCortoPaisProcedencia": item['paisProcedenciaUltimoPuerto']?.toString() || "",
+      "nombreCortoPaisOrigen": Array.isArray(item['paisDeOriginDatosObj'])
+      ? item['paisDeOriginDatosObj'].map((a: { clave?: string }) => a?.clave || "")
+      : [],
+      "nombreCortoPaisProcedencia": Array.isArray(item['paisDeProcedenciaDatosObj'])
+      ? item['paisDeProcedenciaDatosObj'].map((a: { clave?: string }) => a?.clave || "")
+      : [],
       "tipoProductoDescripcionOtros": "Analgésico",
       "nombreCortoUsoEspecifico": item['usoEspecifico'] as string || "",
       "fechaCaducidadStr": "31/12/2026"

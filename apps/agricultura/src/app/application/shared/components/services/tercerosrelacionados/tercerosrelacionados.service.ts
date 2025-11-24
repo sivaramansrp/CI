@@ -84,16 +84,18 @@ export class TercerosrelacionadosService {
    * @returns Un observable que emite la respuesta base con el arreglo de entidades federativas (`Catalogo[]`).
    */
   obtieneCatalogoEntidadesFederativasGeneral(
-    tramite: number
+    tramite: number,
+    cvePais: string = 'MEX'
   ): Observable<BaseResponse<Catalogo[]>> {
-    const ENDPOINT = `${this.host
-      }${API_GET_CATALOGO_ENTIDADES_FEDERATIVAS_GENERAL(tramite.toString())}`;
+    const ENDPOINT = `${
+      this.host
+    }${API_GET_CATALOGO_ENTIDADES_FEDERATIVAS_GENERAL(tramite.toString(), cvePais)}`;
     return this.http.get<BaseResponse<Catalogo[]>>(ENDPOINT);
   }
 
   /**
    * Obtiene el catálogo de entidades federativas basado en el trámite y clave de país proporcionados.
-   * 
+   *
    * @param tramite - Identificador numérico del trámite.
    * @param cvePais - Clave del país en formato de cadena.
    * @returns Un observable que emite una respuesta base con un arreglo de catálogos.
@@ -114,11 +116,12 @@ export class TercerosrelacionadosService {
     tramite: number,
     cveEntidad: string
   ): Observable<BaseResponse<Catalogo[]>> {
-    const ENDPOINT = `${this.host
-      }${API_GET_CATALOGO_ENTIDAD_FEDERATIVA_MUNICIPIOS(
-        tramite.toString(),
-        cveEntidad
-      )}`;
+    const ENDPOINT = `${
+      this.host
+    }${API_GET_CATALOGO_ENTIDAD_FEDERATIVA_MUNICIPIOS(
+      tramite.toString(),
+      cveEntidad
+    )}`;
     return this.http.get<BaseResponse<Catalogo[]>>(ENDPOINT);
   }
 

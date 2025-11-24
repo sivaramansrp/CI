@@ -84,6 +84,12 @@ export const API_GET_CATALOGO_SEXOS_ACTIVOS = (TRAMITE: string) : string => `sat
 export const API_GET_CATALOGO_REGIMENES = (TRAMITE: string) : string => `sat-t${TRAMITE}/catalogo/regimenes`;
 
 /**
+ * Servicio que permite consultar vida silvestre.
+ * @see https://api-v30.cloud-ultrasist.net/api/sat-t220201/swagger-ui/index.html#/Catalogos/consulta-regimenes
+ */
+export const API_GET_CATALOGO_VIDA_SILVESTRE = (TRAMITE: string) : string => `sat-t${TRAMITE}/catalogo/tipos-vida-silvestre`;
+
+/**
  * Servicio que permite consultar los régimenes ACTIVOS y VIGENTES.
  * @see https://api-v30.cloud-ultrasist.net/api/sat-t220201/swagger-ui/index.html#/Catalogos/consulta-regimenes_1
  */
@@ -165,7 +171,7 @@ export const API_GET_CATALOGO_ESPECIES = (TRAMITE: string) : string => `sat-t${T
  * Servicio que permite consultar las entidades federativas ordenados por el nombre ascendente.
  * @see https://api-v30.cloud-ultrasist.net/api/sat-t220201/swagger-ui/index.html#/Catalogos/consulta-entidades-federativas
  */
-export const API_GET_CATALOGO_ENTIDADES_FEDERATIVAS_GENERAL = (TRAMITE: string) : string => `sat-t${TRAMITE}/catalogo/entidades-federativas`;
+export const API_GET_CATALOGO_ENTIDADES_FEDERATIVAS_GENERAL = (TRAMITE: string, PAIS: string = 'MEX') : string => `sat-t${TRAMITE}/catalogo/pais/${PAIS}/entidades-federativas`;
 
 /**
  * Servicio que permite consultar los datos de las delegaciones o municipios por medio de la clave de la entidad federativa.
@@ -201,6 +207,7 @@ export const API_GET_CATALOGO_OFICINAS_INSPECCION = (TRAMITE: string, CVEADUANA:
  * @see https://api-v30.cloud-ultrasist.net/api/sat-t220201/swagger-ui/index.html#/Registro-Solicitud/consulta-datos-solicitud
  */
 export const API_GET_DATOS_SOLICITUD = (TRAMITE: string, esPrellenado: boolean, idSolicitud : string) : string => `sat-t${TRAMITE}/prellenado/${esPrellenado}/solicitud/${idSolicitud}/datos-solicitud`;
+
 
 /**
  * Genera la ruta de la API para obtener las solicitudes recientes de un trámite específico y RFC dado.
@@ -256,6 +263,15 @@ export const API_GET_SOLICITUDES_UNIDAD_MEDIDA = (TRAMITE: string, cveFraccion: 
  * @returns La ruta de la API como cadena de texto para cargar el archivo masivo de mercancía animal.
  */
 export const API_GET_SOLICITUDES_CARGAR_ARCHIVO_MASIVO_ANIMAL = (TRAMITE: string, archivo: File) : string => `sat-t${TRAMITE}/solicitud/detalle-mercancia-animal/cargar-archivo`;
+
+/**
+ * GUARDA LOS DATOS DE UNA SOLICITUD
+ *
+ * @returns Obtiene Json con caso exitoso o no.
+ * @see https://api-v30.cloud-ultrasist.net/api/sat-t220202/swagger-ui/index.html#/Registro-Solicitud/guardar
+ */
+export const API_POST_SOLICITUD_GUARDAR = (TRAMITE: string): string => `sat-t${TRAMITE}/solicitud/guardar`;
+
 
 /**
  * Genera la ruta de la API para guardar parcialmente una solicitud para un trámite específico.
@@ -321,6 +337,29 @@ export const API_POST_CADENA_ORIGINAL = (TRAMITE: string, IDSOLICITUD: string) :
  * @returns La ruta de la API como cadena de texto.
  */
 export const API_POST_GUARDAR = (TRAMITE: string) : string => `sat-t${TRAMITE}/solicitud/guardar`;
+
+/**
+ * Genera la ruta de la API para obtener los documentos opcionales de una solicitud.
+ *
+ * @param TRAMITE - Identificador del trámite que se utilizará en el endpoint.
+ * @returns La ruta de la API como cadena de texto.
+ */
+export const API_GET_DOCUMENTOS_OPCIONALES = (TRAMITE: string, idSolicitud: number | undefined, especifico: boolean) : string => {
+  let url = `sat-t${TRAMITE}/solicitud/documentos`;
+  const PARAMS: string[] = [];
+  if (idSolicitud !== undefined && idSolicitud !== null) {
+    PARAMS.push(`idSolicitud=${idSolicitud}`);
+  }
+  if (especifico !== undefined && especifico !== null) {
+    PARAMS.push(`especifico=${especifico}`);
+  }
+
+  if (PARAMS.length > 0) {
+    url += `?${PARAMS.join('&')}`;
+  }
+
+  return url;
+}
 
 
 /**

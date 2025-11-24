@@ -87,9 +87,10 @@
         </div>
         <div class="col-md-4">
           <label class="form-label" for="codigoPostal">Código postal*</label>
-          <input type="number" class="form-control" id="codigoPostal" formControlName="codigoPostal" (change)="
-          setValoresStore(datosDelTramite, 'codigoPostal', 'setCodigoPostal')
-        " maxlength="12" />
+          <input type="number" class="form-control" id="codigoPostal" formControlName="codigoPostal"
+            (input)="onCodigoPostalInput($event)"
+            (change)="setValoresStore(datosDelTramite, 'codigoPostal', 'setCodigoPostal')"
+          />
           <div class="d-grid">
             <div *ngIf="datosDelTramite.get('codigoPostal')?.touched">
               <small class="mensaje-error" *ngIf="datosDelTramite.get('codigoPostal')?.hasError('required')">
@@ -133,6 +134,10 @@
           <label class="form-label" for="calle">Calle*</label>
           <input type="text" class="form-control" id="calle" formControlName="calle"
             (change)="setValoresStore(datosDelTramite, 'calle', 'setCalle')" maxlength="100" />
+                <div class="text-danger"
+                  *ngIf="datosDelTramite.get('calle')?.touched && datosDelTramite.get('calle')?.invalid && datosDelTramite.get('calle')?.errors?.['pattern']">
+                  <small>El valor capturado no es válido.</small>
+                </div>
           <div class="d-grid">
             <div *ngIf="datosDelTramite.get('calle')?.touched">
               <small class="mensaje-error" *ngIf="datosDelTramite.get('calle')?.hasError('required')">
@@ -231,8 +236,9 @@
               <div class="col-md-12">
                 <label class="form-label" for="descripcionAdicional">Descripción adicional de la mercancía</label>
                 <textarea class="form-control ht2" id="descripcionAdicional" formControlName="descripcionAdicional"
-                  rows="6">
+                  rows="6"  [maxlength]="250">
                 </textarea>
+            
               </div>
             </div>
 
@@ -243,8 +249,16 @@
           <button type="button" class="btn btn-danger" data-bs-dismiss="modal" #closeModal>
             Cancelar
           </button>
+          <button type="button" class="btn btn-default" data-bs-dismiss="modal" #closeModal>
+              Limpiar
+            </button>
         </div>
       </div>
     </div>
   </div>
 </div>
+<lib-notificaciones
+  *ngIf="nuevaNotificacion"
+  [notificacionInput]="nuevaNotificacion"
+  (confirmacionModal)="aceptarConfirmacion($event)">
+</lib-notificaciones>
