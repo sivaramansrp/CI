@@ -72,11 +72,12 @@ export class GuardarAdapter_260202 {
         return {
               "cveScian": datos.clave,
               "descripcion": datos.descripcion,
+              "selected": true
           }
       }),
       "mercancias": (state.tablaMercanciasConfigDatos ?? []).map((mercancia) => {
         return {
-              "idMercancia": "",
+              "idMercancia": null,
               "idClasificacionProducto": mercancia.claveClasificacionProductoObj?.clave,
               "nombreClasificacionProducto": mercancia.claveClasificacionProductoObj?.descripcion,
               "ideSubClasificacionProducto": mercancia.especificarClasificacionObj?.clave,
@@ -559,7 +560,7 @@ export class GuardarAdapter_260202 {
             representanteNombre: resp.representanteLegal?.nombre ?? '',
             apellidoPaterno: resp.representanteLegal?.apellidoPaterno ?? '',
             apellidoMaterno: resp.representanteLegal?.apellidoMaterno ?? '',
-            estado: 'BCS', // resp.establecimiento?.domicilio?.entidadFederativa?.clave ?? '',
+            estado: resp.establecimiento?.domicilio?.entidadFederativa?.clave ?? '',
             aeropuerto: false,
             manifesto: resp.solicitud?.declaracionesSeleccionadas ?? [],
         };
