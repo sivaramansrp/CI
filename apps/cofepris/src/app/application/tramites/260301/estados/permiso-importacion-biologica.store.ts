@@ -4,18 +4,6 @@ import { Store, StoreConfig } from '@datorama/akita';
 
 import { CatalogoResponse } from '@libs/shared/data-access-user/src';
 
-/**
- * Estado de la tienda para Permiso de Importación Biológica.
- * @interface PermisoImportacionBiologicaState
- * @property {CatalogoResponse | null} selectedEstado - Estado seleccionado del catálogo.
- * @property {CatalogoResponse | null} setClave - Clave seleccionada del catálogo.
- * @property {CatalogoResponse | null} setBanco - Banco seleccionado del catálogo.
- * @property {string} setClaveDeReferncia - Clave de referencia seleccionada.
- * @property {string} setCadenaDeLaDependencia - Cadena de la dependencia seleccionada.
- * @property {string} setLlaveDePago - Llave de pago seleccionada.
- * @property {string} setFechaDePago - Fecha de pago seleccionada.
- * @property {string} setImporteDePago - Importe de pago seleccionado.
- */
 export interface PermisoImportacionBiologicaState {
   selectedEstado: CatalogoResponse | null;
   /**
