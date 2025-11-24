@@ -272,6 +272,7 @@ export interface TablaMercanciasDatos {
   unidadMedidaTarifa: string;
   cantidadUMT: string;
   cantidadUmtValor?:string;
+  cantidadUmcValor?:string;
   presentacion: string;
   numeroRegistroSanitario: string;
   paisOrigen: string;
