@@ -6,6 +6,11 @@ import { Query } from '@datorama/akita';
 export class Solicitud260702Query extends Query<Solicitud260702State> {
 
   /**
+   * Observable selector for retrieving the entire state.
+   */
+  allStoreData$ = this.select((state) => state);
+
+  /**
    * Selecciona el estado completo de la solicitud
    */
   selectSolicitud$ = this.select((state) => {
