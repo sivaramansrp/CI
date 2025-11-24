@@ -4,26 +4,34 @@ import { Store, StoreConfig } from '@datorama/akita';
 
 import { CatalogoResponse } from '@libs/shared/data-access-user/src';
 
+/**
+ * Estado para el permiso de importación biológica.
+ * @interface PermisoImportacionBiologicaState
+ * @property {CatalogoResponse | null} selectedEstado - Estado seleccionado del catálogo.
+ * @property {CatalogoResponse | null} setClave - Clave seleccionada del catálogo de respuestas.
+ * @property {CatalogoResponse | null} setBanco - Banco seleccionado del catálogo de respuestas.
+ * @property {string} setClaveDeReferncia - Clave de referencia seleccionada del catálogo de respuestas.
+ * @property {string} setCadenaDeLaDependencia - Cadena de la dependencia seleccionada del catálogo de respuestas.
+ * @property {string} setLlaveDePago - Llave de pago seleccionada del catálogo de respuestas.
+ * @property {string} setFechaDePago - Fecha de pago seleccionada del catálogo de respuestas.
+ * @property {string} setImporteDePago - Importe de pago seleccionado del catálogo de respuestas.
+ */
 export interface PermisoImportacionBiologicaState {
+  /** Estado seleccionado del catálogo. */
   selectedEstado: CatalogoResponse | null;
-  /**
-   * Clave seleccionada del catálogo de respuestas.
-   */
+  /** Clave seleccionada del catálogo de respuestas. */
   setClave: CatalogoResponse | null,
-  /**
-   * Banco seleccionado del catálogo de respuestas.
-   */
+  /** Banco seleccionado del catálogo de respuestas. */
   setBanco: CatalogoResponse | null,
-  /**
-   * Clave de referencia seleccionada del catálogo de respuestas.
-   */
+  /** Clave de referencia seleccionada del catálogo de respuestas. */
   setClaveDeReferncia:string,
-  setCadenaDeLaDependencia:string, // Cadena de la dependencia seleccionada del catálogo de respuestas.
-  setLlaveDePago:string, // Llave de pago seleccionada del catálogo de respuestas.
-  setFechaDePago:string, // Fecha de pago seleccionada del catálogo de respuestas.
-  /**
-   * Importe de pago seleccionado del catálogo de respuestas.
-   */
+  /** Cadena de la dependencia seleccionada del catálogo de respuestas. */
+  setCadenaDeLaDependencia:string,
+  /** Llave de pago seleccionada del catálogo de respuestas. */
+  setLlaveDePago:string,
+  /** Fecha de pago seleccionada del catálogo de respuestas. */
+  setFechaDePago:string,
+  /** Importe de pago seleccionado del catálogo de respuestas. */
   setImporteDePago:string
 }
 

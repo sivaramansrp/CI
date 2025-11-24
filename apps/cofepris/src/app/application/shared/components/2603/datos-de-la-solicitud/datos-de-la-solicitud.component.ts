@@ -55,20 +55,28 @@ import { Solicitud2603State, Tramite2603Store } from '../../../estados/stores/26
 import { CONFIGURACION_MERCANCIAS_DATOS, CONFIGURACION_TABLA_PRODUCTO_TERMINADO, CONFIGURACION_TABLA_SCIAN, RADIO_OPCIONES } from '../../../constantes/shared2603/certificados-licencias-permisos.enum';
 import { CertificadosLicenciasPermisosService } from '../../../services/shared2603/certificados-licencias-permisos.service';
 /**
- * DatosDeLaSolicitudComponent es responsable de manejar el primer paso del proceso.
- * para actualizar el componente actual que se está mostrando.
+ * Interfaz que representa un tipo de producto.
+ * @interface TipoDeProducto
+ * @property {string} nombre - Nombre del producto.
+ * @property {string} descripcion - Descripción del producto.
+ * @property {number} codigo - Código identificador del producto.
  */
-
+export interface TipoDeProducto {
+  /** Identificador único del tipo de producto. */
+  id: number;
+  /** Nombre del producto. */
+  nombre: string;
+  /** Descripción del producto. */
+  descripcion: string;
+  /** Código identificador del producto. */
+  codigo: number;
+}
 /**
  * Representa el tipo de producto en el proceso de solicitud.
  * @interface TipoDeProducto
  * @property {number} id - Identificador único del tipo de producto.
  * @property {string} descripcion - Descripción del tipo de producto.
  */
-interface TipoDeProducto {
-  id: number;
-  descripcion: string;
-}
 @Component({
   selector: 'app-datos-de-la-solicitud',
   standalone: true,
