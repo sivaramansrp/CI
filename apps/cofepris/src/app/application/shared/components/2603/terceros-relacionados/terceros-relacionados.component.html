@@ -35,7 +35,7 @@
                 </div>
             </div>
         </div>
-    @if (permisoSeccion && (!permisoSeccion.includes(260302) && !permisoSeccion.includes(260304))) {
+    @if (permisoSeccion && (permisoSeccion.includes(260301) || permisoSeccion.includes(260303))) {
         <div class="row mb-3">
             <h5>Facturador<span
                 [ngClass]="{

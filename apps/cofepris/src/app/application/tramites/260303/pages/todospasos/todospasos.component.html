@@ -4,29 +4,27 @@
             <div class="col-md-12">
                 <h1>{{titulo}}</h1>
                 @if(indice === 2) {
-                <ng-alert [CONTENIDO]="TEXTOS.Importante"></ng-alert>
+                    <ng-alert [CONTENIDO]="TEXTOS.Importante"></ng-alert>
                 }
             </div>
             <app-wizard [listaPasos]="pantallasPasos"></app-wizard>
         </div>
         <div class="row">
             @switch (indice) {
-            @case (1) {
-            <app-paso-uno></app-paso-uno>
+                @case (1) {
+                    <app-paso-uno></app-paso-uno>
+                }
+                @case (2) {
+                    <ng-alert [CONTENIDO]="TEXTOS2.Importante"></ng-alert>
+                    <anexar-documentos [catalogoDocumentos]='catalogoDocumentos'></anexar-documentos>
+                }
+                @case (3) {
+                    <app-paso-cuatro></app-paso-cuatro>
+                }
             }
-            @case (2) {
-            <ng-alert [CONTENIDO]="TEXTOS2.Importante"></ng-alert>
-             <app-paso-carga-documento [idSolicitud]="solicitudState.idSolicitud" [idTipoTRamite]="'260303'"
-        [cargaArchivosEvento]="cargarArchivosEvento" (reenviarEventoCarga)="manejaEventoCargaDocumentos($event)"
-        (reenviarCargaRealizada)="cargaRealizada($event)"
-        (cargaEnProgreso)="onCargaEnProgreso($event)"></app-paso-carga-documento>
-            }
-            @case (3) {
-            <paso-firma [idSolicitud]="solicitudState.idSolicitud" [procedure]="260303"
-                [procedureUrl]="'importacion-psicotropicos/registrarIPM'"></paso-firma>
-            }
-            }
-            <btn-continuar [datos]="datosPasos" (continuarEvento)="getValorIndice($event)">
+            <btn-continuar 
+                [datos]="datosPasos" 
+                (continuarEvento)="getValorIndice($event)">
             </btn-continuar>
         </div>
     </div>

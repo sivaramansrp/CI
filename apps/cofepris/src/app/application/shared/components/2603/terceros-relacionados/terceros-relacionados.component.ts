@@ -358,7 +358,9 @@ private static generateConfiguracionTabla<T>(
       initialState: {
         titulo: titulo,
         datosExistentes: datosExistentes,
-        esModificacion: true
+        esModificacion: true,
+        permisoDefinitivoTitulo: this.permisoDefinitivoTitulo,
+        permisoSeccion: this.permisoSeccion
       }
     };
     this.bsModalRef = this.modalService.show(FabricanteModalComponent, INITIAL_STATE);
@@ -555,7 +557,9 @@ private static generateConfiguracionTabla<T>(
     const INITIAL_STATE: ModalOptions = {
       class: 'modal-xl',
       initialState: {
-        titulo: titulo
+        titulo: titulo,
+        permisoDefinitivoTitulo: this.permisoDefinitivoTitulo,
+        permisoSeccion: this.permisoSeccion
       }
     };
     this.bsModalRef = this.modalService.show(FabricanteModalComponent, INITIAL_STATE);

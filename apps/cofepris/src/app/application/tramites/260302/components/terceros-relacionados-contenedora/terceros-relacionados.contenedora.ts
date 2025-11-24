@@ -5,7 +5,7 @@ import { Subject, map, takeUntil } from 'rxjs';
 
 import { ConsultaioQuery, ConsultaioState } from '@ng-mf/data-access-user';
 
-import { ID_PROCEDIMIENTO, PERMISO_DEFINITIVO_TITULO } from '../../../../shared/constantes/shared2603/medicos-sin-registrar.enum';
+import { ID_PROCEDIMIENTO } from '../../../../shared/constantes/shared2603/medicos-sin-registrar.enum';
 import { TercerosRelacionadosComponent } from '../../../../shared/components/2603/terceros-relacionados/terceros-relacionados.component';
 import { Tramite260302Query } from '../../estados/queries/tramite260302.query';
 import { Tramite260302Store } from '../../estados/stores/tramite260302.store';
@@ -29,7 +29,7 @@ export class TercerosRelacionadosContenedoraComponent implements OnDestroy {
    * @type {number}
    * @description Identificador único del procedimiento actual. Este valor se utiliza para asociar el componente con un trámite específico en el sistema.
    */
-  permisoDefinitivoTitulo: number[] = PERMISO_DEFINITIVO_TITULO;
+  permisoDefinitivoTitulo: number[] = [260302];
 
     /**
    * @property
@@ -38,6 +38,14 @@ export class TercerosRelacionadosContenedoraComponent implements OnDestroy {
    * @description Identificador único del procedimiento actual. Este valor se utiliza para asociar el componente con un trámite específico en el sistema.
    */
   idProcedimiento : number[] = ID_PROCEDIMIENTO;
+
+  /**
+   * @property
+   * @name permisoSeccion
+   * @type {number[]}
+   * @description Identificador de la sección de permisos específica para este procedimiento.
+   */
+  permisoSeccion: number[] = [260302];
   
   /**
    * @property destroyNotifier$

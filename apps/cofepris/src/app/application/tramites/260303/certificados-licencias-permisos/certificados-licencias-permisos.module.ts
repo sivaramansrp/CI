@@ -1,4 +1,4 @@
-import { AlertComponent, AnexarDocumentosComponent, BtnContinuarComponent, CatalogosService, FirmaElectronicaComponent, PasoFirmaComponent } from '@libs/shared/data-access-user/src';
+import { AlertComponent, AnexarDocumentosComponent, BtnContinuarComponent, CatalogosService, FirmaElectronicaComponent } from '@libs/shared/data-access-user/src';
 import { ToastrModule, ToastrService } from 'ngx-toastr';
 import { BsModalService } from 'ngx-bootstrap/modal';
 import { CertificadosLicenciasPermisosRoutingModule } from './certificados-licencias-permisos-routing.module';
@@ -24,8 +24,7 @@ import { provideHttpClient } from '@angular/common/http';
     FabricanteModalComponent,
     AnexarDocumentosComponent,
     ToastrModule.forRoot(),
-    FirmaElectronicaComponent,
-    PasoFirmaComponent
+    FirmaElectronicaComponent
 ],
 providers: [
   BsModalService,
