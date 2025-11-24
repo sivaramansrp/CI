@@ -45,6 +45,7 @@ import {
   ES_VALIDO_REGISTRO_O_VENCIMIENTO,
   FEACCION_AFRACCION_ARANCELARIA_CATALOG,
   FECHA_DE_MOVIMIENTO,
+  PAIS_DE_PROCEDENCIA_DISABLED,
   TIPO_PRODUCTO_ESPECIAL,
   UMT_DESHABILITADO_VALOR,
 } from '../../../constantes/shared2606/datos-solicitud.enum';
@@ -256,6 +257,7 @@ export class DatosMercanciaComponent implements OnInit, AfterViewInit, OnChanges
   pedimentos: Array<Pedimento> = [];
 
 
+  paisDeProcedenciaDisabled: number[] = PAIS_DE_PROCEDENCIA_DISABLED;
   /**
    * @property {CrossListLable} usoEspesificoLabel
    * Etiqueta personalizada para el componente de lista cruzada de uso específico.
@@ -447,25 +449,26 @@ export class DatosMercanciaComponent implements OnInit, AfterViewInit, OnChanges
     }
   }
 
-  onSeleccionarPaisDeOrigen(event: any): void {
-    const SELECCIONADOS = event.seleccionados;
+  onSeleccionarPaisDeOrigen(event: Catalogo): void {
+    const SELECCIONADOS = event.clave;
+
     this.mercanciaForm
       .get('paisDeOrigen')
-      ?.setValue(SELECCIONADOS.length > 0 ? SELECCIONADOS : null);
+      ?.setValue(SELECCIONADOS);
   }
 
-  onSeleccionarPaisDeProcedencia(event: any): void {
-    const SELECCIONADOS = event.seleccionados;
+  onSeleccionarPaisDeProcedencia(event: Catalogo): void {
+    const SELECCIONADOS = event.clave;
     this.mercanciaForm
       .get('paisProcedencia')
-      ?.setValue(SELECCIONADOS.length > 0 ? SELECCIONADOS : null);
+      ?.setValue(SELECCIONADOS);
   }
 
-  onSeleccionarPaisDeDestino(event: any): void {
-    const SELECCIONADOS = event.seleccionados;
+  onSeleccionarPaisDeDestino(event: Catalogo): void {
+    const SELECCIONADOS = event.clave;
     this.mercanciaForm
       .get('paisDestino')
-      ?.setValue(SELECCIONADOS.length > 0 ? SELECCIONADOS : null);
+      ?.setValue(SELECCIONADOS);
   }
   /**
    * @method ngOnInit
@@ -496,9 +499,17 @@ export class DatosMercanciaComponent implements OnInit, AfterViewInit, OnChanges
         .subscribe((response) => {
           const DATOS = response.datos as Catalogo[];
 
+
+              const PAIS_DE_PROCEDENCIA = DATOS.filter(item => item.clave === 'MEX');
           if (response) {
             this.paisDeProcedenciaDatos = DATOS;
+            if (PAIS_DE_PROCEDENCIA.length > 0 && this.paisDeProcedenciaDisabled.includes(this.idProcedimiento)) {
+              this.mercanciaForm.patchValue({
+              paisProcedencia: PAIS_DE_PROCEDENCIA[0].clave
+              });
+            }
           }
+       
         })
     );
 
@@ -517,7 +528,7 @@ export class DatosMercanciaComponent implements OnInit, AfterViewInit, OnChanges
     );
 
     // País de origen
-     this.subscription.add(
+    this.subscription.add(
       this.catalogoService
         .paisesCatalogo(String(this.idProcedimiento))
         .pipe(takeUntil(this.destroyNotifier$))
@@ -708,14 +719,34 @@ export class DatosMercanciaComponent implements OnInit, AfterViewInit, OnChanges
    */
   fechaDeFabricacioInput: InputFecha = FECHA_DE_FABRICACIO_PAGO;
 
+  /**
+   * @property {InputFecha} fechaDeCaducidadInputMercanica
+   * Objeto con la configuración de la fecha inicial del componente.
+   */
   fechaDeCaducidadInputMercanica: InputFecha = FECHA_DE_CADUCIDAD_MERCANICA;
 
+  /**
+   * @property {InputFecha} fechaDeMovimientoInput
+   * Objeto con la configuración de la fecha inicial del componente.
+   */
   fechaDeMovimientoInput: InputFecha = FECHA_DE_MOVIMIENTO;
 
+  /**
+   * @property {Catalogo[]} paisDestinoDatos
+   * Datos de países para lista cruzada de país de destino.
+   */
   paisDestinoDatos: Catalogo[] = [];
 
+  /**
+   * @property {Catalogo[]} paisDeProcedenciaDatos
+   * Datos de países para lista cruzada de país de procedencia.
+   */
   paisDeProcedenciaDatos: Catalogo[] = [];
 
+  /**
+   *  @property {Catalogo[]} paisDeOrigenDatos
+   * Datos de países para lista cruzada de país de origen.
+   */
   paisDeOrigenDatos: Catalogo[] = [];
   /**
    * @property {InputFecha} fechaDeCaducidadInput
@@ -759,6 +790,8 @@ export class DatosMercanciaComponent implements OnInit, AfterViewInit, OnChanges
           'fechaDeFabricacio',
           'presentacion',
         ];
+        this.elementosDeshabilitados = ['descripcionFraccion'];
+
         break;
       default:
         if (this.detalleMercancia) {
@@ -855,6 +888,7 @@ export class DatosMercanciaComponent implements OnInit, AfterViewInit, OnChanges
         this.obtenerValor('fraccionArancelaria'),
         [
           Validators.required,
+          Validators.minLength(8),
           Validators.maxLength(8),
           Validators.pattern(SOLO_REGEX_NUMEROS),
         ],
@@ -1314,14 +1348,8 @@ export class DatosMercanciaComponent implements OnInit, AfterViewInit, OnChanges
    * de lo contrario, lo establece en false.
    * */
   public validarFraccionArancelaria(): void {
-    const FRACCION_ARANCELARIA = this.mercanciaForm.get(
-      'fraccionArancelaria'
-    )?.value;
-    if (FRACCION_ARANCELARIA?.length < 8) {
-      this.showLimitError = true;
-    } else {
-      this.showLimitError = false;
-    }
+    const VALUE = this.mercanciaForm.get('fraccionArancelaria')?.value;
+  this.showLimitError = VALUE?.length !== 8;
   }
 
   /**

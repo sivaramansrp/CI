@@ -252,6 +252,7 @@ export enum TablaSeleccion {
  * @property {string} usoEspecifico - Uso específico del producto.
  */
 export interface TablaMercanciasDatos {
+  denominacionEspecificaProducto?: string | undefined;
   clasificacionProducto: string;
   paisDestino?: string;
   paisDeOrigen?: string;
@@ -268,7 +269,7 @@ export interface TablaMercanciasDatos {
   marcaComercialODenominacionDistintiva?: string;
   denominacionDistintiva?: string;
   denominacionComun?: string;
-  formaFarmaceutica: string;
+  formaFarmaceutica?: string;
   estadoFisico: string;
   fraccionArancelaria: string;
   descripcionFraccion?: string;
@@ -420,7 +421,7 @@ export interface MercanciaForm {
   denominacionDistintiva: string;
   denominacionComun: string;
   tipoProducto: string;
-  formaFarmaceutica: string;
+  formaFarmaceutica?: string;
   estadoFisico: string;
   fraccionArancelaria: string;
   descripcionFraccion: string;
@@ -473,7 +474,7 @@ export interface MercanciaFormEstupefacientes {
   denominacionCumonInternacional:string;
   marcaComercialDenominacion:string;
   tipoProducto: string;
-  formaFarmaceutica: string;
+  formaFarmaceutica?: string;
   estadoFisico: string;
   fraccionArancelaria: string;
   descripcionFraccion: string;

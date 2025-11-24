@@ -35,7 +35,7 @@
             {
               'text-danger': mercanciaForm.get('marcaComercialODenominacionDistintiva')?.errors?.['required'] && mercanciaForm.get('marcaComercialODenominacionDistintiva')?.touched
             }">*</span>:</label>
-        <input class="form-control" id="marcaComercialODenominacionDistintiva" type="text" maxlength="1000"
+        <input class="form-control" id="marcaComercialODenominacionDistintiva" type="text" maxlength="120"
           formControlName="marcaComercialODenominacionDistintiva" [ngClass]="
               isValid(mercanciaForm, 'marcaComercialODenominacionDistintiva')
                 ? 'required'
@@ -56,7 +56,7 @@
             {
               'text-danger': mercanciaForm.get('denominacionComunInternacional')?.errors?.['required'] && mercanciaForm.get('denominacionComunInternacional')?.touched
             }">*</span>:</label>
-        <input class="form-control" id="denominacionComunInternacional" type="text" maxlength="1000"
+        <input class="form-control" id="denominacionComunInternacional" type="text" maxlength="40"
           formControlName="denominacionComunInternacional" [ngClass]="
               isValid(mercanciaForm, 'denominacionComunInternacional')
                 ? 'required'
@@ -265,15 +265,21 @@
             mercanciaForm.get('fraccionArancelaria')?.touched
           }" />
 
-        <div class="mensaje-error"
-          *ngIf="mercanciaForm.get('fraccionArancelaria')?.value && mercanciaForm.get('fraccionArancelaria')?.errors?.['pattern'] && mercanciaForm.get('fraccionArancelaria')?.touched">
-          Por favor, sólo escribe dígitos
-        </div>
-        <div class="mensaje-error" *ngIf="
-              mercanciaForm.get('fraccionArancelaria')?.value && showLimitError
-            ">
-          Por favor, no escribas menos de 8 caracteres.
-        </div>
+  <div class="mensaje-error"
+     *ngIf="mercanciaForm.get('fraccionArancelaria')?.errors?.['pattern'] && mercanciaForm.get('fraccionArancelaria')?.touched">
+  Por favor, sólo escribe dígitos
+</div>
+
+<div class="mensaje-error"
+     *ngIf="mercanciaForm.get('fraccionArancelaria')?.errors?.['minlength'] && mercanciaForm.get('fraccionArancelaria')?.touched">
+  Por favor, no escribas menos de 8 caracteres.
+</div>
+
+<div class="mensaje-error"
+     *ngIf="mercanciaForm.get('fraccionArancelaria')?.errors?.['maxlength'] && mercanciaForm.get('fraccionArancelaria')?.touched">
+  Por favor, no escribas más de 8 caracteres.
+</div>
+
         <div class="mensaje-error"
           *ngIf="mercanciaForm.get('fraccionArancelaria')?.errors?.['required'] && mercanciaForm.get('fraccionArancelaria')?.touched">
           Este campo es obligatorio.
@@ -360,7 +366,7 @@
             {
               'text-danger': mercanciaForm.get('PorcentajeDeConcentracion')?.errors?.['required'] && mercanciaForm.get('PorcentajeDeConcentracion')?.touched
             }">*</span>:</label>
-        <input maxlength="20" class="form-control" id="PorcentajeDeConcentracion" type="text" formControlName="PorcentajeDeConcentracion"
+        <input maxlength="100" class="form-control" id="PorcentajeDeConcentracion" type="text" formControlName="PorcentajeDeConcentracion"
           [ngClass]="
               isValid(mercanciaForm, 'PorcentajeDeConcentracion') ? 'required' : ''
             " />
@@ -475,6 +481,7 @@
           [label]="'País de procedencia'" [required]="true"
           [markUntouched]="mercanciaForm.get('paisProcedencia')?.errors?.['required'] && mercanciaForm.get('paisProcedencia')?.touched ? true : false"
           name="paisProcedencia" [placeholder]="'Selecciona una opción'"
+          [isDisabled]="paisDeProcedenciaDisabled.includes(idProcedimiento)"
           [markTouched]="mercanciaForm.get('paisProcedencia')?.touched??false"
           (selectionChange)="onSeleccionarPaisDeProcedencia($event)"></app-catalogo-select>
       </div>

@@ -765,7 +765,7 @@ export class DatosDeLaSolicitudComponent
         .pipe(takeUntil(this.destroyNotifier$))
         .subscribe((response) => {
           const DATOS = response.datos as Catalogo[];
-          const REGIMENLIST = DATOS.filter(item => item.descripcion === 'Definitivos');
+          const REGIMENLIST = DATOS.filter(item => item.clave === '01');
           if (response) {
             this.regimenDatos = DATOS;
             if (REGIMENLIST.length > 0 && this.disableRegimen.includes(this.idProcedimiento)) {

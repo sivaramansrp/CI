@@ -157,46 +157,46 @@ export const ALERTA_DE_MANIFESTO_Y_DECLARACIONES = `Cumplo con los requisitos y 
 export const PRODUCTO_TABLA = [
   {
     encabezado: 'Clasificación del producto',
-    clave: (ele: TablaMercanciasDatos): string => ele.clasificacionProducto, // Reemplaza 'ele.clasificacionProducto' con la clave correcta
+    clave: (ele: TablaMercanciasDatos): string | undefined => ele.clasificacionProducto, // Reemplaza 'ele.clasificacionProducto' con la clave correcta
     orden: 1,
   },
   {
     encabezado: 'Especificar clasificación del producto',
-    clave: (ele: TablaMercanciasDatos): string =>
+    clave: (ele: TablaMercanciasDatos): string | undefined =>
       ele.especificarClasificacionProducto, // Reemplaza 'ele.especificarClasificacionProducto' con la clave correcta
     orden: 2,
   },
-  {
-    encabezado: 'Denominación específica del producto',
+   {
+    encabezado: 'Marca comercial o denominación distintiva',
     clave: (ele: TablaMercanciasDatos): string | undefined =>
-      ele.denominacionComunInternacional, // Reemplaza 'ele.denominacionEspecificaProducto' con la clave correcta
+      ele.marcaComercialODenominacionDistintiva ?? '', // Reemplaza 'ele.especificarClasificacionProducto' con la clave correcta
     orden: 3,
+  },
+  {
+    encabezado: 'Denominación común internacional (DCI) o denominación genérica',
+    clave: (ele: TablaMercanciasDatos): string | undefined =>
+      ele.denominacionComunInternacional ?? '', // Reemplaza 'ele.denominacionEspecificaProducto' con la clave correcta
+    orden: 4,
   },
   {
     encabezado: 'Denominación distintiva',
     clave: (ele: TablaMercanciasDatos): string | undefined =>
       ele.denominacionDistintiva, // Reemplaza 'ele.denominacionDistintiva' con la clave correcta
-    orden: 4,
-  },
-  {
-    encabezado: 'Denominación común, nombre común o nombre científico',
-    clave: (ele: TablaMercanciasDatos): string | undefined =>
-      ele.denominacionComun, // Reemplaza 'ele.denominacionComun' con la clave correcta
     orden: 5,
   },
-  {
-    encabezado: 'Forma farmacéutica',
-    clave: (ele: TablaMercanciasDatos): string => ele.formaFarmaceutica, // Reemplaza 'ele.formaFarmaceutica' con la clave correcta
+    {
+    encabezado: 'Tipo producto',
+    clave: (ele: TablaMercanciasDatos): string | undefined => ele.tipoProducto, // Reemplaza 'ele.tipoProducto' con la clave correcta
     orden: 6,
   },
   {
     encabezado: 'Estado físico',
-    clave: (ele: TablaMercanciasDatos): string => ele.estadoFisico, // Reemplaza 'ele.estadoFisico' con la clave correcta
+    clave: (ele: TablaMercanciasDatos): string | undefined => ele.estadoFisico, // Reemplaza 'ele.estadoFisico' con la clave correcta
     orden: 7,
   },
   {
     encabezado: 'Fracción arancelaria',
-    clave: (ele: TablaMercanciasDatos): string => ele.fraccionArancelaria, // Reemplaza 'ele.fraccionArancelaria' con la clave correcta
+    clave: (ele: TablaMercanciasDatos): string | undefined => ele.fraccionArancelaria, // Reemplaza 'ele.fraccionArancelaria' con la clave correcta
     orden: 8,
   },
   {
@@ -205,57 +205,59 @@ export const PRODUCTO_TABLA = [
       ele.descripcionFraccion, // Reemplaza 'ele.descripcionFraccion' con la clave correcta
     orden: 9,
   },
-  {
+    {
     encabezado: 'Unidad de medida de comercialización (UMC)',
     clave: (ele: TablaMercanciasDatos): string | undefined =>
       ele.unidadMedidaComercializacion, // Reemplaza 'ele.unidadMedidaComercializacion' con la clave correcta
     orden: 10,
   },
-  {
+    {
     encabezado: 'Cantidad UMC',
-    clave: (ele: TablaMercanciasDatos): string => ele.cantidadUMC, // Reemplaza 'ele.cantidadUMC' con la clave correcta
+    clave: (ele: TablaMercanciasDatos): string | undefined => ele.cantidadUMC ?? '', // Reemplaza 'ele.cantidadUMC' con la clave correcta
     orden: 11,
   },
-  {
-    encabezado: 'Unidad de medida de tarifa (UMT)',
-    clave: (ele: TablaMercanciasDatos): string => ele.unidadMedidaTarifa, // Reemplaza 'ele.unidadMedidaTarifa' con la clave correcta
+    {
+    encabezado: 'Uso especifico',
+    clave: (ele: TablaMercanciasDatos): string | undefined => ele.usoEspecifico, // Reemplaza 'ele.usoEspecifico' con la clave correcta
     orden: 12,
   },
   {
-    encabezado: 'Cantidad UMT',
-    clave: (ele: TablaMercanciasDatos): string => ele.cantidadUMT, // Reemplaza 'ele.cantidadUMT' con la clave correcta
+    encabezado: 'Porcentaje de concentración',
+    clave: (ele: TablaMercanciasDatos): string | undefined => ele.PorcentajeDeConcentracion ?? '', // Reemplaza 'ele.Presentación' con la clave correcta
     orden: 13,
   },
-  {
-    encabezado: 'Presentación',
-    clave: (ele: TablaMercanciasDatos): string => ele.presentacion, // Reemplaza 'ele.Presentación' con la clave correcta
+    {
+    encabezado: 'Valor comercial (dólares)',
+    clave: (ele: TablaMercanciasDatos): string | undefined => ele.valorComercial ?? '', // Reemplaza 'ele.Presentación' con la clave correcta
     orden: 14,
   },
-  {
-    encabezado: 'Número de registro sanitario',
-    clave: (ele: TablaMercanciasDatos): string => ele.numeroRegistroSanitario, // Reemplaza 'ele.numeroRegistroSanitario' con la clave correcta
+    {
+    encabezado: 'Fecha de movimiento',
+    clave: (ele: TablaMercanciasDatos): string | undefined => ele.fechaDeMovimiento ?? '', // Reemplaza 'ele.Presentación' con la clave correcta
     orden: 15,
   },
-  {
-    encabezado: 'País de origen',
-    clave: (ele: TablaMercanciasDatos): string => ele.paisOrigen, // Reemplaza 'ele.paisOrigen' con la clave correcta
+   {
+    encabezado: 'Presentación farmacéutica o tipo de envase',
+    clave: (ele: TablaMercanciasDatos): string | undefined => ele.presentacion ?? '', // Reemplaza 'ele.Presentación' con la clave correcta
     orden: 16,
   },
   {
-    encabezado: 'País de procedencia',
-    clave: (ele: TablaMercanciasDatos): string => ele.paisProcedencia, // Reemplaza 'ele.paisProcedencia' con la clave correcta
+    encabezado: 'País de destino',
+    clave: (ele: TablaMercanciasDatos): string | undefined => ele.paisDestino ?? '', // Reemplaza 'ele.paisDestino' con la clave correcta
     orden: 17,
   },
   {
-    encabezado: 'Tipo producto',
-    clave: (ele: TablaMercanciasDatos): string => ele.tipoProducto, // Reemplaza 'ele.tipoProducto' con la clave correcta
+    encabezado: 'País de procedencia',
+    clave: (ele: TablaMercanciasDatos): string | undefined => ele.paisProcedencia, // Reemplaza 'ele.paisProcedencia' con la clave correcta
     orden: 18,
   },
   {
-    encabezado: 'Uso especifico',
-    clave: (ele: TablaMercanciasDatos): string => ele.usoEspecifico, // Reemplaza 'ele.usoEspecifico' con la clave correcta
+    encabezado: 'País de origen',
+    clave: (ele: TablaMercanciasDatos): string | undefined => ele.paisDeOrigen ?? '', // Reemplaza 'ele.paisOrigen' con la clave correcta
     orden: 19,
-  }
+  },
+
+
 ];
 export const PRODUCTO_TABLA_218 = [
   {
@@ -289,7 +291,7 @@ export const PRODUCTO_TABLA_218 = [
   },
   {
     encabezado: 'Forma farmacéutica',
-    clave: (ele: TablaMercanciasDatos): string => ele.formaFarmaceutica,
+    clave: (ele: TablaMercanciasDatos): string => ele.formaFarmaceutica ?? '',
     orden: 6,
   },
   {
@@ -1109,7 +1111,7 @@ export const CAMPOS_CLAVE = [
 
 export const FECHA_DE_MOVIMIENTO = {
     labelNombre: 'Fecha de movimiento en caso de importación o exportación:',
-  required: false,
+  required: true,
   habilitado: true,
 }
 /**
@@ -1149,3 +1151,5 @@ export const PROCEDIMIENTOS_DESHABILITAR_REPRESENTANTE = [260604];
  * @type {number[]}
  */
 export const ES_VALIDO_REGISTRO_O_VENCIMIENTO = [260601];
+
+export const PAIS_DE_PROCEDENCIA_DISABLED = [260604];
