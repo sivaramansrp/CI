@@ -7,13 +7,20 @@ import {
   API_GET_SOLICITUDES_UNIDAD_MEDIDA,
   API_POST_SOLICITUD_GUARDAR,
 } from '../../../../../core/server/api-router';
-import { Catalogo, ENVIRONMENT } from '@libs/shared/data-access-user/src';
+import {
+  Catalogo,
+  ENVIRONMENT,
+  formatFechaCreacion,
+} from '@libs/shared/data-access-user/src';
 import { FraccionArancelariaDecripcionModel, SolicitudData } from '../../../../220201/models/220201/capturar-solicitud.model';
+import {
+  GuardarSolicitud,
+  RespuestaGuardarSolicitud,
+} from '../../../models/220202/guardar-solicitud.model';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Observable, catchError, map, throwError } from 'rxjs';
 import { BaseResponse } from '@libs/shared/data-access-user/src/core/models/shared/base-response.model';
 import { Documentos } from '../../../models/220202/fitosanitario.model';
-import { GuardarSolicitud } from '../../../models/220202/guardar-solicitud.model';
 import { Injectable } from '@angular/core';
 import { ResponseParcial } from '../../../models/220202/response-guardado-parcial.model';
 
@@ -119,10 +126,10 @@ export class RegistroSolicitudService {
     return this.http.get<BaseResponse<Documentos>>(ENDPOINT);
   }
 
-  guardarSolicitud(tramite: number, solicitud: GuardarSolicitud): Observable<BaseResponse<any>> {
+  guardarSolicitud(tramite: number, solicitud: GuardarSolicitud): Observable<BaseResponse<RespuestaGuardarSolicitud>> {
     const ENDPOINT = `${this.host}` + API_POST_SOLICITUD_GUARDAR(tramite.toString());
     return this.http
-      .post<BaseResponse<any>>(ENDPOINT, solicitud)
+      .post<BaseResponse<RespuestaGuardarSolicitud>>(ENDPOINT, solicitud)
       .pipe(
         map((response) => {
           return response;
@@ -176,18 +183,3 @@ export class RegistroSolicitudService {
 }
 }
 
-
-
-/**
- * Formatea una fecha en formato ISO a 'DD/MM/YYYY HH:mm:ss'.
- * @param fecha_creacion Fecha en formato ISO (string)
- * @returns Fecha formateada como string
- */
-function formatFechaCreacion(fecha_creacion: string): string {
-  const DATE = new Date(fecha_creacion);
-  if (isNaN(DATE.getTime())) {
-    return fecha_creacion;
-  }
-  const PAD = (n: number): string => n.toString().padStart(2, '0');
-  return `${PAD(DATE.getDate())}/${PAD(DATE.getMonth() + 1)}/${DATE.getFullYear()} ${PAD(DATE.getHours())}:${PAD(DATE.getMinutes())}:${PAD(DATE.getSeconds())}`;
-}

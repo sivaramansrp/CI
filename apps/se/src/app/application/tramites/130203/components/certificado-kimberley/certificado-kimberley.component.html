@@ -109,8 +109,10 @@
         <app-catalogo-select
           [catalogo]="paisesEmisores"
           [label]="'País de origen'"
+          [required]="true"
           formControlName="paisOrigen"
           (change)="setValoresStore(formularioEmpresa, 'paisOrigen')"
+          [markTouched]="formularioEmpresa.get('paisOrigen')?.touched ?? false"
           [isDisabled]="esFormularioSoloLectura || disabledCatalogoPaisOrigen"
         ></app-catalogo-select>
         <div *ngIf="isInvalid('paisOrigen', formularioEmpresa)" class="invalid-feedback">
@@ -191,16 +193,19 @@
             libUppercase
             aria-labelledby="nombreImportador"
             (change)="setValoresStore(datosDelImportador, 'nombreImportador')"
-            [ngClass]="{'is-invalid': isInvalid('nombreImportador', datosDelImportador)}"
+            [ngClass]="isValid(datosDelImportador,'nombreImportador') ? 'required' : ''" 
             />
-            <div *ngIf="isInvalid('nombreImportador', datosDelImportador)" class="invalid-feedback">
-              <small *ngIf="datosDelImportador.controls['nombreImportador'].errors?.['required']">
-                Este campo es obligatorio.
-              </small>
-              <small *ngIf="datosDelImportador.controls['nombreImportador'].errors?.['maxlength']">
-                El tamaño máximo es de 120 caracteres.
-              </small>
-            </div>
+              @if (datosDelImportador.get('nombreImportador')?.invalid && datosDelImportador.get('nombreImportador')?.touched) {
+              <div class="text-danger">
+                @if (datosDelImportador.get('nombreImportador')?.errors?.['required']) {
+                <small>Este campo es obligatorio</small>
+                } @else if (datosDelImportador.get('nombreImportador')?.errors?.['pattern']) {
+                <small>Por favor, corrige la descripción/dirección</small>
+                } @else if (datosDelImportador.get('nombreImportador')?.errors?.['maxlength']) {
+                <small>El tamaño máximo es de 120 caracteres.</small>
+                }
+              </div>
+              }
           </div>
         </div>
       </div>
@@ -221,16 +226,19 @@
               libUppercase
               aria-labelledby="direccionImportador"
               (change)="setValoresStore(datosDelImportador, 'direccionImportador')"
-              [ngClass]="{'is-invalid': isInvalid('direccionImportador', datosDelImportador)}"
+              [ngClass]="isValid(datosDelImportador,'direccionImportador') ? 'required' : ''" 
             />
-            <div *ngIf="isInvalid('direccionImportador', datosDelImportador)" class="invalid-feedback">
-              <small *ngIf="datosDelImportador.controls['direccionImportador'].errors?.['required']">
-                Este campo es obligatorio.
-              </small>
-              <small *ngIf="datosDelImportador.controls['direccionImportador'].errors?.['maxlength']">
-                El tamaño máximo es de 120 caracteres.
-              </small>
-            </div>
+              @if (datosDelImportador.get('direccionImportador')?.invalid && datosDelImportador.get('direccionImportador')?.touched) {
+              <div class="text-danger">
+                @if (datosDelImportador.get('direccionImportador')?.errors?.['required']) {
+                <small>Este campo es obligatorio</small>
+                } @else if (datosDelImportador.get('direccionImportador')?.errors?.['pattern']) {
+                <small>Por favor, corrige la descripción/dirección</small>
+                } @else if (datosDelImportador.get('direccionImportador')?.errors?.['maxlength']) {
+                <small>El tamaño máximo es de 200 caracteres.</small>
+                }
+              </div>
+              }
           </div>
         </div>
       </div>
@@ -256,17 +264,17 @@
               (change) = "setValoresStore(datosDeLaRemesa, 'numeroEnLetraDeLosLotes')"
               [ngClass]="{'input-error': isInvalid('numeroEnLetraDeLosLotes', datosDeLaRemesa)}"
             ></textarea>
-            <div *ngIf="isInvalid('numeroEnLetraDeLosLotes', datosDeLaRemesa)" class="text-danger">
-              <small *ngIf="datosDeLaRemesa.controls['numeroEnLetraDeLosLotes'].errors?.['required']">
-                Este campo es obligatorio.
-              </small>
-              <small *ngIf="datosDeLaRemesa.controls['numeroEnLetraDeLosLotes'].errors?.['pattern']">
-                Solo se permiten números.
-              </small>
-               <small *ngIf="datosDeLaRemesa.controls['numeroEnLetraDeLosLotes'].errors?.['maxlength']">
-                El tamaño máximo es de 200 caracteres.
-              </small>
-            </div>
+            @if (datosDeLaRemesa.get('numeroEnLetraDeLosLotes')?.invalid && datosDeLaRemesa.get('numeroEnLetraDeLosLotes')?.touched) {
+              <div class="text-danger">
+                @if (datosDeLaRemesa.get('numeroEnLetraDeLosLotes')?.errors?.['required']) {
+                <small>Este campo es obligatorio</small>
+                } @else if (datosDeLaRemesa.get('numeroEnLetraDeLosLotes')?.errors?.['pattern']) {
+                <small>Por favor, corrige la descripción/dirección</small>
+                } @else if (datosDeLaRemesa.get('numeroEnLetraDeLosLotes')?.errors?.['maxlength']) {
+                <small>El tamaño máximo es de 200 caracteres.</small>
+                }
+              </div>
+              }
           </div>
         </div>
       </div>
@@ -287,14 +295,17 @@
               (change) = "setValoresStore(datosDeLaRemesa, 'numeroEnLetraDeLosLotesEnIngles')"
               [ngClass]="{'input-error': isInvalid('numeroEnLetraDeLosLotesEnIngles', datosDeLaRemesa)}"
             ></textarea>
-            <div *ngIf="esInvalido('numeroEnLetraDeLosLotesEnIngles')" class="text-danger">
-              <small *ngIf="datosDeLaRemesa.controls['numeroEnLetraDeLosLotesEnIngles'].errors?.['required']">
-                Este campo es obligatorio.
-              </small>
-              <small *ngIf="datosDeLaRemesa.controls['numeroEnLetraDeLosLotesEnIngles'].errors?.['pattern']">
-                Solo se permiten números.
-              </small>
-            </div>
+            @if (datosDeLaRemesa.get('numeroEnLetraDeLosLotesEnIngles')?.invalid && datosDeLaRemesa.get('numeroEnLetraDeLosLotesEnIngles')?.touched) {
+              <div class="text-danger">
+                @if (datosDeLaRemesa.get('numeroEnLetraDeLosLotesEnIngles')?.errors?.['required']) {
+                <small>Este campo es obligatorio</small>
+                } @else if (datosDeLaRemesa.get('numeroEnLetraDeLosLotesEnIngles')?.errors?.['pattern']) {
+                <small>Por favor, corrige la descripción/dirección</small>
+                } @else if (datosDeLaRemesa.get('numeroEnLetraDeLosLotesEnIngles')?.errors?.['maxlength']) {
+                <small>El tamaño máximo es de 250 caracteres.</small>
+                }
+              </div>
+              }
           </div>
         </div>
       </div>
@@ -318,14 +329,15 @@
               (change) = "setValoresStore(datosDeLaRemesa, 'numeroDeFactura')"
               [ngClass]="{'input-error': isInvalid('numeroDeFactura', datosDeLaRemesa)}"
             />
-            <div *ngIf="esInvalido('numeroDeFactura')" class="text-danger">
-              <small *ngIf="datosDeLaRemesa.controls['numeroDeFactura'].errors?.['required']">
-                Este campo es obligatorio.
-              </small>
-              <small *ngIf="datosDeLaRemesa.controls['numeroDeFactura'].errors?.['pattern']">
-                Solo se permiten números.
-              </small>
-            </div>
+             @if (datosDeLaRemesa.get('numeroDeFactura')?.invalid && datosDeLaRemesa.get('numeroDeFactura')?.touched) {
+              <div class="text-danger">
+                @if (datosDeLaRemesa.get('numeroDeFactura')?.errors?.['required']) {
+                <small>Este campo es obligatorio</small>
+                } @else if (datosDeLaRemesa.get('numeroDeFactura')?.errors?.['maxlength']) {
+                <small>El tamaño máximo es de 50 caracteres.</small>
+                }
+              </div>
+              }
           </div>
         </div>
       </div>
@@ -347,21 +359,26 @@
               class="form-control"
               type="text"
               id="cantidadEnQuilates"
+              maxlength="15"
               formControlName="cantidadEnQuilates"
               libUppercase
               aria-labelledby="cantidadEnQuilates"
-              (input)="soloNumerosEnInput($event, datosDeLosDiamantes, 'cantidadEnQuilates')"
+              (input)="onNumericKeyUp($event)"
+              (keypress)="onKeyPress($event)"
               (change) = "setValoresStore(datosDeLosDiamantes, 'cantidadEnQuilates')"
               [ngClass]="{'is-invalid': isInvalid('cantidadEnQuilates', datosDeLosDiamantes)}"
             />
-            <div *ngIf="isInvalid('cantidadEnQuilates', datosDeLosDiamantes)" class="invalid-feedback">
-              <small *ngIf="datosDeLosDiamantes.controls['cantidadEnQuilates'].errors?.['required']">
-                Este campo es obligatorio.
-              </small>
-              <small *ngIf="datosDeLosDiamantes.controls['cantidadEnQuilates'].errors?.['maxlength']">
-                El número debe tener 11 dígitos enteros
-              </small>
-            </div>
+            @if (datosDeLosDiamantes.get('cantidadEnQuilates')?.invalid && datosDeLosDiamantes.get('cantidadEnQuilates')?.touched) {
+              <div class="text-danger">
+                @if (datosDeLosDiamantes.get('cantidadEnQuilates')?.errors?.['required']) {
+                <small>Este campo es obligatorio</small>
+                } @else if (datosDeLosDiamantes.get('cantidadEnQuilates')?.errors?.['pattern']) {
+                <small>El número debe tener 3 dígitos decimales</small>
+                } @else if (datosDeLosDiamantes.get('cantidadEnQuilates')?.errors?.['maxDigits']) {
+                <small>El número debe tener 11 dígitos enteros</small>
+                }
+              </div>
+              }
           </div>
         </div>
 
@@ -380,18 +397,22 @@
               placeholder=""
               libUppercase
               aria-labelledby="valorDeLosDiamantes"
-              (input)="soloNumerosEnInput($event, datosDeLosDiamantes, 'valorDeLosDiamantes')"
               (change) = "setValoresStore(datosDeLosDiamantes, 'valorDeLosDiamantes')"
+              (input)="onNumericKeyUp($event)"
+              (keypress)="onKeyPress($event)"
               [ngClass]="{'is-invalid': isInvalid('valorDeLosDiamantes', datosDeLosDiamantes)}"
             />
-            <div *ngIf="isInvalid('valorDeLosDiamantes', datosDeLosDiamantes)" class="invalid-feedback">
-            <small *ngIf="datosDeLosDiamantes.controls['valorDeLosDiamantes'].errors?.['required']">
-              Este campo es obligatorio.
-            </small>
-            <small *ngIf="datosDeLosDiamantes.controls['valorDeLosDiamantes'].errors?.['maxlength']">
-              El número debe tener 11 dígitos enteros
-            </small>
-          </div>
+             @if (datosDeLosDiamantes.get('valorDeLosDiamantes')?.invalid && datosDeLosDiamantes.get('valorDeLosDiamantes')?.touched) {
+              <div class="text-danger">
+                @if (datosDeLosDiamantes.get('valorDeLosDiamantes')?.errors?.['required']) {
+                <small>Este campo es obligatorio</small>
+                } @else if (datosDeLosDiamantes.get('valorDeLosDiamantes')?.errors?.['pattern']) {
+                <small>El número debe tener 3 dígitos decimales</small>
+                } @else if (datosDeLosDiamantes.get('valorDeLosDiamantes')?.errors?.['maxDigits']) {
+                <small>El número debe tener 11 dígitos enteros</small>
+                }
+              </div>
+              }
           </div>
         </div>
       </div>

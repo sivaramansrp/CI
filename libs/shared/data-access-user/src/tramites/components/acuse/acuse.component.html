@@ -65,11 +65,13 @@
     </div>
   </div>
 
-  <div class="row mt-5 mb-5">
+  @if (datosTabla.length !== 0) {
+    <div class="row mt-5 mb-5">
     <div class="col-md-12 d-flex justify-content-end">
       <button type="button" class="btn btn-primary" (click)="salir()">
         Cerrar
       </button>
     </div>
   </div>
+  }
 </div>

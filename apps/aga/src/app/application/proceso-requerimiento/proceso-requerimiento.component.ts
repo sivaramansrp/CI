@@ -512,7 +512,6 @@ export class ProcesoRequerimientoComponent implements OnInit, OnDestroy {
         this.ejecutaActualizarSolicitud();
       }
       this.indice = e.valor;
-
       this.cdRef.detectChanges(); // Asegura que la vista se actualice con el nuevo índice
 
       if (this.indice === 2) {
@@ -610,7 +609,7 @@ export class ProcesoRequerimientoComponent implements OnInit, OnDestroy {
               this.iniciarAtenderRequerimientoData = response.datos ?? {} as IniciarAtenderRequerimientoResponse;
               this.tipoRequerimiento = this.iniciarAtenderRequerimientoData.alcance_requerimiento || '';
               this.cdRef.detectChanges(); // Asegura que la vista se actualice con el nuevo índice
-              
+
               if(TRAMITES_CUATRO_PASOS.includes(this.guardarDatos?.procedureId)) {
               switch(this.tipoRequerimiento) {
                 case TipoRequerimiento.DATOS:
@@ -629,13 +628,6 @@ export class ProcesoRequerimientoComponent implements OnInit, OnDestroy {
               } else {
                 this.pasos = PASOS_REQUERIMIENTOS;
               }
-
-              this.datosPasos = {
-                nroPasos: this.pasos?.length ? this.pasos.length : 3,
-                indice: this.indice,
-                txtBtnAnt: 'Anterior',
-                txtBtnSig: 'Continuar',
-              };
         } else {
           this.nuevaNotificacion = {
             tipoNotificacion: 'toastr',

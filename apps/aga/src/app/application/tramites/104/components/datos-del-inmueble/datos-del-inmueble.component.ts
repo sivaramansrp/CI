@@ -22,6 +22,12 @@ import dropDown from '@libs/shared/theme/assets/json/104/selector-104.json'
   styleUrl: './datos-del-inmueble.component.scss',
 })
 export class DatosDelInmuebleComponent implements OnInit, OnDestroy {
+  /**
+   * Indica si el formulario de establecimiento está en modo edición.
+   * Cuando es true, el formulario permite modificar un registro existente en lugar de agregar uno nuevo.
+   * Se utiliza para controlar el comportamiento del modal y los botones de acción.
+   */
+  public isEditMode: boolean = false;
 
   /**
    * **Evento de cierre**  
@@ -80,7 +86,12 @@ export class DatosDelInmuebleComponent implements OnInit, OnDestroy {
    * Almacena los nombres de las columnas de la tabla de establecimientos.
    */
   public establecimientoHeaderData: string[] = [];
-
+  /**
+   * Devuelve true si exactamente una fila está seleccionada
+   */
+  public get isSingleRowSelected(): boolean {
+    return this.establecimientoBodyData.filter(r => r.selected).length === 1;
+  }
   /**
    * **Datos del cuerpo de la tabla de establecimientos**  
    * 
@@ -88,6 +99,132 @@ export class DatosDelInmuebleComponent implements OnInit, OnDestroy {
    * Se usa `TableBodyData[]` hasta definir su estructura específica.
    */
   public establecimientoBodyData: TableBodyData[] = [];
+  /**
+   * Índice de la fila seleccionada en la tabla de establecimientos.
+   *
+   * Se utiliza para identificar qué establecimiento está seleccionado para editar o eliminar.
+   * Si es null, no hay ninguna fila seleccionada.
+   */
+  public selectedEstablecimientoIndex: number | null = null;
+  /**
+   * Selecciona un establecimiento de la tabla
+   * @param index Índice del establecimiento seleccionado
+   */
+  seleccionarEstablecimiento(index: number): void {
+    this.selectedEstablecimientoIndex = index;
+    // Optionally, patch the form with selected data for editing
+    const selected = this.establecimientoBodyData[index];
+    if (selected) {
+      this.formularioDireccion.patchValue(selected);
+    }
+  }
+ 
+  /**
+   * Edita el establecimiento seleccionado con los datos del formulario
+   */
+  editarEstablecimiento(): void {
+  this.isEditMode = true;
+    if (this.selectedEstablecimientoIndex !== null) {
+      // Patch the form with the selected row's data, ensuring 'pais' is enabled for patching
+      const selected = this.establecimientoBodyData[this.selectedEstablecimientoIndex];
+      if (selected && selected.tbodyData) {
+        const paisControl = this.formularioDireccion.get('pais');
+        const wasDisabled = paisControl?.disabled;
+        if (wasDisabled) paisControl.enable({ emitEvent: false });
+        // Find the matching catalog entry for pais
+        let paisValue = selected.tbodyData[9];
+        let paisCatalog = this.configuracionesFormularioDropdown[0]?.catalogos || [];
+        let paisObj = paisCatalog.find((c: any) => c?.id === paisValue || c?.descripcion === paisValue || c?.clave === paisValue) || paisValue;
+        this.formularioDireccion.patchValue({
+          calle: selected.tbodyData[1],
+          numeroExterior: selected.tbodyData[2],
+          numeroInterior: selected.tbodyData[3],
+          colonia: selected.tbodyData[4],
+          municipioDelegacion: selected.tbodyData[5],
+          localidad: selected.tbodyData[6],
+          codigoPostal: selected.tbodyData[7],
+          entidadFederativa: selected.tbodyData[8],
+          pais: paisObj
+        });
+        if (wasDisabled) paisControl.disable({ emitEvent: false });
+      }
+      // Open the modal for editing
+      setTimeout(() => {
+        const modal = document.getElementById('modalAgregar');
+        if (modal) {
+          (window as any).bootstrap?.Modal?.getOrCreateInstance(modal)?.show();
+        }
+      }, 0);
+    }
+  }
+
+  
+  /**
+   * Selecciona un establecimiento por objeto (usado por rowSelected)
+   */
+  seleccionarEstablecimientoPorObjeto(row: TableBodyData): void {
+    const idx = this.establecimientoBodyData.findIndex(r =>
+      Array.isArray(r.tbodyData) && Array.isArray(row.tbodyData) &&
+      r.tbodyData.length === row.tbodyData.length &&
+      r.tbodyData.every((val, i) => val === row.tbodyData[i])
+    );
+    if (idx !== -1) {
+      this.selectedEstablecimientoIndex = idx;
+      // Patch the form with the selected row's data
+      const selected = this.establecimientoBodyData[idx];
+      if (selected && selected.tbodyData) {
+        this.formularioDireccion.patchValue({
+          calle: selected.tbodyData[1],
+          numeroExterior: selected.tbodyData[2],
+          numeroInterior: selected.tbodyData[3],
+          colonia: selected.tbodyData[4],
+          municipioDelegacion: selected.tbodyData[5],
+          localidad: selected.tbodyData[6],
+          codigoPostal: selected.tbodyData[7],
+          entidadFederativa: selected.tbodyData[8],
+          pais: selected.tbodyData[9]
+        });
+      }
+    }
+  }
+
+
+  /**
+   * Elimina el establecimiento seleccionado
+   */
+  eliminarEstablecimiento(): void {
+    // Remove all rows with selected === true (multi-row delete)
+    const anySelected = this.establecimientoBodyData.some(row => row.selected);
+    if (anySelected) {
+      const updatedRows = this.establecimientoBodyData.filter(row => !row.selected);
+      // Re-number the rows in the first column and clear selection
+      this.establecimientoBodyData = updatedRows.map((row, idx) => ({
+        ...row,
+        tbodyData: [
+          (idx + 1).toString(),
+          ...row.tbodyData.slice(1)
+        ],
+        selected: false
+      }));
+      this.totalItems = this.establecimientoBodyData.length;
+      this.selectedEstablecimientoIndex = null;
+      this.rowSelected = false;
+    } else if (this.selectedEstablecimientoIndex !== null) {
+      // Fallback: remove the single selected index if no .selected property is set
+      const updatedRows = this.establecimientoBodyData.filter((_, idx) => idx !== this.selectedEstablecimientoIndex);
+      this.establecimientoBodyData = updatedRows.map((row, idx) => ({
+        ...row,
+        tbodyData: [
+          (idx + 1).toString(),
+          ...row.tbodyData.slice(1)
+        ],
+        selected: false
+      }));
+      this.totalItems = this.establecimientoBodyData.length;
+      this.selectedEstablecimientoIndex = null;
+      this.rowSelected = false;
+    }
+  }
 
   /**
    * **Datos de la tabla de destinatarios**  
@@ -400,5 +537,106 @@ export class DatosDelInmuebleComponent implements OnInit, OnDestroy {
     this.destroy$.complete();
   }
 
+  /**
+   * Agrega un nuevo establecimiento usando los datos del formulario
+   */
+  agregarEstablecimiento(): void {
+    if (this.formularioDireccion && this.formularioDireccion.valid) {
+      const values = this.formularioDireccion.value;
+      const hasData = Object.keys(values).some(key => {
+        const v = values[key];
+        return v !== null && v !== undefined && v !== '';
+      });
+      if (!hasData) {
+        return;
+      }
+      // Ensure row number column exists in header
+      if (!this.establecimientoHeaderData.includes('No.')) {
+        this.establecimientoHeaderData = ['No.', ...this.establecimientoHeaderData];
+      }
+      if (this.isEditMode && this.selectedEstablecimientoIndex !== null) {
+        // Edit mode: update the selected row
+        const tbodyData = [
+          (this.selectedEstablecimientoIndex + 1).toString(),
+          values.calle || '',
+          values.numeroExterior || '',
+          values.numeroInterior || '',
+          values.colonia || '',
+          values.municipioDelegacion || '',
+          values.localidad || '',
+          values.codigoPostal || '',
+          values.entidadFederativa || '',
+          values.pais || ''
+        ];
+        const updatedRows = [...this.establecimientoBodyData];
+        updatedRows[this.selectedEstablecimientoIndex] = { tbodyData };
+        this.establecimientoBodyData = updatedRows;
+        this.isEditMode = false;
+        this.selectedEstablecimientoIndex = null;
+      } else {
+        // Add mode: add a new row
+        const tbodyData = [
+          (this.establecimientoBodyData.length + 1).toString(),
+          values.calle || '',
+          values.numeroExterior || '',
+          values.numeroInterior || '',
+          values.colonia || '',
+          values.municipioDelegacion || '',
+          values.localidad || '',
+          values.codigoPostal || '',
+          values.entidadFederativa || '',
+          values.pais || ''
+        ];
+        const newRow = { tbodyData };
+        this.establecimientoBodyData = [...this.establecimientoBodyData, newRow];
+      }
+      this.totalItems = this.establecimientoBodyData.length;
+      // Close modal after adding or editing
+      const modal = document.getElementById('modalAgregar');
+      if (modal) {
+        (window as any).bootstrap?.Modal?.getInstance(modal)?.hide();
+      }
+    }
+  }
 
+    /**
+     * Indica si al menos una fila de la tabla de establecimientos está seleccionada.
+     * Se utiliza para habilitar o deshabilitar los botones de edición y eliminación.
+     * Se actualiza automáticamente cuando cambia la selección de filas en la tabla.
+     */
+    public rowSelected: boolean = false;
+
+  /**
+   * Cambia el estado de selección de una fila (para selección múltiple)
+   * Llama este método desde el checkbox de cada fila en la tabla:
+   * <input type="checkbox" [checked]="row.selected" (change)="toggleSeleccionFila(row, $event.target.checked)">
+   * @param row Fila a modificar
+   * @param selected true si se selecciona, false si se deselecciona
+   */
+  toggleSeleccionFila(row: TableBodyData, selected: boolean): void {
+    row.selected = selected;
+    // Actualiza rowSelected para habilitar/deshabilitar botones
+    this.rowSelected = this.establecimientoBodyData.some(r => r.selected);
+  }
+
+/**
+ * Habilita o deshabilita los botones de editar/eliminar según la selección
+ */
+onSeleccionCambio(selected: boolean): void {
+  this.rowSelected = selected;
+  if (selected) {
+    // Find the first selected row and update selectedEstablecimientoIndex
+    const idx = this.establecimientoBodyData.findIndex(row => row.selected);
+    this.selectedEstablecimientoIndex = idx !== -1 ? idx : null;
+  } else {
+    this.selectedEstablecimientoIndex = null;
+  }
+}
+
+/**
+ * Sincroniza el cuerpo de la tabla cuando cambia la selección en la tabla hija
+ */
+onBodyChange(updatedBody: TableBodyData[]): void {
+  this.establecimientoBodyData = updatedBody;
+}
 }

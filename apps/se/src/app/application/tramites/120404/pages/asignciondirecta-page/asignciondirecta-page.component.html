@@ -25,10 +25,17 @@
      </app-solicitante-entidad>
      }
     @case (2) {
-   <app-paso-dos (formValidation)="onFormValidation($any($event))"></app-paso-dos>
+    <app-paso-carga-documento 
+        [idSolicitud]="solicitudState.idSolicitud"
+        [idTipoTRamite]="'120404'"
+        [cargaArchivosEvento]="cargarArchivosEvento"
+        (reenviarEventoCarga)="manejaEventoCargaDocumentos($event)"
+        (reenviarCargaRealizada)="cargaRealizada($event)"
+        (cargaEnProgreso)="onCargaEnProgreso($event)"
+      ></app-paso-carga-documento>
     }
     @case (3) {
-      <app-paso-tres (formValidation)="onFormValidation($any($event))"></app-paso-tres>
+      <paso-firma [idSolicitud]="solicitudState.idSolicitud" [procedure]="120404" [procedureUrl]="'entidad-legal/soliciante'"></paso-firma> 
     }
   }    
  <btn-continuar [datos]="datosPasos" (continuarEvento)="getValorIndice($event)"></btn-continuar> 
