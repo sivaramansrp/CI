@@ -59,6 +59,12 @@ import { CertificadosLicenciasPermisosService } from '../../../services/shared26
  * para actualizar el componente actual que se está mostrando.
  */
 
+/**
+ * Representa el tipo de producto en el proceso de solicitud.
+ * @interface TipoDeProducto
+ * @property {number} id - Identificador único del tipo de producto.
+ * @property {string} descripcion - Descripción del tipo de producto.
+ */
 interface TipoDeProducto {
   id: number;
   descripcion: string;

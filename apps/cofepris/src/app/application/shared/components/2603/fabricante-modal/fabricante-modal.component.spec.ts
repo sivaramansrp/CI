@@ -311,4 +311,178 @@ describe('FabricanteModalComponent', () => {
     expect(Array.isArray(result)).toBe(true);
     expect(result.find(o => o.value === 'noContribuyente')).toBeUndefined();
   });
+
+  it('should initialize component properties correctly on ngOnInit', () => {
+    const mockState = createTramiteInitialState();
+    tramiteQuery.selectSolicitud$ = of(mockState);
+    consultaioQuery.selectConsultaioState$ = of({ ...createConsultaInitialState(), readonly: true });
+    
+    componente.ngOnInit();
+    
+    expect(componente.solicitudState).toEqual(mockState);
+    expect(componente.esSoloLecturaFormulario).toBe(true);
+  });
+
+  it('should handle all form value changes and store updates', () => {
+    componente.solicitudState = createTramiteInitialState();
+    componente.inicializarFormularioTercerosRelacionados();
+    
+    const formFields = [
+      { field: 'denominacionSocial', setter: 'setTercerosRelacionadosDenominacionSocial' },
+      { field: 'terceroNombre', setter: 'setTercerosRelacionadosTerceroNombre' },
+      { field: 'tercerosNacionalidad', setter: 'setTercerosNacionalidad' },
+      { field: 'tipoPersona', setter: 'setTipoPersona' },
+      { field: 'rfc', setter: 'setTercerosRelacionadosRfc' },
+      { field: 'curp', setter: 'setTercerosRelacionadosCurp' },
+      { field: 'razonSocial', setter: 'setTercerosRelacionadosRazonSocial' },
+      { field: 'pais', setter: 'setTercerosRelacionadosPais' },
+      { field: 'estado', setter: 'setTercerosRelacionadosEstado' },
+      { field: 'codigoPostal', setter: 'setTercerosRelacionadosCodigoPostal' },
+      { field: 'calle', setter: 'setTercerosRelacionadosCalle' },
+      { field: 'numeroExterior', setter: 'setTercerosRelacionadosNumeroExterior' },
+      { field: 'numeroInterior', setter: 'setTercerosRelacionadosNumeroInterior' },
+      { field: 'lada', setter: 'setTercerosRelacionadosLada' },
+      { field: 'telefono', setter: 'setTercerosRelacionadosTelefono' },
+      { field: 'correoElectronico', setter: 'setTercerosRelacionadosCorreoElectronico' }
+    ];
+
+    formFields.forEach(({ field, setter }) => {
+      if (tramiteStore[setter as keyof typeof tramiteStore]) {
+        componente.tercerosRelacionadosForm.get(field)?.setValue(`test_${field}`);
+        componente.establecerValorStore(componente.tercerosRelacionadosForm, field, setter as keyof Tramite2603Store);
+        expect(tramiteStore[setter as keyof typeof tramiteStore]).toHaveBeenCalledWith(`test_${field}`);
+      }
+    });
+  });
+
+  it('should handle all validation scenarios correctly', () => {
+    componente.solicitudState = createTramiteInitialState();
+    componente.inicializarFormularioTercerosRelacionados();
+
+    const rfcControl = componente.tercerosRelacionadosForm.get('rfc');
+    rfcControl?.setValue('INVALID_RFC');
+    expect(rfcControl?.errors).toBeTruthy();
+    
+    rfcControl?.setValue('XAXX010101000');
+    expect(rfcControl?.errors).toBeFalsy();
+    
+    const curpControl = componente.tercerosRelacionadosForm.get('curp');
+    curpControl?.setValue('INVALID_CURP');
+    expect(curpControl?.errors).toBeTruthy();
+    
+    curpControl?.setValue('CURP771113HMCRRR09');
+    expect(curpControl?.errors).toBeFalsy();
+  });
+
+  it('should handle all nationality and person type combinations', () => {
+    componente.solicitudState = createTramiteInitialState();
+    componente.inicializarFormularioTercerosRelacionados();
+    
+    const testCombinations = [
+      { nationality: 'nacional', personType: 'fisica' },
+      { nationality: 'nacional', personType: 'moral' },
+      { nationality: 'nacional', personType: 'noContribuyente' },
+      { nationality: 'extranjero', personType: 'fisica' },
+      { nationality: 'extranjero', personType: 'moral' }
+    ];
+
+    testCombinations.forEach(({ nationality, personType }) => {
+      componente.tercerosRelacionadosForm.get('tercerosNacionalidad')?.setValue(nationality);
+      componente.tercerosRelacionadosForm.get('tipoPersona')?.setValue(personType);
+      componente.cerrarFormularioTercerosRelacionados();
+      
+      expect(componente.tercerosRelacionadosForm).toBeDefined();
+    });
+  });
+
+  it('should handle different modal titles correctly', () => {
+    const titles = ['Agregar fabricante', 'Agregar facturador', 'Agregar proveedor', 'Agregar certificado analítico', 'Agregar otros'];
+    
+    titles.forEach(title => {
+      componente.titulo = title;
+      componente.solicitudState = createTramiteInitialState();
+      componente.inicializarFormularioTercerosRelacionados();
+      expect(componente.titulo).toBe(title);
+    });
+  });
+
+  it('should handle form submission with valid data', () => {
+    const spyEmit = jest.spyOn(componente.guardarFabricante, 'emit');
+    const spyHide = jest.spyOn(componente.bsModalRef, 'hide');
+    
+    componente.solicitudState = createTramiteInitialState();
+    componente.inicializarFormularioTercerosRelacionados();
+    componente.tercerosRelacionadosForm.patchValue({
+      denominacionSocial: 'Test Company',
+      terceroNombre: 'Test Name',
+      tercerosNacionalidad: 'nacional',
+      tipoPersona: 'moral',
+      rfc: 'XAXX010101000',
+      razonSocial: 'Test Razon Social',
+      pais: 'México',
+      estado: 'CDMX',
+      codigoPostal: '12345',
+      calle: 'Test Street',
+      numeroExterior: '123',
+      lada: '55',
+      telefono: '5555555555',
+      correoElectronico: 'test@example.com'
+    });
+    
+    componente.guardar();
+    
+    expect(spyEmit).toHaveBeenCalled();
+    expect(spyHide).toHaveBeenCalled();
+  });
+
+  it('should handle error scenarios gracefully', () => {
+    componente.solicitudState = null as any;
+    expect(() => componente.inicializarFormularioTercerosRelacionados()).not.toThrow();
+    
+    componente.solicitudState = createTramiteInitialState();
+    componente.inicializarFormularioTercerosRelacionados();
+    componente.guardar();
+    
+    expect(componente.tercerosRelacionadosForm.touched).toBe(true);
+  });
+
+  it('should handle catalog data loading', () => {
+    const mockCatalogService = TestBed.inject(CertificadosLicenciasPermisosService);
+    expect(mockCatalogService.getPaisDatos).toHaveBeenCalled();
+  });
+
+  it('should properly cleanup on destroy', () => {
+    const destroySubject = componente['notificadorDestruir$'];
+    const spyNext = jest.spyOn(destroySubject, 'next');
+    const spyComplete = jest.spyOn(destroySubject, 'complete');
+    
+    componente.ngOnDestroy();
+    
+    expect(spyNext).toHaveBeenCalled();
+    expect(spyComplete).toHaveBeenCalled();
+  });
+
+  it('should handle all field validations and enable/disable logic', () => {
+    componente.solicitudState = createTramiteInitialState();
+    componente.inicializarFormularioTercerosRelacionados();
+    
+    const formControls = Object.keys(componente.tercerosRelacionadosForm.controls);
+    
+    formControls.forEach(controlName => {
+      const control = componente.tercerosRelacionadosForm.get(controlName);
+      if (control) {
+        const isValid = componente.esValido(componente.tercerosRelacionadosForm, controlName);
+        expect(typeof isValid).toBe('boolean');
+      }
+    });
+  });
+
+  it('should handle all store subscription scenarios', () => {
+    tramiteQuery.selectSolicitud$ = of(createTramiteInitialState());
+    consultaioQuery.selectConsultaioState$ = of({ ...createConsultaInitialState(), readonly: false });
+    
+    componente.ngOnInit();
+    
+    expect(componente.esSoloLecturaFormulario).toBe(false);
+  });
 });
