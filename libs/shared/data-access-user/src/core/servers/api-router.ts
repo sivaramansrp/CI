@@ -830,6 +830,13 @@ export const CATALOGO_REPRESENTACION_FEDERAL = (TRAMITE: string, CVEENTIDAD: str
   `sat-t${TRAMITE}/catalogo/representacion-federal/${CVEENTIDAD}`;
 
 /*
+ * API para obtener la representación federal por clave de entidad
+ * @see https://api-v30.cloud-ultrasist.net/api/procedureID/catalogo/representacion-federal/{cveEntidad}
+ */
+export const CATALOGO_REPRESENTACION_FEDERAL_10 = (TRAMITE: string, CVEENTIDAD: string): string =>
+  `sat-t${TRAMITE}/representacion-federal/${CVEENTIDAD}`;
+
+/*
  * API para obtener el tipo de factura
  * @see https://api-v30.cloud-ultrasist.net/api/procedureID/catalogo/tipo-factura
  */
@@ -1188,7 +1195,12 @@ export const CLASSIFICACIONES_REGIMEN = (TRAMITE: string) : string => `sat-t${TR
 
 export const API_PEXIM_FRACCION_ARANCELARIA = (TRAMITE: string, TITPEX_ID: string): string => `sat-t${TRAMITE}/catalogo/tramite/${TITPEX_ID}/pexim/fracciones-arancelarias`;
 
+export const API_PEXIM_FRACCION_ARANCELARIA_10 = (TRAMITE: string, TITPEX_ID: string): string => `sat-t${TRAMITE}/tramite/${TITPEX_ID}/pexim/fracciones-arancelarias`;
+
+
 export const API_UNIDADES_MEDIDA_TARIFARIA = (TRAMITE: string, ID: string): string => `sat-t${TRAMITE}/catalogo/fraccion-arrancelaria/${ID}/unidades-medidas-tarifarias`;
+
+export const API_UNIDADES_MEDIDA_TARIFARIA_10 = (TRAMITE: string, ID: string): string => `sat-t${TRAMITE}/fraccion-arrancelaria/${ID}/unidades-medidas-tarifarias`;
 
 // export const API_PAISES_POR_BLOQUE = (TRAMITE: string, ID: string): string => `sat-t${TRAMITE}/catalogo/paises-por-bloque/${ID}`;
 
@@ -1197,6 +1209,8 @@ export const API_CATALOGOS_PAISES_TODOS = (TRAMITE: string): string => `sat-t${T
 export const API_MOSTRAR_PARTIDAS_SOLICITUD = (TRAMITE: string, ID_SOLICITUD: number): string => `sat-t${TRAMITE}/solicitud/mostrar/partidas?idSolicitud=${ID_SOLICITUD}`;
 
 export const REGIMEN_CLASSIFICACIONES = (TRAMITE: string) : string => `sat-t${TRAMITE}/catalogo/tramite/TITPEX.130108/regimenes/${CLASIFICACION}/clasificacion`;
+
+export const REGIMEN_CLASSIFICACIONES_10 = (TRAMITE: string) : string => `sat-t${TRAMITE}/tramite/TITPEX.130110/regimenes/${CLASIFICACION}/clasificacion`;
 
 /**
  * API para guardar la solicitud
