@@ -438,7 +438,7 @@ ngOnChanges(currentValue: SimpleChanges): void {
         if (
           this.datoSeleccionado?.[0]?.tipoPersona && this.idProcedimiento !== 260103
         ) {
-          this.agregarFabricanteForm?.enable();
+          // this.agregarFabricanteForm?.enable();
         }
         else if(this.idProcedimiento === 260103){
           this.agregarFabricanteForm?.disable();
@@ -1299,7 +1299,14 @@ changeTipoPersona(): void {
    * If either is missing, disables dropdowns. If both are present, enables them.
    */
   private actualizarEstadoDesplegables(): void {
+
     const TIPO_PERSONA = this.agregarFabricanteForm?.get('tipoPersona')?.value;
+        if(this.idProcedimiento === 260103){
+        this.agregarFabricanteForm.disable();
+        this.agregarFabricanteForm.get('tipoPersona')?.enable();
+        this.agregarFabricanteForm.get('rfc')?.enable();
+      }
+      else{
     if (TIPO_PERSONA) {
       this.estaDeshabilitadoDesplegable = false;
       Object.keys(this.agregarFabricanteForm.controls).forEach((controlName) => {
@@ -1316,17 +1323,11 @@ changeTipoPersona(): void {
           this.agregarFabricanteForm.get(controlName)?.enable();
         }
       });
-
-      if(this.idProcedimiento === 260103){
-        this.agregarFabricanteForm.disable();
-        this.agregarFabricanteForm.get('tipoPersona')?.enable();
-        this.agregarFabricanteForm.get('rfc')?.enable();
-        
-      }
       if (this.chequeoValidacionAlGuardar) {
         this.agregarFabricanteForm.get('tipoPersona')?.disable();
       }
     }
+  }
   }
   /**
    * Getter que determina si se debe mostrar el campo RFC en el formulario.

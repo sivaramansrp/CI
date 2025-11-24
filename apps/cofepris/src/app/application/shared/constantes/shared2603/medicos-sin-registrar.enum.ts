@@ -10,6 +10,30 @@ export const PERMISO_DEFINITIVO_TITULO = [
 ];
 
 /**
+ * Sección de permisos - Identificadores numéricos para la sección de permisos en el sistema.
+ *
+ * @constant
+ * @type {number[]}
+ * @description Constante utilizada para identificar la sección de permisos en la aplicación.
+ */
+export const SECCION_PERMISOS = [
+  260301, 260302, 260303, 260304
+];
+
+/**
+ * CAMPO_PERMISO - Identificadores numéricos para la sección de permisos en el sistema.
+ *
+ * @constant
+ * @type {number[]}
+ * @description Arreglo de códigos utilizados para identificar la sección de permisos en la aplicación. 
+ * Cada número representa un tipo de permiso sanitario relacionado con dispositivos médicos sin registro.
+ * Útil para validaciones, consultas y lógica de negocio en el sistema.
+ */
+export const CAMPO_PERMISO = [
+  260301, 260302, 260303, 260304
+];
+
+/**
  * Identificador numérico único del procedimiento administrativo.
  * 
  * @description Código oficial asignado por COFEPRIS para identificar el trámite de
