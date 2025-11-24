@@ -1,5 +1,5 @@
-import { TablaMercanciasDatos, TablaScianConfig } from '../../../shared/models/datos-solicitud.model';
 import { Injectable } from '@angular/core';
+import { TablaScianConfig } from '../../../shared/models/datos-solicitud.model';
 import { Tramite260209State } from '../estados/tramite260209Store.store';
 
 
@@ -12,6 +12,7 @@ export class GuardarAdapter_260209 {
       solicitante: {
         rfc: state.datosSolicitudFormState.rfcSanitario,
         nombre: state.datosSolicitudFormState.denominacionRazon,
+        actividadEconomica: "",
         correoElectronico: state.datosSolicitudFormState.correoElectronico,
         domicilio: {
           pais: 'México',
@@ -55,7 +56,7 @@ export class GuardarAdapter_260209 {
         cveScian: datos.clave,
         descripcion: datos.descripcion
       })),
-  mercancias: (state.tablaMercanciasConfigDatos ?? []).map((mercancia: TablaMercanciasDatos) => ({
+  mercancias: (state.tablaMercanciasConfigDatos ?? []).map((mercancia) => ({
         idMercancia: '',
         idClasificacionProducto: '',
         nombreClasificacionProducto: mercancia.clasificacionProducto,
@@ -68,7 +69,7 @@ export class GuardarAdapter_260209 {
         estadoFisicoDescripcionOtros: mercancia.estadoFisico,
         fraccionArancelaria: {
           clave: mercancia.fraccionArancelaria,
-          descripcion: mercancia.descripcionFraccion || ''
+          descripcion: mercancia.descripcionFraccion || ''  
         },
         unidadMedidaComercial: {
           descripcion: mercancia.unidadMedidaComercializacion
@@ -80,10 +81,10 @@ export class GuardarAdapter_260209 {
         cantidadUMTConComas: mercancia.cantidadUMT,
         presentacion: mercancia.presentacion,
         registroSanitarioConComas: mercancia.numeroRegistroSanitario,
-        nombreCortoPaisOrigen: mercancia.paisDeOriginDatos?.toString(),
-        nombreCortoPaisProcedencia: mercancia.paisDeProcedenciaDatos?.toString(),
+          nombreCortoPaisOrigen: mercancia.paisOrigenDatosClave,
+          nombreCortoPaisProcedencia: mercancia.paisProcedenciaDatosClave,
+          nombreCortoUsoEspecifico: mercancia.usoEspecificoDatosClave,
         tipoProductoDescripcionOtros: mercancia.tipoProducto,
-        nombreCortoUsoEspecifico: mercancia.usoEspecifico?.toString(),
         fechaCaducidadStr: mercancia.fechaCaducidad
       })),
       representanteLegal: {
