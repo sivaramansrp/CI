@@ -1999,6 +1999,21 @@ this.editFabricanteIndex = this.fabricanteRowData.findIndex(
   }
 
   /**
+ * Llama dinámicamente al método correspondiente del store para actualizar el país seleccionado.
+ * @param event Objeto de tipo Catalogo que representa el país seleccionado.
+ * @param metodoNombre Nombre del método del store que se debe invocar.
+ */
+  onPaisChange(event: Catalogo, metodoNombre: keyof TercerosFabricanteStore): void {
+    if (event) {
+    (
+      this.tercerosFabricanteStore[metodoNombre] as (
+        value: Catalogo
+      ) => void
+    )(event);
+    }
+  }
+
+  /**
    * Método del ciclo de vida de Angular que se llama cuando el componente se destruye.
    * Este método completa el observable destroyNotifier$ para cancelar las suscripciones activas.
    */

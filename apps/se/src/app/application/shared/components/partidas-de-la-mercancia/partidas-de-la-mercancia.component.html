@@ -2,6 +2,9 @@
    <form [formGroup]="partidasDelaMercanciaForm">
       <div>
          <ng-titulo titulo="Partidas de la mercancía"></ng-titulo>
+          @if(mostrarMensajeFraccionArancelariaRequerida){
+            <ng-alert class="text-center" [CONTENIDO]="MENSAJES_TEXTOS.MENSAJES_FRACCION_ARANCELARIA_REQUERIDA"></ng-alert>
+          }
          <div class="row">
             <div class="col-md-4">
                <div class="form-group">
@@ -190,6 +193,13 @@
                </div>
             </div>
          </div>
+          @if(mostrarMensajeMercanciaRequerida){
+          <div class="row mt-4">
+            <div class="col-md-12 d-flex justify-content-center">
+               <ng-alert [CONTENIDO]="MENSAJES_TEXTOS.MENSAJES_MERCANCIA_REQUERIDA" class="w-100 text-center"></ng-alert>
+            </div>
+          </div>
+          }
       </div>
    </form>
    <!-- modal start-->
