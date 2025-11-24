@@ -40,7 +40,7 @@ import {
     API_GET_SOLICITUDES_PAGO_DERECHOS,
     API_GET_SOLICITUDES_TERCEROS_RELACIONADOS,
 } from '../../../../../core/server/api-router';
-import { PrellenadoMovilizacion, PrellenadoSolicitud } from "../../../models/220201/prellenado-solicitud.model";
+import { PrellenadoMovilizacion, PrellenadoPagoDerechos, PrellenadoSolicitud } from "../../../models/220201/prellenado-solicitud.model";
 
 @Injectable({
     providedIn: 'root'
@@ -461,8 +461,8 @@ export class CatalogosService {
      * @param idsolicitud - Identificador de la solicitud.
      * @returns Un observable que emite la respuesta base con los datos prellenados de movilización.
      */
-    obtenerPagoDerechosPrellenado(tramite: number, esPrellenado: boolean, idsolicitud: string): Observable<BaseResponse<PrellenadoMovilizacion>> {
+    obtenerPagoDerechosPrellenado(tramite: number, esPrellenado: boolean, idsolicitud: string): Observable<BaseResponse<PrellenadoPagoDerechos>> {
         const ENDPOINT = `${this.host}${API_GET_SOLICITUDES_PAGO_DERECHOS(tramite.toString(), esPrellenado, idsolicitud)}`;
-        return this.http.get<BaseResponse<PrellenadoMovilizacion>>(ENDPOINT);
+        return this.http.get<BaseResponse<PrellenadoPagoDerechos>>(ENDPOINT);
     }
 }
