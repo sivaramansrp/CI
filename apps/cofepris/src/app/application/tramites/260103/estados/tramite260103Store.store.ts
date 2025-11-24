@@ -1,5 +1,5 @@
 
-import { DatosSolicitudFormState, MercanciaForm,TablaMercanciaClaveConfig, TablaOpcionConfig, TablaScianConfig, } from '../../../shared/components/shared26010/models/datos-solicitud.model';
+import { DatosSolicitudFormState, MercanciaForm,TablaMercanciaClaveConfig, TablaMercanciasDatos, TablaOpcionConfig, TablaScianConfig, } from '../../../shared/components/shared26010/models/datos-solicitud.model';
 import { Destinatario, Fabricante } from '../../../shared/components/shared26010/models/terceros-relacionados.model';
 import { Store, StoreConfig } from '@datorama/akita';
 import { Injectable } from '@angular/core';
@@ -22,6 +22,12 @@ export interface Tramite260103State {
 
   /** Lista de fabricantes registrados */
   fabricanteTablaDatos: Fabricante[];
+  /**
+     * @property tablaMercanciasConfigDatos
+     * @description Datos y configuración para la tabla de mercancías mostrada en pantalla.
+     * Utilizado para listar productos o bienes relacionados con el trámite.
+     */
+    tablaMercanciasConfigDatos: TablaMercanciasDatos[];
 
     tablaMercanciaClaveConfigDatos: TablaMercanciaClaveConfig[];
 
@@ -37,8 +43,6 @@ export interface Tramite260103State {
   /** Configuración SCIAN disponible */
   scianConfigDatos: TablaScianConfig[];
 
-  /** Configuración de mercancías disponibles */
-  tablaMercanciasConfigDatos: TablaMercanciasImportacion[];
 
   /** Opciones seleccionadas por el usuario */
   seleccionadoopcionDatos: TablaOpcionConfig[];
