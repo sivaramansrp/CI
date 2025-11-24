@@ -729,7 +729,7 @@ this.tramite130112Store.actualizarEstado({
    */
   listaDePaisesDisponibles(): void {
     this.importacionMaterialDeInvestigacionCientificaService
-    .getBloque('130110')
+    .getBloque('130112')
       .pipe(takeUntil(this.destroyed$))
       .subscribe((data) => {
         this.elementosDeBloque = data;
@@ -742,7 +742,7 @@ this.tramite130112Store.actualizarEstado({
    */
   fetchPaisesPorBloque(_bloqueId: number): void {
     this.importacionMaterialDeInvestigacionCientificaService
-      .getPaisesPorBloque('130110', String(_bloqueId))
+      .getPaisesPorBloque('130112', String(_bloqueId))
             .pipe(takeUntil(this.destroyed$))
             .subscribe((data) => {
               this.paisesPorBloque = data;

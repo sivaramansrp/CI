@@ -1210,7 +1210,7 @@ export const API_MOSTRAR_PARTIDAS_SOLICITUD = (TRAMITE: string, ID_SOLICITUD: nu
 
 export const REGIMEN_CLASSIFICACIONES = (TRAMITE: string) : string => `sat-t${TRAMITE}/catalogo/tramite/TITPEX.130108/regimenes/${CLASIFICACION}/clasificacion`;
 
-export const REGIMEN_CLASSIFICACIONES_10 = (TRAMITE: string) : string => `sat-t${TRAMITE}/tramite/TITPEX.130110/regimenes/${CLASIFICACION}/clasificacion`;
+export const REGIMEN_CLASSIFICACIONES_10 = (TRAMITE: string) : string => `sat-t${TRAMITE}/tramite/TITPEX.130115/regimenes/${CLASIFICACION}/clasificacion`;
 
 /**
  * API para guardar la solicitud
