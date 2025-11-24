@@ -32,6 +32,9 @@ import { SolicitanteComponent } from '@libs/shared/data-access-user/src';
   ]
 })
 export class PasoUnoComponent implements OnInit, OnDestroy {
+
+  @Input() loginRfc!: string;
+  
   /**
    * @property {number} indice
    * @description Índice actual de la pestaña seleccionada en el paso uno.

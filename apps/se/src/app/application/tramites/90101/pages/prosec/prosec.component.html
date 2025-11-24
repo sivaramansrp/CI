@@ -9,11 +9,11 @@
           <ng-alert [CONTENIDO]="formErrorAlert" [CUSTOMECLASS]="'alert-danger'"></ng-alert>
         </div>
         }
-        <app-wizard [listaPasos]="pasos"></app-wizard>
+        <app-wizard #wizard [listaPasos]="pasos"></app-wizard>
     </div>
     <div class="row">
       @switch (indice) { @case (1) {
-      <app-paso-uno [tramiteId]="idTipoTramite" #pasoUnoRef></app-paso-uno>
+      <app-paso-uno [loginRfc]="loginRfc" [tramiteId]="idTipoTramite" #pasoUnoRef></app-paso-uno>
       }
       @case (2) {
     <app-paso-carga-documento 
@@ -36,8 +36,6 @@
       <btn-continuar
         [datos]="datosPasos"
         (continuarEvento)="getValorIndice($event)"
-        [btnGuardar]="true"
-        [dePadre]="true"
       ></btn-continuar>
         } @else {
         <div class="mt-5 mb-3 d-flex justify-content-end">
