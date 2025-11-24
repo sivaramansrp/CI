@@ -1998,9 +1998,19 @@ this.editFabricanteIndex = this.fabricanteRowData.findIndex(
     return this.validacionesService.isValid(form, campo);
   }
 
-  // eslint-disable-next-line class-methods-use-this
-  markPaisTouched(formgroup: FormGroup): boolean {
-    return Boolean(formgroup?.get('pais')?.touched);
+  /**
+ * Llama dinámicamente al método correspondiente del store para actualizar el país seleccionado.
+ * @param event Objeto de tipo Catalogo que representa el país seleccionado.
+ * @param metodoNombre Nombre del método del store que se debe invocar.
+ */
+  onPaisChange(event: Catalogo, metodoNombre: keyof TercerosFabricanteStore): void {
+    if (event) {
+    (
+      this.tercerosFabricanteStore[metodoNombre] as (
+        value: Catalogo
+      ) => void
+    )(event);
+    }
   }
 
   /**
