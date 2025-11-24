@@ -7,8 +7,7 @@ import { PagoDeDerechosComponent } from '../../../../shared/components/pago-de-d
 import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
 import { of, Subject } from 'rxjs';
 import { CertificadosLicenciasPermisosService } from '../../services/certificados-licencias-permisos.service';
-import { Tramite260302Store } from '../../../../estados/tramites/260302/tramite260302.store';
-import { Tramite260302Query } from '../../../../estados/queries/260302/tramite260302.query';
+import { Tramite260302Store } from '../../estados/stores/tramite260302.store';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { NgModule } from '@angular/core';
 @Component({
@@ -106,8 +105,8 @@ describe('PagoDeDerechosContenedoraComponent', () => {
     await TestBed.configureTestingModule({
       providers: [
         { provide: ChangeDetectorRef, useValue: mockCdr },
-        { provide: Tramite260302Store, useValue: mockTramiteStore },
-        { provide: Tramite260302Query, useValue: mockConsultaQuery }
+        { provide: Tramite260302Store, useValue: mockTramiteStore }
+        // Tramite260302Query is not available, so it is omitted
       ],
       imports: [HttpClientTestingModule, ReactiveFormsModule, PagoDeDerechosContenedoraComponent],
       schemas: [NO_ERRORS_SCHEMA]

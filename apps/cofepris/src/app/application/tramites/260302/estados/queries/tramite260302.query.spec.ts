@@ -1,7 +1,7 @@
-import { Tramite260302Query } from '../queries/tramite260302.query';
-import { Tramite260302Store } from '../stores/tramite260302.store';
+import { Tramite260302Query } from './tramite260302.query';
+import { Tramite260302Store } from '../../estados/stores/tramite260302.store';
 import { of } from 'rxjs';
-import { Solicitud260302State } from '../stores/tramite260302.store';
+import { Solicitud260302State } from '../../estados/stores/tramite260302.store';
 
 describe('Tramite260302Query', () => {
 	let store: Tramite260302Store;
@@ -40,7 +40,6 @@ describe('Tramite260302Query', () => {
 			denominacionDistintiva: 'DenomDistintiva',
 			denominacionComun: 'DenomComun',
 			tipoDeProducto: 'TipoProducto',
-			especifique: 'Especifique',
 			estadoFisico: 'Fisico',
 			fraccionArancelaria: 'Fraccion',
 			descripcionFraccion: 'DescFraccion',
@@ -202,6 +201,7 @@ describe('Tramite260302Query', () => {
 			const firstState: Solicitud260302State = {
 				idSolicitud: 1,
 				denominacionRazon: 'first',
+				pagoDerechos: {} as any,
 				codigoPostal: '12345',
 				estado: 'TestState',
 				municipio: 'TestMunicipio',
@@ -288,7 +288,6 @@ describe('Tramite260302Query', () => {
 				tercerosRelacionadosLocalidad: 'TerceroLocalidad',
 				tercerosRelacionadosColonia: 'TerceroColonia',
 				manifiestos: true,
-				pagoDerechos: {} as any
 			};
 			const updatedState = { ...firstState, denominacionRazon: 'updated' };
 			store._select = jest.fn(() => stateSubject.asObservable());

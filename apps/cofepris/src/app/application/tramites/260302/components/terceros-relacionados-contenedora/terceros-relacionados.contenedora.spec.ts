@@ -5,7 +5,6 @@ describe('TercerosRelacionadosContenedoraComponent', () => {
   let component: TercerosRelacionadosContenedoraComponent;
   let consultaQueryMock: any;
   let tramite260302QueryMock: any;
-  let tramite260302StoreMock: any;
   let cdrMock: any;
   let selectConsultaioState$: Subject<any>;
 
@@ -13,12 +12,10 @@ describe('TercerosRelacionadosContenedoraComponent', () => {
     selectConsultaioState$ = new Subject();
     consultaQueryMock = { selectConsultaioState$: selectConsultaioState$ };
     tramite260302QueryMock = {};
-    tramite260302StoreMock = {};
     cdrMock = { detectChanges: jest.fn() };
     component = new TercerosRelacionadosContenedoraComponent(
       consultaQueryMock,
       tramite260302QueryMock,
-      tramite260302StoreMock,
       cdrMock
     );
   });
@@ -34,20 +31,23 @@ describe('TercerosRelacionadosContenedoraComponent', () => {
   });
 
 
-  it('should update esFormularioSoloLectura and consultaState on subscription', () => {
+  it('should update esFormularioSoloLectura and consultaState on subscription', async () => {
     const state = { readonly: true, test: 'value' };
     selectConsultaioState$.next(state);
+    await Promise.resolve();
     expect(component.esFormularioSoloLectura).toBe(true);
     expect(component.consultaState).toBe(state);
     expect(cdrMock.detectChanges).toHaveBeenCalled();
   });
 
-  it('should handle multiple subscription updates', () => {
+  it('should handle multiple subscription updates', async () => {
     const state1 = { readonly: false };
     const state2 = { readonly: true };
     selectConsultaioState$.next(state1);
+    await Promise.resolve();
     expect(component.esFormularioSoloLectura).toBe(false);
     selectConsultaioState$.next(state2);
+    await Promise.resolve();
     expect(component.esFormularioSoloLectura).toBe(true);
   });
 
