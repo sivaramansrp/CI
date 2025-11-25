@@ -563,9 +563,7 @@ export class CatalogoServices {
   clasificacionRegimenCatalogo(tramite: string, payloadDatos: { tramite: string, id: string }): Observable<BaseResponse<Catalogo[]>> {
     const ENDPOINT = `${this.host}${CLASIFICACION_REGIMEN(tramite, payloadDatos)}`;
     return this.http.get<BaseResponse<Catalogo[]>>(ENDPOINT);
-
   }
-
   /*
    * Obtiene el catálogo de clasificación de régimen según el trámite y la clave del régimen.
    * @param {string} tramite - El ID del trámite.
