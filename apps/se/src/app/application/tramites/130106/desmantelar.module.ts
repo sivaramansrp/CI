@@ -1,4 +1,4 @@
-import { AlertComponent, BtnContinuarComponent, SolicitanteComponent, PasoFirmaComponent, NotificacionesComponent } from '@libs/shared/data-access-user/src';
+import { AlertComponent, BtnContinuarComponent, NotificacionesComponent, PasoFirmaComponent,SolicitanteComponent} from '@libs/shared/data-access-user/src';
 import { CommonModule } from '@angular/common';
 import { DatosComponent } from './pages/datos/datos.component';
 import { DatosDeLaSolicitudComponent } from './components/datos-de-la-solicitud/datos-de-la-solicitud.component';

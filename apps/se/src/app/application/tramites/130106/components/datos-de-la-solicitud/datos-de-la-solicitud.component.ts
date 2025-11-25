@@ -1,26 +1,24 @@
 /* Importación de componentes, servicios, formularios y datos necesarios para el manejo del trámite 130106 */
 /* Incluye componentes UI, validaciones, operadores RxJS, estados y datos JSON relacionados */
-import { Catalogo, NotificacionesComponent, ConfiguracionColumna, REGEX_DECIMAL, REGEX_NUMERO_ENTERO_POSITIVO, REGEX_NUMERO_ENTERO, REGEX_NUMERO_ENTERO_14_3 } from '@libs/shared/data-access-user/src';
-import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { AbstractControl, FormBuilder, FormGroup, ReactiveFormsModule, ValidationErrors, Validators } from '@angular/forms';
-import { Subject, forkJoin, map, takeUntil } from 'rxjs';
-import { DatosDelTramiteComponent } from "../../../../shared/components/datos-del-tramite/datos-del-tramite.component";
-import { DatosDeLaMercanciaComponent } from "../../../../shared/components/datos-de-la-mercancia/datos-de-la-mercancia.component";
-import { PaisProcendenciaComponent } from "../../../../shared/components/pais-procendencia/pais-procendencia.component";
-import { RepresentacionComponent } from "../../../../shared/components/representacion/representacion.component";
+import { Catalogo, ConfiguracionColumna, NotificacionesComponent, REGEX_DECIMAL,REGEX_NUMERO_ENTERO, REGEX_NUMERO_ENTERO_14_3, REGEX_NUMERO_ENTERO_POSITIVO, } from '@libs/shared/data-access-user/src';
+import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { ConsultaioQuery, Notificacion } from '@ng-mf/data-access-user';
-import { HttpClient } from '@angular/common/http';
 import { DATOS_INPUT_FIELDS, ProductoOpción } from '../../../../shared/constantes/vehiculos-adaptados.enum';
-import { TEXTOS } from '../../../../shared/constantes/representacion-federal.enum';
-import { TablaSeleccion } from '@libs/shared/data-access-user/src/core/enums/tabla-seleccion.enum';
+import { Solicitud130106State, Tramite130106Store } from '../../../../estados/tramites/tramite130106.store';
+import { Subject, map, takeUntil } from 'rxjs';
+import { DatosDeLaMercanciaComponent } from "../../../../shared/components/datos-de-la-mercancia/datos-de-la-mercancia.component";
+import { DatosDelTramiteComponent } from "../../../../shared/components/datos-del-tramite/datos-del-tramite.component";
 import { PARTIDASDELAMERCANCIA_TABLA } from '../../../../shared/constantes/partidas-de-la-mercancia.enum';
+import { PaisProcendenciaComponent } from "../../../../shared/components/pais-procendencia/pais-procendencia.component";
 import { PartidasDeLaMercanciaComponent } from '../../../../shared/components/partidas-de-la-mercancia/partidas-de-la-mercancia.component';
 import { PartidasDeLaMercanciaModelo } from '../../../../shared/models/partidas-de-la-mercancia.model';
 import PartidasdelaTable from '@libs/shared/theme/assets/json/130202/partidas-de-la.json';
-import unidadOptions from '@libs/shared/theme/assets/json/130202/unidad_da.json';
-import { Solicitud130106State, Tramite130106Store } from '../../../../estados/tramites/tramite130106.store';
-import { Tramite130106Query } from '../../../../estados/queries/tramite130106.query';
+import { RepresentacionComponent } from "../../../../shared/components/representacion/representacion.component";
 import { Solocitud130106Service } from '../../service/service130106.service';
+import { TEXTOS } from '../../../../shared/constantes/representacion-federal.enum';
+import { TablaSeleccion } from '@libs/shared/data-access-user/src/core/enums/tabla-seleccion.enum';
+import { Tramite130106Query } from '../../../../estados/queries/tramite130106.query';
 /**
  * Componente Angular que representa la sección "Datos de la solicitud" del trámite 130106.
  * 
@@ -126,16 +124,17 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
   /**
    * @description Campos de entrada configurables para detalles adicionales.
    */
-
   datosInputFields = DATOS_INPUT_FIELDS;
 
+  // Catálogo de regímenes disponibles.
   catalogoRegimenes: Catalogo[] = [];
 
+  // Catálogo de clasificaciones de régimen disponibles.
   catalogoClasificacionRegimen: Catalogo[] = [];
   /**
    * @description Matriz de catálogos adicionales para el formulario.
    */
-  catalogosArray: Catalogo[][] = [];
+  catalogosArray: Catalogo[][] = [[], []];
 
   /**
    * @description Opciones de solicitud configurables.
@@ -145,7 +144,7 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
   /**
    * @description Sujeto para gestionar la destrucción de suscripciones.
    */
-  private destroyed$ = new Subject<void>();
+  public destroyed$ = new Subject<void>();
   /**
    * @description Arreglo que almacena un catálogo de elementosDeBloque.
    * @type {Catalogo[]}
@@ -219,6 +218,12 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
     * Formulario reactivo para modificar las partidas.
     */
   modificarPartidasDelaMercanciaForm!: FormGroup;
+   /**
+     * jest.spyOnIdentificador del procedimiento actual.
+     * @type {number}
+     */
+    idProcedimiento: number = 130106;
+  
   /**
    * Constructor del componente.
    * @param {FormBuilder} fb - Servicio para la creación de formularios reactivos.
@@ -229,10 +234,9 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
    */
   constructor(
     private fb: FormBuilder,
-    private http: HttpClient,
     private tramite130106Store: Tramite130106Store,
     private tramite130106Query: Tramite130106Query,
-    private solocitud130106Service: Solocitud130106Service,
+    public solocitud130106Service: Solocitud130106Service,
     private consultaioQuery: ConsultaioQuery,
   ) {
     this.consultaioQuery.selectConsultaioState$
@@ -249,15 +253,14 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
    */
   ngOnInit(): void {
     this.tramite130106Store.actualizarEstado({
-      solicitud: 'Inicial',
-      producto: 'Nuevo',
-      defaultSelect: 'Inicial',
-      defaultProducto: 'Nuevo'
+      solicitud: 'TISOL.I',
+      producto: 'CONDMER.N',
+      defaultSelect: 'TISOL.I',
+      defaultProducto: 'CONDMER.N'
     });
     this.inicializarEstadoFormulario();
     this.opcionesDeBusqueda();
     this.fetchEntidadFederativa();
-    this.fetchRepresentacionFederal();
     this.listaDePaisesDisponibles();
 
     this.tramite130106Query.select(state => state.tableBodyData)
@@ -267,8 +270,6 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
       });
     this.getRegimenes();
     this.getFraccionArancelaria();
-    this.getUMTCatalogo();
-    this.enCambioDeBloque(105);
   }
 
   /**
@@ -504,6 +505,25 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
     this.formularioTotalCount(String(CANTIDAD_TOTAL), String(VALOR_TOTAL_USD));
   }
 
+  /**
+ *  Calcula el importe unitario en USD basado en la cantidad de partidas y el total en USD.
+ * @param cantidadPartidas 
+ * @param cantidadUSD 
+ * @returns 
+ */
+  calcularImporteUnitario(cantidadPartidas: string, cantidadUSD: string): string {
+    const TOTAL_PARTIDAS = Number(cantidadPartidas) || 0;
+    const TOTAL_USD = Number(cantidadUSD) || 0;
+
+    if (TOTAL_PARTIDAS === 0) {
+      return '0';
+    }
+
+    const MAXIMO_DECIMALES = 3;
+    const IMPORTE_UNITARIO_USD = TOTAL_USD / TOTAL_PARTIDAS;
+
+    return IMPORTE_UNITARIO_USD.toFixed(MAXIMO_DECIMALES).toString();
+  }
 
 
   /**
@@ -511,95 +531,36 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
    * Valida el formulario y muestra la tabla dinámica si es válido.
    */
   validarYEnviarFormulario(): void {
-    ['cantidad', 'valorFacturaUSD'].forEach(controlName => {
-      const CONTROL = this.mercanciaForm.get(controlName);
-      if (CONTROL) {
-        CONTROL.markAsTouched();
-        CONTROL.updateValueAndValidity();
-      }
-    });
-
-    if (this.mercanciaForm.get('cantidad')?.invalid ||
-      this.mercanciaForm.get('valorFacturaUSD')?.invalid
-    ) {
-      this.mostrarErroresMercancia = true;
-      this.mostrarErroresPartidas = false;
-      return;
+    if (this.partidasDelaMercanciaForm.invalid) {
+      this.partidasDelaMercanciaForm.markAllAsTouched();
+    } else {
+      this.mostrarTabla = true;
+      this.tramite130106Store.actualizarEstado({ mostrarTabla: true });
+      const PRECIO_UNITARIO_USD = this.calcularImporteUnitario(this.seccionState?.valorPartidaUSDPartidasDeLaMercancia, this.seccionState?.cantidadPartidasDeLaMercancia);
+      const UMT = this.unidadCatalogo.map(item => item.clave === this.seccionState?.unidadMedida ? item.descripcion : '').toString();
+      const DATOS = [
+        {
+          "id": String(this.tableBodyData.length + 1),
+          "cantidad": this.seccionState?.cantidadPartidasDeLaMercancia || "",
+          "unidadDeMedida": UMT || "",
+          "fraccionFrancelaria": this.seccionState?.fraccion || "",
+          "descripcion": this.seccionState?.descripcion || "",
+          "precioUnitarioUSD": PRECIO_UNITARIO_USD || "",
+          "totalUSD": this.seccionState?.valorPartidaUSDPartidasDeLaMercancia || ""
+        }
+      ];
+      this.tableBodyData = [...this.tableBodyData, ...DATOS];
+      this.partidasDelaMercanciaForm.reset();
+      const CANTIDAD_TOTAL = this.tableBodyData.reduce((acc, item) => acc + parseInt(item.cantidad, 10), 0);
+      const TOTAL_USD = this.tableBodyData.reduce((acc, item) => acc + parseFloat(item.totalUSD), 0);
+      this.formForTotalCount.patchValue({
+        cantidadTotal: CANTIDAD_TOTAL,
+        valorTotalUSD: TOTAL_USD,
+      });
+      this.tramite130106Store.actualizarEstado({
+        tableBodyData: this.tableBodyData
+      })
     }
-    this.mostrarErroresMercancia = false;
-    [
-      'cantidadPartidasDeLaMercancia',
-      'valorPartidaUSDPartidasDeLaMercancia',
-      'descripcionPartidasDeLaMercancia'
-    ].forEach(controlName => {
-      const CONTROL = this.partidasDelaMercanciaForm.get(controlName);
-      if (CONTROL) {
-        CONTROL.markAsTouched();
-        CONTROL.updateValueAndValidity();
-      }
-    });
-    if (
-      this.partidasDelaMercanciaForm.get('cantidadPartidasDeLaMercancia')?.invalid ||
-      this.partidasDelaMercanciaForm.get('valorPartidaUSDPartidasDeLaMercancia')?.invalid ||
-      this.partidasDelaMercanciaForm.get('descripcionPartidasDeLaMercancia')?.invalid
-    ) {
-      this.mostrarErroresPartidas = true;
-      return;
-    }
-    // Si fracción no tiene valor, mostrar popup y detener flujo
-    if (!this.mercanciaForm.get('fraccion')?.value) {
-      this.nuevaNotificacion = {
-        tipoNotificacion: 'alert',
-        categoria: 'info',
-        modo: '',
-        titulo: '',
-        mensaje: 'Debes seleccionar una Fracción arancelaria',
-        cerrar: true,
-        txtBtnAceptar: 'Aceptar',
-        txtBtnCancelar: '',
-        tamanioModal: 'modal-sm'
-      };
-      this.mostrarNotificacion = true;
-      return;
-    }
-    const CURRENT_TABLE = this.tramite130106Query.getValue().tableBodyData || [];
-    const CANTIDAD = Number(this.partidasDelaMercanciaForm.get('cantidadPartidasDeLaMercancia')?.value);
-    const TOTALUSD = Number(this.partidasDelaMercanciaForm.get('valorPartidaUSDPartidasDeLaMercancia')?.value);
-    const PRECIOUNITARIO_USD =
-      CANTIDAD && !isNaN(CANTIDAD) && !isNaN(TOTALUSD)
-        ? (TOTALUSD / CANTIDAD).toFixed(2)
-        : '';
-    const NEW_ROW: PartidasDeLaMercanciaModelo = {
-      id: Date.now().toString(),
-      cantidad: this.partidasDelaMercanciaForm.get('cantidadPartidasDeLaMercancia')?.value,
-      totalUSD: this.partidasDelaMercanciaForm.get('valorPartidaUSDPartidasDeLaMercancia')?.value,
-      descripcion: this.partidasDelaMercanciaForm.get('descripcionPartidasDeLaMercancia')?.value,
-      unidadDeMedida: this.unidadCatalogo.find(f => String(f.id) === String(this.mercanciaForm.get('unidadMedida')?.value))?.descripcion || '',
-      fraccionFrancelaria: this.fraccionCatalogo.find(f => String(f.id) === String(this.mercanciaForm.get('fraccion')?.value))?.descripcion || '',
-      precioUnitarioUSD: PRECIOUNITARIO_USD
-    };
-    const UPDATED_TABLE = [...CURRENT_TABLE, NEW_ROW];
-    this.tramite130106Store.actualizarEstado({
-      tableBodyData: UPDATED_TABLE,
-      mostrarTabla: true
-    });
-    this.tableBodyData = UPDATED_TABLE;
-    this.mostrarTabla = true;
-    const CANTIDAD_TOTAL = this.tableBodyData.reduce(
-      (sum, row) => sum + Number(row.cantidad),
-      0
-    );
-    const VALOR_TOTAL_USD = this.tableBodyData.reduce(
-      (sum, row) => sum + Number(row.totalUSD),
-      0
-    );
-    this.tramite130106Store.actualizarEstado({
-      cantidadTotal: String(CANTIDAD_TOTAL),
-      valorTotalUSD: String(VALOR_TOTAL_USD)
-    });
-    this.formularioTotalCount(String(CANTIDAD_TOTAL), String(VALOR_TOTAL_USD));
-    this.partidasDelaMercanciaForm.reset();
-    this.mostrarErroresPartidas = false;
   }
 
   /**
@@ -625,13 +586,13 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
   /**
   * Método para obtener la lista de representaciones federales.
   */
-  fetchRepresentacionFederal(): void {
-    this.solocitud130106Service
-      .getRepresentacionFederal('130106',"SIN")
+  fetchRepresentacionFederal(cveEntidad: string): void {
+    this.solocitud130106Service.getRepresentacionFederal(this.idProcedimiento.toString(), cveEntidad)
       .subscribe((data) => {
-        this.representacionFederal = data;
+        this.representacionFederal = data as Catalogo[];
       });
   }
+
   /**
   * Método para obtener la lista de países disponibles.
   */
@@ -646,22 +607,27 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
   * Método para obtener la lista de países por bloque.
   * @param {number} _bloqueId - Identificador del bloque.
   */
-  fetchPaisesPorBloque(_bloqueId: number): void {
-    this.solocitud130106Service
-      .getPaisesPorBloque('130106', _bloqueId)
+  fetchPaisesPorBloque(ID: string): void {
+    this.solocitud130106Service.getPaisesPorBloque(this.idProcedimiento.toString(), ID)
       .subscribe((data) => {
-        this.paisesPorBloque = data;
-        this.selectRangoDias = this.paisesPorBloque.map(
-          (pais: Catalogo) => pais.descripcion
-        );
+       this.paisesPorBloque = data as Catalogo[];
       });
   }
+
   /**
   * Maneja el cambio de bloque seleccionado.
   * @param {number} bloqueId - Identificador del bloque seleccionado.
   */
   enCambioDeBloque(bloqueId: number): void {
-    this.fetchPaisesPorBloque(bloqueId);
+    this.fetchPaisesPorBloque(bloqueId.toString());
+  }
+ 
+   /**
+   *  Maneja la selección de fechas y actualiza el estado global.
+   * @param evento 
+   */
+  fechasSeleccionadas(evento: string[]): void {
+    this.tramite130106Store.actualizarEstado({ fechasSeleccionadas: evento });
   }
   /**
    * @description Actualiza el almacén con nuevos valores basados en eventos de formulario.
@@ -669,26 +635,24 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
    */
   setValoresStore($event: { form: FormGroup; campo: string }): void {
     const VALOR = $event.form.get($event.campo)?.value;
-
+    this.tramite130106Store.actualizarEstado({ [$event.campo]: VALOR });
+   
     if ($event.campo === 'regimen') {
-      this.formDelTramite.get('clasificacion')?.setValue('');
-      this.mostrarErrorClasificacion = false;
-      this.tramite130106Store.actualizarEstado({
-        [$event.campo]: VALOR,
-        clasificacion: ''
-      });
-    } else {
-      this.tramite130106Store.actualizarEstado({ [$event.campo]: VALOR });
-      if ($event.campo === 'clasificacion' && VALOR) {
-        this.mostrarErrorClasificacion = true;
-      }
+      const VALOR = this.formDelTramite.get('regimen')?.value;
+      this.getClasificacionRegimen(VALOR);
     }
 
-    if ($event.campo === 'fraccion') {
-      this.mercanciaForm.get('unidadMedida')?.setValue('1');
-      this.tramite130106Store.actualizarEstado({ 'unidadMedida': '1' });
+    if ($event.campo === 'entidad') {
+      const VALOR = this.frmRepresentacionForm.get('entidad')?.value;
+      this.fetchRepresentacionFederal(VALOR);
+    }
+
+     if ($event.campo === 'fraccion') {
+      const VALOR = this.mercanciaForm.get('fraccion')?.value;
+      this.getUMTCatalogo(VALOR);
     }
   }
+
   /**
   * Determina si el botón "Modificar" debe estar deshabilitado.
   * Este método verifica si no hay filas seleccionadas en la tabla dinámica.
@@ -836,22 +800,17 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
    * Actualiza las propiedades del componente con los datos obtenidos.
    */
   getRegimenes(): void {
-    this.solocitud130106Service.getRegimenes('130106').subscribe((data) => {
-      this.catalogoRegimenes = data;
-      this.getClasificacionRegimen();
+    this.solocitud130106Service.getRegimenes(this.idProcedimiento.toString()).subscribe((data) => {
+      this.catalogosArray[0] = data as Catalogo[];
     });
   }
-
   /**
    * Obtiene el catálogo de clasificaciones de régimen desde el servicio.
    * Actualiza las propiedades del componente con los datos obtenidos.
    */
-  getClasificacionRegimen(): void {
-    this.solocitud130106Service.getClasificacionRegimen('130106').subscribe((data) => {
-      this.catalogoClasificacionRegimen = data;
-
-      this.catalogoRegimenes = [...this.catalogoRegimenes, ...data];
-      this.catalogosArray = [this.catalogoRegimenes, this.catalogoClasificacionRegimen];
+  getClasificacionRegimen(VALOR: string): void {
+    this.solocitud130106Service.getClasificacionRegimen(VALOR).subscribe((data) => {
+     this.catalogosArray[1] = data as Catalogo[];
     });
   }
 
@@ -869,14 +828,19 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
    * Obtiene el catálogo de unidades de medida desde el servicio.
    * Actualiza la propiedad del componente con los datos obtenidos.
    */
-  getUMTCatalogo(): void {
-    this.solocitud130106Service.getUMTCatalogo('130106').subscribe((data) => {
+  getUMTCatalogo(FRACCION_ID: string): void {
+    this.solocitud130106Service.getUMTCatalogo('130106', FRACCION_ID).subscribe((data) => {
       this.unidadCatalogo = data || [];
+       if (this.unidadCatalogo.length > 0) {
+        this.mercanciaForm.get('unidadMedida')?.setValue(this.unidadCatalogo[0]?.clave || '');
+        this.tramite130106Store.actualizarEstado({ unidadMedida: this.unidadCatalogo[0]?.clave || '' });
+      }
     });
   }
-   /**
-   * @description Ciclo de vida de Angular: limpia las suscripciones al destruir el componente.
-   */
+ 
+  /**
+  * @description Ciclo de vida de Angular: limpia las suscripciones al destruir el componente.
+  */
   ngOnDestroy(): void {
     this.destroyed$.next();
     this.destroyed$.complete();
