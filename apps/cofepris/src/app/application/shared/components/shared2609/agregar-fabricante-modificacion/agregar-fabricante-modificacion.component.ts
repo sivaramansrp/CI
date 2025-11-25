@@ -788,6 +788,8 @@ private forzarDeshabilitarPais(): void {
       case 260207:
       case 260209:
       case 260208:
+        this.elementosNoRequeridos = ['colonia'];
+        break;
       case 260218:
        this.elementosNoRequeridos = ['codigoPostal','colonia'];
        break;

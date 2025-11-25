@@ -1,9 +1,18 @@
 /**
- * @fileoverview
- * Este archivo contiene el servicio adaptador para convertir entre el estado de Akita y los formatos de payload de API
- * para el trámite de ampliación de servicios 80205.
+ * @method toFormPayload
+ * @static
+ * @memberof GuardarAdapter_260208
+ * @summary
+ * Convierte el estado de Akita del trámite 260208 al formato de payload requerido por la API.
+ *
+ * @param {Tramite260208State} state - El estado actual de Akita para el trámite 260208.
+ * @returns {unknown} Un objeto con la estructura y los datos necesarios para enviar a la API.
+ *
+ * @description
+ * Este método toma el estado de la tienda Akita y lo transforma en el formato de payload esperado por la API para el trámite 260208.
+ * Realiza el mapeo de las propiedades del estado a las claves requeridas por el backend, incluyendo la transformación de arreglos
+ * y objetos anidados como solicitante, solicitud, establecimiento, datosSCIAN, mercancias y diferentes tipos de terceros.
  */
-
 import { Injectable } from '@angular/core';
 import { Tramite260208State } from '../estados/tramite260208Store.store';
 
@@ -69,12 +78,13 @@ export class GuardarAdapter_260208 {
       "datosSCIAN": state.scianConfigDatos.map((datos)=>{
         return {
               "cveScian": datos.clave,
-              "descripcion": datos.descripcion
+              "descripcion": datos.descripcion,
+              "selected": true
           }
       }),
       "mercancias": (state.tablaMercanciasConfigDatos ?? []).map((mercancia) => {
         return {
-              "idMercancia": "",
+              "idMercancia": null,
               "idClasificacionProducto": mercancia.claveClasificacionProductoObj?.clave,
               "nombreClasificacionProducto": mercancia.claveClasificacionProductoObj?.descripcion,
               "ideSubClasificacionProducto": mercancia.especificarClasificacionObj?.clave,
@@ -89,7 +99,7 @@ export class GuardarAdapter_260208 {
                   "descripcion": mercancia.descripcionFraccion
               },
               "unidadMedidaComercial": {
-                  "descripcion": mercancia.cantidadUMCObj?.descripcion
+                  "descripcion": "Pieza"
               },
               "cantidadUMCConComas": mercancia.cantidadUMC,
               "unidadMedidaTarifa": {
