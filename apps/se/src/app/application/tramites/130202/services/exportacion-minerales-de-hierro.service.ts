@@ -84,18 +84,7 @@ getClasificacionRegimenCatalogo(regimenId: string): Observable<Catalogo[]> {
     map(res => res?.datos ?? [])
   );
 }
-  
-// /**
-//    *  Obtiene el catálogo de fracciones arancelarias asociado a un identificador.
-//    * @param ID Identificador para obtener las fracciones arancelarias
-//    * @returns Observable con un arreglo de fracciones arancelarias (o vacío si no hay datos)
-//    */
-//   getFraccionCatalogoService(ID: string): Observable<Catalogo[]> {
-//     return this.catalogoServices.fraccionesArancelariasCatalogo(ID, 'TITPEX.130202')
-//       .pipe(
-//         map(res => res?.datos ?? [])
-//       );
-//   }
+
   /**
  * Obtiene el catálogo de fracciones arancelarias.
  * @returns Observable con un arreglo de fracciones arancelarias.
@@ -111,12 +100,7 @@ getFraccionCatalogoService(): Observable<Catalogo[]> {
    * @param FRACCION_ID Identificador de la fracción arancelaria
    * @returns Observable con un arreglo de unidades de medida tarifaria (o vacío si no hay datos)
    */
-  // getUMTService(ID: string, FRACCION_ID: string): Observable<Catalogo[]> {
-  //   return this.catalogoServices.unidadesMedidaTarifariaCatalogo(ID, FRACCION_ID)
-  //     .pipe(
-  //       map(res => res?.datos ?? [])
-  //     );
-  // }
+  
   getUMTService(fraccion: string): Observable<Catalogo[]> {
   const ENDPOINT = PROC_130202.UNIDADES_MEDIDAS_TARIFARIAS(fraccion);
   return this.http.get<{ datos: Catalogo[] }>(ENDPOINT).pipe(
@@ -134,17 +118,6 @@ getFraccionCatalogoService(): Observable<Catalogo[]> {
     );
   }
 
-   /**
-   *  Obtiene el catálogo de representación federal asociado a un identificador y clave de entidad.
-   * @param ID Identificador para obtener la representación federal
-   * @param cveEntidad Clave de la entidad para filtrar la representación federal
-   * @returns Observable con un arreglo de representación federal (o vacío si no hay datos)
-   */
-  // getRepresentacionFederalCatalogo(ID: string, cveEntidad: string): Observable<Catalogo[]> {
-  //   return this.catalogoServices.representacionFederalCatalogo(ID, cveEntidad).pipe(
-  //     map(res => res?.datos ?? [])
-  //   );
-  // }
   /**
  * Obtiene la representación federal para una clave de entidad específica.
  * @param cveEntidad - La clave de la entidad (ejemplo: 'DGO').
@@ -313,5 +286,66 @@ getRepresentacionFederalCatalogo(cveEntidad: string): Observable<Catalogo[]> {
         unidadMedidaClave: item.unidadMedida
       }));
     }
-
+    /**
+ * Construye el objeto payload para el trámite 130202 de exportación de minerales de hierro.
+ *
+ * @param item - Estado actual del trámite, contiene los datos capturados en el formulario.
+ * @param solicitudState - Estado de la solicitud, incluye el identificador de la solicitud.
+ * @param mercancia - Arreglo de partidas de la mercancía generado por getPayloadDatos.
+ * @returns Objeto con la estructura requerida por el backend para guardar la solicitud.
+ *
+ * @description
+ * Este método toma los datos del formulario y del estado de la solicitud, junto con las partidas de la mercancía,
+ * y construye el objeto que será enviado al backend para registrar la solicitud de exportación.
+ * Incluye información de la mercancía, productor, solicitante, representación federal, entidades federativas y países seleccionados.
+ */
+buildPayload(item: Tramite130202State, solicitudState: Tramite130202State, mercancia: unknown) {
+  return {
+    tipoDeSolicitud: "guardar",
+    mercancia: {
+      cantidadComercial: 0,
+      cantidadTarifaria: Number(item.cantidad),
+      valorFacturaUSD: Number(item.valorFacturaUSD),
+      condicionMercancia: item.producto,
+      descripcion: item.descripcion,
+      usoEspecifico: item.usoEspecifico,
+      justificacionImportacionExportacion: item.justificacionImportacionExportacion,
+      observaciones: item.observaciones,
+      unidadMedidaTarifaria: {
+        clave: item.unidadMedida
+      },
+      fraccionArancelaria: {
+        cveFraccion: item.fraccion
+      },
+      partidasMercancia: mercancia,
+    },
+    id_solcitud: solicitudState.idSolicitud || 0,
+    cve_regimen: item.regimen,
+    cve_clasificacion_regimen: item.clasificacion,
+    productor: {
+      tipo_persona: true,
+      nombre: "Juan",
+      apellido_materno: "López",
+      apellido_paterno: "Norte",
+      razon_social: "Aceros Norte",
+      descripcion_ubicacion: "Calle Acero, No. 123, Col. Centro",
+      rfc: "AAL0409235E6",
+      pais: "SIN"
+    },
+    solicitante: {
+      rfc: "AAL0409235E6",
+      nombre: "Juan Pérez",
+      es_persona_moral: true,
+      certificado_serial_number: "string"
+    },
+    representacion_federal: {
+      cve_entidad_federativa: item.entidad,
+      cve_unidad_administrativa: item.representacion
+    },
+    entidades_federativas: {
+      cveEntidad: item.entidad
+    },
+    lista_paises: item.fechasSeleccionadas
+  };
+}
 }

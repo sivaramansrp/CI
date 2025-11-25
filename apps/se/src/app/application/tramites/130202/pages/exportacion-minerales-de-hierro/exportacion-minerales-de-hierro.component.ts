@@ -245,54 +245,8 @@ export class ExportacionMineralesDeHierroComponent implements OnDestroy {
    */
   guardar(item: Tramite130202State, e: AccionBoton): Promise<JSONResponse> {
     const MERCANCIA = this.exportacionMineralesDeHierroService.getPayloadDatos(item);
-    const PAYLOAD = {
-      "tipoDeSolicitud": "guardar",
-   
-      "mercancia": {
-        "cantidadComercial": 0,
-        "cantidadTarifaria": Number(item.cantidad),
-        "valorFacturaUSD": Number(item.valorFacturaUSD),
-        "condicionMercancia": item.producto,
-        "descripcion": item.descripcion,
-        "usoEspecifico": item.usoEspecifico,
-        "justificacionImportacionExportacion": item.justificacionImportacionExportacion,
-        "observaciones": item.observaciones,
-        "unidadMedidaTarifaria": {
-          "clave": item.unidadMedida
-        },
-        "fraccionArancelaria": {
-          "cveFraccion": item.fraccion
-        },
-        "partidasMercancia": MERCANCIA,
-      },
-      "id_solcitud": this.solicitudState.idSolicitud || 0,
-      "cve_regimen": item.regimen,
-      "cve_clasificacion_regimen": item.clasificacion,
-      "productor": {
-        "tipo_persona": true,
-        "nombre": "Juan",
-        "apellido_materno": "López",
-        "apellido_paterno": "Norte",
-        "razon_social": "Aceros Norte",
-        "descripcion_ubicacion": "Calle Acero, No. 123, Col. Centro",
-        "rfc": "AAL0409235E6",
-        "pais": "SIN"
-      },
-      "solicitante": {
-        "rfc": "AAL0409235E6",
-        "nombre": "Juan Pérez",
-        "es_persona_moral": true,
-        "certificado_serial_number": "string"
-      },
-      "representacion_federal": {
-        "cve_entidad_federativa": item.entidad,
-        "cve_unidad_administrativa": item.representacion
-      },
-      "entidades_federativas": {
-        "cveEntidad": item.entidad
-      },
-      "lista_paises": item.fechasSeleccionadas
-    };
+      const PAYLOAD = this.exportacionMineralesDeHierroService.buildPayload(item, this.solicitudState, MERCANCIA);
+
 
     return new Promise((resolve, reject) => {
       let shouldNavigate = false;

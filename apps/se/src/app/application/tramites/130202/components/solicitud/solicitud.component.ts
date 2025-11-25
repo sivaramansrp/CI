@@ -1,4 +1,4 @@
-import { Catalogo, ConfiguracionColumna, ConsultaioQuery, Notificacion, REGEX_NUMERO_DECIMAL_ENTERO, REG_X } from '@ng-mf/data-access-user';
+import { Catalogo, ConfiguracionColumna, ConsultaioQuery, Notificacion, REGEX_NUMERO_DECIMAL_ENTERO, REG_X } from '@libs/shared/data-access-user/src';
 import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 
@@ -794,7 +794,9 @@ export class SolicitudComponent implements OnInit, OnDestroy {
 
     this.partidasDeLaMercanciaComponent.abrirCargarArchivoModalReal();
   }
-
+  /**  * Elimina las partidas seleccionadas de la tabla y actualiza los totales.
+   * @param evento 
+   */
  partidasEliminadas(evento: string[]): void{
     this.tableBodyData = this.tableBodyData.filter(
       item => !evento.includes(String(item.id))
