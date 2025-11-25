@@ -45,7 +45,7 @@ export class DatosSolicitudService {
   host!: string;
 
   constructor(public httpServicios: HttpClient) {
-      this.host = `${ENVIRONMENT.API_HOST}/api/`;
+    this.host = `${ENVIRONMENT.API_HOST}/api/`;
   }
   /**
    * Obtiene una respuesta desde una URL y asigna los datos a una variable.
@@ -60,13 +60,21 @@ export class DatosSolicitudService {
    * Si la respuesta tiene un código 200 y contiene datos, estos se asignan a la variable especificada.
    * Si la variable o la URL no son válidas, se asigna un arreglo vacío a la variable.
    */
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  obtenerRespuestaPorUrl(self: any, variable: string, url: string): void {
+  obtenerRespuestaPorUrl<TModel extends object, TKey extends keyof TModel>(
+    self: TModel,
+    variable: TKey,
+    url: string
+  ): void {
     if (self && variable && url) {
       this.httpServicios
         .get<RespuestaCatalogos>(`assets/json${url}`)
         .subscribe((resp): void => {
-          self[variable] = resp?.code === 200 && resp.data ? resp.data : [];
+
+          const VALUE = (resp?.code === 200 && resp.data)
+            ? resp.data
+            : (Array.isArray(self[variable]) ? [] : null);
+
+          self[variable] = VALUE as TModel[TKey];
         });
     }
   }

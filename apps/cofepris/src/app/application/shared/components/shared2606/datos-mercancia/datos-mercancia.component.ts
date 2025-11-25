@@ -69,6 +69,7 @@ import { DetalleMercancia } from '../../../models/shared2606/detalle-mercancia.m
 import { DetalleMercanciaComponent } from '../detalle-mercancia/detalle-mercancia.component';
 import { NUMERO_REGISTRO_SANITARIO } from '../../../constantes/shared2606/terceros-relacionados-fabricante.enum';
 import { Observable } from 'rxjs';
+import {REGEX_NUMERO_DECIMAL_5_DIGITOS} from '@libs/shared/data-access-user/src/';
 import { TooltipModule } from 'ngx-bootstrap/tooltip';
 /**
  * @component DatosMercanciaComponent
@@ -256,7 +257,10 @@ export class DatosMercanciaComponent implements OnInit, AfterViewInit, OnChanges
    */
   pedimentos: Array<Pedimento> = [];
 
-
+/** * @property {number[]} paisDeOriginDisabled
+   * Lista de países deshabilitados en la selección de país de origen.
+   */
+  public paisDeOriginDisabled: number[] = PAIS_DE_PROCEDENCIA_DISABLED;
   paisDeProcedenciaDisabled: number[] = PAIS_DE_PROCEDENCIA_DISABLED;
   /**
    * @property {CrossListLable} usoEspesificoLabel
@@ -343,6 +347,10 @@ export class DatosMercanciaComponent implements OnInit, AfterViewInit, OnChanges
    */
   tipoProductoEspecial = TIPO_PRODUCTO_ESPECIAL;
 
+  /** @property {string} tipoFOFA
+   * @description Cadena que representa el tipo FOFA utilizado en el componente.
+   * Se inicializa con el valor 'FOFA.OTR'.
+   * */
   tipoFOFA = 'FOFA.OTR';
 
   /**
@@ -443,12 +451,21 @@ export class DatosMercanciaComponent implements OnInit, AfterViewInit, OnChanges
     }
   }
 
+  /**
+   * Método del ciclo de vida de Angular que se ejecuta cuando hay cambios en las propiedades de entrada del componente.
+   * @param changes - Objeto que contiene los cambios en las propiedades de entrada.
+   */
   ngOnChanges(changes: SimpleChanges): void {
     if (changes['tipoProducto'] || changes['formaFarmaceutica']) {
       this.updateValidation();
     }
   }
 
+  /**  * Maneja la selección de un país de origen.
+   * Actualiza el valor en el formulario basado en la selección del usuario.
+   *
+   * @param event - Objeto con el valor seleccionado de país de origen.
+   */
   onSeleccionarPaisDeOrigen(event: Catalogo): void {
     const SELECCIONADOS = event.clave;
 
@@ -457,6 +474,11 @@ export class DatosMercanciaComponent implements OnInit, AfterViewInit, OnChanges
       ?.setValue(SELECCIONADOS);
   }
 
+  /**  * Maneja la selección de un país de procedencia. 
+   * Actualiza el valor en el formulario basado en la selección del usuario.
+   *
+   * @param event - Objeto con el valor seleccionado de país de procedencia.
+   */
   onSeleccionarPaisDeProcedencia(event: Catalogo): void {
     const SELECCIONADOS = event.clave;
     this.mercanciaForm
@@ -464,12 +486,18 @@ export class DatosMercanciaComponent implements OnInit, AfterViewInit, OnChanges
       ?.setValue(SELECCIONADOS);
   }
 
+  /**  * Maneja la selección de un país de destino.
+   * Actualiza el valor en el formulario basado en la selección del usuario.
+   *
+   * @param event - Objeto con el valor seleccionado de país de destino.
+   */
   onSeleccionarPaisDeDestino(event: Catalogo): void {
     const SELECCIONADOS = event.clave;
     this.mercanciaForm
       .get('paisDestino')
       ?.setValue(SELECCIONADOS);
   }
+
   /**
    * @method ngOnInit
    * @description Hook de ciclo de vida que se ejecuta al inicializar el componente.
@@ -966,10 +994,10 @@ export class DatosMercanciaComponent implements OnInit, AfterViewInit, OnChanges
       }
     }
 
-    // Add dynamic controls
+    // Añadir controles dinámicos
     for (const NOMBRE_DEL_CONTROL of this.elementosAnadidos) {
       if (!this.mercanciaForm.contains(NOMBRE_DEL_CONTROL)) {
-        // Determine if this field is mandatory
+        // Determina si este campo es obligatorio
         const IS_MANDATORY = this.elementosMandatorios.includes(NOMBRE_DEL_CONTROL);
         const VALIDATORS = IS_MANDATORY ? [Validators.required] : [];
 
@@ -983,6 +1011,11 @@ export class DatosMercanciaComponent implements OnInit, AfterViewInit, OnChanges
       }
     }
   }
+  /**  * Actualiza las validaciones de los campos 'especifique' y 'especifiqueForma'
+   * en función del valor seleccionado en 'tipoProducto' y 'formaFarmaceutica'.
+   * Si el tipo de producto o forma farmacéutica coincide con el tipo especial,
+   * se establece la validación como requerida.
+   */
   updateValidation(): void {
     const TIPO_PRODUCTO = this.mercanciaForm.get('tipoProducto')?.value;
     if (this.elementosAnadidos.includes('especifique') && TIPO_PRODUCTO === this.tipoProductoEspecial) {
@@ -1001,13 +1034,13 @@ export class DatosMercanciaComponent implements OnInit, AfterViewInit, OnChanges
     return (control: AbstractControl): ValidationErrors | null => {
       const VALUE = control.value;
 
-      // Skip validation if empty
+      // Omitir la validación si está vacío
       if (!VALUE) {
         return null;
       }
 
-      // Regex pattern: up to 12 digits before decimal, up to 10 after
-      const PATTERN = /^\d{1,12}(\.\d{1,5})?$/;
+      // Patrón de expresión regular: hasta 12 dígitos antes del punto decimal, hasta 10 después
+      const PATTERN = REGEX_NUMERO_DECIMAL_5_DIGITOS;
 
       if (!PATTERN.test(VALUE)) {
         return { formatoInvalido: true };
@@ -1016,6 +1049,16 @@ export class DatosMercanciaComponent implements OnInit, AfterViewInit, OnChanges
       return null;
     };
   }
+  /**
+   * Obtiene el ID correspondiente a una descripción dada en un arreglo de catálogos.
+   * Si la descripción es una cadena, busca el objeto cuyo campo 'descripcion' coincida (ignorando mayúsculas/minúsculas)
+   * y devuelve su ID. Si no se encuentra, devuelve la descripción original.
+   * Si la descripción ya es un número (ID), simplemente lo devuelve.
+   * @param {Catalogo[]} array - Arreglo de objetos de catálogo.
+   * @param {string | number
+   * } descripcion - Descripción o ID a buscar.
+   * @return {number | string | undefined} - ID correspondiente o la descripción original.
+   * */
   public getIdFromDescripcion(
     array: Catalogo[],
     descripcion: string | number

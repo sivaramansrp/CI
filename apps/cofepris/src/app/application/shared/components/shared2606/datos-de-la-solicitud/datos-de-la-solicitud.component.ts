@@ -159,6 +159,10 @@ export class DatosDeLaSolicitudComponent
    */
   @Input() public datosSolicitudFormState!: DatosSolicitudFormState;
 
+  /**
+   * @property {MercanciaForm} mercanciaFormState
+   * Estado inicial del formulario de mercancía, recibido como input.
+   */
   @Input() public mercanciaFormState!: MercanciaForm;
   /**
    * @property {boolean} opcionesColapsableState
@@ -239,6 +243,10 @@ export class DatosDeLaSolicitudComponent
    */
   public datosSolicitudForm!: FormGroup;
 
+  /**
+   * @property {boolean} isContinuarButtonClicked
+   * Indica si el botón "Continuar" ha sido presionado.
+   */
   public isContinuarButtonClicked: boolean = false;
 
 
@@ -283,6 +291,11 @@ export class DatosDeLaSolicitudComponent
    */
   public alertaDeManifestoContenido = ALERTA_DE_MANIFESTO_Y_DECLARACIONES;
 
+  /**
+   * @method validarPasoUno
+   * @description
+   * Valida si el contenedor de datos de la solicitud y el formulario interno son válidos.
+   */
   public enableFields = ENABLE_FIELDS;
 
   /**
@@ -595,12 +608,13 @@ export class DatosDeLaSolicitudComponent
    */
   private subscription: Subscription = new Subscription();
 
-
+/** Mercancía seleccionada en la tabla. */
   public mercanciaSeleccionada: TablaMercanciasDatos | undefined;
 
   /** Indica si el campo de teléfono es requerido según el procedimiento. */
   public telefonoRequerido: number[] = REQUERIDO_TELEFONO;
 
+  /** Indica los regímenes que deben estar deshabilitados según el procedimiento. */
   public disableRegimen: number[] = HABITO_REGIMEN;
 
   /** Evento que emite el ID de la solicitud prellenada. */
@@ -739,13 +753,22 @@ export class DatosDeLaSolicitudComponent
     });
   }
 
+  /**
+   * @method actualizarStore
+   * @description Emite el estado actual del formulario al componente padre.
+   */
   actualizarStore(): void {
     const VALORES_COMPLETOS = this.datosSolicitudForm.getRawValue();
-    if(VALORES_COMPLETOS){
+    if (VALORES_COMPLETOS) {
       this.datasolicituActualizar.emit(VALORES_COMPLETOS);
-    }    
+    }
   }
 
+  /**
+   * @method inicializarCatalogo
+   * @description Inicializa los catálogos necesarios para el formulario de solicitud.
+   * @param {string} tramite - Identificador del trámite para cargar los catálogos correspondientes.
+   */
   inicializarCatalogo(tramite: string): void {
     this.subscription.add(
       this.catalogoService
@@ -806,6 +829,11 @@ export class DatosDeLaSolicitudComponent
     // this.tablaMercanciasConfig.datos = datos1.mercancias;
   }
 
+  /**
+   * @method patchDatosPrincipales
+   * @description Actualiza los campos principales del formulario con los datos proporcionados.
+   * @param datos1 - Objeto que contiene los datos principales a actualizar en el formulario.
+   */
   private patchDatosPrincipales(datos1: TablaOpcionConfig): void {
     this.datosSolicitudForm.patchValue({
       rfcSanitario: datos1.rfcSanitario || '',
@@ -823,6 +851,11 @@ export class DatosDeLaSolicitudComponent
     });
   }
 
+  /**
+   * @method patchDatosRepresentante
+   * @description Actualiza los campos relacionados con el representante legal en el formulario.
+   * @param datos1 - Objeto que contiene los datos del representante a actualizar en el formulario.
+   */
   private patchDatosRepresentante(datos1: TablaOpcionConfig): void {
     this.datosSolicitudForm.patchValue({
       representanteRfc: datos1.representanteRfc || '',
@@ -832,6 +865,11 @@ export class DatosDeLaSolicitudComponent
     });
   }
 
+  /**
+   * @method patchDatosMercancia
+   * @description Actualiza los campos relacionados con la mercancía en el formulario.
+   * @param datos1 - Objeto que contiene los datos de la mercancía a actualizar en el formulario.
+   */
   private patchDatosMercancia(datos1: TablaOpcionConfig): void {
     this.datosSolicitudForm.patchValue({
       regimenLaMercancia: datos1.regimenLaMercancia || '',
@@ -840,6 +878,11 @@ export class DatosDeLaSolicitudComponent
     });
   }
 
+  /**
+   * @method patchDatosOpcionales
+   * @description Actualiza los campos opcionales del formulario con los datos proporcionados.
+   * @param datos1 - Objeto que contiene los datos opcionales a actualizar en el formulario.
+   */
   private patchDatosOpcionales(datos1: TablaOpcionConfig): void {
     this.datosSolicitudForm.patchValue({
       aviso: datos1.aviso || '',
@@ -863,7 +906,7 @@ export class DatosDeLaSolicitudComponent
       rfcSanitario: [
         {
           value: this.datosSolicitudFormState.rfcSanitario,
-          disabled: !ENABLE_FIELDS.includes(this.idProcedimiento) // Disabled by default (as shown in screenshot)
+          disabled: !ENABLE_FIELDS.includes(this.idProcedimiento) // Deshabilitado por defecto (como se muestra en la captura de pantalla)
         },
         [
           Validators.required,
@@ -875,7 +918,7 @@ export class DatosDeLaSolicitudComponent
       denominacionRazon: [
         {
           value: this.datosSolicitudFormState.denominacionRazon,
-          disabled: !ENABLE_FIELDS.includes(this.idProcedimiento)// Disabled by default (as shown in screenshot)
+          disabled: !ENABLE_FIELDS.includes(this.idProcedimiento)// Deshabilitado por defecto (como se muestra en la captura de pantalla)
         },
         [
           Validators.required,
@@ -886,7 +929,7 @@ export class DatosDeLaSolicitudComponent
       correoElectronico: [
         {
           value: this.datosSolicitudFormState.correoElectronico,
-          disabled: !ENABLE_FIELDS.includes(this.idProcedimiento)// Disabled by default (as shown in screenshot)
+          disabled: !ENABLE_FIELDS.includes(this.idProcedimiento)// Deshabilitado por defecto (como se muestra en la captura de pantalla)
         },
         [
           Validators.required,
@@ -898,7 +941,7 @@ export class DatosDeLaSolicitudComponent
       codigoPostal: [
         {
           value: this.datosSolicitudFormState.codigoPostal,
-          disabled: !ENABLE_FIELDS.includes(this.idProcedimiento) // Disabled by default (as shown in screenshot)
+          disabled: !ENABLE_FIELDS.includes(this.idProcedimiento) // Deshabilitado por defecto (como se muestra en la captura de pantalla)
         },
         [
           Validators.required,
@@ -917,7 +960,7 @@ export class DatosDeLaSolicitudComponent
       municipioAlcaldia: [
         {
           value: this.datosSolicitudFormState.municipioAlcaldia,
-          disabled: !ENABLE_FIELDS.includes(this.idProcedimiento) // Disabled by default (as shown in screenshot)
+          disabled: !ENABLE_FIELDS.includes(this.idProcedimiento) // Deshabilitado por defecto (como se muestra en la captura de pantalla)
         },
         [
           Validators.required,
@@ -928,20 +971,20 @@ export class DatosDeLaSolicitudComponent
       localidad: [
         {
           value: this.datosSolicitudFormState.localidad,
-          disabled: !ENABLE_FIELDS.includes(this.idProcedimiento)// Disabled by default (as shown in screenshot)
+          disabled: !ENABLE_FIELDS.includes(this.idProcedimiento)// Deshabilitado por defecto (como se muestra en la captura de pantalla)
         },
         [Validators.pattern(REGEX_IMPORTE_PAGO)],
       ],
       colonia: [
         {
           value: this.datosSolicitudFormState.colonia,
-          disabled: !ENABLE_FIELDS.includes(this.idProcedimiento) // Disabled by default (as shown in screenshot)
+          disabled: !ENABLE_FIELDS.includes(this.idProcedimiento) // Deshabilitado por defecto (como se muestra en la captura de pantalla)
         },
       ],
       calleYNumero: [
         {
           value: this.datosSolicitudFormState.calleYNumero,
-          disabled: false, // Keep enabled (not shown disabled in screenshot)
+          disabled: false, // Mantener habilitado (no se muestra deshabilitado en la captura de pantalla)
         },
         [Validators.required],
       ],
@@ -955,14 +998,14 @@ export class DatosDeLaSolicitudComponent
       lada: [
         {
           value: this.datosSolicitudFormState.lada,
-          disabled: !ENABLE_FIELDS.includes(this.idProcedimiento) // Disabled by default (as shown in screenshot)
+          disabled: !ENABLE_FIELDS.includes(this.idProcedimiento) // Deshabilitado por defecto (como se muestra en la captura de pantalla)
         },
         [Validators.maxLength(5), Validators.pattern(REGEX_SOLO_DIGITOS)],
       ],
       telefono: [
         {
           value: this.datosSolicitudFormState.telefono,
-          disabled: !ENABLE_FIELDS.includes(this.idProcedimiento) // Disabled by default (as shown in screenshot)
+          disabled: !ENABLE_FIELDS.includes(this.idProcedimiento) // Deshabilitado por defecto (como se muestra en la captura de pantalla)
         },
         [
           REQUERIDO_TELEFONO.includes(this.idProcedimiento) ? Validators.required : null,
@@ -978,7 +1021,7 @@ export class DatosDeLaSolicitudComponent
       licenciaSanitaria: [
         {
           value: this.datosSolicitudFormState.licenciaSanitaria,
-          disabled: false, // Keep enabled (not shown disabled in screenshot)
+          disabled: false, // Mantener habilitado (no se muestra deshabilitado en la captura de pantalla)
         },
         [Validators.required],
       ],
@@ -1001,21 +1044,21 @@ export class DatosDeLaSolicitudComponent
       aeropuerto: [
         {
           value: this.datosSolicitudFormState.aeropuerto,
-          disabled: false, // Keep enabled (checkboxes should be clickable)
+          disabled: false, // Mantener habilitado (las casillas de verificación deben ser seleccionables)
         },
         [Validators.required],
       ],
       aeropuertoDos: [
         {
           value: this.datosSolicitudFormState.aeropuertoDos,
-          disabled: false, // Keep enabled (checkboxes should be clickable)
+          disabled: false, // Mantener habilitado (las casillas de verificación deben ser seleccionables)
         },
         [Validators.required],
       ],
       publico: [
         {
           value: this.datosSolicitudFormState.publico,
-          disabled: false, // Keep enabled (radio buttons should be selectable)
+          disabled: false, // Mantener habilitado (los botones de radio deben ser seleccionables)
         },
         [Validators.required],
       ],
@@ -1045,7 +1088,7 @@ export class DatosDeLaSolicitudComponent
           value: this.datosSolicitudFormState.apellidoMaterno,
           disabled: REPRESENTANTE_LEGAL_EN_INIT.includes(this.idProcedimiento),
         },
-        // Note: apellidoMaterno is not required for any procedure
+        // Apellido materno no es requerido
       ],
       regimenLaMercancia: [
         {
@@ -1263,7 +1306,7 @@ export class DatosDeLaSolicitudComponent
     // Usar el mismo campo de nombre para todos los procedimientos
     const NOMBRE_FIELD = data.nombre;
 
-    // Usar datos de la API si están disponibles, de lo contrario usar predeterminados
+    // Construir el objeto de datos para actualizar el formulario
     const DATOS_FORMULARIO = {
       representanteNombre: NOMBRE_FIELD,
       apellidoPaterno: data.apellidoPaterno,
@@ -1274,7 +1317,7 @@ export class DatosDeLaSolicitudComponent
     this.datosSolicitudForm.patchValue(DATOS_FORMULARIO);
     this.actualizarStore();
 
-    // Disable the representative fields after patching
+    // Deshabilitar los campos después de cargar los datos
     const NOMBRE_CONTROL = this.datosSolicitudForm.get('representanteNombre');
     const PATERNO_CONTROL = this.datosSolicitudForm.get('apellidoPaterno');
     const MATERNO_CONTROL = this.datosSolicitudForm.get('apellidoMaterno');
@@ -1291,14 +1334,12 @@ export class DatosDeLaSolicitudComponent
    * Muestra datos predeterminados cuando no se encuentran en la API
    */
   private mostrarDatosPredeterminados(): void {
-    // Enable the representative fields if they are disabled
     const NOMBRE_CONTROL = this.datosSolicitudForm.get('representanteNombre');
     const PATERNO_CONTROL = this.datosSolicitudForm.get('apellidoPaterno');
     const MATERNO_CONTROL = this.datosSolicitudForm.get('apellidoMaterno');
     if (NOMBRE_CONTROL?.disabled) { NOMBRE_CONTROL.enable(); }
     if (PATERNO_CONTROL?.disabled) { PATERNO_CONTROL.enable(); }
     if (MATERNO_CONTROL?.disabled) { MATERNO_CONTROL.enable(); }
-    // Do not show any toast or modal message
   }
 
   /**
@@ -1487,11 +1528,13 @@ export class DatosDeLaSolicitudComponent
   }
 
   /**
- * Opens the SCIAN selection modal
- */
+   * Abre el modal de selección SCIAN.
+   * Este método establece la bandera `scianModalAbierto` en `true` y muestra el modal
+   * utilizando la instancia de Bootstrap. Si el elemento modal no se encuentra, no realiza ninguna acción.
+   */
   abrirScianModal(): void {
     this.scianModalAbierto = true;
-    // If using Bootstrap 5
+    // Abrir el modal utilizando Bootstrap
     const MODALELEMENT = document.getElementById('scianModal');
     if (MODALELEMENT) {
       const MODAL = new (window as any).bootstrap.Modal(MODALELEMENT);
@@ -1500,8 +1543,12 @@ export class DatosDeLaSolicitudComponent
   }
 
   /**
-  * Closes the SCIAN selection modal
-  */
+   * Cierra el modal de selección SCIAN.
+   *
+   * Este método establece la bandera `scianModalAbierto` en `false` y oculta el modal
+   * utilizando la instancia de Bootstrap. Si el elemento modal o su instancia no se encuentran,
+   * no realiza ninguna acción.
+   */
   cerrarScianModal(): void {
     this.scianModalAbierto = false;
     const MODALELEMENT = document.getElementById('scianModal');
@@ -1516,7 +1563,7 @@ export class DatosDeLaSolicitudComponent
 
 
   /**
-   * Handles SCIAN selection from the modal
+   * Maneja la selección de SCIAN desde el modal
    */
   onScianSeleccionado(scianData: TablaScianConfig): void {
     if (this.scianConfig && this.scianConfig.datos) {
@@ -1598,11 +1645,11 @@ export class DatosDeLaSolicitudComponent
       };
       this.mostrarAlerta = true;
     } else if (this.tablaMercanciasLista.length === 1) {
-      // Set the selected merchandise data before opening modal
+      // Establece los datos de la mercancía seleccionada antes de abrir el modal
       this.mercanciaSeleccionada = this.tablaMercanciasLista[0];
       this.abrirMercanciaModal();
     } else {
-      // No merchandise selected
+      // No hay mercancía seleccionada
       this.seleccionarFilaNotificacion = {
         tipoNotificacion: 'alert',
         categoria: 'warning',
@@ -1709,6 +1756,11 @@ export class DatosDeLaSolicitudComponent
     }
   }
 
+  /**
+   * Método que se llama cuando se cambia el correo electrónico en el formulario.
+   * Si el procedimiento es 260103 y los campos de correo electrónico y denominación/razón social
+   * no están vacíos, establece valores predeterminados para varios campos del formulario.
+   */
   cambireCorreoElectronico(): void {
     if (
       this.idProcedimiento === NUMERO_TRAMITE.TRAMITE_260103 &&
@@ -1794,7 +1846,7 @@ export class DatosDeLaSolicitudComponent
    * @param {boolean} buscar - Indica si se debe buscar el RFC del representante.
    */
   obtenerModalDeBuscar(buscar: boolean): void {
-    // Only close the RFC modal, do not patch any values manually
+    // Solo cerrar el modal de RFC, no modificar valores manualmente
     this.mostrarRfcAlerta = false;
   }
   /**
@@ -1884,8 +1936,8 @@ export class DatosDeLaSolicitudComponent
       'apellidoMaterno'
     ];
     if (borrar) {
-      this.habilitarCamposFormulario(); // Use the new method instead of alternarControlesDeFormulario
-      this.mostrarNotificacion = false; // Hide the notification
+      this.habilitarCamposFormulario();
+      this.mostrarNotificacion = false;
       this.pedimentos.splice(this.elementoParaEliminar, 1);
       if (PROCEDIMIENTOS_DESHABILITAR_REPRESENTANTE.includes(this.idProcedimiento)) {
         CAMPOS_REPRESENTANTE.forEach((campo) => {
@@ -1969,23 +2021,23 @@ export class DatosDeLaSolicitudComponent
       return;
     }
 
-    // Get all control names
+    // Obtener todos los nombres de los controles
     const CONTROL_NAMES = Object.keys(this.datosSolicitudForm.controls);
 
 
-    // Loop through each control and mark as touched
+    // Recorrer cada control y marcar como tocado
     CONTROL_NAMES.forEach((controlName: string) => {
       const CONTROL = this.datosSolicitudForm.get(controlName);
 
       if (CONTROL) {
-        // Mark the control as touched
+        // Marca el control como tocado
         if (EXCLUDED_FIELDS.includes(controlName)) {
 
-          return; // Continue to next field
+          return;
         }
         CONTROL.markAsTouched();
 
-        // Optional: Also mark as dirty to trigger additional validation states
+        // Opcional: También marcar como dirty para activar estados de validación adicionales
 
       }
     });
@@ -1994,7 +2046,7 @@ export class DatosDeLaSolicitudComponent
       this.datosSolicitudForm.get('rfcSanitario')?.updateValueAndValidity();
     }
 
-    // Update the form's validation status
+    // Actualiza el estado de validación del formulario
     this.datosSolicitudForm.updateValueAndValidity();
 
   }
@@ -2026,20 +2078,19 @@ export class DatosDeLaSolicitudComponent
     let allFieldsValidOrDisabled = true;
 
 
-    // Loop through each control to check validation status
     CONTROL_NAMES.forEach((controlName: string) => {
       const CONTROL = this.datosSolicitudForm.get(controlName);
 
       if (CONTROL) {
-        // Skip excluded fields
+        // Omitir campos excluidos
         if (EXCLUDED_FIELDS.includes(controlName)) {
 
 
-          return; // Continue to next field
+          return; // Continuar al siguiente campo
         }
 
 
-        // Check if field is valid or disabled
+        // Verificar si el campo es válido o está deshabilitado
         else if (CONTROL.disabled) {
           return;
 
@@ -2049,10 +2100,6 @@ export class DatosDeLaSolicitudComponent
         }
       }
     });
-
-
-
-
     return allFieldsValidOrDisabled;
   }
 
@@ -2072,7 +2119,7 @@ export class DatosDeLaSolicitudComponent
   }
 
   /**
-  * Opens the merchandise selection modal
+  * Abre el modal de selección de mercancía
   */
   abrirMercanciaModal(): void {
     this.mercanciaModalAbierto = true;
@@ -2084,11 +2131,11 @@ export class DatosDeLaSolicitudComponent
   }
 
   /**
-  * Closes the merchandise selection modal
+  * Cierra el modal de selección de mercancía
   */
   cerrarMercanciaModal(): void {
     this.mercanciaModalAbierto = false;
-    this.mercanciaSeleccionada = undefined; // Clear selection when closing
+    this.mercanciaSeleccionada = undefined; // Limpiar selección al cerrar
     const MODALELEMENT = document.getElementById('mercanciaModal');
     if (MODALELEMENT) {
       const MODAL = (window as any).bootstrap.Modal.getInstance(MODALELEMENT);
@@ -2099,7 +2146,7 @@ export class DatosDeLaSolicitudComponent
   }
 
   /**
-  * Handles merchandise selection from the modal
+  * Maneja la selección de mercancía desde el modal
   */
   onMercanciaSeleccionado(mercanciaData: TablaMercanciasDatos): void {
     if (this.mercanciaSeleccionada) {
@@ -2121,23 +2168,23 @@ export class DatosDeLaSolicitudComponent
       ];
     }
 
-    // Update the form control value
+    // Actualizar el valor del control del formulario
     this.datosSolicitudForm.get('mercancias')?.setValue(this.tablaMercanciasConfig.datos);
 
     if (this.mercanciasSeleccionado) {
       this.mercanciasSeleccionado.emit(this.tablaMercanciasConfig.datos);
     }
 
-    // Clear selected merchandise and close modal
+    // Limpiar selección de mercancía y cerrar modal
     this.mercanciaSeleccionada = undefined;
     this.cerrarMercanciaModal();
 
-    // Force change detection
+    // Forzar detección de cambios
     this.cdr.markForCheck();
   }
 
   /**
- * Updates the table after merchandise changes
+ * Actualiza la tabla después de cambios en la mercancía
  */
   private updateMercanciaTable(): void {
     this.datosSolicitudForm.get('mercancias')?.setValue(this.tablaMercanciasConfig.datos);
