@@ -1,4 +1,4 @@
-import { ConfiguracionColumna, REGEX_DIGITOS } from "@libs/shared/data-access-user/src";
+import { ConfiguracionColumna, REGEX_NUMERO_15_ENTEROS_4_DECIMALES, REGEX_SOLO_NUMEROS } from "@libs/shared/data-access-user/src";
 import { DatosMercanciaModalTabla, EnvasesTabla, InsumosTabla, ProcesosTabla } from "../models/panallas110101.model";
 import { ProcesoSolicitado } from "../models/response/validar-fraccion-response.model";
 
@@ -158,6 +158,7 @@ export const DATOS_MERCANCIA_MODAL_FORM = [
     campo: 'proveedor',
     clase: 'col-md-6',
     tipoInput: 'text',
+    maxlength: 250,
     desactivado: false,
     soloLectura: false,
     validadores: [{ tipo: 'required' }],
@@ -172,9 +173,16 @@ export const DATOS_MERCANCIA_MODAL_FORM = [
     campo: 'fraccionArancelariaModal',
     clase: 'col-md-6',
     tipoInput: 'text',
+    maxlength: 8,
     desactivado: false,
     soloLectura: false,
-    validadores: [{ tipo: 'required' }],
+    validadores: [
+      { tipo: 'required' },
+      { 
+        tipo: 'pattern',
+        valor: REGEX_SOLO_NUMEROS,
+      }
+    ],
     marcadorDePosicion: '',
     valorPredeterminado: '',
     marginTop: 0,
@@ -284,6 +292,7 @@ export const DATOS_MERCANCIA_MODAL_FORM = [
     campo: 'nombreTecnico',
     clase: 'col-md-12',
     tipoInput: 'text',
+    maxlength: 250,
     desactivado: false,
     soloLectura: false,
     validadores: [{ tipo: 'required' }],
@@ -304,7 +313,7 @@ export const DATOS_MERCANCIA_MODAL_FORM = [
       { tipo: 'required' },
       {
         tipo: 'pattern',
-        valor: REGEX_DIGITOS,
+        valor: REGEX_NUMERO_15_ENTEROS_4_DECIMALES,
         mensaje: 'Por favor, escribe un número entero válido',
       }
     ],
