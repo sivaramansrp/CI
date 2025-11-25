@@ -74,7 +74,7 @@ export class DetalleMercanciaComponent implements OnInit, OnDestroy {
    */
   @Output() agregarMercanciaSellecion: EventEmitter<DetalleMercancia> =
     new EventEmitter<DetalleMercancia>(true);
-
+@Output() agregarDetalleMercancia = new EventEmitter<DetalleMercancia>();
   /**
    * Emite el evento cuando se elimina una lista de mercancías.
    */
@@ -172,16 +172,27 @@ export class DetalleMercanciaComponent implements OnInit, OnDestroy {
       tipoDeEnvase: this.formaDetalleMercancia.value.tipoDeEnvase,
     };
 
+    // Emit the new detalle
     this.agregarMercanciaSellecion.emit(NEW_DETALLE);
 
+    // Emit the detalle for agregarDetalleMercancia
+    const DETALLE: DetalleMercancia = this.formaDetalleMercancia.getRawValue();
+    console.log('Emitting detalle:', DETALLE);
+    this.agregarDetalleMercancia.emit(DETALLE);
+
+    // Update the observable for the table
     this.datosTablaDetalleMercancia = new Observable((observer) => {
       const CURRENT_DATA = (this.datosTablaDetalleMercancia as any)?.source?.value || [];
       observer.next([...CURRENT_DATA, NEW_DETALLE]);
       observer.complete();
     });
 
+    // Reset the form
     this.formaDetalleMercancia.reset();
     this.formaDetalleMercancia.patchValue({ formaFormaceutica: '' });
+  } else {
+    this.formaDetalleMercancia.markAllAsTouched();
+    console.error('Detalle Mercancía form is invalid');
   }
 }
     ngOnDestroy(): void {
