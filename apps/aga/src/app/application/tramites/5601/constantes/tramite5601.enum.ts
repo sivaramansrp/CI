@@ -39,7 +39,7 @@ export const FORMULARIO_CERTIFICACION_DETALLES = [
     soloLectura: false,
     validadores: [],
     marcadorDePosicion: '',
-    valorPredeterminado: '',
+    valorPredeterminado: 'Orto',
     marginTop: 0
   },
   {
