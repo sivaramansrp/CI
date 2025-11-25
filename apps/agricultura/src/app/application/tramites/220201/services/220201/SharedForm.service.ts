@@ -14,18 +14,26 @@ export class SharedFormService {
     private dataSourcePagoDerechos = new BehaviorSubject<PrellenadoPagoDerechos | null>(null);
     dataPagoDerechos$ = this.dataSourcePagoDerechos.asObservable();
 
+    private dataSourceDocumentos = new BehaviorSubject<boolean | null>(null);
+    dataDocumentos$ = this.dataSourceDocumentos.asObservable();
+
     // Método para enviar datos de prellenado de movilización
     enviarMovilizacionPrellenado(data: PrellenadoMovilizacion): void {
         this.dataSource.next(data);
     }
 
-    // // Método para enviar datos de prellenado de terceros relacionados
+    // Método para enviar datos de prellenado de terceros relacionados
     enviarTercerosRelacionadosPrellenado(dataSourceTerceros: PrellenadoTercerosRelacionados): void {
         this.dataSourceTerceros.next(dataSourceTerceros);
     }
 
-    // // Método para enviar datos de prellenado de terceros relacionados
+    // Método para enviar datos de prellenado de pago de derechos
     enviarPagoDerechosPrellenado(dataSourcePagoDerechos: PrellenadoPagoDerechos): void {
         this.dataSourcePagoDerechos.next(dataSourcePagoDerechos);
+    }
+
+    // Este método puede ser implementado en el futuro para manejar documentos prellenados
+    enviarDocumentosPrellenado(dataSourceDocumentos: boolean): void {
+        this.dataSourceDocumentos.next(dataSourceDocumentos);
     }
 }

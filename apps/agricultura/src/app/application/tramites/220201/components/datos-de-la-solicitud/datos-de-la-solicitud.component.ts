@@ -13,10 +13,6 @@ import {
   TablaDinamicaExpandidaComponent,
   TablaSeleccion,
   TituloComponent,
-  convertDate,
-  formatFechaCreacion,
-  formatFechaCustom,
-  formatearFechaSolicitud,
   formatearFechaSolicitudSinHora,
 } from '@libs/shared/data-access-user/src';
 import {
@@ -860,6 +856,7 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy, AfterView
         .subscribe({
           next: (datos) => {
             if (datos?.datos) {
+              this.solicitudService.emitirIdSolicitud(event.id_solicitud || '');
               this.obtenerSanidadAgropecuariaList(datos.datos.cve_aduana || '');
               this.obtenerVeterinarioList(datos.datos.establecimiento_TIF || '');
               this.obtenerPuntoInspeccionList(datos.datos.oficina_inspeccion_sanidad_agropecuaria || '');
@@ -974,6 +971,7 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy, AfterView
         .subscribe({
           next: (response) => {
             this.sharedService.enviarMovilizacionPrellenado(response.datos as PrellenadoMovilizacion);
+            this.sharedService.enviarDocumentosPrellenado(true);
           },
           error: () => {
             this.nuevaNotificacion = {

@@ -8,6 +8,9 @@ import { Component, DestroyRef, OnDestroy, OnInit, Output, inject } from '@angul
 import { Subject, map, takeUntil } from 'rxjs';
 import { TEXTOS_REQUISITOS } from '../../constantes/certificado-zoosanitario.enum';
 
+import { SharedFormService } from '../../services/220201/SharedForm.service';
+import { SolicitudService } from '../../services/220201/registro-solicitud/solicitud.service';
+
 /**
  * @fileoverview Componente para mostrar el subtítulo y los requisitos del asistente en el paso dos del trámite.
  * Incluye la visualización de textos de ayuda y el componente para anexar documentos.
@@ -73,9 +76,9 @@ export class PasoDosComponent implements OnInit, OnDestroy {
    */
   private destroyRef$ = inject(DestroyRef);
 
-/**
-   * Id del tipo de trámite actual.
-   */
+  /**
+     * Id del tipo de trámite actual.
+     */
   @Input() idTipoTRamite!: string;
   /**
    * Id de la solicitud actual.
@@ -134,6 +137,17 @@ export class PasoDosComponent implements OnInit, OnDestroy {
    */
   @Output() reenviarRegresarSeccion = new EventEmitter<void>();
 
+  /**
+   * Indica si el formulario o los datos han sido prellenados automáticamente.
+   * 
+   * @type {boolean}
+   * @default false
+   * 
+   * @remarks
+   * Cuando es `true`, indica que los datos se cargaron previamente desde una fuente externa.
+   * Cuando es `false`, indica que el usuario debe ingresar los datos manualmente.
+   */
+  esPrellenado: boolean = false;
 
   /**
      * Constructor de la clase PasoDosComponent.
@@ -141,7 +155,8 @@ export class PasoDosComponent implements OnInit, OnDestroy {
      * @param catalogosServices - Servicio para manejar los catálogos.
      */
   constructor(
-
+    private sharedService: SharedFormService,
+    private solicitudService: SolicitudService
   ) {
     // Si es necesario, se puede agregar aquí la lógica de inicialización
   }
@@ -154,6 +169,18 @@ export class PasoDosComponent implements OnInit, OnDestroy {
    */
   ngOnInit(): void {
     this.getListaDocumentoOpcionales();
+
+    // Suscripción para detectar si los datos han sido prellenados
+    this.sharedService.dataDocumentos$
+      .pipe(takeUntil(this.destroyNotifier$))
+      .subscribe((data) => {
+        if (data !== null) {
+          this.esPrellenado = data;
+          this.solicitudService.idSolicitud$.subscribe(id => {
+            this.idSolicitud = id;
+          }) as unknown as string;
+        }
+      });
   }
 
 

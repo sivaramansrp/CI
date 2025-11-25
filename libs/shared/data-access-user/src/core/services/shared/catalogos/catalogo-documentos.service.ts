@@ -69,8 +69,8 @@ export class CatalogoDocumentosService {
      * @param payload - Datos para consulta de documentos.
      * @returns Observable con la respuesta de guardado.
      */
-    recuperaDocumentos(tramite: number, idsolicitud: string, especifico: boolean, payload: PayloadConsultaDocumentosSolicitud): Observable<BaseResponse<RespuestaRecuperaDocumentos>> {
-        const ENDPOINT = `${this.host}${API_POST_PRE_LLENADO_DOCUMENTOS(tramite.toString(), idsolicitud, especifico)}`;
-        return this.http.post<BaseResponse<RespuestaRecuperaDocumentos>>(ENDPOINT, payload);
+    recuperaDocumentosPrellenado(tramite: number, idsolicitud: string, especifico: boolean, payload: PayloadConsultaDocumentosSolicitud): Observable<BaseResponse<CatalogoDocumentosResponse>> {
+        const ENDPOINT = `${this.host}/${API_POST_PRE_LLENADO_DOCUMENTOS(tramite.toString(), idsolicitud, especifico)}`;
+        return this.http.post<BaseResponse<CatalogoDocumentosResponse>>(ENDPOINT, payload);
     }
 }
