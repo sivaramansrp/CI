@@ -1212,8 +1212,8 @@ static generarCatalogoObjeto(catalogo: Catalogo[], id: string): Catalogo[] | und
         this.estaDeshabilitadoDesplegable = false;
       });
     }
-    this.forzarDeshabilitarPais();
     this.agregarDestinatarioFinal.patchValue({pais: 'DEU'});
+    this.forzarDeshabilitarPais();
     this.updateDenominacionRazonValidation();
   }
 
