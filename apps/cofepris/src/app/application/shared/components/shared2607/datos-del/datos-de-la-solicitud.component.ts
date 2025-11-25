@@ -968,9 +968,7 @@ if (this.idProcedimiento) {
       descripcionDelScian: SELECTED_CATALOG ? SELECTED_CATALOG.descripcion : CLAVE_SCIAN_G_VALUE.descripcionDelScian
     }
   };
-
-
-  this.solicitud260702Store.setTableData([...this.tableData, NEW_ROW]);
+    this.solicitud260702Store.setTableData([...this.tableData, NEW_ROW]);
 
   this.showClavaScianForm = false;
   this.clavaScianForm.reset();

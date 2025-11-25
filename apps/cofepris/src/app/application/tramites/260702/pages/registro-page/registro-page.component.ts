@@ -63,7 +63,7 @@ export class RegistroPageComponent implements OnDestroy, OnInit {
      * Indica si la opción de peligro está activada.
      * Cuando es verdadero, representa que la condición de peligro está presente.
      */
-    isPeligro:boolean=true;
+    isPeligro:boolean=false;
   /** Lista de pasos del wizard. */
   pasos: Array<ListaPasosWizard> = PASOS;
 
@@ -136,21 +136,14 @@ export class RegistroPageComponent implements OnDestroy, OnInit {
    if (this.indice === 1 && e.accion === 'cont') {
       this.solicitud260702Store.setContinuarTriggered(true);
       const ES_VALIDO = this.validarFormulariosPasoActual();
-      if (!ES_VALIDO) {
-        this.isPeligro = false;
-        this.datosPasos.indice = e.valor;
-        return;
-      }else if(ES_VALIDO){
+        if (!ES_VALIDO) {
         this.isPeligro = true;
-        this.wizardComponent.siguiente();
- }else{
-       this.isPeligro = true;
-        this.wizardComponent.siguiente();
-    }
+        return;
+      }
+      this.isPeligro = false;
   }
 
-  }
-  
+  }  
 /**
    * Valida los formularios del paso actual antes de permitir continuar.
    * @returns {boolean} - `true` si los formularios son válidos, `false` en caso contrario.
