@@ -11,5 +11,7 @@
   (mercanciasSeleccionado)="mercanciasSeleccionado($event)"
   (datosDeTablaSeleccionados)="datosDeTablaSeleccionados($event)"
   [formularioDeshabilitado]="esFormularioSoloLectura"
+  (idSolicitudPrellenado)="enIdSolicitudPrellenado($event)"
   [elementosRequeridos]="denominacionRazon.split(',')"
+  #datosDeLaSolicitud
 ></app-datos-de-la-solicitud>
