@@ -1,14 +1,21 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { ConsultaioQuery, ConsultaioState } from '@ng-mf/data-access-user';
 import { Subject,map, takeUntil } from 'rxjs';
+
+import { SolicitudComponent } from '../../components/solicitud/solicitud.component';
+
 import { ExportacionMineralesDeHierroService } from '../../services/exportacion-minerales-de-hierro.service';
 
+/**
+ * Componente para gestionar el paso uno de un flujo.
+ * Este componente permite seleccionar una pestaña y actualizar el índice correspondiente.
+ */
 @Component({
   selector: 'app-paso-uno',
   templateUrl: './paso-uno.component.html',
 })
 export class PasoUnoComponent implements OnInit, OnDestroy {
-    /** Datos de respuesta del servidor utilizados para actualizar el formulario. */
+  /** Datos de respuesta del servidor utilizados para actualizar el formulario. */
   public esDatosRespuesta: boolean = false;
 
   /** Subject para notificar la destrucción del componente. */
@@ -19,26 +26,28 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
    * Contiene datos como modo de solo lectura y valores del formulario.
    */
   public consultaState!: ConsultaioState;
+
   /**
-   * @descripcion
-   * Índice de la pestaña seleccionada actualmente.
-   * @type {number}
+   * Índice de la pestaña activa.
+   * Representa la pestaña seleccionada en el flujo.
+   * Valor inicial: 1.
    */
   indice: number = 1;
 
   /**
-   * @descripcion
-   * Cambia el índice de la pestaña seleccionada.
-   * @param {number} i - Índice de la pestaña a seleccionar.
-   */
+   * Referencia al componente SolicitudComponent.
+   * Se utiliza para acceder a las funcionalidades del componente de solicitud.
+   */ 
+  @ViewChild(SolicitudComponent, { static: false}) solicitudComponent!: SolicitudComponent;
 
-    /**
+   /**
    * Constructor que inyecta los servicios necesarios para manejar el estado y la consulta.
    * La lógica de inicialización se delega a métodos específicos.
    */
   constructor(
-    private exportacionMineralesDeHierroService: ExportacionMineralesDeHierroService,
-    private consultaQuery: ConsultaioQuery
+    private consultaQuery: ConsultaioQuery,
+        private exportacionMineralesDeHierroService: ExportacionMineralesDeHierroService,
+    
   ) {
     // Constructor vacío: La inicialización se realizará en métodos específicos según sea necesario.
   }
@@ -51,7 +60,7 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
     this.consultaQuery.selectConsultaioState$.pipe(takeUntil(this.destroyNotifier$),map((seccionState) => {
         this.consultaState = seccionState;
     })).subscribe();
-    if(this.consultaState.update) {
+    if(this.consultaState?.update) {
       this.guardarDatosFormulario();
     } else {
       this.esDatosRespuesta = true;

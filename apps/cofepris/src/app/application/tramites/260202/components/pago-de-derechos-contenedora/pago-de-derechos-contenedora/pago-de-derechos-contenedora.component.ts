@@ -1,11 +1,12 @@
-import { Input, OnDestroy, ViewChild } from '@angular/core';
-import { Subject,map,takeUntil } from 'rxjs';
+import { Input, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { Subject, map, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 import { ConsultaioQuery } from '@ng-mf/data-access-user';
 import { ID_PROCEDIMIENTO } from '../../../constants/importacion-materias-primas.enum';
 import { PagoDeDerechosComponent } from '../../../../../shared/components/pago-de-derechos/pago-de-derechos.component';
 import { PagoDerechosFormState } from '../../../../../shared/models/terceros-relacionados.model';
+import { Tramite260202Query } from '../../../estados/tramite260202Query.query';
 import { Tramite260202Store } from '../../../estados/tramite260202Store.store';
 
 /**
@@ -47,26 +48,26 @@ import { Tramite260202Store } from '../../../estados/tramite260202Store.store';
  * Actualiza el estado del formulario de pago de derechos en el store del trámite.
  * Este método recibe como parámetro el estado actualizado del formulario y lo almacena en el store.
  */
-export class PagoDeDerechosContenedoraComponent implements OnDestroy {
-     /**
-   * @property {boolean} formularioDeshabilitado
-   * @description
-   * Indica si el formulario está deshabilitado. Por defecto es `false`.
-   */
+export class PagoDeDerechosContenedoraComponent implements OnInit, OnDestroy {
+  /**
+* @property {boolean} formularioDeshabilitado
+* @description
+* Indica si el formulario está deshabilitado. Por defecto es `false`.
+*/
   @Input()
   formularioDeshabilitado: boolean = false;
-   /** Indica si el formulario debe mostrarse en modo solo lectura.  
- *  Controla la habilitación o deshabilitación de los campos. */
+  /** Indica si el formulario debe mostrarse en modo solo lectura.  
+*  Controla la habilitación o deshabilitación de los campos. */
   public esFormularioSoloLectura: boolean = false;
- /**
-   * Subject utilizado para gestionar la destrucción del componente y evitar memory leaks.
-   */
+  /**
+    * Subject utilizado para gestionar la destrucción del componente y evitar memory leaks.
+    */
   private destroyNotifier$: Subject<void> = new Subject();
   /**
    * @property {PagoDerechosFormState} pagoDerechos
    * @description Estado actual del formulario de pago de derechos, obtenido del store del trámite.
    */
-  public pagoDerechos: PagoDerechosFormState;
+  public pagoDerechos!: PagoDerechosFormState;
   /**
    * @constructor
    * @description Constructor que inyecta el store `Tramite260202Store` para gestionar el estado del trámite.
@@ -93,18 +94,24 @@ export class PagoDeDerechosContenedoraComponent implements OnDestroy {
    * @param tramiteStore - Una instancia de la tienda `Tramite260202Store` que contiene
    *                       los datos y el estado relacionados con el trámite 260202.
    */
-  constructor(public tramiteStore: Tramite260202Store,private consultaQuery: ConsultaioQuery) {
-    this.pagoDerechos = this.tramiteStore.getValue().pagoDerechos;
+  constructor(public tramiteStore: Tramite260202Store, private consultaQuery: ConsultaioQuery, private tramiteQuery: Tramite260202Query) {
+    //this.pagoDerechos = this.tramiteStore.getValue().pagoDerechos;
     this.consultaQuery.selectConsultaioState$
-          .pipe(
-            takeUntil(this.destroyNotifier$),
-            map((seccionState) => {
-              this.esFormularioSoloLectura = seccionState.readonly;
-            })
-          )
-          .subscribe();
+      .pipe(
+        takeUntil(this.destroyNotifier$),
+        map((seccionState) => {
+          this.esFormularioSoloLectura = seccionState.readonly;
+        })
+      )
+      .subscribe();
   }
-
+  ngOnInit(): void {
+    this.tramiteQuery.selectTramiteState$
+      .pipe(takeUntil(this.destroyNotifier$))
+      .subscribe((data) => {
+        this.pagoDerechos = data.pagoDerechos;
+      });
+  }
   /**
    * @method updatePagoDerechos
    * @description Actualiza los datos del formulario de pago de derechos en el store del trámite.
@@ -121,11 +128,11 @@ export class PagoDeDerechosContenedoraComponent implements OnDestroy {
       this.pagoDeDerechosComponent?.formularioSolicitudValidacion() ?? false
     );
   }
-    /**
-   * Método que se ejecuta cuando el componente es destruido.
-   * 
-   * Libera los recursos y completa la notificación de destrucción del componente.
-   */
+  /**
+ * Método que se ejecuta cuando el componente es destruido.
+ * 
+ * Libera los recursos y completa la notificación de destrucción del componente.
+ */
   ngOnDestroy(): void {
     this.destroyNotifier$.next();
     this.destroyNotifier$.complete();

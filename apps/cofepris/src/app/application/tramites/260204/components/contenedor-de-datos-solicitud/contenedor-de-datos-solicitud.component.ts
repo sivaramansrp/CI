@@ -2,13 +2,15 @@ import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { DatosDeTablaSeleccionados, DatosSolicitudFormState, TablaMercanciasDatos, TablaOpcionConfig, TablaScianConfig, TablaSeleccion } from '../../../../shared/models/datos-solicitud.model';
 import { OPCION_TABLA, PRODUCTO_TABLA, SCIAN_TABLA } from '../../../../shared/constantes/datos-solicitud.enum';
 import { Tramite260204State,Tramite260204Store } from '../../estados/stores/tramite260204Store.store';
-import { map, takeUntil } from 'rxjs';
+import { distinctUntilChanged, map, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
-import { ConsultaioQuery } from '@libs/shared/data-access-user/src';
+import { ConsultaioQuery, RegistroSolicitudService } from '@libs/shared/data-access-user/src';
 import { DatosDeLaSolicitudComponent } from '../../../../shared/components/datos-de-la-solicitud/datos-de-la-solicitud.component';
 import { ID_PROCEDIMIENTO } from '../../constantes/permiso-sanitario-importacion-medicamentos.enum';
 import { Subject } from 'rxjs';
 import { Tramite260204Query } from '../../estados/queries/tramite260204Query.query';
+import { GuardarAdapter_260204 } from '../../adapters/guardar-payload.adapter';
+import { BaseResponse } from '@libs/shared/data-access-user/src/core/models/shared/base-response.model';
 
 /**
  * Decorador de componente de Angular que define las propiedades y configuraciones del componente `ContenedorDeDatosSolicitudComponent`.
@@ -176,7 +178,8 @@ export class ContenedorDeDatosSolicitudComponent implements OnInit, OnDestroy {
    */
   constructor(public tramite260204Query: Tramite260204Query,
     public tramite260204Store: Tramite260204Store,
-    public consultaQuery: ConsultaioQuery
+    public consultaQuery: ConsultaioQuery,
+    private registroSolicitudService: RegistroSolicitudService,
   ) {
      this.consultaQuery.selectConsultaioState$
       .pipe(
@@ -206,9 +209,24 @@ export class ContenedorDeDatosSolicitudComponent implements OnInit, OnDestroy {
    * @returns void
    */
   ngOnInit(): void {
+    this.cargarTablaOpcionConfigSolicitud();
     this.tramite260204Query.selectTramiteState$
       .pipe(
         takeUntil(this.destroyNotifier$),
+        distinctUntilChanged((prev, curr) => {
+          // Solo activa actualizaciones cuando los arreglos de datos principales realmente cambien
+          // Verifica si opcionConfigDatos, scianConfigDatos, o tablaMercanciasConfigDatos han cambiado
+          const PREV_OPCION = JSON.stringify(prev.opcionConfigDatos || []);
+          const CURR_OPCION = JSON.stringify(curr.opcionConfigDatos || []);
+          const PREV_SCIAN = JSON.stringify(prev.scianConfigDatos || []);
+          const CURR_SCIAN = JSON.stringify(curr.scianConfigDatos || []);
+          const PREV_MERCANCIAS = JSON.stringify(prev.tablaMercanciasConfigDatos || []);
+          const CURR_MERCANCIAS = JSON.stringify(curr.tablaMercanciasConfigDatos || []);
+
+          return PREV_OPCION === CURR_OPCION && 
+                 PREV_SCIAN === CURR_SCIAN && 
+                 PREV_MERCANCIAS === CURR_MERCANCIAS;
+        }),
         map((seccionState) => {
           this.tramiteState = seccionState;
           this.opcionConfig.datos = this.tramiteState.opcionConfigDatos;
@@ -219,6 +237,14 @@ export class ContenedorDeDatosSolicitudComponent implements OnInit, OnDestroy {
 
   }
 
+  enIdSolicitudPrellenado($event:number): void {
+    const SOLICITUDE_ID = $event;
+    this.registroSolicitudService.parcheOpcionesPrellenadas(260204, SOLICITUDE_ID).subscribe((res:any) => {
+      if(res && res.datos){
+        GuardarAdapter_260204.patchToStore(res.datos, this.tramite260204Store);
+      }
+    });
+  }
   /**
    * Maneja el evento cuando se selecciona una opción en la tabla.
    * 
@@ -229,6 +255,7 @@ export class ContenedorDeDatosSolicitudComponent implements OnInit, OnDestroy {
    * con las opciones seleccionadas.
    */
   opcionSeleccionado(event: TablaOpcionConfig[]): void {
+    this.seleccionadoopcionDatos = event;
     this.tramite260204Store.updateOpcionConfigDatos(event);
   }
 
@@ -241,6 +268,7 @@ export class ContenedorDeDatosSolicitudComponent implements OnInit, OnDestroy {
    * utilizando el evento proporcionado.
    */
   scianSeleccionado(event: TablaScianConfig[]): void {
+    this.seleccionadoScianDatos = event;
     this.tramite260204Store.updateScianConfigDatos(event);
   }
 
@@ -251,6 +279,7 @@ export class ContenedorDeDatosSolicitudComponent implements OnInit, OnDestroy {
    *                los datos seleccionados en la tabla de mercancías.
    */
   mercanciasSeleccionado(event: TablaMercanciasDatos[]): void {
+    this.seleccionadoTablaMercanciasDatos = event;
     this.tramite260204Store.updateTablaMercanciasConfigDatos(event);
   }
 
@@ -272,13 +301,43 @@ export class ContenedorDeDatosSolicitudComponent implements OnInit, OnDestroy {
    * y las mercancías seleccionadas de la tabla.
    */
   datosDeTablaSeleccionados(event: DatosDeTablaSeleccionados): void {
-    this.tramite260204Store.update((state) => ({
-      ...state,
-      seleccionadoopcionDatos: event.opcionSeleccionados,
-      seleccionadoScianDatos: event.scianSeleccionados,
-      seleccionadoTablaMercanciasDatos: event.mercanciasSeleccionados,
-      opcionesColapsableState: event.opcionesColapsableState
-    }))
+    // Actualizar el estado local primero para evitar activadores innecesarios del store
+    this.seleccionadoopcionDatos = event.opcionSeleccionados;
+    this.seleccionadoScianDatos = event.scianSeleccionados;
+    this.seleccionadoTablaMercanciasDatos = event.mercanciasSeleccionados;
+
+    // Solo actualizar el store si hay cambios reales para evitar activar la suscripción
+    const CURRENT_STATE = this.tramiteState;
+    const HAS_CHANGES = 
+      JSON.stringify(CURRENT_STATE?.seleccionadoopcionDatos || []) !== JSON.stringify(event.opcionSeleccionados) ||
+      JSON.stringify(CURRENT_STATE?.seleccionadoScianDatos || []) !== JSON.stringify(event.scianSeleccionados) ||
+      JSON.stringify(CURRENT_STATE?.seleccionadoTablaMercanciasDatos || []) !== JSON.stringify(event.mercanciasSeleccionados) ||
+      CURRENT_STATE?.opcionesColapsableState !== event.opcionesColapsableState;
+
+    if (HAS_CHANGES) {
+      this.tramite260204Store.update((state) => ({
+        ...state,
+        seleccionadoopcionDatos: event.opcionSeleccionados,
+        seleccionadoScianDatos: event.scianSeleccionados,
+        seleccionadoTablaMercanciasDatos: event.mercanciasSeleccionados,
+        opcionesColapsableState: event.opcionesColapsableState,
+      }));
+    }
+  }
+  
+   cargarTablaOpcionConfigSolicitud(): void {    
+    this.registroSolicitudService.cargarOpcionesPrellenadoSolicitud(this.idProcedimiento, 'AAL0409235E6').subscribe((res:BaseResponse<unknown>) => {
+      const DATOS = res.datos as TablaOpcionConfig[];
+
+      // Procesar los datos para manejar valores nulos en el proveedor
+      const DATOS_PROCESADOS = DATOS.map(item => ({
+        ...item,
+        proveedor: item.proveedor && item.proveedor.trim() !== '' ? item.proveedor : 'N/A'
+      }));
+
+      this.opcionConfig.datos = DATOS_PROCESADOS;
+      this.opcionSeleccionado(DATOS_PROCESADOS);
+    });
   }
 
   /**
