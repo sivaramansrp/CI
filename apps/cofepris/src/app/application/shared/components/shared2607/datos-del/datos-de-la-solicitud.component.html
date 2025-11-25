@@ -611,13 +611,6 @@
     <label class="form-label" for="">Los datos o anexos pueden contener información confidencial ¿Está de acuerdo en hacerlos públicos?*:</label>
     <app-input-radio formControlName="hacerlosPublicos" [radioOptions]="hacerlosRadioOptions" [selectedValue]="hercelosSeleccionados" [layout]="'horizontal'" [disabled]="esFormularioSoloLectura"></app-input-radio>
   </div>
-  @if (manifiestos.get('cumplimiento')?.touched && manifiestos.get('cumplimiento')?.errors?.['required']) {
-         <div class="col-md-12">
-            <div class="mensaje-error mt-2">
-               Este campo es obligatorio.
-            </div>
-         </div>
-         }
   <ng-container formGroupName="datosDelTramiteRealizar"> 
 
 <ng-titulo titulo="Representante legal" />
