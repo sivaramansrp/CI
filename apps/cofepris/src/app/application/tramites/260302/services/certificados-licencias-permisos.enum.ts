@@ -1,4 +1,5 @@
-import { ConfiguracionColumna, Fabricante, MercanciasDatos, Otros260303 } from "@libs/shared/data-access-user/src";
+import { ConfiguracionColumna, Fabricante, MercanciasDatos } from "@libs/shared/data-access-user/src";
+import { Otros260302 } from "@libs/shared/data-access-user/src/core/models/260302/certificados-licencias-permisos.model";
 
 /**
  * Pasos principales del trámite, utilizados para controlar el flujo de la solicitud.
@@ -53,10 +54,10 @@ export const FABRICANTE_TABLA: Array<{ encabezado: string; clave: keyof Fabrican
 
 /**
  * Configuración de columnas para la tabla de otros terceros relacionados.
- * Cada elemento define el encabezado de la columna y la clave correspondiente del modelo Otros260303.
- * @type {Array<{encabezado: string, clave: keyof Otros260303}>}
+ * Cada elemento define el encabezado de la columna y la clave correspondiente del modelo Otros260302.
+ * @type {Array<{encabezado: string, clave: keyof Otros260302}>}
  */
-export const OTROS_TABLA:Array<{ encabezado: string; clave: keyof Otros260303 }> = [
+export const OTROS_TABLA:Array<{ encabezado: string; clave: keyof Otros260302 }> = [
   { encabezado: 'Tercero nombre descripción', clave: 'tercero' },
   { encabezado: 'Nombre/denominación o razón social', clave: 'nombre' },
   { encabezado: 'R.F.C', clave: 'rfc' },
@@ -79,7 +80,7 @@ export const OTROS_TABLA:Array<{ encabezado: string; clave: keyof Otros260303 }>
  * Título del primer paso del trámite.
  * @type {string}
  */
-export const PASO_UNO = 'Solicitud importación de materias primas que sean o contengan estupefacientes o psicotrópicos';
+export const PASO_UNO = 'Solicitud de Importación de Medicamentos que sean o contengan Estupefacientes o Psicotrópicos';
 /**
  * Título del segundo paso del trámite.
  * @type {string}

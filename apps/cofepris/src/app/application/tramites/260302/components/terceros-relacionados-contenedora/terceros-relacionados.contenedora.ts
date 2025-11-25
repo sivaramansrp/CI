@@ -7,8 +7,8 @@ import { ConsultaioQuery, ConsultaioState } from '@ng-mf/data-access-user';
 
 import { ID_PROCEDIMIENTO } from '../../../../shared/constantes/shared2603/medicos-sin-registrar.enum';
 import { TercerosRelacionadosComponent } from '../../../../shared/components/2603/terceros-relacionados/terceros-relacionados.component';
-import { Tramite260303Query } from '../../estados/queries/tramite260303.query';
-import { Tramite260303Store } from '../../estados/stores/tramite260303.store';
+import { Tramite260302Query } from '../../estados/queries/tramite260302.query';
+import { Tramite260302Store } from '../../estados/stores/tramite260302.store';
 
 /**
  * TercerosRelacionadosContenedoraComponent es responsable de manejar el primer paso del proceso.
@@ -18,7 +18,7 @@ import { Tramite260303Store } from '../../estados/stores/tramite260303.store';
   selector: 'app-terceros-relacionados-contenedora',
   standalone: true,
   imports: [CommonModule, TercerosRelacionadosComponent],
-  providers: [Tramite260303Store, Tramite260303Query],
+  providers: [Tramite260302Store, Tramite260302Query],
   templateUrl: './terceros-relacionados.contenedora.html',
   styleUrls: ['./terceros-relacionados.contenedora.scss'],
 })
@@ -29,7 +29,7 @@ export class TercerosRelacionadosContenedoraComponent implements OnDestroy {
    * @type {number}
    * @description Identificador único del procedimiento actual. Este valor se utiliza para asociar el componente con un trámite específico en el sistema.
    */
-  permisoDefinitivoTitulo: number[] = [260303];
+  permisoDefinitivoTitulo: number[] = [260302];
 
     /**
    * @property
@@ -45,7 +45,7 @@ export class TercerosRelacionadosContenedoraComponent implements OnDestroy {
    * @type {number[]}
    * @description Identificador de la sección de permisos específica para este procedimiento.
    */
-  permisoSeccion: number[] = [260303];
+  permisoSeccion: number[] = [260302];
   
   /**
    * @property destroyNotifier$
@@ -89,16 +89,15 @@ export class TercerosRelacionadosContenedoraComponent implements OnDestroy {
    * Actualiza la bandera `esFormularioSoloLectura` y el estado `consultaState` cada vez que cambia el estado de consulta.
    *
    * @param consultaQuery Servicio para consultar el estado global de la consulta.
-   * @param tramite260303Query Servicio para consultar el estado específico del trámite 260303.
-   * @param tramite260303Store Store para gestionar el estado del trámite 260303.
+   * @param tramite260302Query Servicio para consultar el estado específico del trámite 260302.
+   * @param tramite260302Store Store para gestionar el estado del trámite 260302.
    * @param cdr Servicio de Angular para detectar y aplicar cambios en el ciclo de vida del componente.
    *
    * La suscripción se cancela automáticamente al destruir el componente para evitar fugas de memoria.
    */
   constructor(
     private consultaQuery: ConsultaioQuery,
-    private tramite260303Query: Tramite260303Query,
-    private tramite260303Store: Tramite260303Store,
+    private tramite260302Query: Tramite260302Query,
     private cdr: ChangeDetectorRef
   ) {
     this.consultaQuery.selectConsultaioState$

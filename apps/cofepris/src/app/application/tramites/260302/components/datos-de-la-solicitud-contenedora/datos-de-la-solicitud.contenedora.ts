@@ -5,48 +5,28 @@ import { Subject, map, takeUntil } from 'rxjs';
 
 import { ConsultaioQuery, ConsultaioState } from '@ng-mf/data-access-user';
 
-import { ID_PROCEDIMIENTO } from '../../../../shared/constantes/shared2603/medicos-sin-registrar.enum';
-import { TercerosRelacionadosComponent } from '../../../../shared/components/2603/terceros-relacionados/terceros-relacionados.component';
-import { Tramite260303Query } from '../../estados/queries/tramite260303.query';
-import { Tramite260303Store } from '../../estados/stores/tramite260303.store';
+import { DatosDeLaSolicitudComponent } from '../../../../shared/components/2603/datos-de-la-solicitud/datos-de-la-solicitud.component';
+
+import { Tramite260302Query } from '../../estados/queries/tramite260302.query';
+import { Tramite260302Store } from '../../estados/stores/tramite260302.store';
 
 /**
- * TercerosRelacionadosContenedoraComponent es responsable de manejar el primer paso del proceso.
- * para actualizar el componente actual que se está mostrando.
- */
+ * @component DatosDeLaSolicitudContenedoraComponent
+ * @description Componente contenedor para el trámite 260302, encargado
+ * de gestionar la lógica y presentación de datos relacionados con la
+ * solicitud. Integra `DatosDeLaSolicitudComponent` para mostrar/editar
+ * información específica, y sincroniza el estado global mediante
+ * `Tramite260302Store`.
+ **/
 @Component({
-  selector: 'app-terceros-relacionados-contenedora',
+  selector: 'app-datos-de-la-solicitud-contenedora',
   standalone: true,
-  imports: [CommonModule, TercerosRelacionadosComponent],
-  providers: [Tramite260303Store, Tramite260303Query],
-  templateUrl: './terceros-relacionados.contenedora.html',
-  styleUrls: ['./terceros-relacionados.contenedora.scss'],
+  imports: [CommonModule, DatosDeLaSolicitudComponent],
+  providers: [Tramite260302Store, Tramite260302Query],
+  templateUrl: './datos-de-la-solicitud.contenedora.html',
+  styleUrls: ['./datos-de-la-solicitud.contenedora.scss'],
 })
-export class TercerosRelacionadosContenedoraComponent implements OnDestroy {
-      /**
-   * @property
-   * @name permisoDefinitivoTitulo
-   * @type {number}
-   * @description Identificador único del procedimiento actual. Este valor se utiliza para asociar el componente con un trámite específico en el sistema.
-   */
-  permisoDefinitivoTitulo: number[] = [260303];
-
-    /**
-   * @property
-   * @name idProcedimiento
-   * @type {number}
-   * @description Identificador único del procedimiento actual. Este valor se utiliza para asociar el componente con un trámite específico en el sistema.
-   */
-  idProcedimiento : number[] = ID_PROCEDIMIENTO;
-
-  /**
-   * @property
-   * @name permisoSeccion
-   * @type {number[]}
-   * @description Identificador de la sección de permisos específica para este procedimiento.
-   */
-  permisoSeccion: number[] = [260303];
-  
+export class DatosDeLaSolicitudContenedoraComponent implements OnDestroy {
   /**
    * @property destroyNotifier$
    * @description Subject utilizado para cancelar observables de manera ordenada
@@ -80,25 +60,23 @@ export class TercerosRelacionadosContenedoraComponent implements OnDestroy {
    * ```
    */
   public esFormularioSoloLectura: boolean = false;
-  
 
   /**
-   * Crea una instancia de TercerosRelacionadosContenedoraComponent.
+   * Crea una instancia de DatosDeLaSolicitudContenedoraComponent.
    *
    * Inicializa la suscripción al estado de consulta mediante el store `ConsultaioQuery`.
    * Actualiza la bandera `esFormularioSoloLectura` y el estado `consultaState` cada vez que cambia el estado de consulta.
    *
    * @param consultaQuery Servicio para consultar el estado global de la consulta.
-   * @param tramite260303Query Servicio para consultar el estado específico del trámite 260303.
-   * @param tramite260303Store Store para gestionar el estado del trámite 260303.
+   * @param tramite260302Query Servicio para consultar el estado específico del trámite 260302.
+   * @param tramite260302Store Store para gestionar el estado del trámite 260302.
    * @param cdr Servicio de Angular para detectar y aplicar cambios en el ciclo de vida del componente.
    *
    * La suscripción se cancela automáticamente al destruir el componente para evitar fugas de memoria.
    */
   constructor(
     private consultaQuery: ConsultaioQuery,
-    private tramite260303Query: Tramite260303Query,
-    private tramite260303Store: Tramite260303Store,
+    private tramite260302Query: Tramite260302Query,
     private cdr: ChangeDetectorRef
   ) {
     this.consultaQuery.selectConsultaioState$
@@ -113,11 +91,11 @@ export class TercerosRelacionadosContenedoraComponent implements OnDestroy {
       .subscribe();
   }
 
-    /**
+  /**
    * Método del ciclo de vida de Angular que se llama justo antes de que el componente sea destruido.
    */
-    ngOnDestroy(): void {
-      this.destroyNotifier$.next();
-      this.destroyNotifier$.complete();
-    }
+  ngOnDestroy(): void {
+    this.destroyNotifier$.next();
+    this.destroyNotifier$.complete();
+  }
 }
