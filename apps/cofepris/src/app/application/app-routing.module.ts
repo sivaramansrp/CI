@@ -462,8 +462,8 @@ const ROUTES: Routes = [
     path: 'exportacion-medicamentos-contengan',
     loadChildren: () =>
       import(
-        './tramites/260304/exportacion-medicamentos-contengan.module'
-      ).then((m) => m.ExportacionMedicamentosContenganModule),
+        './tramites/260304/certificados-licencias-permisos/certificados-licencias-permisos.module'
+      ).then((m) => m.CertificadosLicenciasPermisosModule),
   },
 
   {
