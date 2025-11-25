@@ -91,8 +91,6 @@ import { ScianTablaComponent } from '../scian-tabla/scian-tabla.component';
 import { ToastrService } from 'ngx-toastr';
 import { TooltipModule } from 'ngx-bootstrap/tooltip';
 import radio_si_no from '@libs/shared/theme/assets/json/260103/radio_si_no.json';
-import { DetalleMercancia } from '../../models/detalle-mercancia.model';
-import { DETALLE_MERCANCIA_PRODUCTO_TERMINADO } from '../../../tramites/260304/constants/medicamentos-contengan.enum';
 
 @Component({
   selector: 'app-datos-de-la-solicitud',
