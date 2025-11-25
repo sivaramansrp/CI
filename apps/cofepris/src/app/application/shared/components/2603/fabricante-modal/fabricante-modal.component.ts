@@ -29,7 +29,6 @@ import tipoPersona from '@libs/shared/theme/assets/json/2603/tipo-persona.json';
   styleUrl: './fabricante-modal.component.scss',
 })
 export class FabricanteModalComponent implements OnInit, OnDestroy {
-
   @Output() guardarFabricante = new EventEmitter<Record<string, unknown>>();
 
   /**
@@ -115,23 +114,10 @@ export class FabricanteModalComponent implements OnInit, OnDestroy {
   get opcionesTipoPersonaFiltradas(): RadioOpcion[] {
     const NACIONALIDAD = this.tercerosRelacionadosForm?.get('tercerosNacionalidad')?.value;
     const IS_260304 = this.permisoDefinitivoTitulo && this.permisoDefinitivoTitulo.includes(260304);
-    
     return (NACIONALIDAD === 'extranjero' || IS_260304)
       ? (this.opcionesTipoPersona ?? []).filter((option: RadioOpcion) => option.value !== 'noContribuyente')
       : (this.opcionesTipoPersona ?? []);
   }
-
-  /**
-   * Constructor del componente FabricanteModalComponent.
-   *
-   * @param bsModalRef Referencia a la instancia del modal de Bootstrap.
-   * @param fb Instancia de FormBuilder utilizada para crear y gestionar formularios reactivos.
-   * @param tramite2603Store Store para gestionar el estado del trámite 2603.
-   * @param tramite2603Query Query para consultar el estado del trámite 2603.
-   * @param consultaioQuery Query para consultar el estado de consulta IO.
-   * @param validacionesService Servicio para validaciones de formulario.
-   * @param certificadosLicenciasSvc Servicio para certificados, licencias y permisos.
-   */
   constructor(
     public bsModalRef: BsModalRef,
     private fb: FormBuilder,
@@ -152,7 +138,6 @@ export class FabricanteModalComponent implements OnInit, OnDestroy {
       )
       .subscribe();
   }
-
   /**
    * Gancho del ciclo de vida que se llama después de que Angular ha inicializado todas las propiedades enlazadas a datos de una directiva.
    * Este método se utiliza para realizar la lógica de inicialización del componente.
@@ -191,14 +176,14 @@ export class FabricanteModalComponent implements OnInit, OnDestroy {
         'telefono',
         'correoElectronico'
       ];
-      // Deshabilite todos los campos, incluido 'pais', utilizando tanto disable() como markAsDisabled para FormControl y FormGroup
+      // Deshabilitar todos los campos, incluido 'pais', al inicio
       CAMPOS_DESHABILITAR.forEach(FIELD => {
         const CONTROL = this.tercerosRelacionadosForm.get(FIELD);
         if (CONTROL) {
           CONTROL.disable({ onlySelf: true, emitEvent: false });
         }
       });
-      // Habilitar campos cuando se selecciona tipoPersona como 'fisica' o 'moral'
+      // Habilitar campos (incluyendo pais) cuando se selecciona tipoPersona como 'fisica' o 'moral'
       this.tercerosRelacionadosForm.get('tipoPersona')?.valueChanges
         .pipe(takeUntil(this.notificadorDestruir$))
         .subscribe(tipoPersona => {
@@ -610,7 +595,6 @@ export class FabricanteModalComponent implements OnInit, OnDestroy {
    * @returns {void}
    */
   inicializarFormularioTercerosRelacionados(): void {
-    const IS_260304 = this.permisoDefinitivoTitulo && this.permisoDefinitivoTitulo.includes(260304);
     this.tercerosRelacionadosForm = this.fb.group({
       denominacionSocial: [
         this.solicitudState.tercerosRelacionadosDenominacionSocial || '',
@@ -624,7 +608,7 @@ export class FabricanteModalComponent implements OnInit, OnDestroy {
       datosPersonalesNombre: ['', [Validators.pattern(REGEX_PATRON_ALFANUMERICO)]],
       datosPersonalesPrimerApellido: ['', [Validators.pattern(REGEX_PATRON_ALFANUMERICO)]],
       datosPersonalesSegundoApellido: ['', [Validators.pattern(REGEX_PATRON_ALFANUMERICO)]],
-      pais: [{value: this.solicitudState.tercerosRelacionadosPais, disabled: IS_260304 ? true : false}, [Validators.required]],
+      pais: [{value: this.solicitudState.tercerosRelacionadosPais}, [Validators.required]],
       estado: [this.solicitudState.tercerosRelacionadosEstado || '', [Validators.pattern(REGEX_PATRON_ALFANUMERICO), Validators.maxLength(255)]],
       municipio: ['', [Validators.pattern(REGEX_PATRON_ALFANUMERICO), Validators.maxLength(255)]],
       localidad: [''],
@@ -763,8 +747,19 @@ export class FabricanteModalComponent implements OnInit, OnDestroy {
    * @returns {void}
    */
   guardar(): void {
-    this.tercerosRelacionadosForm.markAllAsTouched();
-    if (this.tercerosRelacionadosForm.valid) {
+    // Marcar todo como tocado solo para controles visibles (habilitados)
+    Object.keys(this.tercerosRelacionadosForm.controls).forEach(KEY => {
+      const CONTROL = this.tercerosRelacionadosForm.get(KEY);
+      if (CONTROL && CONTROL.enabled) {
+        CONTROL.markAsTouched();
+      }
+    });
+    // Enviar solo si los controles habilitados son válidos
+    const ENABLED_CONTROLS = Object.keys(this.tercerosRelacionadosForm.controls)
+      .filter(KEY => this.tercerosRelacionadosForm.get(KEY)?.enabled)
+      .map(KEY => this.tercerosRelacionadosForm.get(KEY));
+    const ALL_ENABLED_VALID = ENABLED_CONTROLS.every(CTRL => CTRL?.valid);
+    if (ALL_ENABLED_VALID) {
       this.guardarFabricante.emit(this.tercerosRelacionadosForm.getRawValue());
       this.bsModalRef.hide();
     }

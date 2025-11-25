@@ -1,6 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { PasoUnoComponent } from './paso-uno.component';
-import { CertificadosLicenciasPermisosService } from '../../services/certificados-licencias-permisos.service';
+import { CertificadosLicenciasPermisosService } from '../../../../shared/services/shared2603/certificados-licencias-permisos.service';
 import { ConsultaioQuery, ConsultaioState } from '@libs/shared/data-access-user/src';
 import { of} from 'rxjs';
 import { CUSTOM_ELEMENTS_SCHEMA,NO_ERRORS_SCHEMA} from '@angular/core';

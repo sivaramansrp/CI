@@ -11,11 +11,10 @@ describe('TercerosRelacionadosContenedoraComponent', () => {
   beforeEach(() => {
     selectConsultaioState$ = new Subject();
     consultaQueryMock = { selectConsultaioState$: selectConsultaioState$ };
-    tramite260304QueryMock = {};
     cdrMock = { detectChanges: jest.fn() };
     component = new TercerosRelacionadosContenedoraComponent(
       consultaQueryMock,
-      tramite260304QueryMock
+      cdrMock
     );
   });
 

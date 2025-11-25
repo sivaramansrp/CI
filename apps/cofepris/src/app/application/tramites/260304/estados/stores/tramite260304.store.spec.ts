@@ -1,10 +1,10 @@
-import { Solicitud260302State, Tramite260302Store, createInitialState } from './tramite260304.store';
+import { Solicitud260304State, Tramite260304Store, createInitialState } from './tramite260304.store';
 
-describe('Tramite260302Store', () => {
-  let store: Tramite260302Store;
+describe('Tramite260304Store', () => {
+  let store: Tramite260304Store;
 
   beforeEach(() => {
-    store = new Tramite260302Store();
+    store = new Tramite260304Store();
   });
 
   describe('Store initialization', () => {
@@ -124,9 +124,9 @@ describe('Tramite260302Store', () => {
   });
 });
 
-describe('Solicitud260302State interface', () => {
-	it('should create a valid state object', () => {
-    const state: Solicitud260302State = {
+describe('Solicitud260304State interface', () => {
+  it('should create a valid state object', () => {
+    const state: Solicitud260304State = {
       idSolicitud: 1,
       denominacionRazon: 'Test',
       pagoDerechos: {} as any,

@@ -307,7 +307,7 @@
                     <div class="form-group">
                         <app-catalogo-select id="pais" [catalogo]="paisCatalogo || []" formControlName="pais"
                                                     label="País" [required]="true"
-                                                    [isDisabled]="(permisoDefinitivoTitulo && permisoDefinitivoTitulo.includes(260304)) ? true : (titulo === 'Agregar otros' ? !(tercerosRelacionadosForm.get('tercerosNacionalidad')?.value === 'extranjero' && (tercerosRelacionadosForm.get('tipoPersona')?.value === 'fisica' || tercerosRelacionadosForm.get('tipoPersona')?.value === 'moral')) : false)"
+                                                    [isDisabled]="(permisoDefinitivoTitulo && permisoDefinitivoTitulo.includes(260304) && !(tercerosRelacionadosForm.get('tipoPersona')?.value === 'fisica' || tercerosRelacionadosForm.get('tipoPersona')?.value === 'moral')) ? true : (titulo === 'Agregar otros' ? !(tercerosRelacionadosForm.get('tercerosNacionalidad')?.value === 'extranjero' && (tercerosRelacionadosForm.get('tipoPersona')?.value === 'fisica' || tercerosRelacionadosForm.get('tipoPersona')?.value === 'moral')) : false)"
                                                     name="pais"
                                                     [markTouched]="tercerosRelacionadosForm.get('pais')?.touched??false"
                                                     placeholder=""
