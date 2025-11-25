@@ -400,7 +400,7 @@ onGuardar(): void {
       targetTable = this.destinatarioDatos;
       break;
     default:
-      console.error('Invalid table selection');
+      
       return;
   }
 
@@ -489,7 +489,7 @@ this.solicitud260702Store.setFabricanteDatos(this.fabricanteDatos)
        this.solicitud260702Store.setDestinatarioDatos(this.destinatarioDatos);
       break;
     default:
-      console.error('Invalid table selection:', this.tablaActual);
+     
       return;
   }
 
@@ -524,7 +524,7 @@ openModificarMercancias(): void {
       filasseleccionadas = this.filasSeleccionadasDestinatario;
       break;
     default:
-      console.error('Invalid table selection:', this.tablaActual);
+    
       return;
   }
 
@@ -629,7 +629,7 @@ enEliminado(tableName: string): void {
       filasseleccionadas = this.filasSeleccionadasDestinatario;
       break;
     default:
-      console.error('Invalid table selection:', this.tablaActual);
+    
       return;
   }
 
