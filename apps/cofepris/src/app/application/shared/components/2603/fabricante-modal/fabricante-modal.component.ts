@@ -108,13 +108,15 @@ export class FabricanteModalComponent implements OnInit, OnDestroy {
 
   /**
    * Obtiene las opciones de tipo de persona filtradas según la nacionalidad seleccionada.
-   * Si la nacionalidad es 'extranjero', se excluye la opción 'noContribuyente'.
+   * Si la nacionalidad es 'extranjero' o si es trámite 260304, se excluye la opción 'noContribuyente'.
    *
    * @returns {RadioOpcion[]} Un arreglo de opciones de tipo de persona filtradas.
    */
   get opcionesTipoPersonaFiltradas(): RadioOpcion[] {
     const NACIONALIDAD = this.tercerosRelacionadosForm?.get('tercerosNacionalidad')?.value;
-    return NACIONALIDAD === 'extranjero'
+    const IS_260304 = this.permisoDefinitivoTitulo && this.permisoDefinitivoTitulo.includes(260304);
+    
+    return (NACIONALIDAD === 'extranjero' || IS_260304)
       ? (this.opcionesTipoPersona ?? []).filter((option: RadioOpcion) => option.value !== 'noContribuyente')
       : (this.opcionesTipoPersona ?? []);
   }
@@ -170,6 +172,52 @@ export class FabricanteModalComponent implements OnInit, OnDestroy {
       this.cerrarFormularioTercerosRelacionados();
     } else {
       this.inicializarFormularioTercerosRelacionados();
+    }
+
+    // Deshabilitar campos inicialmente para 260304 hasta que se seleccione Fisica o Moral
+    if (this.permisoDefinitivoTitulo && this.permisoDefinitivoTitulo.includes(260304)) {
+      const CAMPOS_DESHABILITAR = [
+        'datosPersonalesNombre',
+        'datosPersonalesPrimerApellido',
+        'datosPersonalesSegundoApellido',
+        'razonSocial',
+        'pais',
+        'estado',
+        'codigoPostal',
+        'calle',
+        'numeroExterior',
+        'numeroInterior',
+        'lada',
+        'telefono',
+        'correoElectronico'
+      ];
+      // Deshabilite todos los campos, incluido 'pais', utilizando tanto disable() como markAsDisabled para FormControl y FormGroup
+      CAMPOS_DESHABILITAR.forEach(FIELD => {
+        const CONTROL = this.tercerosRelacionadosForm.get(FIELD);
+        if (CONTROL) {
+          CONTROL.disable({ onlySelf: true, emitEvent: false });
+        }
+      });
+      // Habilitar campos cuando se selecciona tipoPersona como 'fisica' o 'moral'
+      this.tercerosRelacionadosForm.get('tipoPersona')?.valueChanges
+        .pipe(takeUntil(this.notificadorDestruir$))
+        .subscribe(tipoPersona => {
+          if (tipoPersona === 'fisica' || tipoPersona === 'moral') {
+            CAMPOS_DESHABILITAR.forEach(FIELD => {
+              const CONTROL = this.tercerosRelacionadosForm.get(FIELD);
+              if (CONTROL) {
+                CONTROL.enable({ onlySelf: true, emitEvent: false });
+              }
+            });
+          } else {
+            CAMPOS_DESHABILITAR.forEach(FIELD => {
+              const CONTROL = this.tercerosRelacionadosForm.get(FIELD);
+              if (CONTROL) {
+                CONTROL.disable({ onlySelf: true, emitEvent: false });
+              }
+            });
+          }
+        });
     }
   }
 
@@ -231,7 +279,7 @@ export class FabricanteModalComponent implements OnInit, OnDestroy {
   private obtenerValoresParaModificacion(esAgregarOtros: boolean): Record<string, unknown> {
     const DATOS = this.datosExistentes as Fabricante;
     const DATOS_OTROS = this.datosExistentes as Otros2603;
-    
+    const IS_260304 = this.permisoDefinitivoTitulo && this.permisoDefinitivoTitulo.includes(260304);
     return {
       terceroNombre: [DATOS_OTROS.tercero || '', Validators.required],
       tercerosNacionalidad: ['nacional'],
@@ -242,7 +290,7 @@ export class FabricanteModalComponent implements OnInit, OnDestroy {
       datosPersonalesNombre: [{ value: DATOS.nombre || '', disabled: true }, []],
       datosPersonalesPrimerApellido: [{ value: '', disabled: true }, []],
       datosPersonalesSegundoApellido: [{ value: '', disabled: true }, []],
-      pais: [{ value: DATOS.pais || '', disabled: esAgregarOtros }, []],
+      pais: [{ value: DATOS.pais || '', disabled: IS_260304 ? true : esAgregarOtros }, []],
       estado: [{ value: DATOS.estado || '', disabled: true }, []],
       municipio: [{ value: DATOS.municipio || '', disabled: true }, []],
       localidad: [{ value: DATOS.localidad || '', disabled: true }],
@@ -261,6 +309,7 @@ export class FabricanteModalComponent implements OnInit, OnDestroy {
    * Obtiene valores para modo creación.
    */
   private obtenerValoresParaCreacion(esAgregarOtros: boolean): Record<string, unknown> {
+    const IS_260304 = this.permisoDefinitivoTitulo && this.permisoDefinitivoTitulo.includes(260304);
     return {
       terceroNombre: [this.solicitudState.tercerosRelacionadosTerceroNombre, Validators.required],
       tercerosNacionalidad: [this.solicitudState.tercerosNacionalidad],
@@ -271,7 +320,7 @@ export class FabricanteModalComponent implements OnInit, OnDestroy {
       datosPersonalesNombre: [{ value: this.solicitudState.datosPersonalesNombre, disabled: true }, []],
       datosPersonalesPrimerApellido: [{ value: this.solicitudState.datosPersonalesPrimerApellido, disabled: true }, []],
       datosPersonalesSegundoApellido: [{ value: this.solicitudState.datosPersonalesSegundoApellido, disabled: true }, []],
-      pais: [{ value: this.solicitudState.tercerosRelacionadosPais, disabled: esAgregarOtros }, []],
+      pais: [{ value: this.solicitudState.tercerosRelacionadosPais, disabled: IS_260304 ? true : esAgregarOtros }, [Validators.required]],
       estado: [{ value: this.solicitudState.tercerosRelacionadosEstado, disabled: true }, []],
       municipio: [{ value: this.solicitudState.tercerosRelacionadosMunicipio, disabled: true }, []],
       localidad: [{ value: this.solicitudState.tercerosRelacionadosLocalidad, disabled: true }],
@@ -561,8 +610,12 @@ export class FabricanteModalComponent implements OnInit, OnDestroy {
    * @returns {void}
    */
   inicializarFormularioTercerosRelacionados(): void {
+    const IS_260304 = this.permisoDefinitivoTitulo && this.permisoDefinitivoTitulo.includes(260304);
     this.tercerosRelacionadosForm = this.fb.group({
-  denominacionSocial: [this.solicitudState.tercerosRelacionadosDenominacionSocial || '', [Validators.required, Validators.pattern(REGEX_PATRON_ALFANUMERICO)]],
+      denominacionSocial: [
+        this.solicitudState.tercerosRelacionadosDenominacionSocial || '',
+        [Validators.required, Validators.pattern(REGEX_PATRON_ALFANUMERICO)]
+      ],
       tercerosNacionalidad: [''],
       tipoPersona: [''],
       rfc: [''],
@@ -571,7 +624,7 @@ export class FabricanteModalComponent implements OnInit, OnDestroy {
       datosPersonalesNombre: ['', [Validators.pattern(REGEX_PATRON_ALFANUMERICO)]],
       datosPersonalesPrimerApellido: ['', [Validators.pattern(REGEX_PATRON_ALFANUMERICO)]],
       datosPersonalesSegundoApellido: ['', [Validators.pattern(REGEX_PATRON_ALFANUMERICO)]],
-      pais: [{value: this.solicitudState.tercerosRelacionadosPais, disabled: false}, [Validators.required]],
+      pais: [{value: this.solicitudState.tercerosRelacionadosPais, disabled: IS_260304 ? true : false}, [Validators.required]],
       estado: [this.solicitudState.tercerosRelacionadosEstado || '', [Validators.pattern(REGEX_PATRON_ALFANUMERICO), Validators.maxLength(255)]],
       municipio: ['', [Validators.pattern(REGEX_PATRON_ALFANUMERICO), Validators.maxLength(255)]],
       localidad: [''],
