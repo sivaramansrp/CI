@@ -3,19 +3,23 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
 import { AvisoExportacionRoutingModule } from './aviso-exportacion-routing.module';
-import { PantallasComponent } from './pages/pantallas/pantallas.component';
+// import { PantallasComponent } from './pages/pantallas/pantallas.component';
 
-import { DatosComponent } from './pages/datos/datos.component';
+// import { DatosComponent } from './pages/datos/datos.component';
 
 import {
-AlertComponent,
+  AlertComponent,
   BtnContinuarComponent,
   InicioSesionService,
+  NotificacionesComponent,
+  PasoCargaDocumentoComponent,
+  PasoFirmaComponent,
   ServiciosPantallasService,
   SolicitanteComponent,
   SubirDocumentoService,
   TituloComponent,
-  WizardComponent,} from '@libs/shared/data-access-user/src';
+  WizardComponent,
+} from '@libs/shared/data-access-user/src';
 
 import { TercerosRelacionadoComponent } from '../../shared/components/tercerosRelacionado/tercerosRelacionado.component';
 
@@ -36,40 +40,47 @@ import { DatosDelEstablecimientoComponent } from '../../shared/components/datos-
 import { DatosService } from '../../shared/services/datos.service';
 import { DatosDeLaSolicitudComponent } from '../../shared/components/shared2606/datos-de-la-solicitud/datos-de-la-solicitud.component';
 import { ContenedorDeDatosSolicitudComponent } from './components/contenedor-de-datos-solicitud/contenedor-de-datos-solicitud.component';
+import { ContenedorDePasosComponent } from './pages/contenedor-de-paso/contenedor-de-pasos.component';
+import { PasoUnoComponent } from './pages/paso-uno/paso-uno.component';
 
 @NgModule({
   declarations: [
-    PantallasComponent,
-    DatosComponent,
+    // PantallasComponent,
+    // DatosComponent,
+    ContenedorDePasosComponent,
+    PasoUnoComponent
   ],
   imports: [
     ContenedorDeDatosSolicitudComponent,
+    PasoCargaDocumentoComponent,
     CommonModule,
     DatosDeLaSolicitudComponent,
-  HttpClientModule,  
-  AvisoExportacionRoutingModule,
-  AlertComponent,
-  BtnContinuarComponent,
-  TituloComponent,
-  WizardComponent,
-  TercerosRelacionadoComponent,
-  SolicitanteComponent,
-  PasoDosComponent,
-  PasoTresComponent,
-  RepresentanteLegalComponent,
-  DomicilioDelEstablecimientoComponent,
-  DatosDelEstablecimientoComponent
-  
-],
-providers: [
- ToastrService,
- provideHttpClient(),
-  ServiciosPantallasService,
-  ExportacionService,
-  DatosService,
-  InicioSesionService,
-  SubirDocumentoService
+    HttpClientModule,
+    AvisoExportacionRoutingModule,
+    AlertComponent,
+    BtnContinuarComponent,
+    TituloComponent,
+    WizardComponent,
+    TercerosRelacionadoComponent,
+    SolicitanteComponent,
+    PasoDosComponent,
+    PasoFirmaComponent,
+    PasoTresComponent,
+    RepresentanteLegalComponent,
+    DomicilioDelEstablecimientoComponent,
+    NotificacionesComponent,
+    DatosDelEstablecimientoComponent
 
-],
+  ],
+  providers: [
+    ToastrService,
+    provideHttpClient(),
+    ServiciosPantallasService,
+    ExportacionService,
+    DatosService,
+    InicioSesionService,
+    SubirDocumentoService
+
+  ],
 })
-export class AvisoExportacionModule {}
+export class AvisoExportacionModule { }
