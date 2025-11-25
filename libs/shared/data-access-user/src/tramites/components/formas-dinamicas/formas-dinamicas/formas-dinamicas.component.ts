@@ -484,7 +484,7 @@ public eventoDeCambioDeValor(event: any, campo: string, tipo?: string): void {
   }
 
   if (campo) {
-    // Mark field as touched so validation errors show
+    // Marcar el campo como tocado para que se muestren los errores de validación
     this.forma.get(campo)?.markAsTouched();
     this.emitirCambioDeValor.emit({ campo: campo, valor: VALOR });
   }
@@ -497,7 +497,7 @@ public eventoDeCambioDeValor(event: any, campo: string, tipo?: string): void {
     const CONTROL = this.forma.get(campo);
     if (CONTROL) {
       CONTROL.markAsTouched();
-      this.cdr.detectChanges(); // Force change detection
+      this.cdr.detectChanges(); // Detección de cambio forzada
     }
   }
 
