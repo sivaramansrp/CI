@@ -2,7 +2,7 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { CodigoRespuesta } from '../../../../core/enum/se-core-enum';
 import { DatosComponent } from '../datos/datos.component';
 
-import { CategoriaMensaje, DatosPasos, ListaPasosWizard, Notificacion, WizardComponent } from '@libs/shared/data-access-user/src'
+import { AVISO, CategoriaMensaje, DatosPasos, ListaPasosWizard, Notificacion, WizardComponent } from '@libs/shared/data-access-user/src'
 import { PANTAPASOS } from '../../services/pantallas-svc.enum';
 import { PASOS } from '@ng-mf/data-access-user';
 
@@ -42,7 +42,7 @@ interface AccionBoton {
   valor: number;
 }
 
-
+ 
 /**
  * Este componente se utiliza para mostrar los pasos del asistente - 110101
  * Lista de pasos
@@ -93,6 +93,16 @@ export class PantallasComponent implements OnInit {
    * - Se inicializa en `1`, lo que indica que el asistente comienza en el primer paso.  
    */
   indice: number = 1;
+
+  /**
+   * Texto del aviso de privacidad simplificado.
+   */
+  TEXTOS = AVISO.Aviso;
+
+  /**
+   * Clase CSS para mostrar una alerta de información.
+   */
+  public infoAlert = 'alert-info';
 
   /**
    * **Subject para manejar la destrucción del componente**
