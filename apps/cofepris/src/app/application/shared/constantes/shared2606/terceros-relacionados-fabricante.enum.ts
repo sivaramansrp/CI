@@ -62,9 +62,20 @@ export const OTROS_TABLA = [
   { encabezado: 'Código postal', clave: 'cp' },
 ];
 
+/**
+ * @constant {number[]} DEFAULT_TABLA_ORDENS
+ * @description Constante que define los IDs de los trámites que utilizan la tabla de órdenes por defecto.
+ */
+export const DEFAULT_TABLA_ORDENS:number[] = [];
 
-export const DEFAULT_TABLA_ORDENS = [260201];
+/**
+ * @constant {number[]} NUMERO_REGISTRO_SANITARIO
+ * @description Constante que define los IDs de los trámites que requieren el número de registro sanitario.
+ */
+export const NUMERO_REGISTRO_SANITARIO:number[] = [260604];
 
-export const NUMERO_REGISTRO_SANITARIO = [260604];
-
-export const PROCEDIMIENTOS_MUESTRAN_RFC = [260904, 260203,260204, 260210,260213, 260218, 260208, 260201, 260202];
+/**
+ * @constant {number[]} PROCEDIMIENTOS_MUESTRAN_RFC
+ * @description Constante que define los IDs de los trámites que muestran el campo RFC sanitario.
+ */
+export const PROCEDIMIENTOS_MUESTRAN_RFC:number[] = [];

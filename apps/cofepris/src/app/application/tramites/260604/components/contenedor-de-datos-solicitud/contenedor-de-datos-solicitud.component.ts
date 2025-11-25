@@ -151,6 +151,10 @@ export class ContenedorDeDatosSolicitudComponent implements OnInit, OnDestroy {
    */
   public readonly idProcedimiento = ID_PROCEDIMIENTO;
 
+/**   * @property {DatosDeLaSolicitudComponent} datosDeLaSolicitudComponent
+   * @description
+   * Referencia al componente hijo que maneja los datos de la solicitud.
+   */
   @ViewChild('datosDeLaSolicitud') datosDeLaSolicitudComponent!: DatosDeLaSolicitudComponent;
 
   /**
@@ -260,6 +264,11 @@ export class ContenedorDeDatosSolicitudComponent implements OnInit, OnDestroy {
     }));
   }
 
+  /**
+   * @method validarFormularioDatos
+   * @description Valida el formulario de datos de la solicitud.
+   * @returns {boolean} Indica si el formulario es válido.
+   */
   validarFormularioDatos(): boolean {
     return (
       this.datosDeLaSolicitudComponent?.formularioSolicitudValidacion() ?? false

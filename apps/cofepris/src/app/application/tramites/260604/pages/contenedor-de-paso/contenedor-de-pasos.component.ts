@@ -389,6 +389,14 @@ export class ContenedorDePasosComponent implements OnInit {
     this.wizardComponent.siguiente();
   }
 
+  /** 
+   *  @method cerrarModal
+   * @description
+   * Maneja el cierre del modal de alerta y actualiza el estado
+   * de la solicitud según la confirmación del usuario.
+   *
+   * @param {boolean} value - Indica si el usuario confirmó la acción.
+   */
   cerrarModal(value:boolean): void {
     if(value){
       this.mostrarAlerta = false;
