@@ -688,7 +688,7 @@ export class SolicitudComponent implements OnInit, OnDestroy {
         ],
         numeroActaDescruccion: [
           this.tramiteState?.solicitudFormulario?.numeroActaDescruccion,
-          [Validators.required],
+          [Validators.required, Validators.maxLength(30), Validators.pattern('^[a-zA-Z0-9 ]+$')],
         ],
         cveAduanaDestino: [
           this.tramiteState?.solicitudFormulario?.cveAduanaDestino,
@@ -715,13 +715,23 @@ export class SolicitudComponent implements OnInit, OnDestroy {
           [Validators.required],
         ],
         estadoTipoDocumentoDestino: [
-          this.tramiteState?.solicitudFormulario?.estadoTipoDocumentoDestino,
-          [Validators.required],
+          this.tramiteState?.solicitudFormulario?.estadoTipoDocumentoDestino
         ],
         autoridadPresentoAvisoDestruccion: [
           this.tramiteState?.solicitudFormulario
             ?.autoridadPresentoAvisoDestruccion,
-          [Validators.required],
+          [
+            Validators.required,
+            Validators.maxLength(30)
+          ],
+        ],
+        folioImportacionTemporal: [
+          this.tramiteState?.solicitudFormulario?.folioImportacionTemporal,
+          [
+            Validators.required,
+            Validators.maxLength(25),
+            Validators.pattern('^[0-9]*$'),
+          ],
         ],
       }),
     });
