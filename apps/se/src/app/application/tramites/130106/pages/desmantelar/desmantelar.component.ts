@@ -176,10 +176,6 @@ export class DesmantelarComponent {
    * La llamada al servicio actualmente está comentada.
    */
   guardar(item: Solicitud130106State, e: AccionBoton): Promise<JSONResponse> {
-    // if (!this.solicitudState) {
-    //   console.error('solicitudState is undefined in guardar()');
-    //   return Promise.reject('solicitudState is undefined');
-    // }
     const MERCANCIA = this.solocitud130106Service.getPayloadDatos(item);
     const PAYLOAD = {
       "tipoDeSolicitud": "guardar",
