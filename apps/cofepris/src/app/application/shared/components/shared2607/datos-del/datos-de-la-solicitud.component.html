@@ -114,6 +114,7 @@
                         [required]="true"
                         (change)="setValoresStore(datosDelTramiteRealizar,'estado', 'setEstado')"
                         [isDisabled]="esFormularioSoloLectura"
+                        [markTouched]="!!(datosDelTramiteRealizar.get('estado')?.invalid && datosDelTramiteRealizar.get('estado')?.touched)"
                       ></app-catalogo-select>
                     </div>
                 </div>
@@ -193,10 +194,12 @@
         <app-tabla-dinamica
       [configuracionTabla]="configuracionColumnasoli"
        [tipoSeleccionTabla]="tipoSeleccionsoliMercancias"
-        [datos]="tableData"
+        [datos]="nicoTabla"
+         [isInvalida]="nicoTabla && nicoTabla.length === 0 && isContinuarTriggered"
         (listaDeFilaSeleccionada)="onfilasSeleccionadas($event)"
          [disableSeleccionTablaCheckBox]="esFormularioSoloLectura">
     </app-tabla-dinamica>
+ 
     <div class="col-md-12 d-flex justify-content-end">
         <div class="btn-group">
           <button class="btn btn-danger"
@@ -282,6 +285,7 @@
             [label]="'Régimen al que se destinarán la mercancías'" 
             [required]="true"
             [isDisabled]="esFormularioSoloLectura"
+            [markTouched]="!!(datosDelTramiteRealizar.get('regimenalque')?.invalid && datosDelTramiteRealizar.get('regimenalque')?.touched)"
             (change)="setValoresStore(datosDelTramiteRealizar,'regimenalque', 'setRegimenalque')"></app-catalogo-select>
         </div>
         <div class="col-md-4">
@@ -607,6 +611,13 @@
     <label class="form-label" for="">Los datos o anexos pueden contener información confidencial ¿Está de acuerdo en hacerlos públicos?*:</label>
     <app-input-radio formControlName="hacerlosPublicos" [radioOptions]="hacerlosRadioOptions" [selectedValue]="hercelosSeleccionados" [layout]="'horizontal'" [disabled]="esFormularioSoloLectura"></app-input-radio>
   </div>
+  @if (manifiestos.get('cumplimiento')?.touched && manifiestos.get('cumplimiento')?.errors?.['required']) {
+         <div class="col-md-12">
+            <div class="mensaje-error mt-2">
+               Este campo es obligatorio.
+            </div>
+         </div>
+         }
   <ng-container formGroupName="datosDelTramiteRealizar"> 
 
 <ng-titulo titulo="Representante legal" />

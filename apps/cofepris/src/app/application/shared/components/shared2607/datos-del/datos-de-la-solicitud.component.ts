@@ -3,7 +3,7 @@ import { CONFIGURACION_COLUMNAS_LISTA_CLAVE, CONFIGURACION_COLUMNAS_MERCANCIAS, 
 import { AL_DAR, Catalogo, InputFecha, InputRadioComponent, Notificacion, NotificacionesComponent, Pedimento, REGEX_CORREO_ELECTRONICO, REGEX_NO_ESPACIOS_AL_INICIO_NI_AL_FINAL, REGEX_SOLO_DIGITOS, REGEX_TEXTO_ALFANUMERICO_EXTENDIDO, TablaSeleccion } from '@libs/shared/data-access-user/src'; 
 import { ChangeDetectorRef, Component, ElementRef, EventEmitter, Input, OnChanges, OnDestroy, OnInit, Output, ViewChild } from '@angular/core';
 import { CrossList, MercanciaCrossList } from '../../../models/mercancia.model';
-import { FilaData, FilaData2, ListaClave } from '../../../models/fila-modal';
+import { FilaData, FilaData2, ListaClave, NicoInfo} from '../../../models/fila-modal';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ReplaySubject, map, takeUntil } from 'rxjs';
 import { Solicitud260702State, Solicitud260702Store } from '../../../estados/stores/shared2607/tramites260702.store';
@@ -159,7 +159,10 @@ export class DatosdelasolicitudComponent implements OnInit, OnDestroy, OnChanges
 
   /** Datos de la tabla */
   tableData: FilaData[] = [];
-
+/**
+ * Datos de la tabla NICO
+ */
+  nicoTabla: FilaData[] = [];
   /** Conjunto de filas seleccionadas */
   filasSeleccionadas: Set<number> = new Set();
 
@@ -202,6 +205,7 @@ export class DatosdelasolicitudComponent implements OnInit, OnDestroy, OnChanges
   /** Configuración para el campo de selección del tipo de producto */
   public tipoProductoData = TIPO_PRODUCTO_DATA;
 
+  public mostrarErrorTabla: boolean = false;
   /**
    * Indica si el formulario está en modo solo lectura.
    * Cuando es `true`, los campos del formulario no se pueden editar.
@@ -322,9 +326,10 @@ export class DatosdelasolicitudComponent implements OnInit, OnDestroy, OnChanges
  * Utiliza Promise.resolve() para asegurar que la validación se ejecute en el próximo ciclo del event loop.
  */
   ngOnChanges(): void {
-    if (this.isContinuarTriggered) {
-    this.dataDeLaSolicitudForm.markAllAsTouched();
-    this.clavaScianForm.markAllAsTouched();
+       if (this.isContinuarTriggered) {
+      Promise.resolve().then(() => {
+        this.validarFormularios();
+      });
     }
   }
     /**
@@ -351,6 +356,26 @@ export class DatosdelasolicitudComponent implements OnInit, OnDestroy, OnChanges
       this.inicializarFormulario();
     }
   }
+ /**
+  * Valida los formularios del componente.
+  * @returns  {boolean} - `true` si el formulario es válido, `false` en caso contrario.
+  */
+  validarFormularios(): boolean { 
+    const FORM_GROUP = this.dataDeLaSolicitudForm.get('datosDelTramiteRealizar');
+
+  const VALID = FORM_GROUP?.valid ?? false;
+   const TABLA_VALID = this.tableData && this.tableData.length > 0;
+if (!TABLA_VALID) {
+    this.mostrarErrorTabla = true; 
+  } else {
+    this.mostrarErrorTabla = false;
+  }
+  if (!VALID) {
+    FORM_GROUP?.markAllAsTouched();
+  }
+
+  return VALID;
+}
 
   /**
    * Maneja el cambio de selección en el botón de radio.
@@ -495,8 +520,7 @@ export class DatosdelasolicitudComponent implements OnInit, OnDestroy, OnChanges
       ],
       datosDelTramiteRealizar: this.fb.group({
          tipoOperacion: [
-        { value: this.dataDeLaSolicitudState?.tipoOperacion, disabled: false },
-        Validators.required,
+        { value: this.dataDeLaSolicitudState?.tipoOperacion, disabled: false }
       ],
         justification: [
           { value: this.dataDeLaSolicitudState?.justification ,
@@ -515,7 +539,6 @@ export class DatosdelasolicitudComponent implements OnInit, OnDestroy, OnChanges
         codigopostal: [
           this.dataDeLaSolicitudState?.codigopostal,
          [
-            Validators.required,
             Validators.maxLength(12),
              Validators.pattern(REGEX_SOLO_DIGITOS),
           ],
@@ -523,12 +546,10 @@ export class DatosdelasolicitudComponent implements OnInit, OnDestroy, OnChanges
         estado: [this.dataDeLaSolicitudState?.estado, Validators.required],
         municipoyalcaldia: [
           this.dataDeLaSolicitudState?.municipoyalcaldia,
-          Validators.required,
         ],
         localidad: [
           this.dataDeLaSolicitudState?.localidad,
          [
-            Validators.required,
             Validators.maxLength(120),
             Validators.pattern(REGEX_TEXTO_ALFANUMERICO_EXTENDIDO),
           ],
@@ -536,7 +557,6 @@ export class DatosdelasolicitudComponent implements OnInit, OnDestroy, OnChanges
         colonia: [this.dataDeLaSolicitudState?.colonia, [Validators.maxLength(120)]],
         calle: [this.dataDeLaSolicitudState?.calle,[Validators.required, Validators.maxLength(100)]],
         lada: [this.dataDeLaSolicitudState?.lada,[
-                    Validators.required,
                     Validators.minLength(5),
                     Validators.maxLength(5),
                     Validators.pattern(REGEX_SOLO_DIGITOS),
@@ -548,16 +568,14 @@ export class DatosdelasolicitudComponent implements OnInit, OnDestroy, OnChanges
                   ],],
         avisoDeFuncionamiento: [
           this.dataDeLaSolicitudState?.avisoDeFuncionamiento,
-          Validators.required,
         ],
         licenciaSanitaria: [
           this.dataDeLaSolicitudState?.licenciaSanitaria,
-          Validators.required,
         ],
         regimenalque: [
           this.dataDeLaSolicitudState?.regimenalque
         ],
-        aduana: [this.dataDeLaSolicitudState?.aduana, Validators.required],
+        aduana: [this.dataDeLaSolicitudState?.aduana],
         rfc: [this.dataDeLaSolicitudState?.rfc || this.rfc, [Validators.required, Validators.maxLength(13)]],
         legalRazonSocial: [
           this.dataDeLaSolicitudState?.legalRazonSocial,
@@ -569,7 +587,6 @@ export class DatosdelasolicitudComponent implements OnInit, OnDestroy, OnChanges
         ],
         apellidoMaterno: [
           this.dataDeLaSolicitudState?.apellidoMaterno,
-          Validators.required,
         ],
       }),
       hacerlosPublicos: [{value: this.dataDeLaSolicitudState?.hacerlosPublicos, disabled: this.esFormularioSoloLectura}, Validators.required],
@@ -963,8 +980,12 @@ if (this.idProcedimiento) {
   };
 
   this.tableData = [...this.tableData, NEW_ROW];
+  this.nicoTabla=this.tableData;
+  this.solicitud260702Store.setNicoTabla(this.nicoTabla);
   this.showClavaScianForm = false;
   this.clavaScianForm.reset();
+    
+  this.mostrarErrorTabla = false;
   }
 
   /** Última fila seleccionada */
