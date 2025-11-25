@@ -124,19 +124,19 @@ export class DatosDelTramiteDosComponent implements OnInit, OnDestroy {
     /**
      * Notificación que se muestra al usuario.
      */
-  public nuevaNotificacionEliminar: Notificacion | undefined;
+  public nuevaNotificacionEliminar: Notificacion | null = null;
 
        /**
        * Notificación que se muestra al usuario.
        */
-    public nuevaNotificacion: Notificacion | undefined;
+    public nuevaNotificacion: Notificacion | null = null;
   
 
   /**
    * Notificación que se muestra al usuario cuando hay un error o alerta relacionado con la selección de filas en la tabla.
    * Por ejemplo, cuando se intenta modificar o eliminar sin seleccionar filas, o se seleccionan múltiples filas para una acción que requiere solo una.
    */
-  public nuevaNotificacionRowselect: Notificacion | undefined;
+  public nuevaNotificacionRowselect: Notificacion | null = null;
   /**
    * Maneja la selección de filas en la tabla de mercancías.
    *
@@ -196,7 +196,7 @@ export class DatosDelTramiteDosComponent implements OnInit, OnDestroy {
         const operacionesValue = this.datosDelTramiteDos.get('operaciones')?.value;
         // Always find the label (descripcion) for the selected id using filter
         let operacionesLabel = operacionesValue;
-        if (typeof operacionesValue !== 'undefined' && this.operaciones && Array.isArray(this.operaciones)) {
+        if (!operacionesValue && this.operaciones && Array.isArray(this.operaciones)) {
           const filtered = this.operaciones.filter(op => op.id == operacionesValue);
           if (filtered.length > 0 && filtered[0].descripcion) {
             operacionesLabel = filtered[0].descripcion;
@@ -223,7 +223,7 @@ export class DatosDelTramiteDosComponent implements OnInit, OnDestroy {
     if (confirmado) {
       this.confirmarEliminarMercancia();
     } else {
-      this.nuevaNotificacionEliminar = undefined;
+      this.nuevaNotificacionEliminar = null;
     }
   }
 
@@ -232,7 +232,7 @@ export class DatosDelTramiteDosComponent implements OnInit, OnDestroy {
    * Maneja la respuesta del modal de confirmación de eliminación
    */
   onEliminarRowselect(confirmado: boolean) {
-    this.nuevaNotificacionRowselect = undefined;
+    this.nuevaNotificacionRowselect = null;
   
   }
   /**
@@ -268,7 +268,7 @@ export class DatosDelTramiteDosComponent implements OnInit, OnDestroy {
       // Clear selection and disable buttons
       this.canDelete = false;
       this.canEdit = false;
-      this.nuevaNotificacionEliminar = undefined;
+      this.nuevaNotificacionEliminar = null;
     }
   }
 
