@@ -8,6 +8,8 @@ import { Injectable } from '@angular/core';
 import { MercanciaCrossList } from '../../models/mercancia.model';
 import { Observable } from 'rxjs';
 import { TramitesAsociados } from '../../models/destinatario.model';
+import { HttpCoreService } from '@libs/shared/data-access-user/src';
+import { PROC_260704 } from './api-route';
 /**
  * Servicio para gestionar las solicitudes MCP.
  * Proporciona métodos para obtener datos de catálogos y otros recursos necesarios para el trámite.
@@ -24,7 +26,9 @@ export class RegistrarSolicitudMcpService {
    * Constructor del servicio.
    * @param http Cliente HTTP para realizar solicitudes a los recursos.
    */
-  constructor(private http: HttpClient) {
+  constructor(private http: HttpClient,
+        public httpService: HttpCoreService,
+  ) {
     this.host = `${COMUN_URL.BASE_URL}`;
   }
 
@@ -222,6 +226,16 @@ export class RegistrarSolicitudMcpService {
       return this.http.get<BaseResponse<Catalogo[]>>(ENDPOINT);
     }
 
-    
+
+     
+       /**
+        * Envía los datos proporcionados mediante una solicitud HTTP POST a la ruta especificada.
+        *
+        * @param body - Objeto que contiene los datos a enviar en el cuerpo de la solicitud.
+        * @returns Observable con la respuesta de la solicitud POST.
+        */
+       guardarDatosPost(body: Record<string, unknown>): Observable<Record<string, unknown>> {
+         return this.httpService.post<Record<string, unknown>>(PROC_260704.GUARDAR, { body: body });
+       }
   
 }
