@@ -1,7 +1,9 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
 import { ConsultaioQuery, ConsultaioState } from '@ng-mf/data-access-user';
 import { Subject, map, takeUntil } from 'rxjs';
 import { Service260702Service } from '../../../../shared/services/shared2607/service260702.service';
+import { Solicitud260702Store } from '../../../../shared/estados/stores/shared2607/tramites260702.store';
+import { Solicitud260702Query } from '../../../../shared/estados/queries/shared2607/tramites260702.query';
 
 /**
  * Componente que representa el paso uno del trámite.
@@ -13,6 +15,20 @@ import { Service260702Service } from '../../../../shared/services/shared2607/ser
   styles: ``,
 })
 export class PasoUnoComponent implements OnInit, OnDestroy {
+  /** Indicadores booleanos que validan el estado de los componentdatos de la solicitud */
+  private isDatosDeLaSolicitudComponentValid: boolean = false;
+  /**
+ * Evento que emite el estado de validez del formulario de domicilio.
+ * 
+ * @event
+ * @type {boolean}
+ * @description Emite `true` si el formulario de domicilio es válido, `false` en caso contrario.
+ */
+@Output() domicilioFormValidity = new EventEmitter<boolean>();
+
+
+   /** Indica si el botón continuar ha sido activado para ejecutar las validaciones del formulario. */
+@Input() isContinuarTriggered: boolean = false;
   /** Índice de la pestaña seleccionada. */
   indice: number = 1;
 
@@ -39,7 +55,9 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
   */
   constructor(
     private service260702Service: Service260702Service,
-    private consultaQuery: ConsultaioQuery
+    private consultaQuery: ConsultaioQuery,
+     private solicitud260702Store:Solicitud260702Store,
+    private solicitud260702Query:Solicitud260702Query
   ) {
     // Constructor vacío: La inicialización se realizará en métodos específicos según sea necesario.
   }
@@ -59,6 +77,15 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
     } else {
       this.esDatosRespuesta = true;
     }
+  }
+    /**
+   * Maneja el cambio de validez del formulario.
+   * 
+   * @param event - Valor booleano que indica si el formulario es válido o no.
+   * Establece el estado de validez del formulario 'datosDelSolicitude' en el store de solicitud260703.
+   */
+  onFormValidityChange(event:boolean):void {
+   this.solicitud260702Store.setFormValidity('datosDelSolicitude', event);
   }
   /**
    * Carga datos desde un archivo JSON y actualiza el store con la información obtenida.
@@ -83,6 +110,20 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
    */
   seleccionaTab(i: number): void {
     this.indice = i;
+  }
+   /**
+   * Valida los formularios relacionados con la solicitud actual.
+   * 
+   * Esta función verifica la validez del componente de datos de la solicitud
+   * accediendo al estado actual de `solicitud260703Query` y consultando la propiedad
+   * `formValidity.datosDelSolicitude`. Si la propiedad no está definida, retorna `false`.
+   * 
+   * @returns {boolean} `true` si el formulario de datos de la solicitud es válido, `false` en caso contrario.
+   */
+   validarFormularios(): boolean {
+       this.isDatosDeLaSolicitudComponentValid = (
+      this.solicitud260702Query.getValue().formValidity?.datosDelSolicitude ) ?? false;
+    return this.isDatosDeLaSolicitudComponentValid;
   }
   /**
   * Método del ciclo de vida `ngOnDestroy`.

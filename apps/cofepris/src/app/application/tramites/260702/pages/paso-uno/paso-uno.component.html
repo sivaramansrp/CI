@@ -25,7 +25,7 @@
       }
       @case (2) {
         @if(esDatosRespuesta) {
-      <app-datos-de-la-solicitud [tabindex]="2" [idProcedimiento]="idProcedimiento"></app-datos-de-la-solicitud>
+      <app-datos-de-la-solicitud [tabindex]="2" [idProcedimiento]="idProcedimiento" [isContinuarTriggered]="isContinuarTriggered" (formValidityChange)="onFormValidityChange($event)"></app-datos-de-la-solicitud>
         }
       }
       @case (3) {
@@ -35,7 +35,7 @@
       }
       @case (4) {
         @if(esDatosRespuesta) {
-        <app-pago-de-derecho [tabindex]="4" [idProcedimiento]="idProcedimiento"></app-pago-de-derecho>
+        <app-pago-de-derecho [tabindex]="4" [idProcedimiento]="idProcedimiento"  [isContinuarTriggered]="isContinuarTriggered"></app-pago-de-derecho>
         }
         }
       @case (5) {

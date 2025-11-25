@@ -1,8 +1,11 @@
 import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
-import { DatosPasos, PASOS, SeccionLibQuery, SeccionLibState, SeccionLibStore } from '@ng-mf/data-access-user';
+import { DatosPasos, ERROR_FORMA_ALERT, PASOS, SeccionLibQuery, SeccionLibState, SeccionLibStore } from '@ng-mf/data-access-user';
 import { ReplaySubject, map, takeUntil } from 'rxjs';
 import { ListaPasosWizard } from '@ng-mf/data-access-user';
 import { WizardComponent } from '@ng-mf/data-access-user';
+import { Solicitud260702State, Solicitud260702Store } from '../../../../shared/estados/stores/shared2607/tramites260702.store';
+import { PasoUnoComponent } from '../paso-uno/paso-uno.component';
+import { Solicitud260702Query } from '../../../../shared/estados/queries/shared2607/tramites260702.query';
 
 
 
@@ -27,6 +30,26 @@ interface AccionBoton {
  
 })
 export class RegistroPageComponent implements OnDestroy, OnInit {
+  /** Indica si el botón continuar ha sido activado para ejecutar las validaciones del formulario. */
+  public isContinuarTriggered: boolean = false;
+
+  /**
+   * Estado actual de la solicitud para el trámite 260702.
+   * Contiene toda la información relevante sobre el proceso de la solicitud,
+   * incluyendo datos ingresados por el usuario y el progreso en el flujo del trámite.
+   */
+  solicitudState!: Solicitud260702State;
+    public formErrorAlert = ERROR_FORMA_ALERT;
+     /**
+     * Referencia al componente `PasoUnoComponent`.
+     */
+    @ViewChild('pasoUnoRef') pasoUnoComponent!: PasoUnoComponent;
+
+    /**
+     * Indica si la opción de peligro está activada.
+     * Cuando es verdadero, representa que la condición de peligro está presente.
+     */
+    isPeligro:boolean=true;
   /** Lista de pasos del wizard. */
   pasos: Array<ListaPasosWizard> = PASOS;
 
@@ -57,7 +80,9 @@ export class RegistroPageComponent implements OnDestroy, OnInit {
    */
   constructor(
     private seccionQuery: SeccionLibQuery,
-    private seccionStore: SeccionLibStore
+    private seccionStore: SeccionLibStore,
+    private solicitud260702Store:Solicitud260702Store,
+     private solicitud260702Query:Solicitud260702Query
   ) {}
 
   /**
@@ -82,6 +107,10 @@ export class RegistroPageComponent implements OnDestroy, OnInit {
         })
       )
       .subscribe();
+         this.solicitud260702Query.selectSolicitud$.pipe().subscribe((data) => {
+      this.solicitudState = data;
+      this.isContinuarTriggered = this.solicitudState['continuarTriggered'] ?? false;
+    });
   }
 
   /**
@@ -90,14 +119,32 @@ export class RegistroPageComponent implements OnDestroy, OnInit {
    * @param e Objeto que contiene la acción y el valor del paso.
    */
   getValorIndice(e: AccionBoton): void {
-    if (e.valor > 0 && e.valor < 5) {
-      this.indice = e.valor;
-      if (e.accion === 'cont') {
+   if (this.indice === 1 && e.accion === 'cont') {
+      this.solicitud260702Store.setContinuarTriggered(true);
+      const ES_VALIDO = this.validarFormulariosPasoActual();
+      if (!ES_VALIDO) {
+        this.isPeligro = false;
+        this.datosPasos.indice = e.valor;
+        return;
+      }else if(ES_VALIDO){
+        this.isPeligro = true;
         this.wizardComponent.siguiente();
-      } else {
-        this.wizardComponent.atras();
-      }
+ }else{
+       this.isPeligro = true;
+        this.wizardComponent.siguiente();
     }
+  }
+
+  }
+/**
+   * Valida los formularios del paso actual antes de permitir continuar.
+   * @returns {boolean} - `true` si los formularios son válidos, `false` en caso contrario.
+   */
+  validarFormulariosPasoActual(): boolean {
+    if (this.indice === 1) {
+      return this.pasoUnoComponent?.validarFormularios() ?? true;
+    }
+    return true;
   }
 
   /**
