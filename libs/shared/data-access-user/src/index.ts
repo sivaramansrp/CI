@@ -44,6 +44,7 @@ export * from './core/services/shared/validaciones-formulario/validaciones-formu
 export { PANTA_PASOS } from './core/enums/120404/pantallas260514.enum';
 export { AccionBoton } from './core/models/260514/aviso-pantallas.model';
 export * from './core/ambientes';
+export { PayloadConsultaDocumentosSolicitud } from './core/models/shared/anexar-documentos.model';
 export { TablaDinamicaExpandidaComponent } from './tramites/components/tabla-dinamica-expandida/tabla-dinamica-exp.component';
 // export * from './core/constants/api-constants';
 export * from './core/constants/constantes-generales';
@@ -230,3 +231,5 @@ export * from './core/services/shared/registro-solicitud.service';
 export * from './core/models/110101/response/tab-tratados-response.model';
 export * from './tramites/components/rfc-solicitante/rfc-solicitante.component';
 export * from './core/models/shared/mostrar-partidas';
+
+export * from './tramites/components/datos-generales-del-tramite/datos-generales-del-tramite.component'

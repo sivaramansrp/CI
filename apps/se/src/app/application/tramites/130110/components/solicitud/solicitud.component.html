@@ -20,6 +20,7 @@
 
 
 <app-partidas-de-la-mercancia
+  [fraccionDescripcionPartidasDeLaMercancia]="fraccionDescripcionPartidasDeLaMercanciaCatalogo"
   [partidasDelaMercanciaForm]="partidasDelaMercanciaForm"
   [formForTotalCount]="formForTotalCount"
   [tableHeaderData]="tableHeaderData"
@@ -46,6 +47,7 @@
 [selectRangoDias]="selectRangoDias"
 (bloqueCambiar)="enCambioDeBloque($event)"
 [esFormularioSoloLectura] ="esFormularioSoloLectura"
+(fechasSeleccionadas)="onFechasSeleccionadasChange($event)"
 (setValoresStoreEvent)="setValoresStore($event)"
 ></app-pais-procendencia>
 

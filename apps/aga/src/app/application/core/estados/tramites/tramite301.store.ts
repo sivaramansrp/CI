@@ -96,6 +96,19 @@ export interface Solicitud301State {
      * @type {PagoDeDerechosTabla[]}
      */
     pagoDerechosTabla: PagoDeDerechosTabla[];
+
+    /**
+     * Indica si hay un error relacionado al registro.
+     * @type {boolean}
+     */
+    registroError?: boolean;
+
+    /**
+     * Indica si hay un error relacionado al pago de derechos.
+     * @type {boolean}
+     */
+    pagoError?: boolean;
+
 }
 
 export function createInitialState(): Solicitud301State {
@@ -188,7 +201,13 @@ export function createInitialState(): Solicitud301State {
      * pagoDerechosTabla
      * @type {PagoDeDerechosTabla[]}
      */
-    pagoDerechosTabla: []
+    pagoDerechosTabla: [],
+
+     /** Indica si hay un error relacionado al pago de derechos */
+    pagoError: false,
+
+    /** Indica si hay un error relacionado al registro */
+    registroError: false,
 
   };
 }
@@ -375,6 +394,26 @@ export class Tramite301Store extends Store<Solicitud301State> {
     this.update((state) => ({
       ...state,
       [fieldName]: value,
+    }));
+  }
+
+  /**  * Guarda el estado de error relacionado al pago de derechos.
+   * @param pagoError
+   */
+  public setPagoError(pagoError: boolean): void {
+    this.update((state) => ({
+      ...state,
+      pagoError,
+    }));
+  }
+
+  /**  * Guarda el estado de error relacionado al registro.
+   * @param registroError
+   */
+  public setRegistroError(registroError: boolean): void {
+    this.update((state) => ({
+      ...state,
+      registroError,
     }));
   }
 }

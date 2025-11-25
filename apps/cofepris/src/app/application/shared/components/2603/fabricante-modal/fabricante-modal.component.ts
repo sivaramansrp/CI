@@ -1,6 +1,6 @@
 import { AbstractControl, FormBuilder, FormGroup, ReactiveFormsModule, ValidationErrors, Validators } from '@angular/forms';
 import { Catalogo, CatalogoSelectComponent, Fabricante, InputRadioComponent, REGEX_CURP, REGEX_PATRON_ALFANUMERICO, REGEX_POSTAL, REGEX_RFC, REGEX_SOLO_NUMEROS, REGEX_TELEFONO_OPCIONAL, ValidacionesFormularioService } from '@libs/shared/data-access-user/src';
-import { Component, EventEmitter, OnDestroy, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
 import { Solicitud2603State, Tramite2603Store } from '../../../estados/stores/2603/tramite2603.store';
 import { Subject, map, takeUntil } from 'rxjs';
 import { BsModalRef } from 'ngx-bootstrap/modal';
@@ -40,10 +40,18 @@ export class FabricanteModalComponent implements OnInit, OnDestroy {
       /**
      * @property
      * @name permisoDefinitivoTitulo
-     * @type {number}
+     * @type {number[]}
      * @description Identificador único del procedimiento actual. Este valor se utiliza para asociar el componente con un trámite específico en el sistema.
      */
-  permisoDefinitivoTitulo: number[] = PERMISO_DEFINITIVO_TITULO;
+  @Input() permisoDefinitivoTitulo: number[] = PERMISO_DEFINITIVO_TITULO;
+
+  /**
+   * @property
+   * @name permisoSeccion
+   * @type {number[]}
+   * @description Identificador de la sección de permisos específica para este procedimiento.
+   */
+  @Input() permisoSeccion: number[] = [];
   
   /**
    * Identificador numérico del procedimiento actual.

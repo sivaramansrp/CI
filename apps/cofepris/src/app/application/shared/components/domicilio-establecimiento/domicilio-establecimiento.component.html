@@ -792,7 +792,7 @@
                         @if (colapsableTres) {
                         <div class="panel-collapse collapse in" id="panel-01">
                            <div class="panel-body">
-                              <crosslist [fechas]="seleccionarOrigenDelPaisCuatro" [label]="paisOrigenLabel"
+                              <crosslist [fechas]="idProcedimiento ? paises : seleccionarOrigenDelPaisCuatro" [label]="paisOrigenLabel"
                               [botones]="paisDeProcedenciaBotonesCuatro" [isDisabled]="esFormularioSoloLectura"
                               [fechasSeleccionadas]="seleccionadasPaisProveedor"
                               (fechasSeleccionadasChange)="paisProveedorSeleccionadasChange($event)"
@@ -816,7 +816,7 @@
                         @if (colapsableTress) {
                         <div class="panel-collapse collapse in" id="panel-01">
                            <div class="panel-body">
-                              <crosslist [fechas]="seleccionarOrigenDelPaisCinco" [label]="paisEmbarqueLabel"
+                              <crosslist [fechas]="idProcedimiento ? paises : seleccionarOrigenDelPaisCinco" [label]="paisEmbarqueLabel"
                               [botones]="paisDeProcedenciaBotonesCinco" [isDisabled]="esFormularioSoloLectura"
                               [fechasSeleccionadas]="seleccionadasPaisDeProcedenciaDatos"
                               (fechasSeleccionadasChange)="paisDeProcedenciaSeleccionadasChange($event)"

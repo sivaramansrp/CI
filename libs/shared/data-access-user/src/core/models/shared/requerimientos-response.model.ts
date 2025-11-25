@@ -6,7 +6,7 @@ export interface RequerimientosResponse {
     /**
      * Estado actual del requerimiento.
      */
-    estadoRequerimiento: string | null;
+    estado_requerimiento: string | null;
     
     /**
      * Fecha de creación del requerimiento.

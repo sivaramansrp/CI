@@ -151,6 +151,7 @@ export class RepresentacionFederalComponent implements OnInit {
     }
     if (this.esFormularioSoloLectura) {
       this.datosFederal.disable();
+
     }
   }
 
@@ -160,7 +161,7 @@ export class RepresentacionFederalComponent implements OnInit {
    */
   initActionFormBuild(): void {
     this.datosFederal = this.fb.group({
-      entidad_federativa: [this.datosState.datosFederal.entidad_federativa, Validators.required],
+      entidad_federativa: [this.datosState.datosFederal.descripcion_representacion_federal, Validators.required],
       representacion_federal: [this.datosState.datosFederal.representacion_federal, Validators.required]
     });
   }
@@ -204,6 +205,7 @@ export class RepresentacionFederalComponent implements OnInit {
   onEntidadSeleccionado(): void {
     const CVEENTIDAD = this.datosFederal.get('entidad_federativa')?.value;
     this.store.setDescripcion_representacion_federal(CVEENTIDAD);
+    this.store.setEntidad_federativa(CVEENTIDAD);
     if (CVEENTIDAD) {
       this.obtenerRepresentacionSelectList(CVEENTIDAD);
     } else {
