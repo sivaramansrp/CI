@@ -1,8 +1,7 @@
 import { FilaData, FilaData2, ListaClave } from '../../../models/fila-modal';
 import { Store, StoreConfig } from '@datorama/akita';
-import { Injectable } from '@angular/core';
-
 import { Destinatario } from '../../../models/destinatario.model';
+import { Injectable } from '@angular/core';
 
 /**
  * Interfaz que define el estado de la solicitud 260702.
@@ -159,6 +158,7 @@ export interface Solicitud260702State {
 
   /** Fracción arancelaria del producto */
   fraccionArancelaria: string;
+  mensaje:boolean
   
   /** Indica si los datos deben hacerse públicos. */
   hacerlosPublicos: string;
@@ -168,6 +168,18 @@ export interface Solicitud260702State {
 
   /** Datos de la tabla de destinatarios */
     tableData2: Destinatario[];
+
+      /**
+       * El valor de nicoTabla.
+       */
+      nicoTabla: FilaData[],
+    
+      /**
+       * El valor de mercanciaTabla.
+       */
+      mercanciaTabla: FilaData2[],
+      destinatarioDatos:Destinatario[],
+      fabricanteDatos:Destinatario[],
 /**
  * Método para actualizar la descripción del SCIAN en el estado.
  */
@@ -340,7 +352,7 @@ export function createInitialSolicitudState(): Solicitud260702State {
 
     /** Fracción arancelaria del producto */
     fraccionArancelaria: '',
-
+    mensaje:false,
     /** Indica si los datos deben hacerse públicos. */
     hacerlosPublicos: '',
     /** Datos de la tabla */
@@ -351,6 +363,18 @@ export function createInitialSolicitudState(): Solicitud260702State {
      * Método para actualizar la descripción del SCIAN en el estado.
      */
     descripcionDelScian: '',
+    
+      /**
+   * El valor de nicoTabla.
+   */
+    nicoTabla: [],
+
+    /**
+   * El valor de mercanciaTabla.
+   */
+    mercanciaTabla: [],
+    fabricanteDatos:[],
+    destinatarioDatos:[],
     
     formValidity: {},
     continuarTriggered:false
@@ -379,6 +403,46 @@ export class Solicitud260702Store extends Store<Solicitud260702State> {
     }));
   }
 
+     /** Actualiza el estado con la nueva tabla de información Nico. */
+      setNicoTabla(nicoTabla: FilaData[]): void {
+        this.update((state) => ({
+              ...state,
+              nicoTabla,
+          }));
+      }
+  /**
+ * Establece los datos de la tabla de mercancías en el estado del store.
+ *
+ * @param mercanciaTabla - Array de objetos `FilaData2` que representa las filas de la tabla de mercancías.
+ */
+      setMercanciasTabla(mercanciaTabla: FilaData2[]): void {
+        this.update((state) => ({
+              ...state,
+              mercanciaTabla,
+          }));
+      }
+      /**
+ * Establece los datos de los fabricantes en el estado del store.
+ *
+ * @param fabricanteDatos - Array de objetos `Destinatario` que representa los fabricantes.
+ */
+    setFabricanteDatos(fabricanteDatos: Destinatario[]): void {
+        this.update((state) => ({
+              ...state,
+              fabricanteDatos,
+          }));
+      }
+      /**
+ * Establece los datos de los destinatarios en el estado del store.
+ *
+ * @param destinatarioDatos - Array de objetos `Destinatario` que representa los destinatarios.
+ */
+      setDestinatarioDatos(destinatarioDatos: Destinatario[]): void {
+        this.update((state) => ({
+              ...state,
+              destinatarioDatos,
+          }));
+      }
   /**
    * Método para actualizar la clave de referencia en el estado.
    * @param clavedereferencia Clave de referencia a establecer.
@@ -993,4 +1057,16 @@ export class Solicitud260702Store extends Store<Solicitud260702State> {
   public setContinuarTriggered(continuarTriggered: boolean): void {
     this.update((state) => ({ ...state, continuarTriggered }));
   }
+  /**
+ * Establece el valor de la propiedad `mensaje` en el estado del store.
+ *
+ * @param mensaje - Valor booleano que indica el estado del mensaje.
+ */
+   public setMensaje(mensaje: boolean):void {
+        this.update((state) => ({
+            ...state,
+            mensaje,
+        }));
+    }
+     
 }

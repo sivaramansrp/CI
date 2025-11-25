@@ -7,6 +7,10 @@ import { PartidasDeLaMercanciaModelo } from '../../shared/models/partidas-de-la-
  * Interfaz que define la estructura del estado para Tramite130217.
  */
 export interface Tramite130217State {
+  /**
+   * ID de la solicitud asociada al trámite.
+   */
+  idSolicitud: number;
   /** Nombre del producto */
   producto: string;
   /** Descripción del producto */
@@ -34,7 +38,7 @@ export interface Tramite130217State {
   /** Cantidad de partidas de la mercancía */
   cantidadPartidasDeLaMercancia: string;
   /** Valor en USD de las partidas de la mercancía */
-  valorPartidaUSDPartidasDeLaMercancia: number;
+  valorPartidaUSDPartidasDeLaMercancia: string;
   /** Descripción de las partidas de la mercancía */
   descripcionPartidasDeLaMercancia: string;
   /** Valor de la factura en USD */
@@ -53,6 +57,36 @@ export interface Tramite130217State {
   representacion: string;
   /** Indicador para mostrar u ocultar la tabla */
   mostrarTabla: boolean;
+
+  /** Lista de partidas de la mercancía asociadas al trámite. */
+  tableBodyData: PartidasDeLaMercanciaModelo[];
+
+  /**
+   * Formulario para modificar las partidas de la mercancía.
+   */
+  modificarPartidasDelaMercanciaForm: {
+    /** Cantidad de partidas de la mercancía */
+    cantidadPartidasDeLaMercancia: string;
+    /** Valor en USD de las partidas de la mercancía */
+    valorPartidaUSDPartidasDeLaMercancia: string;
+    /** Descripción de las partidas de la mercancía */
+    descripcionPartidasDeLaMercancia: string;
+  };
+
+  /**   
+   * Cantidad total de las partidas de la mercancía.
+   */
+  cantidadTotal: string;
+  /**   
+   * Valor total en USD de las partidas de la mercancía.
+   */
+  valorTotalUSD: string;
+
+  /**   
+    * Fechas seleccionadas en el formulario.
+    */
+  fechasSeleccionadas: string[];
+  
 }
 
 /**
@@ -62,21 +96,22 @@ export interface Tramite130217State {
  */
 export function createInitialState(): Tramite130217State {
   return {
+    idSolicitud: 0,
     filaSeleccionada: [],
     mostrarTabla: false,
     solicitud: '',
     fraccion: '',
-    defaultSelect: 'Inicial',
-    producto: 'Nuevo',
+    defaultSelect: 'TISOL.I',
+    producto: 'CONDMER.U',
     descripcion: '',
     cantidad: '',
     valorPartidaUSD: 0,
     unidadMedida: '',
-    defaultProducto: 'Nuevo',
+    defaultProducto: 'CONDMER.U',
     regimen: '',
     clasificacion: '',
     cantidadPartidasDeLaMercancia: '',
-    valorPartidaUSDPartidasDeLaMercancia: 0,
+    valorPartidaUSDPartidasDeLaMercancia: '',
     descripcionPartidasDeLaMercancia: '',
     valorFacturaUSD: '',
     bloque: '',
@@ -85,6 +120,15 @@ export function createInitialState(): Tramite130217State {
     observaciones: '',
     entidad: '',
     representacion: '',
+    tableBodyData: [],
+    modificarPartidasDelaMercanciaForm: {
+      cantidadPartidasDeLaMercancia: '',
+      valorPartidaUSDPartidasDeLaMercancia: '',
+      descripcionPartidasDeLaMercancia: '',
+    },
+    cantidadTotal: '',
+    valorTotalUSD: '',
+    fechasSeleccionadas: [],
   };
 }
 
@@ -110,4 +154,24 @@ export class Tramite130217Store extends Store<Tramite130217State> {
       ...valores,
     }));
   }
+
+  /**
+   * Guarda el ID de la solicitud en el estado.
+   *
+   * @param idSolicitud - El ID de la solicitud que se va a guardar.
+   */
+  public setIdSolicitud(idSolicitud: number): void {
+    this.update((state) => ({
+      ...state,
+      idSolicitud,
+    }));
+  }
+
+  /**
+    * Restablece el estado de la tienda a su estado inicial.
+    */
+  resetStore(): void {
+    this.reset();
+  }
+
 }

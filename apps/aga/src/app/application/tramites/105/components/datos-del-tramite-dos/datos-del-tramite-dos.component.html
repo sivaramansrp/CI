@@ -80,8 +80,8 @@
             (click)="abrirModal()" [disabled]="esFormularioSoloLectura">
             Agregar
           </button>
-          <button type="button" class="btn btn-danger ms-3 me-3" [disabled]="esFormularioSoloLectura || !canDelete" (click)="eliminarMercancia()">Eliminar</button>
-          <button type="button" class="btn btn-default" [disabled]="esFormularioSoloLectura || !canEdit" (click)="modificarMercancia()">Modificar</button>
+          <button type="button" class="btn btn-danger ms-3 me-3"(click)="eliminarMercancia()">Eliminar</button>
+          <button type="button" class="btn btn-default" (click)="modificarMercancia()">Modificar</button>
         </div>
 
         <div class="table-container">
@@ -111,26 +111,20 @@
                 <div class="col-md-6">
                   <label class="form-label label-fnt" for="nombres">Nombre(s)*</label>
                   <input type="text" class="form-control" id="nombres" formControlName="nombres" maxlength="200" />
-                    <div class="text-danger" *ngIf="agenteForm.get('nombres')?.touched && agenteForm.get('nombres')?.invalid && agenteForm.get('nombres')?.errors?.['pattern']">
-                      <small>Existen datos incorrectos que no cumplen con el formato esperado.</small>
-                    </div>
+                
                   <div class="d-grid">
                     <div *ngIf="agenteForm.get('nombres')?.touched">
                       <small class="mensaje-error" *ngIf="agenteForm.get('nombres')?.hasError('required')">
                         Este campo es obligatorio
                       </small>
-                      <small class="mensaje-error" *ngIf="agenteForm.get('nombres')?.hasError('maxlength')">
-                        El Nombre(s) no puede exceder los 200 caracteres.
-                      </small>
+                  
                     </div>
                   </div>
                 </div>
                 <div class="col-md-6">
                   <label class="form-label label-fnt" for="primerApellido">Primer Apellido*</label>
                   <input type="text" class="form-control" id="primerApellido" formControlName="primerApellido" maxlength="200" />
-                    <div class="text-danger" *ngIf="agenteForm.get('primerApellido')?.touched && agenteForm.get('primerApellido')?.invalid && agenteForm.get('primerApellido')?.errors?.['pattern']">
-                      <small>Existen datos incorrectos que no cumplen con el formato esperado.</small>
-                    </div>
+                  
                   <div class="d-grid">
                     <div *ngIf="agenteForm.get('primerApellido')?.touched">
                       <small class="mensaje-error" *ngIf="agenteForm.get('primerApellido')?.hasError('required')">
@@ -177,7 +171,7 @@
 
           <div class="modal-footer custom-footer justify-content-center">
             <button type="button" class="btn btn-primary"
-            (click)="agregarMercancias()"
+            (click)="aceptarConfirmationPopup()"
              >Agregar</button>
             <button type="button" class="btn btn-danger" data-bs-dismiss="modal" #closeModal>
               Cancelar
@@ -190,11 +184,22 @@
       </div>
     </div>
   </div>
-<!-- Notificación de confirmación de eliminación -->
+<lib-notificaciones
+  *ngIf="nuevaNotificacionEliminar"
+  [notificacionInput]="nuevaNotificacionEliminar"
+  (confirmacionModal)="onEliminarConfirmacion($event)">
+</lib-notificaciones>
+
 <lib-notificaciones
   *ngIf="nuevaNotificacion"
   [notificacionInput]="nuevaNotificacion"
-  (confirmacionModal)="onEliminarConfirmacion($event)">
+  (confirmacionModal)="aceptarConfirmacion($event)">
+</lib-notificaciones>
+
+<lib-notificaciones
+  *ngIf="nuevaNotificacionRowselect"
+  [notificacionInput]="nuevaNotificacionRowselect"
+  (confirmacionModal)="onEliminarRowselect($event)">
 </lib-notificaciones>
 
 

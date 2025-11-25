@@ -29,6 +29,7 @@
           class="form-control"
           type="text"
           name="cadenaPagoDependencia"
+          maxlength ="14"
           formControlName="cadenaPagoDependencia"
           (change)="setValoresStore(pagoDeDerechosForm, 'cadenaPagoDependencia')"
           [ngClass]="{'is-invalid': mostrarErroresDeCampoPago && pagoDeDerechosForm.get('cadenaPagoDependencia')?.invalid}"

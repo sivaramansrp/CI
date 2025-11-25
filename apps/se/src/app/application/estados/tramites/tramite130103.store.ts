@@ -12,6 +12,7 @@ import { Injectable } from '@angular/core';
  * @property {any} [value] - Los valores pueden ser de cualquier tipo, dependiendo del campo.
  */
 export interface ImportacionDefinitiva130103State {
+     idSolicitud: number | null;
     [key: string]: any;
 }
 
@@ -20,7 +21,9 @@ export interface ImportacionDefinitiva130103State {
  * @returns {ImportacionDefinitiva130103State} Un objeto vacío que representa el estado inicial del estado de ImportacionDefinitiva130103.
  */
 export function createInitialState(): ImportacionDefinitiva130103State {
-    return {};
+    return {
+         idSolicitud: 0,
+    };
 }
 
 /**
@@ -66,4 +69,15 @@ export class Tramite130103Store extends Store<ImportacionDefinitiva130103State> 
       [fieldName]: value,
     }));
   }
+      /**
+* Guarda el ID de la solicitud en el estado.
+*
+* @param idSolicitud - El ID de la solicitud que se va a guardar.
+*/
+    public setIdSolicitud(idSolicitud: number): void {
+        this.update((state) => ({
+            ...state,
+            idSolicitud,
+        }));
+    }
   }

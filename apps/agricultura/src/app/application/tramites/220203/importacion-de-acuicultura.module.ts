@@ -7,29 +7,24 @@ import { ReactiveFormsModule } from '@angular/forms';
 import {
   AlertComponent,
   AnexarDocumentosComponent,
-  BtnContinuarComponent,
+  BtnContinuarComponent, CargaDocumentoComponent,
   CatalogoSelectComponent,
   CrosslistComponent,
   FirmaElectronicaComponent,
   InputCheckComponent,
   InputFechaComponent,
-  InputRadioComponent,
+  InputRadioComponent, PasoFirmaComponent,
   SolicitanteComponent,
   TablaDinamicaComponent,
   TableComponent,
   TercerosComponent,
   TituloComponent,
-  WizardComponent
+  WizardComponent,
 } from '@ng-mf/data-access-user';
 
+import { ToastrModule, ToastrService } from 'ngx-toastr';
 
 import { ImportacionDeAcuiculturaRoutingModule } from './importacion-de-acuicultura-routing.module';
-
-import { PasoDosComponent } from './pages/paso-dos/paso-dos.component';
-
-import { PasoTresComponent } from './pages/paso-tres/paso-tres.component';
-
-import { SanidadCertificadoComponent } from './pages/sanidad-certificado/sanidad-certificado.component';
 
 import { DatosDeLaSolicitudComponent } from './components/datos-de-la-solicitud/datos-de-la-solicitud.component';
 
@@ -37,17 +32,9 @@ import { DatosParaMovilizacionComponent } from './components/datos-para-moviliza
 
 import { PagoDeDerechosComponent } from './components/pago-de-derechos/pago-de-derechos.component';
 
-import { ToastrModule, ToastrService } from 'ngx-toastr';
-import { PasoUnoComponent } from './pages/paso-uno/paso-uno.component';
-
-
 
 @NgModule({
-  declarations: [
-    PasoDosComponent,
-    PasoTresComponent,
-    SanidadCertificadoComponent
-  ],
+  declarations: [],
   imports: [
     CommonModule,
     ImportacionDeAcuiculturaRoutingModule,
@@ -55,8 +42,6 @@ import { PasoUnoComponent } from './pages/paso-uno/paso-uno.component';
     DatosDeLaSolicitudComponent,
     DatosParaMovilizacionComponent,
     PagoDeDerechosComponent,
-    PasoUnoComponent,
-
     // UI Components from data-access-user
     TablaDinamicaComponent,
     WizardComponent,
@@ -74,9 +59,9 @@ import { PasoUnoComponent } from './pages/paso-uno/paso-uno.component';
     CatalogoSelectComponent,
     TercerosComponent,
     ToastrModule.forRoot(),
+    CargaDocumentoComponent,
+    PasoFirmaComponent,
   ],
-  providers: [
-    ToastrService
-  ]
+  providers: [ToastrService],
 })
-export class ImportacionDeAcuiculturaModule { }
+export class ImportacionDeAcuiculturaModule {}

@@ -4,7 +4,7 @@ import { PartidasDeLaMercanciaModelo } from '../../shared/models/partidas-de-la-
 
 
 export interface Solicitud130106State {
-    idSolicitud: number | null;
+    idSolicitud: number;
     regimen: string;
     clasificacion: string;
     solicitudDescripcion: string
@@ -41,6 +41,7 @@ export interface Solicitud130106State {
     mostrarTabla: boolean;
     cantidadTotal: string;
     valorTotalUSD: string;
+  fechasSeleccionadas: string[];
 }
 
 export function createInitialState(): Solicitud130106State {
@@ -81,7 +82,8 @@ export function createInitialState(): Solicitud130106State {
         usoEspecifico: '',
         justificacionImportacionExportacion: '',
         cantidadTotal: '',
-        valorTotalUSD: ''
+        valorTotalUSD: '',
+        fechasSeleccionadas: [],
 
     };
 }
@@ -235,8 +237,6 @@ export class Tramite130106Store extends Store<Solicitud130106State> {
             idSolicitud,
         }));
     }
-
-
     /**
      * Actualiza el estado del store con los valores proporcionados.
      * Valores a actualizar en el estado.

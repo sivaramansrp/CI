@@ -112,8 +112,9 @@ export class DatosProductorComponent implements OnInit, OnDestroy {
         takeUntil(this.destroyNotifier$),
         map((state) => {
           this.datosState = state as DatosGrupos;
-          if(state.datosProductor.persona_tipo) {
-            this.onTipoPersonaProductorChange(state.datosProductor.persona_tipo);
+          const TPO_PERSONA = this.datosState?.datosProductor?.persona_tipo;
+          if (TPO_PERSONA !== null && TPO_PERSONA !== undefined && TPO_PERSONA !== '') {
+            this.tipoPersonaProductor = TPO_PERSONA;
           }
         })
       )
@@ -158,6 +159,7 @@ export class DatosProductorComponent implements OnInit, OnDestroy {
     this.tipoPersonaProductor = String(value);
     const GRUPO = this.datosProductor as FormGroup;
     this.store.setPersona_tipo(this.tipoPersonaProductor);
+    // this.setValoresStore(GRUPO, 'persona_tipo', 'setPersona_tipo');
 
     // Siempre requerido
     GRUPO.get('persona_tipo')?.setValidators([Validators.required]);
@@ -236,9 +238,9 @@ export class DatosProductorComponent implements OnInit, OnDestroy {
     );
   }
 
-/**
- * Validación del formulario al enviar los datos
- */
+  /**
+   * Validación del formulario al enviar los datos
+   */
   validarFormulario(): boolean {
     this.formValidation.marcarFormularioComoTocado(this.datosProductor);
     this.cdr.detectChanges();

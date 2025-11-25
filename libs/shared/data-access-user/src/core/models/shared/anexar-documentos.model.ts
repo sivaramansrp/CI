@@ -64,7 +64,7 @@ export interface TipoDocumentos {
   adicionales?: TipoDocumentos[];
   cargado?: boolean;
   file?: DocumentosParaCargar;
-  error?:string[];
+  error?: string[];
 }
 
 export interface TipoTramite {
@@ -133,4 +133,68 @@ export interface Entidad {
 
 export interface ParametrosGetDocumentos {
   especifico: boolean;
+}
+
+/**
+ * Payload para consultar documentos asociados a una solicitud de prellenado.
+ * 
+ * @interface PayloadConsultaDocumentosSolicitud
+ * 
+ * @property {number} id_solicitud_prellenado - Identificador único de la solicitud de prellenado
+ * @property {number} id_tipo_tramite - Identificador del tipo de trámite asociado
+ * @property {number} esquema - Número de esquema aplicable a la consulta
+ * @property {string} rfc_solicitante - RFC (Registro Federal de Contribuyentes) del solicitante
+ * @property {string} rol_actual - Rol actual del usuario en el sistema
+ * @property {Object} documento_certificacion - Información sobre el documento de certificación
+ * @property {boolean} documento_certificacion.nacional - Indica si la certificación es de tipo nacional
+ * @property {boolean} documento_certificacion.persona_moral - Indica si el solicitante es persona moral
+ * @property {number} documento_certificacion.id_norma_aplicable - Identificador de la norma aplicable
+ * @property {boolean} documento_certificacion.organismo_certificador - Indica si es organismo certificador
+ * @property {string} documento_certificacion.tipo_certificacion - Tipo de certificación solicitada
+ */
+export interface PayloadConsultaDocumentosSolicitud {
+
+  id_solicitud_prellenado: number,
+  id_tipo_tramite: number,
+  esquema: number,
+  rfc_solicitante: string,
+  rol_actual: string,
+  documento_certificacion: {
+    nacional: true,
+    persona_moral: true,
+    id_norma_aplicable: number,
+    organismo_certificador: true,
+    tipo_certificacion: string
+  }
+
+}
+
+/**
+ * Representa la respuesta al recuperar documentos asociados a una solicitud.
+ * 
+ * @interface RespuestaRecuperaDocumentos
+ * 
+ * @property {number} id_documento_solicitud - Identificador único del documento en la solicitud
+ * @property {Object} documento - Información detallada del documento
+ * @property {string} documento.fecha_fin_vigencia - Fecha de finalización de vigencia del documento
+ * @property {string} documento.fecha_ini_vigencia - Fecha de inicio de vigencia del documento
+ * @property {string} documento.nombre - Nombre del documento
+ * @property {string} documento.tipo_documento - Tipo o categoría del documento
+ * @property {string} ide_est_documento_sol - Identificador del estado del documento en la solicitud
+ * @property {string} estado_documento_solicitud - Descripción del estado actual del documento en la solicitud
+ * @property {string} fecha_asociacion - Fecha en que el documento fue asociado a la solicitud
+ * @property {string} documento_uuid - Identificador único universal del documento
+ */
+export interface RespuestaRecuperaDocumentos {
+  id_documento_solicitud: number;
+  documento: {
+    fecha_fin_vigencia: string;
+    fecha_ini_vigencia: string;
+    nombre: string;
+    tipo_documento: string;
+  };
+  ide_est_documento_sol: string;
+  estado_documento_solicitud: string;
+  fecha_asociacion: string;
+  documento_uuid: string;
 }

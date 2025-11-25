@@ -817,12 +817,24 @@ export const API_POST_FIRMA = (IDSOLICITUD: string, PROCEDURE: number): string =
  * @see https://api-v30.cloud-ultrasist.net/api/procedureID/solicitud/guardar
  */
 export const API_POST_SOLICITUD_GUARDAR = (PROCEDURE: string): string => `sat-t${PROCEDURE}/solicitud/guardar`;
+
+/** API para guardar la solicitud del tramite generico.
+ * @see https://api-v30.cloud-ultrasist.net/api/procedureID/solicitud/guardar
+ */
+export const API_POST_SOLICITUD_GUARDAR_PARCIAL = (PROCEDURE: string): string => `sat-t${PROCEDURE}/solicitud/guardar-parcial`;
 /*
  * API para obtener la representación federal por clave de entidad
  * @see https://api-v30.cloud-ultrasist.net/api/procedureID/catalogo/representacion-federal/{cveEntidad}
  */
 export const CATALOGO_REPRESENTACION_FEDERAL = (TRAMITE: string, CVEENTIDAD: string): string =>
   `sat-t${TRAMITE}/catalogo/representacion-federal/${CVEENTIDAD}`;
+
+/*
+ * API para obtener la representación federal por clave de entidad
+ * @see https://api-v30.cloud-ultrasist.net/api/procedureID/catalogo/representacion-federal/{cveEntidad}
+ */
+export const CATALOGO_REPRESENTACION_FEDERAL_10 = (TRAMITE: string, CVEENTIDAD: string): string =>
+  `sat-t${TRAMITE}/representacion-federal/${CVEENTIDAD}`;
 
 /*
  * API para obtener el tipo de factura
@@ -1161,8 +1173,10 @@ export const TIPO_EMPRESA = (TRAMITE: string): string => `sat-t${TRAMITE}/catalo
 /*API para obtener el catálogo de fracciones arancelarias*/
 export const API_FRACCIONES_ARANCELARIAS = (TRAMITE: string): string => `sat-t${TRAMITE}/catalogo/fracciones-arancelarias`;
 
+export const FRACCIONES_ARANCELARIAS = (TRAMITE: string): string => `sat-t${TRAMITE}/catalogo/tramite/TITPEX.130106/pexim/fracciones-arancelarias`;
+
 /*API para obtener el catálogo de unidades de medida tarifaria por clasificación*/
-export const API_UMT = (TRAMITE: string): string => `sat-t${TRAMITE}/catalogo/fraccion-arrancelaria/${CLASIFICACION}/unidades-medida-tarifaria`;
+export const API_UMT = (TRAMITE: string): string => `sat-t${TRAMITE}/catalogo/fraccion-arrancelaria/${CLASIFICACION}/unidades-medidas-tarifarias`;
 
 /** API para prellenadasDatos la solicitud del tramite generico.
  */
@@ -1181,13 +1195,22 @@ export const CLASSIFICACIONES_REGIMEN = (TRAMITE: string) : string => `sat-t${TR
 
 export const API_PEXIM_FRACCION_ARANCELARIA = (TRAMITE: string, TITPEX_ID: string): string => `sat-t${TRAMITE}/catalogo/tramite/${TITPEX_ID}/pexim/fracciones-arancelarias`;
 
+export const API_PEXIM_FRACCION_ARANCELARIA_10 = (TRAMITE: string, TITPEX_ID: string): string => `sat-t${TRAMITE}/tramite/${TITPEX_ID}/pexim/fracciones-arancelarias`;
+
+
 export const API_UNIDADES_MEDIDA_TARIFARIA = (TRAMITE: string, ID: string): string => `sat-t${TRAMITE}/catalogo/fraccion-arrancelaria/${ID}/unidades-medidas-tarifarias`;
+
+export const API_UNIDADES_MEDIDA_TARIFARIA_10 = (TRAMITE: string, ID: string): string => `sat-t${TRAMITE}/fraccion-arrancelaria/${ID}/unidades-medidas-tarifarias`;
 
 // export const API_PAISES_POR_BLOQUE = (TRAMITE: string, ID: string): string => `sat-t${TRAMITE}/catalogo/paises-por-bloque/${ID}`;
 
 export const API_CATALOGOS_PAISES_TODOS = (TRAMITE: string): string => `sat-t${TRAMITE}/catalogo/paises-todos`;
 
 export const API_MOSTRAR_PARTIDAS_SOLICITUD = (TRAMITE: string, ID_SOLICITUD: number): string => `sat-t${TRAMITE}/solicitud/mostrar/partidas?idSolicitud=${ID_SOLICITUD}`;
+
+export const REGIMEN_CLASSIFICACIONES = (TRAMITE: string) : string => `sat-t${TRAMITE}/catalogo/tramite/TITPEX.130108/regimenes/${CLASIFICACION}/clasificacion`;
+
+export const REGIMEN_CLASSIFICACIONES_10 = (TRAMITE: string) : string => `sat-t${TRAMITE}/tramite/TITPEX.130115/regimenes/${CLASIFICACION}/clasificacion`;
 
 /**
  * API para guardar la solicitud
@@ -1289,3 +1312,13 @@ export const API_ESTADO_UNIDADES_ADMINISTRATIVAS = (TRAMITE: string, ID: string)
  * @description Endpoint de catálogo de representación federal vecina.
  */
 export const CATALOGO_REPRESENTACION_FEDERAL_VECINA = (TRAMITE: string, CLAVEESTADO: string): string => `sat-t${TRAMITE}/catalogo/representacion-federal/vecina/${CLAVEESTADO}`;
+
+
+/**
+ * Generates the API endpoint URL for pre-filling documents.
+ * @param TRAMITE - The procedure identifier
+ * @param IDSOLICITUD - The request ID
+ * @param especifico - Whether the request is specific
+ * @returns The formatted API endpoint URL
+ */
+export const API_POST_PRE_LLENADO_DOCUMENTOS = (TRAMITE: string, IDSOLICITUD: string, especifico: boolean) : string => `sat-t${TRAMITE}/solicitud/documentos?idSolicitud=${IDSOLICITUD}&especifico=${especifico}`;

@@ -38,3 +38,16 @@ textarea.form-control {
 .no-scroll::-webkit-scrollbar {
   display: none; 
 }
+
+.regimenCatalogo {
+    ::ng-deep select.form-select {
+        max-width: 100% !important;
+        opacity: 0.7 !important;
+        background: #fff !important;
+        appearance: auto !important;
+        -webkit-appearance: auto !important;
+        background-repeat: no-repeat !important;
+        background-position: right 0.75rem center !important;
+        background-size: 16px 12px !important;
+    }
+}

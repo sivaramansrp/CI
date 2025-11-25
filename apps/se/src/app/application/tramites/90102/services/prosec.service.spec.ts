@@ -12,8 +12,8 @@ describe('ProsecService', () => {
   beforeEach(() => {
     storeMock = {
       setModalidad: jest.fn(),
-      setEstado: jest.fn(),
-      setRepresentacionFederal: jest.fn(),
+      setEstadoSeleccionar: jest.fn(),
+      setRepresentacionFederalLista: jest.fn(),
       setActividadProductiva: jest.fn(),
       setSector: jest.fn(),
       setFraccionArancelaria: jest.fn(),
@@ -56,7 +56,7 @@ describe('ProsecService', () => {
         expect(data).toEqual(mockResponse.data);
       });
 
-      const req = httpMock.expectOne(`../../../../../assets/json/90101/${fileName}`);
+      const req = httpMock.expectOne(`../../../../../assets/json/90102/${fileName}`);
       expect(req.request.method).toBe('GET');
       req.flush(mockResponse);
     });
@@ -96,8 +96,8 @@ describe('ProsecService', () => {
       service.actualizarEstadoFormulario(mockState);
 
       expect(storeMock.setModalidad).toHaveBeenCalledWith(mockState.modalidad);
-      expect(storeMock.setEstado).toHaveBeenCalledWith(mockState.Estado);
-      expect(storeMock.setRepresentacionFederal).toHaveBeenCalledWith(mockState.RepresentacionFederal);
+      expect(storeMock.setEstadoSeleccionar).toHaveBeenCalledWith(mockState.Estado);
+      expect(storeMock.setRepresentacionFederalLista).toHaveBeenCalledWith(mockState.RepresentacionFederal);
       expect(storeMock.setActividadProductiva).toHaveBeenCalledWith(mockState.ActividadProductiva);
       expect(storeMock.setSector).toHaveBeenCalledWith(mockState.Sector);
       expect(storeMock.setFraccionArancelaria).toHaveBeenCalledWith(mockState.Fraccion_arancelaria);

@@ -155,6 +155,8 @@ export class DatosMercanciaComponent implements OnInit, AfterViewInit, OnChanges
   @Output() agregarMercanciaDatos: EventEmitter<DetalleMercancia> =
     new EventEmitter<DetalleMercancia>(true);
 
+    private detalleMercanciaData: DetalleMercancia | null = null;
+
   /**
    * Referencias a los componentes de listas cruzadas.
    */
@@ -458,6 +460,18 @@ export class DatosMercanciaComponent implements OnInit, AfterViewInit, OnChanges
    * @description Mensaje de error mostrado cuando el formulario de mercancía no es válido o faltan campos por capturar.
    */
   mensajeDeError: string = '';
+  /** @property {Catalogo[]} crosslistPaisDeOriginDatos
+   * Datos de países para la lista cruzada de país de origen.
+   */
+  crosslistPaisDeOriginDatos: Catalogo[] = [];
+  /** @property {Catalogo[]} crosslistPaisDeProcedenciaDatos
+   * Datos de países para la lista cruzada de país de procedencia.
+   * */
+  crosslistPaisDeProcedenciaDatos: Catalogo[] = [];
+  /** @property {Catalogo[]} crosslistUsoEspecificoDatos
+   * Datos de usos específicos para lista cruzada.
+   * */
+  crosslistUsoEspecificoDatos: Catalogo[] = [];
 
   /**
    * @constructor
@@ -601,6 +615,7 @@ export class DatosMercanciaComponent implements OnInit, AfterViewInit, OnChanges
         .pipe(takeUntil(this.destroyNotifier$))
         .subscribe((response) => {
           if (response && Array.isArray(response.datos)) {
+            this.crosslistPaisDeOriginDatos = response.datos;
             this.seleccionarOrigenDelPais = response.datos.map((item: Catalogo) => item.descripcion);
             const SELECTED = this.mercanciaForm.getRawValue();
             this.seleccionadasPaisDeOriginDatos = Array.isArray(SELECTED.paisDeOriginDatos)
@@ -620,6 +635,7 @@ export class DatosMercanciaComponent implements OnInit, AfterViewInit, OnChanges
         .pipe(takeUntil(this.destroyNotifier$))
         .subscribe((response) => {
           if (response && Array.isArray(response.datos)) {
+            this.crosslistPaisDeProcedenciaDatos = response.datos;
             this.paisDeProcedenciaDatos = response.datos.map((item: Catalogo) => item.descripcion);
             const SELECTED = this.mercanciaForm.getRawValue();
             this.seleccionadasPaisDeProcedenciaDatos = Array.isArray(SELECTED.paisDeProcedenciaDatos)
@@ -639,6 +655,7 @@ export class DatosMercanciaComponent implements OnInit, AfterViewInit, OnChanges
         .pipe(takeUntil(this.destroyNotifier$))
         .subscribe((response) => {
           if (response && Array.isArray(response.datos)) {
+            this.crosslistUsoEspecificoDatos = response.datos;
             this.usoEspesificoDatos = response.datos.map((item: Catalogo) => item.descripcion);
             const SELECTED = this.mercanciaForm.getRawValue();
             this.seleccionadasUsoEspesificoDatos = Array.isArray(SELECTED.usoEspecifico)
@@ -891,8 +908,10 @@ export class DatosMercanciaComponent implements OnInit, AfterViewInit, OnChanges
         this.elementosDeshabilitados = ['descripcionFraccion', 'cantidadUmt'];
         break;
       case 260203:
+        this.detalleMercancia = true;
         this.elementosAnadidos = ['especifique','especifiqueEstado'];
         this.elementosDeshabilitados = ['descripcionFraccion', 'cantidadUmt'];
+        this.elementosNoValidos = ['formaFarmaceutica','denominacionDistintiva'];
         break;
       case 260204:
         this.elementosAnadidos = ['especifique','especifiqueForma'];
@@ -1197,11 +1216,9 @@ export class DatosMercanciaComponent implements OnInit, AfterViewInit, OnChanges
         Validators.required,
         Validators.pattern(REGEX_DECIMAL),
         DatosMercanciaComponent.numeroUMCDecimalesValidator(),
-
       ],
     ],
     cantidadUmc: [this.obtenerValor('cantidadUmc'), [Validators.required]],
-    presentacion: [this.obtenerValor('presentacion'), [Validators.required]],
     numeroRegistroSanitario: [
       this.obtenerValor('numeroRegistroSanitario')
     ],
@@ -1224,27 +1241,27 @@ export class DatosMercanciaComponent implements OnInit, AfterViewInit, OnChanges
     especifiqueForma: [
       this.obtenerValor('especifiqueForma')
     ],
-    especifiqueEstado:[this.obtenerValor('especifiqueEstado')],
+    especifiqueEstado: [this.obtenerValor('especifiqueEstado')],
     id: [this.obtenerValor('id')]
   });
-   const MERCANCIA_FORM_DETALLE = this.mercanciaForm.getRawValue();
-  setTimeout(()=>{
- 
-      MERCANCIA_FORM_DETALLE.clasificacionProducto = this.getIdFromDescripcion(this.clasificacionProductoDatos,MERCANCIA_FORM_DETALLE.clasificacionProducto);
-    MERCANCIA_FORM_DETALLE.especificarClasificacionProducto = this.getIdFromDescripcion(this.especificarClasificacionProductoDatos,MERCANCIA_FORM_DETALLE.especificarClasificacionProducto);
-      MERCANCIA_FORM_DETALLE.tipoProducto = this.getIdFromDescripcion(this.tipoProductoDatos,MERCANCIA_FORM_DETALLE.tipoProducto);
-  MERCANCIA_FORM_DETALLE.formaFarmaceutica = this.getIdFromDescripcion(this.formaFarmaceuticaDatos,MERCANCIA_FORM_DETALLE.formaFarmaceutica);
-    MERCANCIA_FORM_DETALLE.estadoFisico = this.getIdFromDescripcion(this.estadoFisicoDatos,MERCANCIA_FORM_DETALLE.estadoFisico);
-MERCANCIA_FORM_DETALLE.fraccionArancelaria = this.getIdFromDescripcion(this.fraccionArancelariaDatos,MERCANCIA_FORM_DETALLE.fraccionArancelaria);
-MERCANCIA_FORM_DETALLE.cantidadUmc = this.getIdFromDescripcion(this.cantidadUmcDatos,MERCANCIA_FORM_DETALLE.cantidadUmc);
-this.mercanciaForm.patchValue(MERCANCIA_FORM_DETALLE);  
-},500);
-    
+
+  const MERCANCIA_FORM_DETALLE = this.mercanciaForm.getRawValue();
+  setTimeout(() => {
+    MERCANCIA_FORM_DETALLE.clasificacionProducto = this.getIdFromDescripcion(this.clasificacionProductoDatos, MERCANCIA_FORM_DETALLE.clasificacionProducto);
+    MERCANCIA_FORM_DETALLE.especificarClasificacionProducto = this.getIdFromDescripcion(this.especificarClasificacionProductoDatos, MERCANCIA_FORM_DETALLE.especificarClasificacionProducto);
+    MERCANCIA_FORM_DETALLE.tipoProducto = this.getIdFromDescripcion(this.tipoProductoDatos, MERCANCIA_FORM_DETALLE.tipoProducto);
+    MERCANCIA_FORM_DETALLE.formaFarmaceutica = this.getIdFromDescripcion(this.formaFarmaceuticaDatos, MERCANCIA_FORM_DETALLE.formaFarmaceutica);
+    MERCANCIA_FORM_DETALLE.estadoFisico = this.getIdFromDescripcion(this.estadoFisicoDatos, MERCANCIA_FORM_DETALLE.estadoFisico);
+    MERCANCIA_FORM_DETALLE.fraccionArancelaria = this.getIdFromDescripcion(this.fraccionArancelariaDatos, MERCANCIA_FORM_DETALLE.fraccionArancelaria);
+    MERCANCIA_FORM_DETALLE.cantidadUmc = this.getIdFromDescripcion(this.cantidadUmcDatos, MERCANCIA_FORM_DETALLE.cantidadUmc);
+    this.mercanciaForm.patchValue(MERCANCIA_FORM_DETALLE);
+  }, 500);
+
   const CONTROLS_A_ELIMINAR = [...this.elementosNoValidos];
   if (this.detalleMercancia) {
     CONTROLS_A_ELIMINAR.push('formaFarmaceutica', 'denominacionDistintiva');
   }
-  
+
   for (const NOMBRE_DEL_CONTROL of CONTROLS_A_ELIMINAR) {
     if (this.mercanciaForm.contains(NOMBRE_DEL_CONTROL)) {
       this.mercanciaForm.removeControl(NOMBRE_DEL_CONTROL, {
@@ -1267,6 +1284,17 @@ this.mercanciaForm.patchValue(MERCANCIA_FORM_DETALLE);
           { validators: VALIDATORS }
         )
       );
+    }
+  }
+
+  if (!this.elementosNoValidos.includes('presentacion') && !this.detalleMercancia) {
+    this.mercanciaForm.addControl(
+      'presentacion',
+      new FormControl(this.obtenerValor('presentacion'), [Validators.required])
+    );
+  } else {
+    if (this.mercanciaForm.contains('presentacion')) {
+      this.mercanciaForm.removeControl('presentacion');
     }
   }
 }
@@ -1377,7 +1405,8 @@ public convertToStringArray(value: unknown): string[] {
   // eslint-disable-next-line class-methods-use-this
   public isValid(control: AbstractControl, campo?: string): boolean | null {
     if (control instanceof FormGroup && campo) {
-      return control.controls[campo].errors && control.controls[campo].touched;
+      const FORM_CONTROL = control.controls[campo];
+      return FORM_CONTROL ? FORM_CONTROL.errors && FORM_CONTROL.touched : null;
     }
     return control.errors && control.touched;
   }
@@ -1449,6 +1478,7 @@ public convertToStringArray(value: unknown): string[] {
    *
    * @returns {void} Este método no devuelve ningún valor.
    */
+  // eslint-disable-next-line complexity
   agregarMercancia(): void {
 
     this.actualizarValidadoresClave()
@@ -1469,12 +1499,15 @@ public convertToStringArray(value: unknown): string[] {
      */
      const ID = Math.floor(100000 + Math.random() * 900000);
      VALORTABLAMERCANCIA.id = this.mercanciaForm.get('id')?.value ? this.mercanciaForm.get('id')?.value : ID
-      // Set additional values
+    
     VALORTABLAMERCANCIA.paisOrigen = this.mercanciaForm.get('paisDeOriginDatos')?.value;
+    VALORTABLAMERCANCIA.paisOrigenDatosClave = this.crosslistPaisDeOriginDatos.filter((pais) => this.seleccionadasPaisDeOriginDatos.includes(pais.descripcion)).map((paise) => paise.clave).filter((clave): clave is string => typeof clave === 'string');
     VALORTABLAMERCANCIA.paisProcedencia = this.mercanciaForm.get('paisDeProcedenciaDatos')?.value;
+    VALORTABLAMERCANCIA.paisProcedenciaDatosClave = this.crosslistPaisDeProcedenciaDatos.filter((pais) => this.seleccionadasPaisDeProcedenciaDatos.includes(pais.descripcion)).map((paise) => paise.clave).filter((clave): clave is string => typeof clave === 'string');
     VALORTABLAMERCANCIA.usoEspecifico = this.mercanciaForm.get('usoEspecifico')?.value;
-    VALORTABLAMERCANCIA.unidadMedidaComercializacion = this.mercanciaForm.get('cantidadUmcValor')?.value;
-    VALORTABLAMERCANCIA.cantidadUMC = this.mercanciaForm.get('cantidadUmc')?.value;
+    VALORTABLAMERCANCIA.usoEspecificoDatosClave = this.crosslistUsoEspecificoDatos.filter((uso) => this.seleccionadasUsoEspesificoDatos.includes(uso.descripcion)).map((uso) => uso.clave).filter((clave): clave is string => typeof clave === 'string');
+    VALORTABLAMERCANCIA.unidadMedidaComercializacion = this.mercanciaForm.get('cantidadUmc')?.value;
+    VALORTABLAMERCANCIA.cantidadUMC = this.mercanciaForm.get('cantidadUmcValor')?.value;
     VALORTABLAMERCANCIA.unidadMedidaTarifa = this.mercanciaForm.get('cantidadUmtValor')?.value;
     VALORTABLAMERCANCIA.cantidadUMT = this.mercanciaForm.get('cantidadUmt')?.value;
     const CLASIFICACIONID = this.mercanciaForm.get('clasificacionProducto')?.value;
@@ -1556,13 +1589,16 @@ public convertToStringArray(value: unknown): string[] {
     VALORTABLAMERCANCIA.cantidadUMC = UMCOBJ?.[0]?.descripcion ?? '';
     VALORTABLAMERCANCIA.cantidadUMCObj = UMCOBJ?.[0] ?? undefined;
 
-    // Emit the merchandise data
+  if (this.detalleMercancia && this.detalleMercanciaData) {
+    VALORTABLAMERCANCIA.formaFarmaceutica = this.detalleMercanciaData.formaFormaceutica;
+    VALORTABLAMERCANCIA.numeroRegistroSanitario = this.detalleMercanciaData.numeroDeRegistro;
+    VALORTABLAMERCANCIA.denominacionDistintiva = this.detalleMercanciaData.marcasDistintivas;
+    VALORTABLAMERCANCIA.presentacion = this.detalleMercanciaData.tipoDeEnvase;
+  }
     this.mercanciaSeleccionado.emit(VALORTABLAMERCANCIA);
     
-    // Reset form for next use
     this.mercanciaForm.reset();
     
-    // Close the modal
     this.cerrarModal.emit();
 }
 
@@ -1627,8 +1663,9 @@ actualizarValidadoresClave(): void {
    * @returns {void} This method does not return any value.
    */
 
-  agregarMercanciaSellecion(datos: DetalleMercancia): void {
-    this.agregarMercanciaDatos.emit(datos);
+  onAgregarDetalleMercancia(detalle: DetalleMercancia): void {
+    console.log('Received detalle from DetalleMercanciaComponent:', detalle);
+    this.detalleMercanciaData = detalle;
   }
 
   /**

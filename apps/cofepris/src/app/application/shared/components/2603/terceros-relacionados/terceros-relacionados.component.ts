@@ -27,7 +27,11 @@ import {
   FormGroup,
   ReactiveFormsModule,
 } from '@angular/forms';
-import { ID_PROCEDIMIENTO, PERMISO_DEFINITIVO_TITULO } from '../../../constantes/shared2603/medicos-sin-registrar.enum';
+import { ID_PROCEDIMIENTO, PERMISO_DEFINITIVO_TITULO, SECCION_PERMISOS } from '../../../constantes/shared2603/medicos-sin-registrar.enum';
+/**
+ * Tipo permitido para los valores en las tablas dinámicas de terceros relacionados.
+ * @typedef {string | number | boolean | undefined} AllowedValue
+ */
 type AllowedValue = string | number | boolean | undefined;
 
 /**
@@ -76,13 +80,22 @@ export class TercerosRelacionadosComponent implements OnDestroy {
    */
   @Input() formularioDeshabilitado: boolean = false;
 
-    /**
-   * @property
-   * @name permisoDefinitivoTitulo
-   * @type {number}
-   * @description Identificador único del procedimiento actual. Este valor se utiliza para asociar el componente con un trámite específico en el sistema.
-   */
+/**
+ * @property
+ * @name permisoDefinitivoTitulo
+ * @type {number[]}
+ * @description Lista de identificadores de títulos de permisos definitivos asociados al trámite actual.
+ */
   @Input() permisoDefinitivoTitulo: number[] = PERMISO_DEFINITIVO_TITULO;
+
+/**
+ * @property
+ * @name permisoSeccion
+ * @type {number}
+ * @description Identificador de la sección de permisos en el sistema. Utilizado para asociar el componente con la sección correspondiente.
+ */
+  @Input() permisoSeccion: number[] = SECCION_PERMISOS;
+  
 
     /**
    * @property
@@ -345,7 +358,9 @@ private static generateConfiguracionTabla<T>(
       initialState: {
         titulo: titulo,
         datosExistentes: datosExistentes,
-        esModificacion: true
+        esModificacion: true,
+        permisoDefinitivoTitulo: this.permisoDefinitivoTitulo,
+        permisoSeccion: this.permisoSeccion
       }
     };
     this.bsModalRef = this.modalService.show(FabricanteModalComponent, INITIAL_STATE);
@@ -542,7 +557,9 @@ private static generateConfiguracionTabla<T>(
     const INITIAL_STATE: ModalOptions = {
       class: 'modal-xl',
       initialState: {
-        titulo: titulo
+        titulo: titulo,
+        permisoDefinitivoTitulo: this.permisoDefinitivoTitulo,
+        permisoSeccion: this.permisoSeccion
       }
     };
     this.bsModalRef = this.modalService.show(FabricanteModalComponent, INITIAL_STATE);

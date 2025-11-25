@@ -1,6 +1,7 @@
-import { ADUANA_DATA, CLASIFICACION_PRODUCTO_DATA, CLAVE_SCIAN_DATA, DESCRIPCION_SCIAN_DATA, ESPECIFICAR_DATA, ESTADO_DATA, REGIMEN_AL_QUE_DATA, TIPO_PRODUCTO_DATA } from '../../../constantes/catalogs.enum';
+import { AL_DAR, Catalogo, InputFecha, InputRadioComponent, Notificacion, NotificacionesComponent, Pedimento, REGEX_CORREO_ELECTRONICO, REGEX_SOLO_DIGITOS, REGEX_TEXTO_ALFANUMERICO_EXTENDIDO, TablaSeleccion } from '@libs/shared/data-access-user/src'; 
+import { AlertComponent,TablaDinamicaComponent } from '@libs/shared/data-access-user/src';
+import { CLASIFICACION_PRODUCTO_DATA, CLAVE_SCIAN_DATA, DESCRIPCION_SCIAN_DATA, ESPECIFICAR_DATA, TIPO_PRODUCTO_DATA } from '../../../constantes/catalogs.enum';
 import { CONFIGURACION_COLUMNAS_LISTA_CLAVE, CONFIGURACION_COLUMNAS_MERCANCIAS, CONFIGURACION_COLUMNAS_SOLI } from '../../../constantes/column-config.enum';
-import { AL_DAR, Catalogo, InputFecha, InputRadioComponent, Notificacion, NotificacionesComponent, Pedimento, REGEX_CORREO_ELECTRONICO, REGEX_NO_ESPACIOS_AL_INICIO_NI_AL_FINAL, REGEX_SOLO_DIGITOS, REGEX_TEXTO_ALFANUMERICO_EXTENDIDO, TablaSeleccion } from '@libs/shared/data-access-user/src'; 
 import { ChangeDetectorRef, Component, ElementRef, EventEmitter, Input, OnChanges, OnDestroy, OnInit, Output, ViewChild } from '@angular/core';
 import { CrossList, MercanciaCrossList } from '../../../models/mercancia.model';
 import { FilaData, FilaData2, ListaClave } from '../../../models/fila-modal';
@@ -11,6 +12,7 @@ import { CatalogoSelectComponent } from '@libs/shared/data-access-user/src';
 import { CommonModule } from '@angular/common';
 import { ConsultaioQuery } from '@ng-mf/data-access-user';
 import { CrosslistComponent } from '@libs/shared/data-access-user/src';
+import { DatosServiceService } from '../../../services/datos-service.service';
 import { InputCheckComponent } from '@libs/shared/data-access-user/src';
 import { InputFechaComponent } from '@libs/shared/data-access-user/src';
 import { Modal } from 'bootstrap';
@@ -18,9 +20,7 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { RegistrarSolicitudMcpService } from '../../../services/shared2607/registrar-solicitud-mcp.service';
 import { Solicitud260702Query } from '../../../estados/queries/shared2607/tramites260702.query';
 import { TEXTOS } from '../../../constantes/constantes.enum';
-import { TablaDinamicaComponent, AlertComponent } from '@libs/shared/data-access-user/src';
 import { TituloComponent } from '@libs/shared/data-access-user/src';
-import { DatosServiceService } from '../../../services/datos-service.service';
 
 /**
  * Componente para gestionar los datos de la solicitud.
@@ -398,6 +398,12 @@ export class DatosdelasolicitudComponent implements OnInit, OnDestroy, OnChanges
         })
       )
       .subscribe();
+      this.solicitud260702Query.selectSolicitud$
+    .pipe(takeUntil(this.destroyed$))
+    .subscribe(state => {
+      this.tableData = [...state.tableData];
+      
+    });
 
     this.createForm();
     this.getEstadosData();
@@ -572,6 +578,7 @@ export class DatosdelasolicitudComponent implements OnInit, OnDestroy, OnChanges
           Validators.required,
         ],
       }),
+      mensaje:[ this.dataDeLaSolicitudState?.mensaje],
       hacerlosPublicos: [{value: this.dataDeLaSolicitudState?.hacerlosPublicos, disabled: this.esFormularioSoloLectura}, Validators.required],
 
     });
@@ -961,8 +968,8 @@ if (this.idProcedimiento) {
       descripcionDelScian: SELECTED_CATALOG ? SELECTED_CATALOG.descripcion : CLAVE_SCIAN_G_VALUE.descripcionDelScian
     }
   };
+    this.solicitud260702Store.setTableData([...this.tableData, NEW_ROW]);
 
-  this.tableData = [...this.tableData, NEW_ROW];
   this.showClavaScianForm = false;
   this.clavaScianForm.reset();
   }
