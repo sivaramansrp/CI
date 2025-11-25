@@ -606,8 +606,8 @@ export class SolicitudComponent implements OnInit, OnDestroy {
     cantidad: this.partidasDelaMercanciaForm.get('cantidadPartidasDeLaMercancia')?.value,
     totalUSD: this.partidasDelaMercanciaForm.get('valorPartidaUSDPartidasDeLaMercancia')?.value,
     descripcion: this.partidasDelaMercanciaForm.get('descripcionPartidasDeLaMercancia')?.value,
-    unidadDeMedida: this.unidadCatalogo.find(f => String(f.id) === String(this.mercanciaForm.get('unidadMedida')?.value))?.descripcion || '',
-    fraccionFrancelaria: this.fraccionCatalogo.find(f => String(f.id) === String(this.mercanciaForm.get('fraccion')?.value))?.descripcion || '',
+    unidadDeMedida: this.unidadCatalogo.find(f => String(f.clave) === String(this.mercanciaForm.get('unidadMedida')?.value))?.descripcion || '',
+    fraccionFrancelaria: this.fraccionCatalogo.find(f => String(f.clave) === String(this.mercanciaForm.get('fraccion')?.value))?.descripcion || '',
     precioUnitarioUSD: PRECIOUNITARIO_USD,
     fraccionTigiePartidasDeLaMercancia: this.partidasDelaMercanciaForm.get('fraccionTigiePartidasDeLaMercancia')?.value,
     fraccionDescripcionPartidasDeLaMercancia: this.partidasDelaMercanciaForm.get('fraccionDescripcionPartidasDeLaMercancia')?.value
@@ -729,7 +729,7 @@ this.tramite130112Store.actualizarEstado({
    */
   listaDePaisesDisponibles(): void {
     this.importacionMaterialDeInvestigacionCientificaService
-    .getBloque('130110')
+    .getBloque('130112')
       .pipe(takeUntil(this.destroyed$))
       .subscribe((data) => {
         this.elementosDeBloque = data;
@@ -742,7 +742,7 @@ this.tramite130112Store.actualizarEstado({
    */
   fetchPaisesPorBloque(_bloqueId: number): void {
     this.importacionMaterialDeInvestigacionCientificaService
-      .getPaisesPorBloque('130110', String(_bloqueId))
+      .getPaisesPorBloque('130112', String(_bloqueId))
             .pipe(takeUntil(this.destroyed$))
             .subscribe((data) => {
               this.paisesPorBloque = data;
