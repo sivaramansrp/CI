@@ -326,7 +326,7 @@ export class ContenedorDeDatosSolicitudComponent implements OnInit, OnDestroy {
   }
   
    cargarTablaOpcionConfigSolicitud(): void {    
-    this.registroSolicitudService.cargarOpcionesPrellenadoSolicitud(260213, 'AAL0409235E6').subscribe((res:BaseResponse<unknown>) => {
+    this.registroSolicitudService.cargarOpcionesPrellenadoSolicitud(this.idProcedimiento, 'AAL0409235E6').subscribe((res:BaseResponse<unknown>) => {
       const DATOS = res.datos as TablaOpcionConfig[];
 
       // Procesar los datos para manejar valores nulos en el proveedor
