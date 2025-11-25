@@ -65,10 +65,11 @@ export interface tableDatos {
    * @property {string} numeroPatente - Número de patente asociado al agente.
    */
   export interface AgentestableDatos {
-    nombres:string
-  primerApellido: string;
-  segundoApellido: string;
-  numeroPatente: string;
+    nombres: string;
+    primerApellido: string;
+    segundoApellido: string;
+    numeroPatente: string;
+    operaciones: string;
 }
 
   /**
@@ -85,9 +86,9 @@ export interface tableDatos {
    * @typeParam AgentestableDatos - Tipo de los datos de agente.
    */
   export const Agentes_DATOS: ConfiguracionColumna<AgentestableDatos>[] = [
-    { encabezado: "Tipo de Figura", clave: (item: AgentestableDatos) => item.segundoApellido, orden: 1 },
+    { encabezado: "Tipo de Figura", clave: (item: AgentestableDatos) => item.operaciones, orden: 1 },
     { encabezado: "Nombre(s)", clave: (item: AgentestableDatos) => item.nombres, orden: 2 },
-    { encabezado: "Apellido materno", clave: (item: AgentestableDatos) => item.primerApellido, orden: 3 },
+    { encabezado: "Apellido paterno", clave: (item: AgentestableDatos) => item.primerApellido, orden: 3 },
     { encabezado: "Apellido materno", clave: (item: AgentestableDatos) => item.segundoApellido, orden: 4 },
     { encabezado: "Patente/Autorización", clave: (item: AgentestableDatos) => item.numeroPatente, orden: 5 },
   ];

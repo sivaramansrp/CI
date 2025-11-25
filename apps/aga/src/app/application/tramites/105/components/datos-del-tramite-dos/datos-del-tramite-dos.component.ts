@@ -124,8 +124,19 @@ export class DatosDelTramiteDosComponent implements OnInit, OnDestroy {
     /**
      * Notificación que se muestra al usuario.
      */
-  public nuevaNotificacion: Notificacion | undefined;
+  public nuevaNotificacionEliminar: Notificacion | undefined;
 
+       /**
+       * Notificación que se muestra al usuario.
+       */
+    public nuevaNotificacion: Notificacion | undefined;
+  
+
+  /**
+   * Notificación que se muestra al usuario cuando hay un error o alerta relacionado con la selección de filas en la tabla.
+   * Por ejemplo, cuando se intenta modificar o eliminar sin seleccionar filas, o se seleccionan múltiples filas para una acción que requiere solo una.
+   */
+  public nuevaNotificacionRowselect: Notificacion | undefined;
   /**
    * Maneja la selección de filas en la tabla de mercancías.
    *
@@ -146,6 +157,65 @@ export class DatosDelTramiteDosComponent implements OnInit, OnDestroy {
     }
   }
 
+    /**
+     * @method aceptarConfirmationPopup
+     * Abre un popup de confirmación para eliminar los registros seleccionados.
+     * Si no hay registros seleccionados, no realiza ninguna acción.
+     */
+    aceptarConfirmationPopup(): void {
+        if (!this.agenteForm.valid) {
+      this.agenteForm.markAllAsTouched();
+      return;
+    }
+    else{
+      let addAccept='El agente aduanal fue agregado correctamente.';
+       if (this.selectedMercanciaIndex !== null && this.selectedMercanciaIndex > -1) {
+        addAccept='Datos guardados correctamente.';
+       }
+      this.cerrarModal();
+      this.nuevaNotificacion = {
+        tipoNotificacion: TipoNotificacionEnum.ALERTA,
+        categoria: CategoriaMensaje.ALERTA,
+        modo: 'modal',
+        titulo: '',
+        mensaje: addAccept,
+        cerrar: false,
+        txtBtnAceptar: 'Aceptar',
+        txtBtnCancelar: '',
+      };
+      
+    }
+
+    }
+
+      /**
+   * Maneja la respuesta del modal de confirmación de eliminación
+   */
+  aceptarConfirmacion(confirmado: boolean) {
+        // Get the current operaciones value from the main form
+        const operacionesValue = this.datosDelTramiteDos.get('operaciones')?.value;
+        // Always find the label (descripcion) for the selected id using filter
+        let operacionesLabel = operacionesValue;
+        if (typeof operacionesValue !== 'undefined' && this.operaciones && Array.isArray(this.operaciones)) {
+          const filtered = this.operaciones.filter(op => op.id == operacionesValue);
+          if (filtered.length > 0 && filtered[0].descripcion) {
+            operacionesLabel = filtered[0].descripcion;
+          }
+        }
+        // Merge label into the new/updated row
+        const MERCANCIA = { ...this.agenteForm.value, operaciones: operacionesLabel } as AgentestableDatos;
+        if (this.selectedMercanciaIndex !== null && this.selectedMercanciaIndex > -1) {
+          // Update existing
+          this.mercanciTablaDatos[this.selectedMercanciaIndex] = MERCANCIA;
+          this.selectedMercanciaIndex = null;
+        } else {
+          // Add new
+          this.mercanciTablaDatos.push(MERCANCIA);
+        }
+        this.mercanciTablaDatos = [...this.mercanciTablaDatos];
+        this.agenteForm.reset();
+  }
+
   /**
    * Maneja la respuesta del modal de confirmación de eliminación
    */
@@ -153,8 +223,17 @@ export class DatosDelTramiteDosComponent implements OnInit, OnDestroy {
     if (confirmado) {
       this.confirmarEliminarMercancia();
     } else {
-      this.nuevaNotificacion = undefined;
+      this.nuevaNotificacionEliminar = undefined;
     }
+  }
+
+
+   /**
+   * Maneja la respuesta del modal de confirmación de eliminación
+   */
+  onEliminarRowselect(confirmado: boolean) {
+    this.nuevaNotificacionRowselect = undefined;
+  
   }
   /**
    * @method abrirElimninarConfirmationopup
@@ -162,7 +241,7 @@ export class DatosDelTramiteDosComponent implements OnInit, OnDestroy {
    * Si no hay registros seleccionados, no realiza ninguna acción.
    */
   abrirElimninarConfirmationopup(): void {
-    this.nuevaNotificacion = {
+    this.nuevaNotificacionEliminar = {
       tipoNotificacion: TipoNotificacionEnum.ALERTA,
       categoria: CategoriaMensaje.ERROR,
       modo: 'modal',
@@ -187,10 +266,9 @@ export class DatosDelTramiteDosComponent implements OnInit, OnDestroy {
       });
       this.mercanciTablaDatos = [...this.mercanciTablaDatos];
       // Clear selection and disable buttons
-    
       this.canDelete = false;
       this.canEdit = false;
-      this.nuevaNotificacion = undefined;
+      this.nuevaNotificacionEliminar = undefined;
     }
   }
 
@@ -201,23 +279,57 @@ export class DatosDelTramiteDosComponent implements OnInit, OnDestroy {
     if (this.selectedMercanciaRows && this.selectedMercanciaRows.length > 0) {
       this.abrirElimninarConfirmationopup();
     }
+    else{
+      this.nuevaNotificacionRowselect = {
+        tipoNotificacion: TipoNotificacionEnum.ALERTA,
+        categoria: CategoriaMensaje.ERROR,
+        modo: 'modal',
+        titulo: 'Alerta',
+        mensaje: 'Por favor seleccione un elemento para eliminar.',
+        cerrar: false,
+        txtBtnAceptar: 'Aceptar',
+        txtBtnCancelar: '',
+      };
+    }
   }
 
   /**
    * Modifica la mercancía seleccionada (carga los datos en el formulario)
    */
   modificarMercancia() {
-    // Solo permitir modificar si canEdit es true (una sola fila seleccionada)
-    if (this.canEdit && this.selectedMercanciaIndex !== null) {
-      const mercancia = this.mercanciTablaDatos[this.selectedMercanciaIndex];
-      this.agenteForm.patchValue(mercancia);
-      // Abrir modal si es necesario
-      const modal = document.getElementById('modalAgregar');
-      if (modal && (window as any).bootstrap?.Modal) {
-        (window as any).bootstrap.Modal.getOrCreateInstance(modal).show();
+    if (this.selectedMercanciaRows && this.selectedMercanciaRows.length === 1) {
+      const index = this.mercanciTablaDatos.findIndex(item => item === this.selectedMercanciaRows[0]);
+      if (index !== -1) {
+        const mercancia = this.mercanciTablaDatos[index];
+        this.agenteForm.patchValue(mercancia);
+        // Abrir modal si es necesario
+        const modal = document.getElementById('modalAgregar');
+        if (modal && (window as any).bootstrap?.Modal) {
+          (window as any).bootstrap.Modal.getOrCreateInstance(modal).show();
+        }
       }
-      this.canDelete = false;
-      this.canEdit = false;
+    } else if (this.selectedMercanciaRows && this.selectedMercanciaRows.length > 1) {
+      this.nuevaNotificacionRowselect = {
+        tipoNotificacion: TipoNotificacionEnum.ALERTA,
+        categoria: CategoriaMensaje.ERROR,
+        modo: 'modal',
+        titulo: '',
+        mensaje: 'Selecciona sólo un registro para modificar.',
+        cerrar: false,
+        txtBtnAceptar: 'Aceptar',
+        txtBtnCancelar: '',
+      };
+    } else {
+      this.nuevaNotificacionRowselect = {
+        tipoNotificacion: TipoNotificacionEnum.ALERTA,
+        categoria: CategoriaMensaje.ERROR,
+        modo: 'modal',
+        titulo: '',
+        mensaje: 'Selecciona un registro.',
+        cerrar: false,
+        txtBtnAceptar: 'Aceptar',
+        txtBtnCancelar: '',
+      };
     }
   }
   /**
@@ -553,30 +665,6 @@ export class DatosDelTramiteDosComponent implements OnInit, OnDestroy {
         this.operaciones = RESPONSE;
       }
     });
-  }
-
-  /**
-   * Agrega mercancías a la tabla.
-   * 
-   * @memberof DatosDelTramiteDosComponent
-   */
-  agregarMercancias(): void {
-    if (!this.agenteForm.valid) {
-      this.agenteForm.markAllAsTouched();
-      return;
-    }
-    const MERCANCIA = this.agenteForm.value;
-    if (this.selectedMercanciaIndex !== null && this.selectedMercanciaIndex > -1) {
-      // Update existing
-      this.mercanciTablaDatos[this.selectedMercanciaIndex] = MERCANCIA as AgentestableDatos;
-      this.selectedMercanciaIndex = null;
-    } else {
-      // Add new
-      this.mercanciTablaDatos.push(MERCANCIA as AgentestableDatos);
-    }
-    this.mercanciTablaDatos = [...this.mercanciTablaDatos];
-    this.agenteForm.reset();
-    this.cerrarModal();
   }
 
   /**
