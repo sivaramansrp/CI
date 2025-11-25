@@ -416,7 +416,7 @@ label: 'Moral',
   ngOnInit(): void {
     this.requestedFocus = DEFAULT_TABLA_ORDENS.includes(this.idProcedimiento) ? false : true;
     this.cambiarHabilitacionContribuyente();
-    this.cargarDatos(this.tramiteID);
+    this.cargarDatos(this.idProcedimiento.toString());
     this.chequeoValidacionAlGuardar =
       PROCEDIMIENTOS_PARA_OCULTAR_EL_BOTON_AGREGAR.includes(this.idProcedimiento)
         ? false

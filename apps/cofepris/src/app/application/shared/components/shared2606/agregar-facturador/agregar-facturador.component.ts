@@ -179,7 +179,7 @@ export class AgregarFacturadorComponent
    * Hook de inicialización del componente. Carga los catálogos necesarios.
    */
   ngOnInit(): void {
-    this.obtenerListaPaises(this.tramiteID);
+    this.obtenerListaPaises(this.idProcedimiento.toString());
     this.crearAgregarFormularioFacturador();
     this.changeNacionalidad();
      this.chequeoValidacionAlGuardar =

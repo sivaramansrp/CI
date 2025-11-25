@@ -214,7 +214,7 @@ export class AgregarProveedorComponent implements OnDestroy, OnInit, OnChanges {
    */
   ngOnInit(): void {
     this.cambiarHabilitacionNacionalidad();
-    this.obtenerListaPaises(this.tramiteID);
+    this.obtenerListaPaises(this.idProcedimiento.toString());
     this.validarElementos();
     this.chequeoValidacionAlGuardar =
       PROCEDIMIENTOS_PARA_OCULTAR_EL_BOTON_AGREGAR.includes(this.idProcedimiento)
