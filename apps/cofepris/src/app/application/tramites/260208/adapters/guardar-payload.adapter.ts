@@ -51,8 +51,8 @@ export class GuardarAdapter_260208 {
           "discriminatorValue": 260208,
           "declaracionesSeleccionadas": state.datosSolicitudFormState.manifesto,
           "regimen": state.datosSolicitudFormState.regimen,
-          "aduanaAIFA": "",
-          "informacionConfidencial": state.datosSolicitudFormState.publico === 'si' ? true : false
+          "aduanaAIFA": "", 
+          "informacionConfidencial": state.datosSolicitudFormState.publico === 'Si' ? true : false
       },
       "establecimiento": {
           "rfcResponsableSanitario": state.datosSolicitudFormState.rfcSanitario,
@@ -61,7 +61,7 @@ export class GuardarAdapter_260208 {
           "domicilio": {
               "codigoPostal": state.datosSolicitudFormState.codigoPostal,
               "entidadFederativa": {
-                  "clave": ""
+                  "clave": state.datosSolicitudFormState.estado
               },
               "descripcionMunicipio": state.datosSolicitudFormState.municipioAlcaldia,
               "informacionExtra": state.datosSolicitudFormState.localidad,
@@ -91,37 +91,33 @@ export class GuardarAdapter_260208 {
               "nombreSubClasificacionProducto": mercancia.especificarClasificacionObj?.descripcion,
               "descDenominacionEspecifica": mercancia.denominacionEspecificaProducto,
               "descDenominacionDistintiva": mercancia.denominacionDistintiva,
-              "descripcionMercancia": "",
-              "formaFarmaceuticaDescripcionOtros": mercancia.formaFarmaceutica,
-              "estadoFisicoDescripcionOtros": mercancia.estadoFisico,
+              "descripcionMercancia": mercancia.denominacionComun,
+              "idFormaFarmaceutica": mercancia.formaFarmaceutica,
+              "formaFarmaceuticaDescripcionOtros": mercancia.especifiqueForma,
+              "idEstadoFisico": mercancia.estadoFisico,
+              "estadoFisicoDescripcionOtros": mercancia.especifiqueEstado,
               "fraccionArancelaria": {
                   "clave": mercancia.fraccionArancelaria,
                   "descripcion": mercancia.descripcionFraccion
               },
               "unidadMedidaComercial": {
-                  "descripcion": "Pieza"
+                  "descripcion": mercancia.cantidadUMCObj?.descripcion
               },
-              "cantidadUMCConComas": mercancia.cantidadUMC,
+              "cantidadUMCConComas": mercancia.cantidadUmcValor,
               "unidadMedidaTarifa": {
                   "descripcion": mercancia.cantidadUMT
               },
               "cantidadUMTConComas": mercancia.cantidadUmtValor,
               "presentacion": mercancia.presentacion,
               "registroSanitarioConComas": mercancia.numeroRegistroSanitario,
-              "nombreCortoPaisOrigen": mercancia.paisDeOriginDatos?.toString(),
-              "nombreCortoPaisProcedencia": mercancia.paisDeProcedenciaDatos?.toString(),
-              "tipoProductoDescripcionOtros": mercancia.tipoProducto,
-              "nombreCortoUsoEspecifico": mercancia.usoEspecifico?.toString(),
+              "nombreCortoPaisOrigen": mercancia.paisOrigenDatosClave,
+              "nombreCortoPaisProcedencia": mercancia.paisProcedenciaDatosClave,
+              "idTipoProductoTipoTramite": mercancia.tipoProducto,
+              "tipoProductoDescripcionOtros": mercancia.especifique,
+              "nombreCortoUsoEspecifico": mercancia.usoEspecificoDatosClave,
               "fechaCaducidadStr": mercancia.fechaCaducidad
           }
       }),
-      "representanteLegal": {
-          "rfc": state.datosSolicitudFormState.representanteRfc,
-          "resultadoIDC": "",
-          "nombre": state.datosSolicitudFormState.representanteNombre,
-          "apellidoPaterno": state.datosSolicitudFormState.apellidoPaterno,
-          "apellidoMaterno": state.datosSolicitudFormState.apellidoMaterno
-      },
       "gridTerceros_TIPERS_FAB": state.fabricanteTablaDatos.map((fabricante) => {
         return {
               "idPersonaSolicitud": "",

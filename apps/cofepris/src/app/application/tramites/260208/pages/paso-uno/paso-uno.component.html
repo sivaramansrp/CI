@@ -47,11 +47,11 @@
       </li>
     </ul>
     <ng-container>
-      <solicitante #solicitante [hidden]="indice !== 1"></solicitante>
       @if(esDatosRespuesta){
-      <app-contenedor-de-datos-solicitud #contenedorDatos [hidden]="indice !== 2"></app-contenedor-de-datos-solicitud>
-      <app-terceros-relacionados-vista #tercerosRelacionados [hidden]="indice !== 3"></app-terceros-relacionados-vista>
-      <app-pago-de-derechos-contenedora #pagoDerechos [hidden]="indice !== 4"></app-pago-de-derechos-contenedora>
+        <solicitante [tabindex]="1" [hidden]="indice !== 1"></solicitante>
+        <app-contenedor-de-datos-solicitud #contenedorDeDatosSolicitudComponent [hidden]="indice !== 2"></app-contenedor-de-datos-solicitud>
+        <app-terceros-relacionados-vista #tercerosRelacionadosVistaComponent [hidden]="indice !== 3"></app-terceros-relacionados-vista>
+        <app-pago-de-derechos-contenedora #pagoDeDerechosContenedoraComponent [hidden]="indice !== 4"></app-pago-de-derechos-contenedora>
       }
     </ng-container>
   </div>
