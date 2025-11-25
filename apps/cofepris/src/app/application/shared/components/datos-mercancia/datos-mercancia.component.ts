@@ -155,6 +155,8 @@ export class DatosMercanciaComponent implements OnInit, AfterViewInit, OnChanges
   @Output() agregarMercanciaDatos: EventEmitter<DetalleMercancia> =
     new EventEmitter<DetalleMercancia>(true);
 
+    private detalleMercanciaData: DetalleMercancia | null = null;
+
   /**
    * Referencias a los componentes de listas cruzadas.
    */
@@ -1476,6 +1478,7 @@ public convertToStringArray(value: unknown): string[] {
    *
    * @returns {void} Este método no devuelve ningún valor.
    */
+  // eslint-disable-next-line complexity
   agregarMercancia(): void {
 
     this.actualizarValidadoresClave()
@@ -1586,13 +1589,16 @@ public convertToStringArray(value: unknown): string[] {
     VALORTABLAMERCANCIA.cantidadUMC = UMCOBJ?.[0]?.descripcion ?? '';
     VALORTABLAMERCANCIA.cantidadUMCObj = UMCOBJ?.[0] ?? undefined;
 
-    // Emit the merchandise data
+  if (this.detalleMercancia && this.detalleMercanciaData) {
+    VALORTABLAMERCANCIA.formaFarmaceutica = this.detalleMercanciaData.formaFormaceutica;
+    VALORTABLAMERCANCIA.numeroRegistroSanitario = this.detalleMercanciaData.numeroDeRegistro;
+    VALORTABLAMERCANCIA.denominacionDistintiva = this.detalleMercanciaData.marcasDistintivas;
+    VALORTABLAMERCANCIA.presentacion = this.detalleMercanciaData.tipoDeEnvase;
+  }
     this.mercanciaSeleccionado.emit(VALORTABLAMERCANCIA);
     
-    // Reset form for next use
     this.mercanciaForm.reset();
     
-    // Close the modal
     this.cerrarModal.emit();
 }
 
@@ -1657,9 +1663,9 @@ actualizarValidadoresClave(): void {
    * @returns {void} This method does not return any value.
    */
 
-  agregarMercanciaSellecion(datos: DetalleMercancia): void {
-    console.log('Received detalle:', datos)
-    this.agregarMercanciaDatos.emit(datos);
+  onAgregarDetalleMercancia(detalle: DetalleMercancia): void {
+    console.log('Received detalle from DetalleMercanciaComponent:', detalle);
+    this.detalleMercanciaData = detalle;
   }
 
   /**
