@@ -1,7 +1,9 @@
 import { AlertComponent, REG_X, TramiteStore } from "@libs/shared/data-access-user/src";
-import { Component, OnInit } from "@angular/core";
+import { Component, OnDestroy, OnInit } from "@angular/core";
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from "@angular/forms";
+import { Subject, map, takeUntil } from "rxjs";
 import { ConsultaTramiteService } from "../services/consulta-tramite.service";
+import { LoginQuery } from '@ng-mf/data-access-user';
 import { NgIf } from "@angular/common";
 import { Router } from "@angular/router";
 
@@ -12,7 +14,12 @@ import { Router } from "@angular/router";
     templateUrl: "./consulta-tramite-busqueda-folio.component.html",
     imports: [ReactiveFormsModule, AlertComponent, NgIf]
 })
-export class ConsultaTramiteBusquedaFolioComponent implements OnInit {
+export class ConsultaTramiteBusquedaFolioComponent implements OnInit, OnDestroy {
+    /*
+     * Subject utilizado para emitir un valor y completar las suscripciones activas 
+     * cuando el componente se destruye, evitando fugas de memoria.
+     */
+    private destroyNotifier$: Subject<void> = new Subject();
     /** 
      * Formulario de búsqueda 
     */
@@ -38,12 +45,17 @@ export class ConsultaTramiteBusquedaFolioComponent implements OnInit {
      */
 
     public alertMessage: string = ''
+    /*
+    * Valor del RFC obtenido del estado de login.
+    */
+    public rfcValor = ''
 
     constructor(
         private router: Router,
         private fb: FormBuilder,
         private tramiteStates: TramiteStore,
         public consultaTramiteService: ConsultaTramiteService,
+        public loginQuery: LoginQuery
     ) {
         /**
          * Constructor de la clase ConsultaTramiteComponent.
@@ -62,7 +74,15 @@ export class ConsultaTramiteBusquedaFolioComponent implements OnInit {
         });
     }
 
-    ngOnInit(): void {
+    ngOnInit(): void {  
+        this.loginQuery.selectLoginState$
+          .pipe(
+            takeUntil(this.destroyNotifier$),
+            map((state)=>{
+                this.rfcValor = state.rfc
+            })
+          )
+          .subscribe();
         this.inicializaFormConsulta()
     }
 
@@ -80,7 +100,7 @@ export class ConsultaTramiteBusquedaFolioComponent implements OnInit {
         const FOLIO = this.FormBuscaTramite.get('folioDelTramite')?.value.toString();
         this.consultaTramiteService.getDetallesDelTramite({
             roles_usuario: ["AdministradorDependencia", "Dictaminador"],
-            user_name: "MAVL621207C95",
+            user_name: this.rfcValor,
             folio: FOLIO
         }).subscribe({
             next: (res) => {
@@ -148,6 +168,15 @@ export class ConsultaTramiteBusquedaFolioComponent implements OnInit {
         return CONTROL
             ? CONTROL.invalid && (CONTROL.touched || CONTROL.dirty)
             : false;
+    }
+
+    /*
+  * Hook de destrucción del componente.
+  * Finaliza las suscripciones activas al destruir el componente para evitar fugas de memoria.
+  */
+    ngOnDestroy(): void {
+        this.destroyNotifier$.next();
+        this.destroyNotifier$.complete();
     }
 
 }
