@@ -2,7 +2,7 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { CodigoRespuesta } from '../../../../core/enum/se-core-enum';
 import { DatosComponent } from '../datos/datos.component';
 
-import { AVISO, CategoriaMensaje, DatosPasos, ListaPasosWizard, Notificacion, WizardComponent } from '@libs/shared/data-access-user/src'
+import { AVISO, CategoriaMensaje, DatosPasos, FIRMAR_SOLICITUD, ListaPasosWizard, Notificacion, WizardComponent } from '@libs/shared/data-access-user/src'
 import { PANTAPASOS } from '../../services/pantallas-svc.enum';
 import { PASOS } from '@ng-mf/data-access-user';
 
@@ -98,6 +98,16 @@ export class PantallasComponent implements OnInit {
    * Texto del aviso de privacidad simplificado.
    */
   TEXTOS = AVISO.Aviso;
+
+  /**
+   * Constante para el mensaje de firmar solicitud.
+   */
+  FIRMAR_SOLICITUD = FIRMAR_SOLICITUD.MENSAJE;
+
+  /**
+   * Mensaje para firmar la solicitud con el número de solicitud.
+   */
+  mensajeFirmarSolicitud: string = '';
 
   /**
    * Clase CSS para mostrar una alerta de información.
@@ -695,7 +705,9 @@ export class PantallasComponent implements OnInit {
         next: (response) => {
           if (response.codigo === CodigoRespuesta.EXITO) {
             this.tramite110101Store.setId_solicitud(response.datos ?? 0);
-             this.mostrarMensaje = false;
+            const NUM_SOLICITUD = this.solicitudeState.id_solcitud;
+            this.mensajeFirmarSolicitud = FIRMAR_SOLICITUD.MENSAJE.replace("{NUMERO}", String(NUM_SOLICITUD));
+            this.mostrarMensaje = false;
             this.mostrarMensajeServicio = false;
               if (onSuccessCallback) {
                 onSuccessCallback();
