@@ -10,9 +10,7 @@ describe('ExportacionMineralesDeHierroComponent', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       declarations: [ExportacionMineralesDeHierroComponent],
-      imports: [WizardComponent,
-        BtnContinuarComponent,
-        TituloComponent],
+      imports: [WizardComponent, BtnContinuarComponent, TituloComponent],
       schemas: [NO_ERRORS_SCHEMA],
     }).compileComponents();
 
@@ -23,5 +21,38 @@ describe('ExportacionMineralesDeHierroComponent', () => {
 
   it('should create', () => {
     expect(component).toBeTruthy();
+  });
+
+  it('should initialize pasosSolicitar and datosPasos', () => {
+    expect(component.pasosSolicitar.length).toBeGreaterThan(0);
+    expect(component.datosPasos.nroPasos).toEqual(component.pasosSolicitar.length);
+    expect(component.datosPasos.indice).toEqual(component.indice);
+  });
+
+  it('should set activarBotonCargaArchivos when manejaEventoCargaDocumentos is called', () => {
+    component.manejaEventoCargaDocumentos(true);
+    component.manejaEventoCargaDocumentos(false);
+  });
+
+  it('should update seccionCargarDocumentos when cargaRealizada is called', () => {
+    component.cargaRealizada(true);
+    component.cargaRealizada(false);
+   
+  });
+
+  it('should emit cargarArchivosEvento when onClickCargaArchivos is called', () => {
+    spyOn(component.cargarArchivosEvento, 'emit');
+    component.onClickCargaArchivos();
+    expect(component.cargarArchivosEvento.emit).toHaveBeenCalled();
+  });
+
+  it('should clean up on ngOnDestroy', () => {
+    spyOn(component['destroyed$'], 'next');
+    spyOn(component['destroyed$'], 'complete');
+    const storeSpy = spyOn(component['tramite130202Store'], 'resetStore');
+    component.ngOnDestroy();
+    expect(component['destroyed$'].next).toHaveBeenCalled();
+    expect(component['destroyed$'].complete).toHaveBeenCalled();
+    expect(storeSpy).toHaveBeenCalled();
   });
 });
