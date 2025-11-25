@@ -17,7 +17,7 @@
       @if(esDatosRespuesta){
         <solicitante [tabindex]="1" [hidden]="indice !== 1"></solicitante>
         <app-contenedor-de-datos-solicitud #contenedorDeDatosSolicitudComponent [hidden]="indice !== 2"></app-contenedor-de-datos-solicitud>
-        <!-- <app-terceros-relacionados-vista #tercerosRelacionadosVistaComponent [hidden]="indice !== 3"></app-terceros-relacionados-vista> -->
+        <app-terceros-relacionados-vista #tercerosRelacionadosVistaComponent [hidden]="indice !== 3"></app-terceros-relacionados-vista>
       }
     </ng-container>
   </div>

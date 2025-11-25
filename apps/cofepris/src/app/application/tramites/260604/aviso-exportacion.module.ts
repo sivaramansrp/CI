@@ -37,11 +37,12 @@ import { DomicilioDelEstablecimientoComponent } from '../../shared/components/do
 
 import { DatosDelEstablecimientoComponent } from '../../shared/components/datos-del-establecimiento/datos-del-establecimiento.component';
 
-import { DatosService } from '../../shared/services/datos.service';
-import { DatosDeLaSolicitudComponent } from '../../shared/components/shared2606/datos-de-la-solicitud/datos-de-la-solicitud.component';
 import { ContenedorDeDatosSolicitudComponent } from './components/contenedor-de-datos-solicitud/contenedor-de-datos-solicitud.component';
 import { ContenedorDePasosComponent } from './pages/contenedor-de-paso/contenedor-de-pasos.component';
+import { DatosDeLaSolicitudComponent } from '../../shared/components/shared2606/datos-de-la-solicitud/datos-de-la-solicitud.component';
+import { DatosService } from '../../shared/services/datos.service';
 import { PasoUnoComponent } from './pages/paso-uno/paso-uno.component';
+import { TercerosRelacionadosVistaComponent } from './components/terceros-relacionados-vista/terceros-relacionados-vista.component';
 
 @NgModule({
   declarations: [
@@ -64,13 +65,13 @@ import { PasoUnoComponent } from './pages/paso-uno/paso-uno.component';
     TercerosRelacionadoComponent,
     SolicitanteComponent,
     PasoDosComponent,
-    PasoFirmaComponent,
     PasoTresComponent,
+    PasoFirmaComponent,
     RepresentanteLegalComponent,
     DomicilioDelEstablecimientoComponent,
     NotificacionesComponent,
-    DatosDelEstablecimientoComponent
-
+    DatosDelEstablecimientoComponent,
+    TercerosRelacionadosVistaComponent
   ],
   providers: [
     ToastrService,
