@@ -4,7 +4,7 @@ import { TodospasosComponent } from '../pages/todospasos/todospasos.component';
 
 const ROUTES: Routes = [
   {
-    path: 'registrarIPM',
+    path: 'contenedor-de-pasos',
     component: TodospasosComponent
   }
 ];

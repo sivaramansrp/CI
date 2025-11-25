@@ -150,11 +150,11 @@ export interface Otros {
 }
 
 /**
- * Modelo para representar los datos de terceros en el trámite 260303.
+ * Modelo para representar los datos de terceros en el trámite 260302.
  * Incluye información personal, dirección, nacionalidad, tipo de persona y otros campos relacionados.
- * Extiende la funcionalidad básica con campos específicos para el trámite 260303.
+ * Extiende la funcionalidad básica con campos específicos para el trámite 260302.
  */
-export interface Otros260303 {
+export interface Otros260302 {
   /** Descripción del tipo de tercero relacionado */
   tercero?: string,
   /** Nombre completo o denominación social */
