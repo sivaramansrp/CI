@@ -496,3 +496,20 @@ export interface MercanciaFormEstupefacientes {
   paisOrigen:string
 }
 
+export type FabricanteRequiredField =
+  | "tipoPersona"
+  | "rfc"
+  | "curp"
+  | "nombres"
+  | "primerApellido"
+  | "razonSocial"
+  | "pais"
+  | "estado"
+  | "municipio"
+  | "localidad"
+  | "codigoPostal"
+  | "colonia"
+  | "calle"
+  | "numeroExterior"
+  | "correoElectronico";
+

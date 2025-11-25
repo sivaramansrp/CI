@@ -1,24 +1,27 @@
-{
-    "tableHeader": [
-        "Nombre/denominación o razón social",
-        "R.F.C.",
-        "CURP",
-        "Teléfono",
-        "Correo electrónico",
-        "Calle",
-        "Número exterior",
-        "Número interior",
-        "País",
-        "Colonia",
-        "Municipio o alcaldía",
-        "Localidad",
-        "Estado",
-        "Estado",
-        "Código postal"
-    ],
-    "tableBody": [
-        {
-            "tbodyData": []
-        }
-    ]
-}
+[
+  {
+    "tipoPersona": "Fisica",
+    "id": 1,
+    "nombreRazonSocial": "Fabricante Demo S.A. de C.V.",
+    "rfc": "FAB123456789",
+    "curp": "CURP123456HDFABC01",
+    "telefono": "5544332211",
+    "correoElectronico": "contacto@fabricantedemo.com",
+    "calle": "Avenida de los Fabricantes",
+    "numeroExterior": "120",
+    "numeroInterior": "5B",
+    "pais": "1",
+    "colonia": "1",
+    "municipioAlcaldia": "1",
+    "localidad": "1",
+    "entidadFederativa": "CDMX",
+    "estadoLocalidad": "1",
+    "codigoPostal": "12321312",
+    "coloniaEquivalente": "Industrial Equivalente",
+    "nombres": "Juan",
+    "primerApellido": "Perez",
+    "segundoApellido": "Garcia",
+    "razonSocial": "Fabricante Demo S.A. de C.V.",
+    "lada": "55"
+  }
+]

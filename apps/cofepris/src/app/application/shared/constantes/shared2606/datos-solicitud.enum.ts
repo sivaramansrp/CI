@@ -669,7 +669,7 @@ export const PROCEDIMIENTOS_NO_PARA_ELEMENTO_COLAPSABLE = [260604];
  *              para elementos de tabla en la aplicación.
  * @type {number[]}
  */
-export const OCULTAR_PROVEEDOR = [260601];
+export const OCULTAR_PROVEEDOR: number[] = [260601];
 
 /**
  * @const OCULTAR_FACTURADOR
@@ -677,7 +677,23 @@ export const OCULTAR_PROVEEDOR = [260601];
  *
  * @type {number[]}
  */
-export const OCULTAR_FACTURADOR = [260601];
+export const OCULTAR_FACTURADOR :number[] = [260603, 260604];
+
+/**
+ * @const OCULTAR_FACTURADOR
+ * @description Lista de identificadores de procedimientos para los cuales el elemento "Facturador" debe ser ocultado en la aplicación.
+ *
+ * @type {number[]}
+ */
+export const OCULTAR_FABRICANTA: number[] = [260601];
+
+/**
+ * @const OCULTAR_FACTURADOR
+ * @description Lista de identificadores de procedimientos para los cuales el elemento "Facturador" debe ser ocultado en la aplicación.
+ *
+ * @type {number[]}
+ */
+export const OCULTAR_DESTINATARIO: number[] = [];
 
 /**
  * @const PROCEDIMIENTOS_PARA_NO_CONTRIBUYENTE
@@ -1076,7 +1092,7 @@ export const PROCEDIMIENTOS_PARA_TEXTO_ADJUNTAR = [260601];
  * Arreglo de identificadores de procedimientos para los cuales se debe ocultar el botón "Agregar".
  * Si el procedimiento actual coincide con alguno de estos valores, el botón no será mostrado en la interfaz.
  */
-export const PROCEDIMIENTOS_PARA_OCULTAR_EL_BOTON_AGREGAR = [260601];
+export const PROCEDIMIENTOS_PARA_OCULTAR_EL_BOTON_AGREGAR: number[] = [];
 
 /**
  * Constante que representa el código AIFA.
