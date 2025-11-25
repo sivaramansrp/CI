@@ -8,7 +8,11 @@ import { PagoDerechosFormState } from '../../../../shared/models/2603/terceros-r
  * Interfaz que representa el estado de Solicitud260302.
  */
 export interface Solicitud260302State {
-    pagoDerechos: import("c:/01 iLink Digital/Projects/Bug Fixes/cofepris/Shared Component/260302/frontend/apps/cofepris/src/app/application/shared/models/2603/terceros-relacionados.model").PagoDerechosFormState;
+    /**
+     * Estado del formulario de pago de derechos.
+     * @type {PagoDerechosFormState}
+     */
+    pagoDerechos: PagoDerechosFormState;
     /**
      * El valor de idSolicitud.
      */
