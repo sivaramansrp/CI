@@ -13,23 +13,22 @@ import {
   Validators,
 } from '@angular/forms';
 import { AfterViewInit, Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
-import { AlertComponent, Catalogo, Pedimento, REGEX_NUMERO_DECIMAL_ENTERO, REG_X, TablaDinamicaComponent, TablaSeleccion, TituloComponent, UppercaseDirective } from '@libs/shared/data-access-user/src';
+import { AlertComponent, CatalogoSelectComponent, Pedimento, REGEX_NUMERO_DECIMAL_ENTERO, REG_X, TablaDinamicaComponent, TablaSeleccion, TituloComponent, UppercaseDirective } from '@libs/shared/data-access-user/src';
 import { MERCANCIA_TABLA, MODIFICAR_PARTIDAS_FORM } from '../../constantes/octava-temporal.enum';
 import{ Notificacion, NotificacionesComponent } from '@libs/shared/data-access-user/src';
 
 import { Solicitud130102State, Tramite130102Store } from '../../estados/tramites/tramite130102.store';
 import { Subject, map, takeUntil } from 'rxjs'; 
-import { CatalogoSelectComponent } from '@libs/shared/data-access-user/src/tramites/components/catalogo-select/catalogo-select.component';
+import { CatOctavaTemporalService } from '../../services/cat-octava-temporal.service';
 import { CommonModule } from '@angular/common';
 import { ConsultaioQuery } from '@ng-mf/data-access-user';
 import { FormasDinamicasComponent } from '@libs/shared/data-access-user/src/tramites/components/formas-dinamicas/formas-dinamicas/formas-dinamicas.component';
 import { FormularioRegistroService } from '../../services/octava-temporal.service';
 import { Modal } from 'bootstrap';
-import { TEXTOS } from '@libs/shared/data-access-user/src/tramites/constantes/octava-temporal.enum';
-import { Tramite130102Query } from '../../estados/queries/tramite130102.query';
-import { CatOctavaTemporalService } from '../../services/cat-octava-temporal.service';
-import { Tigies } from '../../models/response/catalogos-response.model';
 import { PartidaMercancia } from '../../models/request/regla-octava-request.model';
+import { TEXTOS } from '@libs/shared/data-access-user/src/tramites/constantes/octava-temporal.enum';
+import { Tigies } from '../../models/response/catalogos-response.model';
+import { Tramite130102Query } from '../../estados/queries/tramite130102.query';
 
 
 /**
@@ -176,10 +175,10 @@ export class PartidasDeLaComponent implements OnInit, AfterViewInit, OnDestroy {
     this.formularioTotalCount();
     this.calculateTotals();
 
-    const PARTIDAS_TABLA = this.solicitudState?.['partidas_tabla'];
-    if ((!Array.isArray(PARTIDAS_TABLA) || PARTIDAS_TABLA.length === 0) && this.esFormularioSoloLectura) {
+    // const PARTIDAS_TABLA = this.solicitudState?.['partidas_tabla'];
+    /* if ((!Array.isArray(PARTIDAS_TABLA) || PARTIDAS_TABLA.length === 0) && this.esFormularioSoloLectura) {
 
-    }
+    } */
 
     this.formForTotalCount.controls['cantidadTotal'].disable();
     this.formForTotalCount.controls['valorTotalUSD'].disable();
@@ -229,7 +228,7 @@ export class PartidasDeLaComponent implements OnInit, AfterViewInit, OnDestroy {
         ],
       ],
       fraccionArancelariaTIGIE: [this.solicitudState?.fraccionArancelariaTIGIE, [Validators.required, Validators.pattern(REG_X.REGEX_FRACCION_ARANCELARIA), PartidasDeLaComponent.noLeadingSpacesValidator]],
-      fraccionArancelariaTIGIE_TIGIE: [this.solicitudState?.fraccionArancelariaTIGIE_TIGIE, [Validators.required]],
+      fraccionArancelariaTIGIE_TIGIE: [this.solicitudState?.fraccionArancelariaTIGIE_TIGIE || null, [Validators.required]],
       descripcion: [this.solicitudState?.descripcionPartidas, [Validators.required, Validators.maxLength(255), PartidasDeLaComponent.noLeadingSpacesValidator,]],
       valorPartidaUSD: [
         this.solicitudState?.valorPartidaUSD,
@@ -298,7 +297,7 @@ export class PartidasDeLaComponent implements OnInit, AfterViewInit, OnDestroy {
       valorTotalUSD: VALOR_TOTAL_USD
     });
     this.tramite130102Store.setcantidadTotal( CANTIDAD_TOTAL);
-    this.tramite130102Store.setvalorTotalUSD( VALOR_TOTAL_USD + "");
+    this.tramite130102Store.setvalorTotalUSD( String(VALOR_TOTAL_USD));
   }
 
   formularioTotalCount(): void {

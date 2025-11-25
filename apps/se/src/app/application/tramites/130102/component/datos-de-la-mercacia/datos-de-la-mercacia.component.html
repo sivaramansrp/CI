@@ -50,7 +50,7 @@
     <div class="form-group">
       <label for="fraccionArancelaria" class="form-label">Fracción arancelaria*:</label>
       <select class="form-control form-select" formControlName="fraccionArancelaria" (change)="setValoresStore(formDelLa,'fraccionArancelaria', 'setFraccionArancelaria'); onChangeFraccion(formDelLa)">
-        <option [ngValue]="null">Selecciona una opción</option>
+        <option [ngValue]="null">Selecciona un valor</option>
         <option *ngFor="let frac of fraccionF" [value]="frac.clave">
           {{ frac.descripcion }}
         </option>
@@ -68,7 +68,7 @@
       <div class="col-md-4 form-group">
         <label for="unidadMedida" class="form-label">Unidad de medida*:</label>
       <select class="form-control form-select" formControlName="unidadMedida" (change)="fetchUnidad(); setValoresStore(formDelLa,'unidadMedida', 'setUnidadMedida')">
-        <option [ngValue]="null">Selecciona una opción</option>
+        <option [ngValue]="null">Selecciona un valor</option>
         <option *ngFor="let uni of Unidad" [value]="uni.clave">
           {{ uni.descripcion }}
         </option>

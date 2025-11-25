@@ -8,19 +8,19 @@ import { AVISO_CONTRNIDO, ConsultaioQuery, ConsultaioState, Notificacion} from '
 import { Component, OnDestroy, OnInit, ViewChild, inject } from '@angular/core';
 import { DatosPasos, WizardComponent } from '@libs/shared/data-access-user/src';
 import { ListaPasosWizard, WizardService } from '@libs/shared/data-access-user/src';
+import { Solicitud130102State, Tramite130102Store } from '../../estados/tramites/tramite130102.store';
 import { Subject, map, takeUntil } from 'rxjs';
+import { CadenaOriginal130102Service } from '../../services/cadena-original.service';
+import { CadenaOriginalRequest } from '../../models/request/cadena-original-request.model';
+import { CatOctavaTemporalService } from '../../services/cat-octava-temporal.service';
+import { CategoriaMensaje } from '@libs/shared/data-access-user/src';
 import {ERROR_DE_REGISTRO_ALERT} from '../../constantes/octava-temporal.enum';
 import { FormularioRegistroService } from '../../services/octava-temporal.service';
 import { OCTA_TEMPO } from 'libs/shared/data-access-user/src/core/services/130102/octava-temporal.enum';
-import { CatOctavaTemporalService } from '../../services/cat-octava-temporal.service';
+import { PasoTresComponent } from '../paso-tres/paso-tres.component';
 import { SaveReglaOctavaRequest } from '../../models/request/regla-octava-request.model';
-import { dataRequestROctavaTemporal } from '../../models/request/data-test';
-import { Solicitud130102State, Tramite130102Store } from '../../estados/tramites/tramite130102.store';
 import { Tramite130102Query } from '../../estados/queries/tramite130102.query';
-import { PasoTresComponent } from '../paso-tres/paso-tres.component'; 
-import { CadenaOriginalRequest } from '../../models/request/cadena-original-request.model';
-import { CadenaOriginal130102Service } from '../../services/cadena-original.service';
-import { CategoriaMensaje } from '@libs/shared/data-access-user/src';
+import { dataRequestROctavaTemporal } from '../../models/request/data-test';
 /**
  * @class OctavaTemporalComponent
  * @classdesc Esta clase representa el componente Octava Temporal.
@@ -233,7 +233,7 @@ avisoContrnido = AVISO_CONTRNIDO.aviso;
 
   generaContratoSolicitud(): SaveReglaOctavaRequest {
 
-    const data: SaveReglaOctavaRequest = {
+    const DATA: SaveReglaOctavaRequest = {
         cve_regimen: this.solicitudState.regimen || '',
         cve_clasificacion_regimen: this.solicitudState.clasificacionRegimen || '',
         numero_autorizado_programa_prosec_pex:"9419", /* Valor fijo temporalmente */
@@ -265,7 +265,7 @@ avisoContrnido = AVISO_CONTRNIDO.aviso;
     
     }
 
-    return data;
+    return DATA;
   }
   /**
    * Método que invoca al servicio de guardado de la solicitud.
@@ -273,40 +273,35 @@ avisoContrnido = AVISO_CONTRNIDO.aviso;
    */
   ejecutarGuardadoSolicitud(e: AccionBoton): void {
     this.generaContratoSolicitud();
-    const dataRequest : SaveReglaOctavaRequest = this.generaContratoSolicitud();
-    this.catOctavaTemporalService.saveDataRequest(dataRequest).subscribe({
+    const DATA_REQUEST : SaveReglaOctavaRequest = this.generaContratoSolicitud();
+    this.catOctavaTemporalService.saveDataRequest(DATA_REQUEST).subscribe({
       next: (data) => {
         if (data.codigo !== '00') {
-            this.nuevaNotificacion = {
-              tipoNotificacion: 'toastr',
-              categoria: CategoriaMensaje.ERROR,
-              modo: 'action',
-              titulo: '',
-              mensaje: data.mensaje || 'Error al guardar la solicitud verifica los datos ingresados.',
-              cerrar: false,
-              txtBtnAceptar: '',
-              txtBtnCancelar: '',
-            };
-   
-            return;
-          } else {
-            if(data.datos.id_solicitud){
-              this.tramite130102Store.setIdSolicitud(data.datos.id_solicitud);
-              this.tramite130102Store.setDynamicFieldValue('idSolicitud', data.datos.id_solicitud);
-              this.obtenerCadenaOriginal(data.datos.id_solicitud);
-              this.getValorIndice(e);
-              // reset de formularios
-              this.formularioRegistroService.resetFormularios();
-            } else {
-              alert(`Error: ${data.codigo} - Causa: ${data.mensaje}`);
-              return;
-            } 
-          }
-        
+          this.nuevaNotificacion = {
+            tipoNotificacion: 'toastr',
+            categoria: CategoriaMensaje.ERROR,
+            modo: 'action',
+            titulo: '',
+            mensaje: data.mensaje || 'Error al guardar la solicitud verifica los datos ingresados.',
+            cerrar: false,
+            txtBtnAceptar: '',
+            txtBtnCancelar: '',
+          };
+          return;
+        }
+        if (data.datos.id_solicitud) {
+          this.tramite130102Store.setIdSolicitud(data.datos.id_solicitud);
+          this.tramite130102Store.setDynamicFieldValue('idSolicitud', data.datos.id_solicitud);
+          this.obtenerCadenaOriginal(data.datos.id_solicitud);
+          this.getValorIndice(e);
+          // reset de formularios
+          this.formularioRegistroService.resetFormularios();
+        } else {
+          alert(`Error: ${data.codigo} - Causa: ${data.mensaje}`);
+        }
       },
       error: (error) => {
         alert(`Error: ${error}`);
-        return;
       }
     }
     );
@@ -331,7 +326,7 @@ avisoContrnido = AVISO_CONTRNIDO.aviso;
       };
    
       this.cadena.obtenerCadenaOriginal(String(idSol), PAYLOAD).subscribe({
-        next: (resp: any) => {
+        next: (resp) => {
           if (resp.codigo !== '00') {
             this.nuevaNotificacion = {
               tipoNotificacion: 'toastr',
@@ -346,10 +341,10 @@ avisoContrnido = AVISO_CONTRNIDO.aviso;
    
             return;
           }
-          this.tramite130102Store.setCadenaOriginal(resp.datos);
+          this.tramite130102Store.setCadenaOriginal(resp.datos as string);
           this.cadenaOriginal = typeof resp.datos === 'string' ? resp.datos : undefined;
         },
-        error: (error: any) => {
+        error: (error) => {
 
           const MENSAJE = error?.error?.error || 'Error inesperado al iniciar trámite.';
           this.nuevaNotificacion = {

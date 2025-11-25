@@ -8,7 +8,7 @@
       <div class="col-md-4">
         <label for="bloque" class="form-label">Bloque*:</label>
           <select class="form-control form-select" formControlName="bloque" (change)="setValoresStore(paisForm,'bloque', 'setBloque'); changeBloque(paisForm)">
-            <option [ngValue]="null">Selecciona una opción</option>
+            <option [ngValue]="null">Selecciona un valor</option>
             <option *ngFor="let bloq of paisProc" [value]="bloq.id">
               {{ bloq.descripcion }}
             </option>
@@ -28,7 +28,7 @@
         [showSearchInput1]="true"
         [showSearchInput2]="true"
         [searchInput1Label]="'País disponible:'"
-        [searchInput2Label]="'País seleccionado:'"
+        [searchInput2Label]="'País seleccionado*:'"
         [botonField]="paisDeProcedenciaBotons"
         [isDisabled]="esFormularioSoloLectura"
         (fechasSeleccionadasChange)="changeCrosslist($event)"
