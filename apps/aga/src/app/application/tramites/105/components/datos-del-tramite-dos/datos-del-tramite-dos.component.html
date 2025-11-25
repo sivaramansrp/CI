@@ -80,8 +80,8 @@
             (click)="abrirModal()" [disabled]="esFormularioSoloLectura">
             Agregar
           </button>
-          <button type="button" class="btn btn-danger ms-3 me-3" [disabled]="esFormularioSoloLectura || !canDelete" (click)="eliminarMercancia()">Eliminar</button>
-          <button type="button" class="btn btn-default" [disabled]="esFormularioSoloLectura || !canEdit" (click)="modificarMercancia()">Modificar</button>
+          <button type="button" class="btn btn-danger ms-3 me-3"(click)="eliminarMercancia()">Eliminar</button>
+          <button type="button" class="btn btn-default" (click)="modificarMercancia()">Modificar</button>
         </div>
 
         <div class="table-container">
@@ -171,7 +171,7 @@
 
           <div class="modal-footer custom-footer justify-content-center">
             <button type="button" class="btn btn-primary"
-            (click)="agregarMercancias()"
+            (click)="aceptarConfirmationPopup()"
              >Agregar</button>
             <button type="button" class="btn btn-danger" data-bs-dismiss="modal" #closeModal>
               Cancelar
@@ -184,11 +184,22 @@
       </div>
     </div>
   </div>
-<!-- Notificación de confirmación de eliminación -->
+<lib-notificaciones
+  *ngIf="nuevaNotificacionEliminar"
+  [notificacionInput]="nuevaNotificacionEliminar"
+  (confirmacionModal)="onEliminarConfirmacion($event)">
+</lib-notificaciones>
+
 <lib-notificaciones
   *ngIf="nuevaNotificacion"
   [notificacionInput]="nuevaNotificacion"
-  (confirmacionModal)="onEliminarConfirmacion($event)">
+  (confirmacionModal)="aceptarConfirmacion($event)">
+</lib-notificaciones>
+
+<lib-notificaciones
+  *ngIf="nuevaNotificacionRowselect"
+  [notificacionInput]="nuevaNotificacionRowselect"
+  (confirmacionModal)="onEliminarRowselect($event)">
 </lib-notificaciones>
 
 

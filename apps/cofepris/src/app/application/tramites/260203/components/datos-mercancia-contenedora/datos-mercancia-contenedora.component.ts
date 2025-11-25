@@ -82,7 +82,7 @@ export class DatosMercanciaContenedoraComponent implements OnInit {
         })
       )
       .subscribe();
-    this.detalleMercancia$ = this.tramite260203Query.getDetalleMercancia$;
+    //this.detalleMercancia$ = this.tramite260203Query.getDetalleMercancia$;
   }
 
   /**
@@ -154,7 +154,7 @@ export class DatosMercanciaContenedoraComponent implements OnInit {
    * @param {DetalleMercancia} datos - Detalle de la mercancía a agregar
    */
   aggregarMercancia(datos: DetalleMercancia): void {
-    this.tramite260203Store.aggregarDetalleMercancia(datos);
+   // this.tramite260203Store.aggregarDetalleMercancia(datos);
   }
 
   /**
@@ -162,6 +162,6 @@ export class DatosMercanciaContenedoraComponent implements OnInit {
    * @param {DetalleMercancia[]} datos - Detalles de mercancía a eliminar
    */
   eliminarMercancia(datos: DetalleMercancia[]): void {
-    this.tramite260203Store.eliminarDetalleMercancia(datos);
+    //this.tramite260203Store.eliminarDetalleMercancia(datos);
   }
 }
