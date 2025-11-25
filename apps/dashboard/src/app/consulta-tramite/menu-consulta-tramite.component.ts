@@ -1,11 +1,11 @@
 import { BANDEJA_SOLICITUDES_FORMAS, ConfiguracionColumna, ConsultaTramite } from '@libs/shared/data-access-user/src';
-import { Component, OnDestroy, OnInit } from '@angular/core';
-import { Subject, takeUntil } from 'rxjs';
+import { Component, OnDestroy } from '@angular/core';
 import { BandejaDeSolicitudeService } from '../services/bandeja-de-solicitude.service';
 import { CommonModule } from '@angular/common';
-import { ConsultaTramiteComponent } from '@libs/shared/data-access-user/src/tramites/components/consulta-tramite/consulta-tramite.component';
+import { ConsultaTramiteBusquedaFolioComponent } from '../consulta-tramite-busqueda-folio/consulta-tramite-busqueda-folio.component';
 import { ReactiveFormsModule } from '@angular/forms';
 import { SeleccionadoDepartamento } from '@libs/shared/data-access-user/src/core/models/shared/bandeja-de-tareas-pendientes.model';
+import { Subject } from 'rxjs';
 
 @Component({
   selector: 'menu-consulta-tramite',
@@ -13,11 +13,11 @@ import { SeleccionadoDepartamento } from '@libs/shared/data-access-user/src/core
     imports: [
       CommonModule,
       ReactiveFormsModule,
-      ConsultaTramiteComponent,
+      ConsultaTramiteBusquedaFolioComponent,
     ],
   templateUrl: './menu-consulta-tramite.component.html',
 })
-export class MenuConsultaTramiteComponent implements OnInit, OnDestroy {
+export class MenuConsultaTramiteComponent implements OnDestroy {
 
   /*
    * Subject utilizado para emitir un valor y completar las suscripciones activas 
@@ -63,24 +63,7 @@ export class MenuConsultaTramiteComponent implements OnInit, OnDestroy {
   constructor(private bandejaSvc: BandejaDeSolicitudeService) {
 
   }
-  /*
-   * Hook de inicialización del componente.
-   * Llama al método para obtener los datos de la tabla al cargar el componente.
-   */
-  ngOnInit(): void {
-    this.getSolicitudeTablaDatos();
-  }
 
-  /*
-   * Método para obtener los datos de la tabla de solicitudes desde el servicio.
-   * Se suscribe al observable y asigna los datos obtenidos a la propiedad correspondiente.
-   */
-  public getSolicitudeTablaDatos(): void {
-    this.bandejaSvc.getConsultaTramiteTablaDatos().pipe(takeUntil(this.destroyNotifier$)).subscribe((response) => {
-      this.bandejaTablaDatos = JSON.parse(JSON.stringify(response));
-      this.copiarBandejaTablaDatos = this.bandejaTablaDatos;
-    });
-  }
 
   /**
    * Actualiza la propiedad `numeroDeProcedimiento` del objeto de departamento seleccionado

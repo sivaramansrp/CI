@@ -770,6 +770,9 @@ private forzarDeshabilitarPais(): void {
        this.elementosNoRequeridos = ['codigoPostal','colonia'];
        break;
       case 260204:
+      case 260205:
+      case 260206:
+      case 260216: 
        this.elementosNoRequeridos = ['codigoPostal','colonia'];
        break;
       case 260207:
@@ -860,6 +863,7 @@ private forzarDeshabilitarPais(): void {
     ESTADO_CONTROL.setValidators([Validators.pattern(REGEX_IMPORTE_PAGO)]);
     CALLE_CONTROL.clearValidators();
     NUMERO_EXTERIOR_CONTROL.clearValidators();
+    LOCALIDAD.clearValidators();
   }
 
   NOMBRES_CONTROL.updateValueAndValidity();
@@ -877,6 +881,11 @@ private forzarDeshabilitarPais(): void {
    * regresa a la página anterior en el historial del navegador.
    */
 guardarFabricante(): void {
+  Object.keys(this.agregarFabricanteForm.controls).forEach(key => {
+    const CONTROL = this.agregarFabricanteForm.get(key);
+    CONTROL?.updateValueAndValidity();
+  });
+
   if (this.chequeoValidacionAlGuardar && this.agregarFabricanteForm.invalid) {
     Object.values(this.agregarFabricanteForm.controls).forEach(control => {
       control.markAsTouched();
