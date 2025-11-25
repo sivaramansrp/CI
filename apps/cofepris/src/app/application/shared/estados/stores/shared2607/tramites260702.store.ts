@@ -158,6 +158,7 @@ export interface Solicitud260702State {
 
   /** Fracción arancelaria del producto */
   fraccionArancelaria: string;
+  mensaje:boolean
   
   /** Indica si los datos deben hacerse públicos. */
   hacerlosPublicos: string;
@@ -177,6 +178,8 @@ export interface Solicitud260702State {
        * El valor de mercanciaTabla.
        */
       mercanciaTabla: FilaData2[],
+      destinatarioDatos:Destinatario[],
+      fabricanteDatos:Destinatario[],
 /**
  * Método para actualizar la descripción del SCIAN en el estado.
  */
@@ -349,7 +352,7 @@ export function createInitialSolicitudState(): Solicitud260702State {
 
     /** Fracción arancelaria del producto */
     fraccionArancelaria: '',
-
+    mensaje:false,
     /** Indica si los datos deben hacerse públicos. */
     hacerlosPublicos: '',
     /** Datos de la tabla */
@@ -370,6 +373,8 @@ export function createInitialSolicitudState(): Solicitud260702State {
    * El valor de mercanciaTabla.
    */
     mercanciaTabla: [],
+    fabricanteDatos:[],
+    destinatarioDatos:[],
     
     formValidity: {},
     continuarTriggered:false
@@ -412,7 +417,18 @@ export class Solicitud260702Store extends Store<Solicitud260702State> {
               mercanciaTabla,
           }));
       }
-
+    setFabricanteDatos(fabricanteDatos: Destinatario[]): void {
+        this.update((state) => ({
+              ...state,
+              fabricanteDatos,
+          }));
+      }
+      setDestinatarioDatos(destinatarioDatos: Destinatario[]): void {
+        this.update((state) => ({
+              ...state,
+              destinatarioDatos,
+          }));
+      }
   /**
    * Método para actualizar la clave de referencia en el estado.
    * @param clavedereferencia Clave de referencia a establecer.
@@ -1027,4 +1043,11 @@ export class Solicitud260702Store extends Store<Solicitud260702State> {
   public setContinuarTriggered(continuarTriggered: boolean): void {
     this.update((state) => ({ ...state, continuarTriggered }));
   }
+   public setMensaje(mensaje: boolean):void {
+        this.update((state) => ({
+            ...state,
+            mensaje,
+        }));
+    }
+     
 }

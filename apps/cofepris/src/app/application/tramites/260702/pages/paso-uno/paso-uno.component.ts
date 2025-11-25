@@ -2,8 +2,8 @@ import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angu
 import { ConsultaioQuery, ConsultaioState } from '@ng-mf/data-access-user';
 import { Subject, map, takeUntil } from 'rxjs';
 import { Service260702Service } from '../../../../shared/services/shared2607/service260702.service';
-import { Solicitud260702Store } from '../../../../shared/estados/stores/shared2607/tramites260702.store';
 import { Solicitud260702Query } from '../../../../shared/estados/queries/shared2607/tramites260702.query';
+import { Solicitud260702Store } from '../../../../shared/estados/stores/shared2607/tramites260702.store';
 
 /**
  * Componente que representa el paso uno del trámite.

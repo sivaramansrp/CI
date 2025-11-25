@@ -279,6 +279,12 @@ filasSeleccionadasDestinatario: Set<number> = new Set();
         })
       )
       .subscribe();
+      this.solicitud260702Query.selectSolicitud$
+    .pipe(takeUntil(this.destroyed$))
+    .subscribe(state => {
+      this.fabricanteDatos = [...state.fabricanteDatos];
+      this.destinatarioDatos = [...state.destinatarioDatos];
+    });
     this.crearFormTransporte();
     this.getPaisData();
   }
@@ -409,10 +415,10 @@ onGuardar(): void {
       };
       targetTable[INDEX] = UPDATED_ROW;
 
-      if (this.tablaActual === 'fabricante') {
-        this.fabricanteDatos = [...targetTable];
+      if (this.tablaActual === 'fabricante') {        
+         this.solicitud260702Store.setFabricanteDatos([...targetTable]);
       } else if (this.tablaActual === 'destinatario') {
-        this.destinatarioDatos = [...targetTable];
+                 this.solicitud260702Store.setFabricanteDatos([...targetTable]);
       }
     }
   } else {
@@ -428,9 +434,11 @@ onGuardar(): void {
     };
 
     if (this.tablaActual === 'fabricante') {
-      this.fabricanteDatos = [...this.fabricanteDatos, NEW_ROW];
+           
+      this.solicitud260702Store.setFabricanteDatos([...this.fabricanteDatos, NEW_ROW])
     } else if (this.tablaActual === 'destinatario') {
-      this.destinatarioDatos = [...this.destinatarioDatos, NEW_ROW];
+      
+       this.solicitud260702Store.setDestinatarioDatos([...this.destinatarioDatos, NEW_ROW]);
     }
   }
 
@@ -470,12 +478,15 @@ eliminarMercancias(): void {
       this.fabricanteDatos = this.fabricanteDatos.filter(
         (row) => !filasseleccionadas.has(row.id)
       );
+       
+this.solicitud260702Store.setFabricanteDatos(this.fabricanteDatos)
       break;
     case 'destinatario':
       filasseleccionadas = this.filasSeleccionadasDestinatario;
       this.destinatarioDatos = this.destinatarioDatos.filter(
         (row) => !filasseleccionadas.has(row.id)
       );
+       this.solicitud260702Store.setDestinatarioDatos(this.destinatarioDatos);
       break;
     default:
       console.error('Invalid table selection:', this.tablaActual);

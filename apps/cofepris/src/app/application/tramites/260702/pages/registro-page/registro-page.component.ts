@@ -1,13 +1,11 @@
 import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { DatosPasos, ERROR_FORMA_ALERT, PASOS, SeccionLibQuery, SeccionLibState, SeccionLibStore } from '@ng-mf/data-access-user';
 import { ReplaySubject, map, takeUntil } from 'rxjs';
-import { ListaPasosWizard } from '@ng-mf/data-access-user';
-import { WizardComponent } from '@ng-mf/data-access-user';
 import { Solicitud260702State, Solicitud260702Store } from '../../../../shared/estados/stores/shared2607/tramites260702.store';
+import { ListaPasosWizard } from '@ng-mf/data-access-user';
 import { PasoUnoComponent } from '../paso-uno/paso-uno.component';
 import { Solicitud260702Query } from '../../../../shared/estados/queries/shared2607/tramites260702.query';
-
-
+import { WizardComponent } from '@ng-mf/data-access-user';
 
 /**
  * Interfaz que representa una acción de botón en el wizard.
@@ -39,6 +37,22 @@ export class RegistroPageComponent implements OnDestroy, OnInit {
    * incluyendo datos ingresados por el usuario y el progreso en el flujo del trámite.
    */
   solicitudState!: Solicitud260702State;
+  /**
+ * @property formErrorAlert
+ * @description
+ * Contiene el mensaje de alerta que se muestra cuando ocurre un error en el formulario.
+ * 
+ * Funcionalidad:
+ * - Utiliza el mensaje definido en la constante `ERROR_FORMA_ALERT`.
+ * - Este mensaje informa al usuario sobre los errores que deben corregirse en el formulario antes de continuar.
+ * 
+ * @type {string}
+ * 
+ * @example
+ * <div *ngIf="!esFormaValido">
+ *   {{ formErrorAlert }}
+ * </div>
+ */
     public formErrorAlert = ERROR_FORMA_ALERT;
      /**
      * Referencia al componente `PasoUnoComponent`.
@@ -136,6 +150,7 @@ export class RegistroPageComponent implements OnDestroy, OnInit {
   }
 
   }
+  
 /**
    * Valida los formularios del paso actual antes de permitir continuar.
    * @returns {boolean} - `true` si los formularios son válidos, `false` en caso contrario.
