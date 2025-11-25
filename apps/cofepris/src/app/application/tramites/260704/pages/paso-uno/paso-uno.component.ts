@@ -153,10 +153,6 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
 
      return this.datosdelasolicitudComponent?.validarFormularios() ?? false;
 
-
-    // this.isDatosDeLaSolicitudComponentValid = (
-    //   this.solicitud260704Query.getValue().formValidity?.datosDelSolicitude ) ?? false;
-    // return this.isDatosDeLaSolicitudComponentValid;
   }
 /**
    * Método del ciclo de vida de Angular que se ejecuta cuando el componente es destruido.

@@ -103,7 +103,7 @@ export class SolicitudPageComponent implements OnInit {
       private shared2607Service:Shared2607Service,
       private toastrService: ToastrService,
       private service: RegistrarSolicitudMcpService,){
- //
+ //constructor code
   }
 
     /**
@@ -166,22 +166,7 @@ export class SolicitudPageComponent implements OnInit {
         this.wizardComponent.atras();
       }
     }
-    //   if (this.indice === 1 && e.accion === 'cont') {
-    //   this.solicitud260703Store.setContinuarTriggered(true);
-    //   const ES_VALIDO = this.validarFormulariosPasoActual();
-    //   if (!ES_VALIDO) {
-    //     this.isPeligro = false;
-    //     this.datosPasos.indice = e.valor;
-    //     return;
-    //   }else if(ES_VALIDO){
-    //     this.isPeligro = true;
-    //     this.wizardComponent.siguiente();
-    //   }
-    // }else{
-    //    this.isPeligro = true;
-    //     this.wizardComponent.siguiente();
-    // }
-
+  
    
   }
 
