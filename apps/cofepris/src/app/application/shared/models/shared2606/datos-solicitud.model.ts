@@ -496,6 +496,31 @@ export interface MercanciaFormEstupefacientes {
   paisOrigen:string
 }
 
+/**
+ * @typedef FabricanteRequiredField
+ * @description Define el conjunto de campos requeridos para el registro
+ * o actualización de un Fabricante dentro del sistema.  
+ * Cada valor representa un atributo obligatorio que debe ser validado
+ * y completado por el usuario.
+ *
+ * @type {(
+ *  "tipoPersona" |
+ *  "rfc" |
+ *  "curp" |
+ *  "nombres" |
+ *  "primerApellido" |
+ *  "razonSocial" |
+ *  "pais" |
+ *  "estado" |
+ *  "municipio" |
+ *  "localidad" |
+ *  "codigoPostal" |
+ *  "colonia" |
+ *  "calle" |
+ *  "numeroExterior" |
+ *  "correoElectronico"
+ * )}
+ */
 export type FabricanteRequiredField =
   | "tipoPersona"
   | "rfc"

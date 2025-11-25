@@ -121,8 +121,25 @@ export class AgregarFacturadorComponent
    */
   @Output() updateFacturadorTablaDatos = new EventEmitter<Facturador[]>();
 
+  /**
+   * @Output() guardarYSalir
+   * @description
+   * Evento emitido cuando el usuario selecciona la opción **Guardar y salir**.
+   * Notifica al componente padre que debe ejecutar la acción correspondiente.
+   *
+   * @event
+   */
   @Output() guardarYSalir = new EventEmitter<void>();
 
+  /**
+   * @Output() cancelarDestinario
+   * @description
+   * Evento emitido cuando el usuario decide **cancelar** la operación.
+   * Permite comunicar al componente padre que debe cerrar, limpiar
+   * o revertir el formulario según corresponda.
+   *
+   * @event
+   */
   @Output() cancelarDestinario = new EventEmitter<void>();
 
   /**
@@ -322,85 +339,133 @@ static generarCatalogoObjeto(catalogo: Catalogo[], id: string): Catalogo[] | und
  * lo agrega al arreglo `facturadores` y actualiza el store.
  * Después, limpia el formulario y regresa a la vista anterior.
  */
-// eslint-disable-next-line complexity
-guardarFacturador(): void {
-  if(this.chequeoValidacionAlGuardar){
-    if (this.agregarFacturadorForm.invalid) {
-      // Marca todos los controles como tocados para mostrar errores de validación
-      Object.values(this.agregarFacturadorForm.controls).forEach(control => {
-        control.markAsTouched();
-        control.updateValueAndValidity();
-      });
-      // NO redirigir ni emitir nada si el formulario es inválido
+  guardarFacturador(): void {
+    if (!this.validarFormulario()) {
       return;
     }
+
+    const VALOR_FORMULARIO = this.agregarFacturadorForm.getRawValue();
+    const NUEVO_FACTURADOR = this.crearFacturadorDesdeFormulario(VALOR_FORMULARIO);
+    const UPDATED_FACTURADORES = this.actualizarListaFacturadores(NUEVO_FACTURADOR);
+
+    this.updateFacturadorTablaDatos.emit(UPDATED_FACTURADORES);
+    this.agregarFacturadorForm.reset();
+    this.datoSeleccionado = [];
+    this.guardarYSalir.emit();
   }
 
-  const VALOR_FORMULARIO = this.agregarFacturadorForm.getRawValue();
-  
-  const NUEVO_FACTURADOR: Facturador = VALOR_FORMULARIO as Facturador;
-  
-  const PAIS_ID = this.agregarFacturadorForm.get('pais')?.value;
-  const PAIS_OBJ = AgregarFacturadorComponent.generarCatalogoObjeto(this.paisesDatos, PAIS_ID);
-  
-  NUEVO_FACTURADOR.pais = PAIS_OBJ?.[0]?.descripcion ?? '';
-  NUEVO_FACTURADOR.paisObj = PAIS_OBJ?.[0] ?? undefined;
-  
-  NUEVO_FACTURADOR.colonia = this.agregarFacturadorForm.get('colonia')?.value || '';
-  NUEVO_FACTURADOR.municipioAlcaldia = '';
-  NUEVO_FACTURADOR.localidad = '';
-  NUEVO_FACTURADOR.entidadFederativa = '';
-  NUEVO_FACTURADOR.estadoLocalidad = this.agregarFacturadorForm.get('estado')?.value || '';
-  NUEVO_FACTURADOR.codigoPostal = this.agregarFacturadorForm.get('codigoPostal')?.value || '';
-  NUEVO_FACTURADOR.coloniaEquivalente = '';
-
-  let nombreRazonSocial: string;
-  if (VALOR_FORMULARIO.tipoPersona === this.tipoPersona.MORAL) {
-    nombreRazonSocial = VALOR_FORMULARIO.denominacionRazon;
-  } else if (VALOR_FORMULARIO.tipoPersona === this.tipoPersona.FISICA) {
-    nombreRazonSocial = `${VALOR_FORMULARIO.nombres} ${VALOR_FORMULARIO.primerApellido} ${VALOR_FORMULARIO.segundoApellido || ''}`.trim();
-  } else {
-    nombreRazonSocial = '';
-  }
-  NUEVO_FACTURADOR.nombreRazonSocial = nombreRazonSocial;
-
-  NUEVO_FACTURADOR.nacionalidad = VALOR_FORMULARIO.nacionalidad || '';
-  NUEVO_FACTURADOR.tipoPersona = VALOR_FORMULARIO.tipoPersona;
-  NUEVO_FACTURADOR.rfc = '';
-  NUEVO_FACTURADOR.curp = '';
-  NUEVO_FACTURADOR.telefono = VALOR_FORMULARIO.telefono || '';
-  NUEVO_FACTURADOR.correoElectronico = VALOR_FORMULARIO.correoElectronico || '';
-  NUEVO_FACTURADOR.calle = VALOR_FORMULARIO.calle || '';
-  NUEVO_FACTURADOR.numeroExterior = VALOR_FORMULARIO.numeroExterior || '';
-  NUEVO_FACTURADOR.numeroInterior = VALOR_FORMULARIO.numeroInterior || '';
-  NUEVO_FACTURADOR.nombres = VALOR_FORMULARIO.nombres;
-  NUEVO_FACTURADOR.primerApellido = VALOR_FORMULARIO.primerApellido;
-  NUEVO_FACTURADOR.segundoApellido = VALOR_FORMULARIO.segundoApellido;
-  NUEVO_FACTURADOR.razonSocial = VALOR_FORMULARIO.denominacionRazon || '';
-  NUEVO_FACTURADOR.lada = VALOR_FORMULARIO.lada;
-
-  let UPDATED_FACTURADORES: Facturador[] = Array.isArray(this.facturadoresTablaDatos) 
-    ? [...this.facturadoresTablaDatos] 
-    : [];
-
-  if (this.datoSeleccionado?.[0]?.id) {
-    NUEVO_FACTURADOR.id = this.datoSeleccionado[0].id;
-    UPDATED_FACTURADORES = UPDATED_FACTURADORES.map(f => 
-      f.id === NUEVO_FACTURADOR.id ? NUEVO_FACTURADOR : f
-    );
-  } else {
-    const NEXT_ID = UPDATED_FACTURADORES.length > 0 
-      ? Math.max(...UPDATED_FACTURADORES.map(f => f.id || 0)) + 1 
-      : 1;
-    NUEVO_FACTURADOR.id = NEXT_ID;
-    UPDATED_FACTURADORES.push(NUEVO_FACTURADOR);
+  /**
+   * Valida el formulario si es necesario según la configuración del procedimiento.
+   */
+  private validarFormulario(): boolean {
+    if (this.chequeoValidacionAlGuardar) {
+      if (this.agregarFacturadorForm.invalid) {
+        Object.values(this.agregarFacturadorForm.controls).forEach(control => {
+          control.markAsTouched();
+          control.updateValueAndValidity();
+        });
+        return false;
+      }
+    }
+    return true;
   }
 
-  this.updateFacturadorTablaDatos.emit(UPDATED_FACTURADORES);
-  this.agregarFacturadorForm.reset();
-  this.datoSeleccionado = [];
-  this.guardarYSalir.emit();
-}
+  /**
+   * Crea un objeto Facturador a partir de los datos del formulario.
+   */
+  private crearFacturadorDesdeFormulario(valorFormulario: Facturador): Facturador {
+    const NUEVO_FACTURADOR: Facturador = valorFormulario as Facturador;
+    
+    this.configurarDatosPais(NUEVO_FACTURADOR);
+    this.configurarDatosDireccion(NUEVO_FACTURADOR, valorFormulario);
+    this.configurarNombreRazonSocial(NUEVO_FACTURADOR, valorFormulario);
+    AgregarFacturadorComponent.configurarDatosPersonales(NUEVO_FACTURADOR, valorFormulario);
+
+    return NUEVO_FACTURADOR;
+  }
+
+  /**
+   * Configura los datos de país en el facturador.
+   */
+  private configurarDatosPais(facturador: Facturador): void {
+    const PAIS_ID = this.agregarFacturadorForm.get('pais')?.value;
+    const PAIS_OBJ = AgregarFacturadorComponent.generarCatalogoObjeto(this.paisesDatos, PAIS_ID);
+    
+    facturador.pais = PAIS_OBJ?.[0]?.descripcion ?? '';
+    facturador.paisObj = PAIS_OBJ?.[0] ?? undefined;
+  }
+
+  /**
+   * Configura los datos de dirección en el facturador.
+   */
+  private configurarDatosDireccion(facturador: Facturador, valorFormulario: Facturador): void {
+    facturador.colonia = this.agregarFacturadorForm.get('colonia')?.value || '';
+    facturador.municipioAlcaldia = '';
+    facturador.localidad = '';
+    facturador.entidadFederativa = '';
+    facturador.estadoLocalidad = this.agregarFacturadorForm.get('estado')?.value || '';
+    facturador.codigoPostal = this.agregarFacturadorForm.get('codigoPostal')?.value || '';
+    facturador.coloniaEquivalente = '';
+    facturador.calle = valorFormulario.calle || '';
+    facturador.numeroExterior = valorFormulario.numeroExterior || '';
+    facturador.numeroInterior = valorFormulario.numeroInterior || '';
+  }
+
+  /**
+   * Configura el nombre o razón social según el tipo de persona.
+   */
+  private configurarNombreRazonSocial(facturador: Facturador, valorFormulario: Facturador): void {
+    let nombreRazonSocial: string;
+    if (valorFormulario.tipoPersona === this.tipoPersona.MORAL) {
+      nombreRazonSocial = valorFormulario.denominacionRazon || '';
+    } else if (valorFormulario.tipoPersona === this.tipoPersona.FISICA) {
+      nombreRazonSocial = `${valorFormulario.nombres} ${valorFormulario.primerApellido} ${valorFormulario.segundoApellido || ''}`.trim();
+    } else {
+      nombreRazonSocial = '';
+    }
+    facturador.nombreRazonSocial = nombreRazonSocial;
+  }
+
+  /**
+   * Configura los datos personales del facturador.
+   */
+  private static configurarDatosPersonales(facturador: Facturador, valorFormulario: Facturador): void {
+    facturador.nacionalidad = valorFormulario.nacionalidad || '';
+    facturador.tipoPersona = valorFormulario.tipoPersona;
+    facturador.rfc = '';
+    facturador.curp = '';
+    facturador.telefono = valorFormulario.telefono || '';
+    facturador.correoElectronico = valorFormulario.correoElectronico || '';
+    facturador.nombres = valorFormulario.nombres;
+    facturador.primerApellido = valorFormulario.primerApellido;
+    facturador.segundoApellido = valorFormulario.segundoApellido;
+    facturador.razonSocial = valorFormulario.denominacionRazon || '';
+    facturador.lada = valorFormulario.lada;
+  }
+
+  /**
+   * Actualiza la lista de facturadores con el nuevo facturador.
+   */
+  private actualizarListaFacturadores(nuevoFacturador: Facturador): Facturador[] {
+    let updatedFacturadores: Facturador[] = Array.isArray(this.facturadoresTablaDatos) 
+      ? [...this.facturadoresTablaDatos] 
+      : [];
+
+    if (this.datoSeleccionado?.[0]?.id) {
+      nuevoFacturador.id = this.datoSeleccionado[0].id;
+      updatedFacturadores = updatedFacturadores.map(f => 
+        f.id === nuevoFacturador.id ? nuevoFacturador : f
+      );
+    } else {
+      const NEXT_ID = updatedFacturadores.length > 0 
+        ? Math.max(...updatedFacturadores.map(f => f.id || 0)) + 1 
+        : 1;
+      nuevoFacturador.id = NEXT_ID;
+      updatedFacturadores.push(nuevoFacturador);
+    }
+
+    return updatedFacturadores;
+  }
   /**
    * @method limpiarFormulario
    * @description Resetea el formulario reactivo `agregarFacturadorForm` para limpiar todos los campos.

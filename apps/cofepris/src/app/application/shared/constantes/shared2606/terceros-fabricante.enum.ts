@@ -107,5 +107,11 @@ export const TERCEROS_RELACIONADOS_TABLA_BODY_DATOS = {
  * Utilizado para determinar si ciertos campos deben estar habilitados según el trámite seleccionado.
  */
 export const TERCEROS_RELACIONADOS_DATOS_INICIALES:number[] = [260601,260101];
-
+/**
+ * @constant DEFAULT_TABLA_ORDENS
+ * @description Lista de identificadores de trámites para los cuales se
+ * aplica el comportamiento por defecto en la tabla de órdenes.
+ *
+ * @type {number[]}
+ */
 export const DEFAULT_TABLA_ORDENS = [260201]

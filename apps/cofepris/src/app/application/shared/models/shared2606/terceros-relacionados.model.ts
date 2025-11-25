@@ -205,6 +205,7 @@ export const DESTINATARIO_ENCABEZADO_DE_TABLA: ConfiguracionColumna<Destinatario
  * @description Representa los datos correspondientes a un proveedor.
  */
 export interface Proveedor {
+  denominacionRazon?: string;
   nacionalidad?: string;
   tipoPersona?: string;
   id?: number;
@@ -292,6 +293,7 @@ export const PROVEEDOR_ENCABEZADO_DE_TABLA: ConfiguracionColumna<Proveedor>[] =
  * @description Representa los datos correspondientes a un facturador.
  */
 export interface Facturador {
+  denominacionRazon?: string;
   nacionalidad?: string;
   tipoPersona?: string;
   id?: number;

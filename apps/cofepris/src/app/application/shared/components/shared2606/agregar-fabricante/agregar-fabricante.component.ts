@@ -47,6 +47,15 @@ import { Shared2606Service } from '../../../services/shared2606/shared2606.servi
 import { TERCEROS_RELACIONADOS_DATOS_INICIALES } from '../../../constantes/shared2606/terceros-fabricante.enum';
 import { TooltipModule } from 'ngx-bootstrap/tooltip';
 
+/**
+ * @interface OpcionesPublicacion
+ * @description Representa una opción disponible para la publicación,
+ * incluyendo el texto visible, el valor interno y un mensaje opcional de ayuda.
+ *
+ * @property {string} label - Texto que se muestra al usuario.
+ * @property {string} value - Valor asociado a la opción.
+ * @property {string} [hint] - Texto opcional que muestra información adicional.
+ */
  interface OpcionesPublicacion{
   label: string;
   value: string;
@@ -96,9 +105,18 @@ export class AgregarFabricanteComponent
   correoElectronico: false,
 };
 
-requiredFieldVlidator:FabricanteRequiredField[] =[]
+/**
+ * @property {FabricanteRequiredField[]} requiredFieldValidator
+ * Lista de campos requeridos del fabricante que deben ser validados.
+ */
+ requiredFieldVlidator:FabricanteRequiredField[] =[]
 
+ /**
+ * @property {string} mensajeDeError
+ * Mensaje de error que se mostrará si la validación falla.
+ */
   mensajeDeError: string = '';
+
   /**
    * Función de callback (Input) para propagar la lista de fabricantes.
    * @property {(value: Fabricante[]) => void} guardarFabricanteForm
@@ -211,6 +229,14 @@ requiredFieldVlidator:FabricanteRequiredField[] =[]
    */
   @Input() datoSeleccionado: Fabricante[] | undefined;
 
+  /**
+ * @Input() tramiteID
+ * @description Identificador del trámite asociado al componente.
+ * Este valor se recibe desde el componente padre y se utiliza
+ * para obtener o procesar la información correspondiente.
+ *
+ * @type {string}
+ */
   @Input() tramiteID: string = '';
 
   /**
@@ -459,7 +485,17 @@ ngOnChanges(currentValue: SimpleChanges): void {
 }
 
 /**
- * Updates validators based on tipo persona
+ * @private
+ * @method updateValidatorsBasedOnTipoPersona
+ * @description
+ * Actualiza dinámicamente los validadores de los controles del formulario
+ * según el tipo de persona seleccionado (Física o Moral).
+ * 
+ * - Para **persona moral**: agrega validadores a `razonSocial`.
+ * - Para **persona física**: agrega validadores a `nombres` y `primerApellido`.
+ * - Cuando el tipo de persona no coincide, se eliminan los validadores correspondientes.
+ * 
+ * Este método solo se ejecuta cuando `chequeoValidacionAlGuardar` es verdadero.
  */
 private updateValidatorsBasedOnTipoPersona(): void {
   const RAZONSOCIALCONTROL = this.agregarFabricanteForm.get('razonSocial');
@@ -489,8 +525,22 @@ private updateValidatorsBasedOnTipoPersona(): void {
 
 
 /**
- * Loads catalog data required for modification
- * This method loads all the necessary catalogs when editing a fabricante
+ * @private
+ * @async
+ * @method cargarCatalogosParaModificacion
+ * @description
+ * Carga todos los catálogos necesarios cuando se realiza la modificación
+ * de un fabricante.  
+ * 
+ * Este método:
+ * - Obtiene estados, municipios, localidades y colonias basados en la información previamente seleccionada.
+ * - Recupera la lista de países si aún no se ha cargado.
+ * - Carga la lista de códigos postales si no existe en memoria.
+ *
+ * El proceso se ejecuta de forma secuencial y/o paralela según la dependencia de datos.
+ * Maneja validación del objeto seleccionado y captura errores durante el proceso.
+ *
+ * @returns {Promise<void>} No retorna ningún valor, pero actualiza las propiedades del componente.
  */
 private async cargarCatalogosParaModificacion(): Promise<void> {
   const SELECTEDDATA = this.datoSeleccionado?.[0];
@@ -547,7 +597,20 @@ private async cargarCatalogosParaModificacion(): Promise<void> {
 }
 
 /**
- * Patches form with selected data using proper catalog keys
+ * @private
+ * @method patchFormWithCatalogObjects
+ * @description
+ * Realiza el llenado del formulario utilizando los objetos de catálogo asociados
+ * al fabricante seleccionado.  
+ *
+ * Este método:
+ * - Obtiene las claves de país, estado, municipio, localidad, colonia y código postal,
+ *   ya sea desde el objeto almacenado o buscándolas en los catálogos cargados.
+ * - Aplica los valores al formulario mediante `patchValue`.
+ * - En el caso del procedimiento **260103**, deshabilita el formulario completo
+ *   y solo habilita los campos permitidos (tipoPersona y rfc).
+ *
+ * @returns {void} No retorna ningún valor; solo actualiza el formulario del componente.
  */
 private patchFormWithCatalogObjects(): void {
   const SELECTEDDATA = this.datoSeleccionado?.[0];
@@ -800,6 +863,21 @@ private forzarDeshabilitarPais(): void {
     }
   }
 
+  /**
+ * @private
+ * @method updateExtranjeroFisicaValidators
+ * @description
+ * Actualiza los validadores del formulario cuando la persona es de tipo *Extranjero Física*.  
+ *
+ * Este método obtiene los controles clave del formulario (nombres, apellido,
+ * país, estado, dirección, RFC, etc.) para aplicar las reglas de validación
+ * correspondientes según el tipo de persona seleccionado.
+ * 
+ * Actualmente solo inicializa las referencias a los controles; la lógica de
+ * validación debe implementarse según las reglas del negocio.
+ *
+ * @returns {void} No retorna ningún valor; solo ajusta validadores del formulario.
+ */
   private updateExtranjeroFisicaValidators(): void {
   const TIPOPERSONA = this.agregarFabricanteForm?.get('tipoPersona')?.value;
 
@@ -815,6 +893,22 @@ private forzarDeshabilitarPais(): void {
 
 
 }
+
+/**
+ * @method validatorFuctionRequired
+ * @description
+ * Define dinámicamente los campos obligatorios según el id del procedimiento
+ * y el tipo de persona seleccionado en el formulario.
+ *
+ * Para el procedimiento **260103**, la lista de campos requeridos cambia si:
+ * - La persona es **Física**
+ * - La persona es **Moral**
+ * - No hay tipo de persona seleccionado (caso por defecto)
+ *
+ * En otros procedimientos, no se establece ningún campo obligatorio.
+ *
+ * @returns {void}
+ */
 validatorFuctionRequired():void{
 switch(this.idProcedimiento) {
   case 260103:
@@ -857,11 +951,33 @@ switch(this.idProcedimiento) {
     break;
 }
 }
+
+/**
+ * @method resetAllErrorFlags
+ * @description
+ * Reinicia todas las banderas de error del validador estableciéndolas en `false`.
+ * 
+ * Este método se usa antes de ejecutar una nueva validación para limpiar el estado
+ * previo de errores en el formulario.
+ *
+ * @returns {void}
+ */
 resetAllErrorFlags(): void {
   Object.keys(this.errorMessageValidator).forEach((key) => {
      this.errorMessageValidator[key as keyof typeof this.errorMessageValidator] = false;
   });
 }
+
+/**
+ * @method areAllFieldsValid
+ * @description
+ * Verifica si **todos** los campos del objeto `errorMessageValidator`
+ * están en estado válido.
+ *
+ * Retorna `true` únicamente cuando **ningún** campo tiene errores.
+ *
+ * @returns {boolean} `true` si no existen errores, `false` en caso contrario.
+ */
 areAllFieldsValid(): boolean {
   return Object.values(this.errorMessageValidator).every(v => v === false);
 }
@@ -972,6 +1088,24 @@ if(this.areAllFieldsValid()){
   this.cancelarmodal.emit(); 
 }
 }
+
+/**
+ * @method validateRequiredFields
+ * @description
+ * Valida todos los campos marcados como obligatorios en `requiredFieldVlidator`.
+ *
+ * Para cada campo:
+ * - Obtiene el control del formulario.
+ * - Verifica si pertenece a la lista de campos obligatorios.
+ * - Marca `errorMessageValidator[key] = true` si el valor está vacío,
+ *   nulo o no existe.
+ * - Si el campo contiene un valor válido, se marca como **sin error**.
+ *
+ * Esta función se utiliza generalmente antes de guardar o enviar información
+ * para asegurar que los campos requeridos han sido completados.
+ *
+ * @returns {void}
+ */
 validateRequiredFields(): void {
   const FORM = this.agregarFabricanteForm;
   this.requiredFieldVlidator.forEach((key) => {

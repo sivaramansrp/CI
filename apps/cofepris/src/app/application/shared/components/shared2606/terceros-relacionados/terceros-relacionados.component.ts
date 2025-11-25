@@ -291,6 +291,13 @@ export class TercerosRelacionadosComponent implements OnInit, OnDestroy {
    */
     public fabricanteSeleccionadoParaModificar: Fabricante[] = [];
 
+   /**
+   * @property proveedorSeleccionadoParaModificar
+   * @description Lista que contiene el/los proveedor(es) seleccionados para realizar una modificación.
+   * Se utiliza generalmente cuando el usuario edita un registro existente en la tabla de proveedores.
+   *
+   * @type {Proveedor[]}
+   */
     public proveedorSeleccionadoParaModificar: Proveedor[] = [];
     /**
  * Identificador del trámite asociado.
@@ -442,8 +449,22 @@ export class TercerosRelacionadosComponent implements OnInit, OnDestroy {
    */
   private destroy$ = new Subject<void>();
 
+  /**
+ * @property isContinuarButtonClicked
+ * @description Indica si el botón "Continuar" ha sido presionado.
+ * Se utiliza para controlar validaciones o comportamientos dependientes de la acción del usuario.
+ *
+ * @type {boolean}
+ */
   public isContinuarButtonClicked: boolean = false;
 
+  /**
+ * @property habilitarFabricante
+ * @description Controla si la sección o formulario de fabricante debe estar habilitada.
+ * Permite activar/desactivar funcionalidades según el flujo del trámite.
+ *
+ * @type {boolean}
+ */
   habilitarFabricante: boolean = true;
 
 
@@ -457,10 +478,31 @@ export class TercerosRelacionadosComponent implements OnInit, OnDestroy {
    */
   public fabricanteModalAbierto: boolean = false;
 
+  /**
+   * @property proveedorModalAbierto
+   * @description Indica si el modal de proveedor está abierto.
+   * Se utiliza para controlar la visualización del componente modal.
+   *
+   * @type {boolean}
+   */
   public proveedorModalAbierto: boolean = false;
 
+  /**
+ * @property facturadorModalAbierto
+ * @description Indica si el modal de facturador está abierto.
+ * Permite controlar cuándo mostrar u ocultar el modal de gestión de facturadores.
+ *
+ * @type {boolean}
+ */
   public facturadorModalAbierto: boolean = false;
  
+  /**
+ * @property facturadorSeleccionadoParaModificar
+ * @description Contiene la lista del facturador seleccionado para modificar.
+ * Si está vacío, significa que no hay un facturador en edición.
+ *
+ * @type {Facturador[]}
+ */
   public facturadorSeleccionadoParaModificar: Facturador[] = [];
   /**
    * Reference to the Fabricante modal element
@@ -538,6 +580,14 @@ export class TercerosRelacionadosComponent implements OnInit, OnDestroy {
     MODAL.show();
   }
 }
+
+/**
+ * @method onFacturadorAgregar
+ * @description Limpia la selección de facturador y abre el modal para agregar uno nuevo.
+ * Se utiliza cuando el usuario desea registrar un nuevo facturador.
+ *
+ * @returns {void}
+ */
     onFacturadorAgregar(): void {
       this.facturadorSeleccionadoParaModificar = [];
       this.abrirFacturadorModal();
@@ -555,6 +605,14 @@ export class TercerosRelacionadosComponent implements OnInit, OnDestroy {
   }
 }
 
+/**
+ * @method abrirFacturadorModal
+ * @description Abre el modal correspondiente al facturador.  
+ * Establece el estado interno para indicar que el modal está abierto  
+ * y utiliza la instancia de Bootstrap Modal para mostrarlo en pantalla.
+ *
+ * @returns {void}
+ */
 abrirFacturadorModal(): void {
     this.facturadorModalAbierto = true;
     const MODALELEMENT = document.getElementById('facturadorModal');
@@ -580,7 +638,7 @@ abrirFacturadorModal(): void {
   
 }
   /**
-   * Closes the Fabricante selection modal
+   * Cierra el modal de selección de Fabricante.
    */
   cerrarProveedorModal(): void {
    this.proveedorModalAbierto = false;
@@ -595,16 +653,24 @@ abrirFacturadorModal(): void {
   
 }
 /**
- * Handles the fabricante table data update
+ * Cierra el modal de selección de Fabricante.
   */
 onFabricanteUpdated(fabricantes: Fabricante[]): void {
   this.fabricanteTablaDatos = [...fabricantes];
   this.updateFabricanteTablaDatos.emit([...this.fabricanteTablaDatos]);
   this.fabricanteSeleccionadoDatos = [];
   this.fabricanteSeleccionadoParaModificar = [];
-  
 }
 
+/**
+ * @method onProveedorUpdated
+ * @description Maneja la actualización de la lista de proveedores.  
+ * Se actualiza la tabla interna, se emite el nuevo arreglo de proveedores  
+ * y se reinician las selecciones actuales.
+ *
+ * @param {Proveedor[]} proveedores - Lista actualizada de proveedores.
+ * @returns {void}
+ */
 onProveedorUpdated(proveedores: Proveedor[]): void {
   this.proveedorTablaDatos = [...proveedores];
   this.updateProveedorTablaDatos.emit([...this.proveedorTablaDatos]);
@@ -612,6 +678,15 @@ onProveedorUpdated(proveedores: Proveedor[]): void {
   this.proveedorSeleccionadoParaModificar = [];
 }
 
+/**
+ * @method onFacturadorUpdated
+ * @description Maneja la actualización de la lista de facturadores.  
+ * Actualiza la tabla interna, emite la información actualizada  
+ * y reinicia las selecciones relacionadas.
+ *
+ * @param {Facturador[]} facturadores - Lista actualizada de facturadores.
+ * @returns {void}
+ */
 onFacturadorUpdated(facturadores: Facturador[]): void {
   this.facturadorTablaDatos = [...facturadores];
   this.updateFacturadorTablaDatos.emit([...this.facturadorTablaDatos]);
@@ -619,6 +694,13 @@ onFacturadorUpdated(facturadores: Facturador[]): void {
   this.facturadorSeleccionadoParaModificar = [];
 }
 
+/**
+ * @method cerrarFacturadorModal
+ * @description Cierra el modal de facturador, limpia las selecciones  
+ * y utiliza la instancia de Bootstrap para ocultar el modal si existe.
+ *
+ * @returns {void}
+ */
 cerrarFacturadorModal(): void {
   this.facturadorModalAbierto = false;
   this.facturadorSeleccionadoParaModificar = [];
@@ -730,6 +812,12 @@ cerrarFacturadorModal(): void {
     this.eliminarAlerta = true;
   }
 
+  /**
+ * @method eliminarAlertaConfirmation
+ * @description Cierra la alerta de eliminación y muestra confirmación si el usuario acepta.
+ * @param {boolean} evento - Indica si el usuario confirmó la acción.
+ * @returns {void}
+ */
   eliminarAlertaConfirmation(evento: boolean): void {
     this.eliminarAlerta = false;
     if (evento) {
@@ -739,6 +827,12 @@ cerrarFacturadorModal(): void {
     }
   }
 
+  /**
+ * @method eliminarDotosAlerta
+ * @description Elimina fabricante, proveedor o facturador según la alerta activa.
+ * @param {boolean} evento - Indica si el usuario confirmó la eliminación.
+ * @returns {void}
+ */
   eliminarDotosAlerta(evento: boolean): void {
     if (evento) {
       if (this.eliminarFabricanteAlerta) {
@@ -828,6 +922,13 @@ cerrarFacturadorModal(): void {
     this.eliminarAlerta = true;
   }
 
+  /**
+ * @description Obtiene el identificador del trámite convertido a número.
+ * Útil cuando `tramiteID` se recibe como cadena y se requiere operar con él
+ * como un valor numérico.
+ *
+ * @returns {number} El valor numérico equivalente de `tramiteID`.
+ */
  get tramiteIDNumber(): number {
   return Number(this.tramiteID);
 }

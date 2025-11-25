@@ -448,98 +448,179 @@ export class AgregarProveedorComponent implements OnDestroy, OnInit, OnChanges {
       this.paisesDatos = DATOS;
     }));
 }
-  /**
-   * @method guardarProveedor
-   * @description Toma los datos del formulario, crea un objeto `Proveedor`, lo agrega al arreglo
-   * local, actualiza el store del trámite y luego limpia el formulario y regresa a la vista anterior.
-   */
-// eslint-disable-next-line complexity
+/**
+ * @method guardarProveedor
+ * @description Toma los datos del formulario, crea un objeto `Proveedor`, lo agrega al arreglo
+ * local, actualiza el store del trámite y luego limpia el formulario y regresa a la vista anterior.
+ */
 guardarProveedor(): void {
-  if(this.chequeoValidacionAlGuardar){
-    if (this.agregarProveedorForm.invalid) {
-      // Marca todos los controles como tocados para mostrar errores de validación
-      Object.values(this.agregarProveedorForm.controls).forEach(control => {
-        control.markAsTouched();
-        control.updateValueAndValidity();
-        this.message = 'Faltan campos por capturar.';
-      });
-      
-      // NO redirigir ni emitir nada si el formulario es inválido
-      return;
-    }
+  if (!this.validarFormularioAntesDeSave()) {
+    return;
   }
 
   const VALOR_FORMULARIO = this.agregarProveedorForm.getRawValue();
+  const NUEVO_PROVEEDOR = this.crearObjetoProveedor(VALOR_FORMULARIO);
+  const UPDATED_PROVEEDORES = this.actualizarListaProveedores(NUEVO_PROVEEDOR);
+
+  if (!UPDATED_PROVEEDORES) {
+    return;
+  }
+
+  this.finalizarGuardado(UPDATED_PROVEEDORES);
+}
+
+/**
+ * Valida el formulario antes de guardar.
+ */
+private validarFormularioAntesDeSave(): boolean {
+  if (this.chequeoValidacionAlGuardar && this.agregarProveedorForm.invalid) {
+    this.marcarControlesComoTocados();
+    this.message = 'Faltan campos por capturar.';
+    return false;
+  }
+  return true;
+}
+
+/**
+ * Marca todos los controles del formulario como tocados para mostrar errores.
+ */
+private marcarControlesComoTocados(): void {
+  Object.values(this.agregarProveedorForm.controls).forEach(control => {
+    control.markAsTouched();
+    control.updateValueAndValidity();
+  });
+}
+
+/**
+ * Crea un objeto Proveedor a partir de los datos del formulario.
+ */
+private crearObjetoProveedor(valorFormulario: Proveedor): Proveedor {
+  const NUEVO_PROVEEDOR: Proveedor = valorFormulario as Proveedor;
   
-  const NUEVO_PROVEEDOR: Proveedor = VALOR_FORMULARIO as Proveedor;
-  
+  this.asignarDatosPais(NUEVO_PROVEEDOR);
+  this.asignarDatosUbicacion(NUEVO_PROVEEDOR, valorFormulario);
+  this.asignarNombreRazonSocial(NUEVO_PROVEEDOR, valorFormulario);
+  AgregarProveedorComponent.asignarDatosPersonales(NUEVO_PROVEEDOR, valorFormulario);
+
+  return NUEVO_PROVEEDOR;
+}
+
+/**
+ * Asigna datos del país al proveedor.
+ */
+private asignarDatosPais(proveedor: Proveedor): void {
   const PAIS_ID = this.agregarProveedorForm.get('pais')?.value;
   const PAIS_OBJ = AgregarProveedorComponent.generarCatalogoObjeto(this.paisesDatos, PAIS_ID);
   
-  NUEVO_PROVEEDOR.pais = PAIS_OBJ?.[0]?.descripcion ?? '';
-  NUEVO_PROVEEDOR.paisObj = PAIS_OBJ?.[0] ?? undefined;
-  
-  NUEVO_PROVEEDOR.colonia = this.agregarProveedorForm.get('colonia')?.value || '';
-  NUEVO_PROVEEDOR.municipioAlcaldia = this.agregarProveedorForm.get('municipioAlcaldia')?.value || '';
-  NUEVO_PROVEEDOR.localidad = this.agregarProveedorForm.get('localidad')?.value || '';
-  NUEVO_PROVEEDOR.entidadFederativa = '';
-  NUEVO_PROVEEDOR.estadoLocalidad = this.agregarProveedorForm.get('estado')?.value || '';
-  NUEVO_PROVEEDOR.codigoPostal = this.agregarProveedorForm.get('codigoPostal')?.value || '';
-  NUEVO_PROVEEDOR.coloniaEquivalente = '';
+  proveedor.pais = PAIS_OBJ?.[0]?.descripcion ?? '';
+  proveedor.paisObj = PAIS_OBJ?.[0] ?? undefined;
+}
 
+/**
+ * Asigna datos de ubicación al proveedor.
+ */
+private asignarDatosUbicacion(proveedor: Proveedor, valorFormulario: Proveedor): void {
+  proveedor.colonia = this.agregarProveedorForm.get('colonia')?.value || '';
+  proveedor.municipioAlcaldia = this.agregarProveedorForm.get('municipioAlcaldia')?.value || '';
+  proveedor.localidad = this.agregarProveedorForm.get('localidad')?.value || '';
+  proveedor.entidadFederativa = '';
+  proveedor.estadoLocalidad = this.agregarProveedorForm.get('estado')?.value || '';
+  proveedor.codigoPostal = this.agregarProveedorForm.get('codigoPostal')?.value || '';
+  proveedor.coloniaEquivalente = '';
+  proveedor.calle = valorFormulario.calle || '';
+  proveedor.numeroExterior = valorFormulario.numeroExterior || '';
+  proveedor.numeroInterior = valorFormulario.numeroInterior || '';
+}
+
+/**
+ * Determina y asigna el nombre o razón social del proveedor.
+ */
+private asignarNombreRazonSocial(proveedor: Proveedor, valorFormulario: Proveedor): void {
   let nombreRazonSocial: string;
-  if (VALOR_FORMULARIO.tipoPersona === this.tipoPersona.MORAL) {
-    nombreRazonSocial = VALOR_FORMULARIO.denominacionRazon;
-  } else if (VALOR_FORMULARIO.tipoPersona === this.tipoPersona.FISICA) {
-    nombreRazonSocial = `${VALOR_FORMULARIO.nombres} ${VALOR_FORMULARIO.primerApellido} ${VALOR_FORMULARIO.segundoApellido || ''}`.trim();
+  
+  if (valorFormulario.tipoPersona === this.tipoPersona.MORAL) {
+    nombreRazonSocial = valorFormulario.denominacionRazon || '';
+  } else if (valorFormulario.tipoPersona === this.tipoPersona.FISICA) {
+    nombreRazonSocial = `${valorFormulario.nombres} ${valorFormulario.primerApellido} ${valorFormulario.segundoApellido || ''}`.trim();
   } else {
     nombreRazonSocial = '';
   }
-  NUEVO_PROVEEDOR.nombreRazonSocial = nombreRazonSocial;
+  
+  proveedor.nombreRazonSocial = nombreRazonSocial;
+}
 
-  NUEVO_PROVEEDOR.nacionalidad = VALOR_FORMULARIO.nacionalidad || '';
-  NUEVO_PROVEEDOR.tipoPersona = VALOR_FORMULARIO.tipoPersona;
-  NUEVO_PROVEEDOR.rfc = VALOR_FORMULARIO.rfc || '';
-  NUEVO_PROVEEDOR.curp = VALOR_FORMULARIO.curp || '';
-  NUEVO_PROVEEDOR.telefono = `${VALOR_FORMULARIO.lada || ''} ${VALOR_FORMULARIO.telefono || ''}`.trim();
-  NUEVO_PROVEEDOR.correoElectronico = VALOR_FORMULARIO.correoElectronico || '';
-  NUEVO_PROVEEDOR.calle = VALOR_FORMULARIO.calle || '';
-  NUEVO_PROVEEDOR.numeroExterior = VALOR_FORMULARIO.numeroExterior || '';
-  NUEVO_PROVEEDOR.numeroInterior = VALOR_FORMULARIO.numeroInterior || '';
-  NUEVO_PROVEEDOR.nombres = VALOR_FORMULARIO.nombres;
-  NUEVO_PROVEEDOR.primerApellido = VALOR_FORMULARIO.primerApellido;
-  NUEVO_PROVEEDOR.segundoApellido = VALOR_FORMULARIO.segundoApellido;
-  NUEVO_PROVEEDOR.razonSocial = VALOR_FORMULARIO.denominacionRazon || '';
-  NUEVO_PROVEEDOR.lada = VALOR_FORMULARIO.lada;
+/**
+ * Asigna datos personales y de contacto al proveedor.
+ */
+private static asignarDatosPersonales(proveedor: Proveedor, valorFormulario: Proveedor): void {
+  proveedor.nacionalidad = valorFormulario.nacionalidad || '';
+  proveedor.tipoPersona = valorFormulario.tipoPersona;
+  proveedor.rfc = valorFormulario.rfc || '';
+  proveedor.curp = valorFormulario.curp || '';
+  proveedor.telefono = `${valorFormulario.lada || ''} ${valorFormulario.telefono || ''}`.trim();
+  proveedor.correoElectronico = valorFormulario.correoElectronico || '';
+  proveedor.nombres = valorFormulario.nombres;
+  proveedor.primerApellido = valorFormulario.primerApellido;
+  proveedor.segundoApellido = valorFormulario.segundoApellido;
+  proveedor.razonSocial = valorFormulario.denominacionRazon || '';
+  proveedor.lada = valorFormulario.lada;
+}
 
-  let UPDATED_PROVEEDORES: Proveedor[] = Array.isArray(this.proveedorTablaDatos) 
+/**
+ * Actualiza la lista de proveedores con el nuevo proveedor.
+ */
+private actualizarListaProveedores(nuevoProveedor: Proveedor): Proveedor[] | null {
+  const UPDATED_PROVEEDORES: Proveedor[] = Array.isArray(this.proveedorTablaDatos) 
     ? [...this.proveedorTablaDatos] 
     : [];
 
   if (this.datoSeleccionado?.[0]?.id) {
-    NUEVO_PROVEEDOR.id = this.datoSeleccionado[0].id;
-    UPDATED_PROVEEDORES = UPDATED_PROVEEDORES.map(p => 
-      p.id === NUEVO_PROVEEDOR.id ? NUEVO_PROVEEDOR : p
-    );
-  } else {
-    const IS_DUPLICATE = UPDATED_PROVEEDORES.some(p => 
-      (p.rfc && NUEVO_PROVEEDOR.rfc && p.rfc === NUEVO_PROVEEDOR.rfc) ||
-      (p.nombreRazonSocial && p.nombreRazonSocial === NUEVO_PROVEEDOR.nombreRazonSocial)
-    );
-    
-    if (IS_DUPLICATE) {
-      this.message = 'La información proporcionada de la persona ya existe, favor de verificar.';
-      return;
-    }
+    return this.actualizarProveedorExistente(nuevoProveedor, UPDATED_PROVEEDORES);
+  }
+  return this.agregarNuevoProveedor(nuevoProveedor, UPDATED_PROVEEDORES);
+}
 
-    const NEXT_ID = UPDATED_PROVEEDORES.length > 0 
-      ? Math.max(...UPDATED_PROVEEDORES.map(p => p.id || 0)) + 1 
-      : 1;
-    NUEVO_PROVEEDOR.id = NEXT_ID;
-    UPDATED_PROVEEDORES.push(NUEVO_PROVEEDOR);
+/**
+ * Actualiza un proveedor existente en la lista.
+ */
+private actualizarProveedorExistente(nuevoProveedor: Proveedor, proveedores: Proveedor[]): Proveedor[] {
+  nuevoProveedor.id = this.datoSeleccionado?.[0]?.id;
+  return proveedores.map(p => p.id === nuevoProveedor.id ? nuevoProveedor : p);
+}
+
+/**
+ * Agrega un nuevo proveedor a la lista verificando duplicados.
+ */
+private agregarNuevoProveedor(nuevoProveedor: Proveedor, proveedores: Proveedor[]): Proveedor[] | null {
+  if (AgregarProveedorComponent.esDuplicado(nuevoProveedor, proveedores)) {
+    this.message = 'La información proporcionada de la persona ya existe, favor de verificar.';
+    return null;
   }
 
-  this.updateProveedorTablaDatos.emit(UPDATED_PROVEEDORES);
+  const NEXT_ID = proveedores.length > 0 
+    ? Math.max(...proveedores.map(p => p.id || 0)) + 1 
+    : 1;
+  nuevoProveedor.id = NEXT_ID;
+  proveedores.push(nuevoProveedor);
+  
+  return proveedores;
+}
+
+/**
+ * Verifica si el proveedor es duplicado.
+ */
+private static esDuplicado(nuevoProveedor: Proveedor, proveedores: Proveedor[]): boolean {
+  return proveedores.some(p => 
+    (p.rfc && nuevoProveedor.rfc && p.rfc === nuevoProveedor.rfc) ||
+    (p.nombreRazonSocial && p.nombreRazonSocial === nuevoProveedor.nombreRazonSocial)
+  );
+}
+
+/**
+ * Finaliza el proceso de guardado emitiendo eventos y limpiando formulario.
+ */
+private finalizarGuardado(proveedores: Proveedor[]): void {
+  this.updateProveedorTablaDatos.emit(proveedores);
   this.agregarProveedorForm.reset();
   this.datoSeleccionado = [];
   this.guardarYSalir.emit();
