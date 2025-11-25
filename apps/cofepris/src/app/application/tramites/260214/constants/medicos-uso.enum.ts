@@ -86,3 +86,10 @@ export const ID_PROCEDIMIENTO = 260214;
  * sobre la ausencia de datos relacionados con el pago de derechos.
  */
 export const MENSAJE_DE_VALIDACION = '¿Está seguro que su solicitud no requiere los datos del Pago de derechos?';
+
+
+export const ELEMENTOS_REQUERIDOS = [
+  'correoElectronico',
+  'denominacionRazon',
+  'scian'
+];
