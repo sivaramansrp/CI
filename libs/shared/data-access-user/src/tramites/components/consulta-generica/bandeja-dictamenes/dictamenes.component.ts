@@ -81,13 +81,6 @@ export class DictamenesComponent implements OnInit, OnDestroy, OnChanges{
   ngOnChanges(changes: SimpleChanges): void {
     if (changes['dictamenes'] && changes['dictamenes'].currentValue?.length > 0) {
       this.getDictamenes();
-    } else {
-      this.dictamenService
-      .getDictamenes()
-      .pipe(takeUntil(this.unsubscribe$))
-      .subscribe((data) => {
-        this.datosTablaDictamen = data;
-      });
     }
   }
 

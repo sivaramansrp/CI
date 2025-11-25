@@ -92,6 +92,9 @@
             <small *ngIf="importadorForm.get('razonSocialImportador')?.errors?.['required']">
               La razón social es obligatoria.
             </small>
+            <small *ngIf="importadorForm.get('razonSocialImportador')?.errors?.['maxlength']">
+              La razón social no puede exceder 70 caracteres.
+            </small>
           </span>
         </div>
       </div>
@@ -107,6 +110,9 @@
             *ngIf="importadorForm.get('domicilio')?.invalid && (importadorForm.get('domicilio')?.touched || importadorForm.get('domicilio')?.dirty)">
             <small *ngIf="importadorForm.get('domicilio')?.errors?.['required']">
               El domicilio es obligatorio.
+            </small>
+            <small *ngIf="importadorForm.get('domicilio')?.errors?.['maxlength']">
+              El domicilio no puede exceder 70 caracteres.
             </small>
           </span>
         </div>
@@ -127,6 +133,9 @@
             <small *ngIf="importadorForm.get('ciudadImportador')?.errors?.['required']">
               La ciudad es obligatoria.
             </small>
+            <small *ngIf="importadorForm.get('ciudadImportador')?.errors?.['maxlength']">
+              La ciudad no puede exceder 70 caracteres.
+            </small>
           </span>
         </div>
       </div>
@@ -137,12 +146,18 @@
             libUppercase name="cpImportador" formControlName="cpImportador" (change)="
               setValoresStore(importadorForm, 'cpImportador', 'setCpImportador')
             " />
-            <span class="text-danger"
-              *ngIf="importadorForm.get('cpImportador')?.invalid && (importadorForm.get('cpImportador')?.touched || importadorForm.get('cpImportador')?.dirty)">
-              <small *ngIf="importadorForm.get('cpImportador')?.errors?.['required']">
-                El C P es obligatorio.
-              </small>
-            </span>
+          <span class="text-danger"
+            *ngIf="importadorForm.get('cpImportador')?.invalid && (importadorForm.get('cpImportador')?.touched || importadorForm.get('cpImportador')?.dirty)">
+            <small *ngIf="importadorForm.get('cpImportador')?.errors?.['required']">
+              El C P es obligatorio.
+            </small>
+            <small *ngIf="importadorForm.get('cpImportador')?.errors?.['pattern']">
+              El C P debe contener entre 5 y 9 dígitos.
+            </small>
+            <small *ngIf="importadorForm.get('cpImportador')?.errors?.['maxLength']">
+              El C P no puede exceder 9 caracteres.
+            </small>
+          </span>
         </div>
       </div>
       <div class="col-md-6">

@@ -7,6 +7,7 @@ import {
 } from '../../../../shared/models/terceros-relacionados.model';
 import { Subject, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
+import { ELEMENTOS_REQUERIDOS } from '../../constants/medicos-uso.enum';
 import { ImportacionDispositivosMedicosUsoService } from '../../services/importacion-dispositivos-medicos-uso.service';
 import { TercerosRelacionadosComponent } from '../../../../shared/components/terceros-relacionados/terceros-relacionados.component';
 import { TercerosRelacionadosFebService } from '../../../../shared/services/tereceros-relacionados-feb.service';
@@ -71,6 +72,8 @@ export class TercerosRelacionadosVistaComponent implements OnInit, OnDestroy {
 
   @ViewChild(TercerosRelacionadosComponent)
   tercerosRelacionadosComponent!: TercerosRelacionadosComponent;
+
+  public readonly elementosRequeridos = ELEMENTOS_REQUERIDOS; 
 
   /**
    * Constructor que inyecta los servicios necesarios.

@@ -97,7 +97,6 @@ export class DatosParaMovilizacionNacionalComponent implements OnInit, OnDestroy
   constructor(
     private readonly fb: FormBuilder,
     private readonly certificadoZoosanitarioServices: CertificadoZoosanitarioServiceService,
-    private readonly certificadoZoosanitarioQuery: ZoosanitarioQuery,
     private consultaQuery: ConsultaioQuery,
     private catalogoService: CatalogosService,
     private sharedService: SharedFormService
@@ -116,28 +115,11 @@ export class DatosParaMovilizacionNacionalComponent implements OnInit, OnDestroy
    * @method ngOnInit
    */
   ngOnInit(): void {
-    this.certificadoZoosanitarioQuery.seleccionarMovilizacionNacional$
-      .pipe(takeUntil(this.destroyNotifier$))
-      .subscribe((datosDeLaSolicitud) => {
-        if (datosDeLaSolicitud) {
-          this.movilizacionForm.patchValue(datosDeLaSolicitud);
-        }
-      });
+    
 
     this.obtenerListasDesplegables();
 
-    // Suscribirse a los datos de prellenado de movilización desde el servicio compartido
-      this.sharedService.data$.pipe(takeUntil(this.destroyNotifier$)).subscribe((data) => {
-      if (data) {
-        this.movilizacionForm.patchValue({
-          coordenadas: data.coordenadas,
-          medio: data.ide_medio_transporte,
-          transporte: data.id_transporte,
-          punto: data.id_punto_verificacion,
-          nombre: data.razon_social
-        }); 
-      }
-    });
+    
   }
 
   /**
@@ -167,6 +149,20 @@ export class DatosParaMovilizacionNacionalComponent implements OnInit, OnDestroy
     this.obtenernombreDeLaEmpresaTransportistaList();
     this.obtenerPuntoDeVerificaciónList();
     this.obtenerIdentificacionTransporteList();
+
+    this.movilizacionForm.reset();
+    // Suscribirse a los datos de prellenado de movilización desde el servicio compartido
+      this.sharedService.data$.pipe(takeUntil(this.destroyNotifier$)).subscribe((data) => {
+        if (data) {
+          this.movilizacionForm.patchValue({
+            coordenadas: data.coordenadas,
+            medio: data.ide_medio_transporte,
+            transporte: data.identificacion_transporte,
+            punto: data.id_punto_verificacion,
+            nombre: data.razon_social
+          }); 
+        }
+    });
   }
 
   /**

@@ -104,7 +104,7 @@ export class DetalleEvaluaconSolicitudService {
                     datosFederal: {
                         entidad_federativa: DETALLE.representacion_federal.cve_entidad_federativa,
                         representacion_federal: DETALLE.representacion_federal.cve_unidad_administrativa,
-                        descripcion_representacion_federal: DETALLE.representacion_federal.cve_unidad_administrativa,
+                        descripcion_representacion_federal: DETALLE.representacion_federal.cve_entidad_federativa,
                     },
                 };
 
