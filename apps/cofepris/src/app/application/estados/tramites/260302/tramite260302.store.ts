@@ -3,9 +3,9 @@ import { Injectable } from '@angular/core';
 import { ScianDatos } from '@libs/shared/data-access-user/src';
 
 /**
- * Interfaz que representa el estado de Solicitud260303.
+ * Interfaz que representa el estado de Solicitud260302.
  */
-export interface Solicitud260303State {
+export interface Solicitud260302State {
     /**
      * El valor de idSolicitud.
      */
@@ -360,10 +360,10 @@ export interface Solicitud260303State {
     manifiestos: boolean;
 }
 /**
- * Función para crear el estado inicial de Solicitud260303State.
- * @returns {Solicitud260303State} El estado inicial de Solicitud260211State.
+ * Función para crear el estado inicial de Solicitud260302State.
+ * @returns {Solicitud260302State} El estado inicial de Solicitud260211State.
  */
-export function createInitialState(): Solicitud260303State {
+export function createInitialState(): Solicitud260302State {
     return {
         idSolicitud: 0,
         denominacionRazon: '',
@@ -468,11 +468,11 @@ export function createInitialState(): Solicitud260303State {
  * @param {string} config.name - El nombre de la tienda.
  * @param {boolean} config.resettable - Indica si la tienda es restablecible.
  */
-@StoreConfig({ name: 'tramite260303', resettable: true })
+@StoreConfig({ name: 'tramite260302', resettable: true })
 
-export class Tramite260303Store extends Store<Solicitud260303State>{
+export class Tramite260302Store extends Store<Solicitud260302State>{
     /**
-     * Crea una instancia de Tramite260303Store.
+     * Crea una instancia de Tramite260302Store.
      * Inicializa la tienda con el estado inicial.
      */
     constructor() {
