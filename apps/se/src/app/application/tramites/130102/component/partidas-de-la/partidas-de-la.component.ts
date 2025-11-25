@@ -175,11 +175,6 @@ export class PartidasDeLaComponent implements OnInit, AfterViewInit, OnDestroy {
     this.formularioTotalCount();
     this.calculateTotals();
 
-    // const PARTIDAS_TABLA = this.solicitudState?.['partidas_tabla'];
-    /* if ((!Array.isArray(PARTIDAS_TABLA) || PARTIDAS_TABLA.length === 0) && this.esFormularioSoloLectura) {
-
-    } */
-
     this.formForTotalCount.controls['cantidadTotal'].disable();
     this.formForTotalCount.controls['valorTotalUSD'].disable();
     this.formularioRegistroService.registrarFormulario('formForTotalCount', this.formForTotalCount);
