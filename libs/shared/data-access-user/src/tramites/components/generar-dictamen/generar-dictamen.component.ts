@@ -332,6 +332,9 @@ export class GenerarDictamenComponent implements OnInit, OnChanges, OnDestroy {
         fechaInicioVigenciaAutorizada: this.dataIniciarDictamen.fecha_inicio_vigencia,
         fechaFinVigenciaAutorizada: this.dataIniciarDictamen.fecha_fin_vigencia,
       });
+      if(this.dataIniciarDictamen.texto_dictamen){
+        this.dictamenForm.get('antecedentesEditables')?.setValue(this.dataIniciarDictamen.texto_dictamen);
+      }
       this.evaluarObservacionesDictamen = this.dataIniciarDictamen.historial_observaciones || [];
     }
 
