@@ -3,6 +3,7 @@
   "compilerOptions": {
     "outDir": "../../dist/out-tsc",
     "types": [],
+    "target": "ES2020",
     "paths": {
       "@/*": ["apps/privados/src/app/*"],
       "@app/*": ["apps/privados/src/app/*"],
@@ -12,10 +13,13 @@
   },
   "files": [
     "src/main.ts",
-    "src/bootstrap.ts"
+    "src/bootstrap.ts",
+    "src/app/remote-entry/entry.routes.ts",
+    "src/custom.d.ts"
   ],
   "include": [
-    "src/**/*.ts"
+    "src/**/*.ts",
+    "src/**/*.d.ts"
   ],
   "exclude": [
     "jest.config.ts",
