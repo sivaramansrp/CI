@@ -1,19 +1,32 @@
 /**
- * Constantes de configuración para las rutas de la API del procedimiento 130217
+ * Conjunto de rutas de la API para el procedimiento 130105.
  */
+import { ENVIRONMENT } from "@libs/shared/data-access-user/src/enviroments/enviroment";
+/**
+ * url base de la API
+ */
+const BASE_URL = ENVIRONMENT.API_HOST;
+/**
+ * API nombre
+ */
+const API = ENVIRONMENT.API;
+/**
+ * versión de la API
+ */
+const API_VERSION = ENVIRONMENT.API_VERSION;
 
-/** URL base del servicio */
-const BASE_URL = 'https://vucem-qa.vucem.gob.mx';
-/** Prefijo de la API */
-const API = '/ttsext';
-/** Versión de la API */
-const API_VERSION = '/v1';
-/** Identificador del procedimiento */
-const PROCEDURE = '/130217';
-/** Sufijo para endpoints de solicitud */
-const SOLICITUD = '/solicitud';
-/** Sufijo para endpoints de trámite */
-const TRAMITE = '/tramite';
+/**
+ * Solicitud de la API
+ */
+const SOLICITUD = ENVIRONMENT.SOLICITUD_URL;
+/**
+ * Trámite de la API
+ */
+const TRAMITE = ENVIRONMENT.TRAMITE_URL;
+/**
+ * Procedimiento de la API
+ */
+const PROCEDURE = '/sat-t130217';
 
 /**
  * Rutas de la API para el procedimiento 130217
