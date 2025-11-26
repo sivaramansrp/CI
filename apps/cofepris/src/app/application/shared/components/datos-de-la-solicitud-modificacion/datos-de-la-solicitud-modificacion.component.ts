@@ -55,7 +55,7 @@ export class DatosDeLaSolicitudModificacionComponent implements OnInit, AfterVie
   /**
      * Updates descripcionScian in the form when the SCIAN dropdown changes
      */
-    onScianChange(event: any): void {
+   public onScianChange(event: any): void {
       this.scianForm.get('descripcionScian')?.setValue(event.target.value ? event.target.value : '');
     }
 
@@ -75,7 +75,7 @@ export class DatosDeLaSolicitudModificacionComponent implements OnInit, AfterVie
   /**
    * Elimina las filas SCIAN seleccionadas
    */
-  eliminarScianSeleccionado(): void {
+ public eliminarScianSeleccionado(): void {
     if (this.selectedScianRows.length > 0) {
       this.personaparas = this.personaparas.filter(
         item => !this.selectedScianRows.some(sel => sel.clave === item.claveScian && sel.descripcion === item.descripcionScian)
