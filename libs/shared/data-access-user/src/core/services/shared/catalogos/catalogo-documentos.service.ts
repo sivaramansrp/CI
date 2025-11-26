@@ -1,5 +1,5 @@
 import { API_GET_DOCUMENTOS_OBLIGATORIOS, API_GET_DOCUMENTOS_SOLICITUD, API_POST_PRE_LLENADO_DOCUMENTOS, TRAMITE } from "../../../servers/api-router";
-import { CatalogoDocumentosResponse, DocumentosLista, ParametrosGetDocumentos, PayloadConsultaDocumentosSolicitud, RespuestaRecuperaDocumentos } from "../../../models/shared/anexar-documentos.model";
+import { CatalogoDocumentosResponse, DocumentosLista, ParametrosGetDocumentos, PayloadConsultaDocumentosSolicitud } from "../../../models/shared/anexar-documentos.model";
 import { HttpClient, HttpParams } from "@angular/common/http";
 import { Observable, catchError, map, throwError } from "rxjs";
 import { ENVIRONMENT } from "../../../../enviroments/enviroment";

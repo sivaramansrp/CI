@@ -253,9 +253,9 @@ export class CargaDocumentoComponent implements OnInit, OnChanges, OnDestroy {
       )
       .subscribe();
 
-   
+    if (this.esPrellenado) {
       this.preLLenadoDocumentos();
-   
+    }
   }
 
   ngOnChanges(changes: SimpleChanges): void {
@@ -291,21 +291,19 @@ export class CargaDocumentoComponent implements OnInit, OnChanges, OnDestroy {
         tipo_certificacion: "1"
       }
     }
-    
+
     this.serviceDocumentosCarga.recuperaDocumentosPrellenado(Number(this.idTipoTRamite), this.idSolicitud, true, PAYLOAD)
       .pipe(takeUntilDestroyed(this.destroyRef$))
       .subscribe({
         next: (response) => {
-            console.warn('response documentos prellenados', response);
-            
-            if (response.datos?.documento_tramite) {
-              const DOCUMENTOS_PRELLENADOS = response.datos.documento_tramite.map((doc: Documento) => ({
-                ...doc.tipo_documento,
-                adicionales: [],
-                cargado: true,
-              }));
-              this.documentosOpcionalesSeleccionados = [...this.documentosOpcionalesSeleccionados, ...DOCUMENTOS_PRELLENADOS];
-            }
+          if (response.datos?.documento_tramite && response.datos.documento_tramite.length > 0) {
+            const DOCUMENTOS_PRELLENADOS = response.datos.documento_tramite.map((doc: Documento) => ({
+              ...doc.tipo_documento,
+              adicionales: [],
+              cargado: true,
+            }));
+            this.documentosOpcionalesSeleccionados = [...this.documentosOpcionalesSeleccionados, ...DOCUMENTOS_PRELLENADOS];
+          }
         },
         error: (err) => {
           console.error('Error obteniendo documentos desde solicitud', err);
@@ -866,23 +864,6 @@ export class CargaDocumentoComponent implements OnInit, OnChanges, OnDestroy {
       this.documentosOpcionalesSeleccionados
     );
     this.listDocOpcionalesAgregar = [];
-  }
-
-  pruebaagregar(doc: TipoDocumentos): void {
-
-    const OPCIONAL = this.catalogoDocumentosOpcionales.find(
-      (f) => f.id_tipo_documento === doc.id_tipo_documento
-    ) as TipoDocumentos;
-
-    const DOCUMENTO_LIMPIO: TipoDocumentos = {
-      ...OPCIONAL,
-      adicionales: [], 
-      cargado: false,
-      error: []
-    };
-
-
-    this.documentosOpcionalesSeleccionados.push(DOCUMENTO_LIMPIO);
   }
 
   /**
