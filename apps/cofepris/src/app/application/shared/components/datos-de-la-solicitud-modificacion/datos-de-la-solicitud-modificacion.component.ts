@@ -53,6 +53,41 @@ import { TooltipModule } from 'ngx-bootstrap/tooltip';
 })
 export class DatosDeLaSolicitudModificacionComponent implements OnInit, AfterViewInit, OnDestroy {
   /**
+     * Updates descripcionScian in the form when the SCIAN dropdown changes
+     */
+    onScianChange(event: any): void {
+      this.scianForm.get('descripcionScian')?.setValue(event.target.value ? event.target.value : '');
+    }
+
+
+      /**
+       * Filas SCIAN seleccionadas (checkbox)
+       */
+      public selectedScianRows: any[] = [];
+
+      /**
+       * Maneja la selección de filas SCIAN por checkbox
+       */
+      onSelectScianRows(rows: any[]): void {
+        this.selectedScianRows = rows;
+      }
+
+  /**
+   * Elimina las filas SCIAN seleccionadas
+   */
+  eliminarScianSeleccionado(): void {
+    if (this.selectedScianRows.length > 0) {
+      this.personaparas = this.personaparas.filter(
+        item => !this.selectedScianRows.some(sel => sel.clave === item.claveScian && sel.descripcion === item.descripcionScian)
+      );
+      this.datosData = this.personaparas.map(item => ({
+        clave: item.claveScian,
+        descripcion: item.descripcionScian
+      }));
+      this.selectedScianRows = [];
+    }
+  }
+  /**
    * Valor que habilita el campo Justificación
    * Cambia según la opción seleccionada en 'genericos'.
    */
@@ -672,14 +707,27 @@ export class DatosDeLaSolicitudModificacionComponent implements OnInit, AfterVie
    * Guarda un nuevo dato SCIAN y lo agrega a la tabla.
    */
   guardarScian(): void {
-    if (this.scianForm.valid) {
+    if (this.scianForm?.value?.scian) {
+      const claveScian = this.scianForm.get('scian')?.value;
+      let descripcionScian = this.scianForm.get('descripcionScian')?.value;
+      // If descripcionScian is empty, get it from the selected option
+      if (!descripcionScian && claveScian) {
+        const selected = this.scianJson.find((item: any) => item.clave === claveScian);
+        descripcionScian = selected ? selected.descripcion : '';
+      }
       const SCIAN_DATA: ScianModel = {
-        claveScian: this.scianForm.get('scian')?.value,
-        descripcionScian: this.scianForm.get('descripcionScian')?.value,
+        claveScian,
+        descripcionScian,
       };
 
-      // Agregar el nuevo dato a la tabla
-      this.personaparas.push(SCIAN_DATA);
+
+      // Agregar el nuevo dato a la tabla usando nueva referencia para disparar change detection
+      this.personaparas = [...this.personaparas, SCIAN_DATA];
+      // Actualizar datosData para que la tabla se actualice, mapeando a la estructura correcta
+      this.datosData = this.personaparas.map(item => ({
+        clave: item.claveScian,
+        descripcion: item.descripcionScian
+      }));
 
       // Limpiar el formulario
       this.scianForm.reset();
