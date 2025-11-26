@@ -77,7 +77,7 @@ export class GuardarAdapter_260202 {
       }),
       "mercancias": (state.tablaMercanciasConfigDatos ?? []).map((mercancia) => {
         return {
-              "idMercancia": null,
+              "idMercancia": mercancia.id?.toString() ?? null,
               "idClasificacionProducto": mercancia.claveClasificacionProductoObj?.clave,
               "nombreClasificacionProducto": mercancia.claveClasificacionProductoObj?.descripcion,
               "ideSubClasificacionProducto": mercancia.especificarClasificacionObj?.clave,
@@ -93,14 +93,14 @@ export class GuardarAdapter_260202 {
                   "clave": mercancia.fraccionArancelaria,
                   "descripcion": mercancia.descripcionFraccion
               },
-              "unidadMedidaComercial": {
-                  "descripcion": mercancia.cantidadUMCObj?.descripcion
-              },
-              "cantidadUMCConComas": mercancia.cantidadUmcValor,
-              "unidadMedidaTarifa": {
-                  "descripcion": mercancia.cantidadUMT
-              },
-              "cantidadUMTConComas": mercancia.cantidadUmtValor,
+            "unidadMedidaComercial": {
+                descripcion: mercancia.cantidadUMC
+            },
+            "cantidadUMCConComas": mercancia.cantidadUmcValor,
+            "unidadMedidaTarifa": {
+                descripcion: mercancia.cantidadUMT
+            },
+            "cantidadUMTConComas": mercancia.cantidadUmtValor,
               "presentacion": mercancia.presentacion,
               "registroSanitarioConComas": mercancia.numeroRegistroSanitario,
               "nombreCortoPaisOrigen": mercancia.paisOrigenDatosClave,
@@ -364,8 +364,7 @@ export class GuardarAdapter_260202 {
             estadoFisico: m.estadoFisicoDescripcionOtros ?? '',
             fraccionArancelaria: m.fraccionArancelaria?.clave ?? '',
             descripcionFraccion: m.fraccionArancelaria?.descripcion ?? '',
-            cantidadUMC: m.cantidadUMCConComas ?? '',
-            cantidadUMT: m.cantidadUMTConComas ?? '',
+            cantidadUMT:m.unidadMedidaTarifa?.descripcion ?? '',
             presentacion: m.presentacion ?? '',
             numeroRegistroSanitario: m.registroSanitarioConComas ?? '',
             paisDeOriginDatos: m.nombreCortoPaisOrigen ?? '',
@@ -380,7 +379,13 @@ export class GuardarAdapter_260202 {
             paisOrigen: m.nombreCortoPaisOrigen ?? "",
             paisProcedencia: m.nombreCortoPaisProcedencia ?? "",
             id: m.idMercancia || null,
-        }));
+            paisOrigenDatosClave: m.nombreCortoPaisOrigen ?? "",
+            paisProcedenciaDatosClave: m.nombreCortoPaisProcedencia ?? "",
+            usoEspecificoDatosClave: m.nombreCortoUsoEspecifico ?? "",
+            cantidadUmcValor: m.cantidadUMCConComas ?? '',
+            cantidadUMC: m.unidadMedidaComercial?.descripcion ?? '',
+             cantidadUmtValor: m.cantidadUMTConComas ?? '',
+         }));
     }
 
     private static mapFabricantesData(grid?: any[]): any[] {
@@ -402,7 +407,7 @@ export class GuardarAdapter_260202 {
             municipioAlcaldia: p.domicilio?.delegacionMunicipio?.nombre ?? '',
             localidad: p.domicilio?.localidad?.nombre ?? '',
             entidadFederativa: p.domicilio?.entidadFederativa?.nombre ?? '',
-            estadoLocalidad: p.domicilio?.entidadFederativa?.nombre ?? '',
+            estadoLocalidad: p.domicilio?.localidad?.nombre ?? '',
             codigoPostal: p.domicilio?.codigoPostal ?? '',
             coloniaEquivalente: p.domicilio?.descripcionColonia ?? '',
             nombres: p.nombre ?? '',
