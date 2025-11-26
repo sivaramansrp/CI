@@ -82,6 +82,7 @@
             </div>
             }
             {{documentosOpcionalesSeleccionados.length}}
+            es pre llenado {{esPrellenado}}
             @if (documentosOpcionalesSeleccionados.length > 0) {
             <span class="h3">Documentos opcionales</span>
 
@@ -192,6 +193,8 @@
             </div>
             <div class="d-flex justify-content-end w-100 mb-4 my-3">
                 <button class="btn-primary rounded" (click)="agregarOpcionales()">Agregar</button>
+
+                <button class="btn-primary rounded" >agregar pruebas</button>
             </div>
         </div>
     </div>

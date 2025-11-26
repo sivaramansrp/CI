@@ -1,5 +1,5 @@
 import { API_GET_DOCUMENTOS_OBLIGATORIOS, API_GET_DOCUMENTOS_SOLICITUD, API_POST_PRE_LLENADO_DOCUMENTOS, TRAMITE } from "../../../servers/api-router";
-import { CatalogoDocumentosResponse, ParametrosGetDocumentos, PayloadConsultaDocumentosSolicitud, RespuestaRecuperaDocumentos } from "../../../models/shared/anexar-documentos.model";
+import { CatalogoDocumentosResponse, DocumentosLista, ParametrosGetDocumentos, PayloadConsultaDocumentosSolicitud, RespuestaRecuperaDocumentos } from "../../../models/shared/anexar-documentos.model";
 import { HttpClient, HttpParams } from "@angular/common/http";
 import { Observable, catchError, map, throwError } from "rxjs";
 import { ENVIRONMENT } from "../../../../enviroments/enviroment";
@@ -69,8 +69,8 @@ export class CatalogoDocumentosService {
      * @param payload - Datos para consulta de documentos.
      * @returns Observable con la respuesta de guardado.
      */
-    recuperaDocumentosPrellenado(tramite: number, idsolicitud: string, especifico: boolean, payload: PayloadConsultaDocumentosSolicitud): Observable<BaseResponse<CatalogoDocumentosResponse>> {
+    recuperaDocumentosPrellenado(tramite: number, idsolicitud: string, especifico: boolean, payload: PayloadConsultaDocumentosSolicitud): Observable<BaseResponse<DocumentosLista>> {
         const ENDPOINT = `${this.host}/${API_POST_PRE_LLENADO_DOCUMENTOS(tramite.toString(), idsolicitud, especifico)}`;
-        return this.http.post<BaseResponse<CatalogoDocumentosResponse>>(ENDPOINT, payload);
+        return this.http.post<BaseResponse<DocumentosLista>>(ENDPOINT, payload);
     }
 }

@@ -217,6 +217,8 @@ export class CargaDocumentoComponent implements OnInit, OnChanges, OnDestroy {
 
   @Input() esPrellenado: boolean = false;
 
+  listadoDocumentosPrellenados: TipoDocumentos[] = [];
+
   constructor(
     private documentosQuery: DocumentosQuery,
     private documentosStore: DocumentosStore,
@@ -251,9 +253,9 @@ export class CargaDocumentoComponent implements OnInit, OnChanges, OnDestroy {
       )
       .subscribe();
 
-    if (this.esPrellenado && this.idSolicitud) {
+   
       this.preLLenadoDocumentos();
-    }
+   
   }
 
   ngOnChanges(changes: SimpleChanges): void {
@@ -289,23 +291,21 @@ export class CargaDocumentoComponent implements OnInit, OnChanges, OnDestroy {
         tipo_certificacion: "1"
       }
     }
+    
     this.serviceDocumentosCarga.recuperaDocumentosPrellenado(Number(this.idTipoTRamite), this.idSolicitud, true, PAYLOAD)
       .pipe(takeUntilDestroyed(this.destroyRef$))
       .subscribe({
         next: (response) => {
-          if (this.esDocumentosAgricultura) {
-            response.datos?.datos?.documento_tramite.forEach((doc) => {
-              this.documentosOpcionalesSeleccionados.push({
-                id_tipo_documento: 820,
-                tipo_documento: 'Certificado de Control de Calidad',
-                tamanio_maximo: 0,
-                ide_rango_resolucion_imagen: '',
+            console.warn('response documentos prellenados', response);
+            
+            if (response.datos?.documento_tramite) {
+              const DOCUMENTOS_PRELLENADOS = response.datos.documento_tramite.map((doc: Documento) => ({
+                ...doc.tipo_documento,
                 adicionales: [],
-                cargado: false,
-                error: []
-              });
-            });
-          }
+                cargado: true,
+              }));
+              this.documentosOpcionalesSeleccionados = [...this.documentosOpcionalesSeleccionados, ...DOCUMENTOS_PRELLENADOS];
+            }
         },
         error: (err) => {
           console.error('Error obteniendo documentos desde solicitud', err);
@@ -827,9 +827,6 @@ export class CargaDocumentoComponent implements OnInit, OnChanges, OnDestroy {
    * @description Esta función recorre la lista de documentos opcionales a agregar y verifica si ya existen en la lista de documentos opcionales.
    */
   agregarOpcionales(): void {
-    console.warn('Documentos a agregar:', this.listDocOpcionalesAgregar);
-    console.warn('Documentos a documentosOpcionalesSeleccionados:', this.documentosOpcionalesSeleccionados);
-    console.warn('Documentos a catalogoDocumentosOpcionales:', this.catalogoDocumentosOpcionales);
     this.listDocOpcionalesAgregar.forEach((doc: number) => {
 
       const INDICE = this.documentosOpcionalesSeleccionados.findIndex(
@@ -869,6 +866,23 @@ export class CargaDocumentoComponent implements OnInit, OnChanges, OnDestroy {
       this.documentosOpcionalesSeleccionados
     );
     this.listDocOpcionalesAgregar = [];
+  }
+
+  pruebaagregar(doc: TipoDocumentos): void {
+
+    const OPCIONAL = this.catalogoDocumentosOpcionales.find(
+      (f) => f.id_tipo_documento === doc.id_tipo_documento
+    ) as TipoDocumentos;
+
+    const DOCUMENTO_LIMPIO: TipoDocumentos = {
+      ...OPCIONAL,
+      adicionales: [], 
+      cargado: false,
+      error: []
+    };
+
+
+    this.documentosOpcionalesSeleccionados.push(DOCUMENTO_LIMPIO);
   }
 
   /**
