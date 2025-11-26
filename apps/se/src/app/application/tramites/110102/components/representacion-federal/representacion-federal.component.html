@@ -7,6 +7,13 @@
                     [label]="'Entidad federativa'" [required]="true"
                     [isDisabled]="esSoloLectura"
                     formControlName="claveEntidadFederativa"></app-catalogo-select>
+                 @if(formularioRepresentacionFederal.get('claveEntidadFederativa')?.invalid && formularioRepresentacionFederal.get('claveEntidadFederativa')?.touched) {
+                      <div>
+                          @if(formularioRepresentacionFederal.get('claveEntidadFederativa')?.errors?.['required']) {
+                              <small class="text-danger">{{MENSAJE_REQUERIDO}}</small>
+                          }
+                      </div>
+                  }
             </div>
             <div class="col-md-4">
                 <app-catalogo-select [catalogo]="representacion" [label]="'Representación federal'"
@@ -14,6 +21,13 @@
                     [isDisabled]="esSoloLectura"
                     (selectionChange)="onRepresentacionChange($event)">
                 </app-catalogo-select>
+                 @if(formularioRepresentacionFederal.get('claveUnidadAdministrativa')?.invalid && formularioRepresentacionFederal.get('claveUnidadAdministrativa')?.touched) {
+                      <div>
+                          @if(formularioRepresentacionFederal.get('claveUnidadAdministrativa')?.errors?.['required']) {
+                              <small class="text-danger">{{MENSAJE_REQUERIDO}}</small>
+                          }
+                      </div>
+                  }
             </div>
 
         </div>

@@ -3,12 +3,11 @@
  * Este componente maneja la representación federal, incluyendo la interacción con el estado global y la validación de formularios.
  */
 
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { Subject } from 'rxjs';
-import { takeUntil } from 'rxjs/operators';
+import { Subject, takeUntil, tap } from 'rxjs';
 
 import { CatalogoSelectComponent } from '@libs/shared/data-access-user/src/tramites/components/catalogo-select/catalogo-select.component';
 
@@ -92,6 +91,9 @@ export class RepresentacionFederalComponent implements OnInit, OnDestroy {
    */
   public MENSAJE_REQUERIDO = REQUERIDO;
 
+  /** Variable para validar el formulario */
+  validarFormularioRepresentacion: boolean = false;
+
   /**
    * @description
    * Constructor del componente.
@@ -105,7 +107,8 @@ export class RepresentacionFederalComponent implements OnInit, OnDestroy {
     private consultaQuery: ConsultaioQuery,
     private consultaTramite: Tramite110102Query,
     private catalogoTramiteService: CatalogosTramiteService,
-    private estadoGuardadoAkite: Tramite110102Store
+    private estadoGuardadoAkite: Tramite110102Store,
+    private cd: ChangeDetectorRef
   ) {
     this.consultaQuery.selectConsultaioState$
       .pipe(takeUntil(this.destruido$))
@@ -129,6 +132,14 @@ export class RepresentacionFederalComponent implements OnInit, OnDestroy {
     this.inicializarFormulario();
     this.getEntidadFederativa();
     this.getDeclaracionDatos();
+    this.formularioRepresentacionFederal.statusChanges
+      .pipe(
+        takeUntil(this.destruido$),
+        tap((_value) => {
+          this.validarFormularioRepresentacion = this.formularioRepresentacionFederal.valid;
+        })
+      )
+      .subscribe(); 
   }
 
   /**
@@ -330,6 +341,20 @@ export class RepresentacionFederalComponent implements OnInit, OnDestroy {
           this.textos = PROTESTA.ADJUNTAR;}
         });
     }
+
+/**
+ * @description Valida el formulario principal y el de otras instancias antes de continuar.
+ * @method validarFormulario
+ * @returns {boolean} Retorna `true` si todos los formularios son válidos, de lo contrario `false`.
+ */
+ validarFormulario(): boolean {
+    if (this.formularioRepresentacionFederal.valid === false) {
+     this.formularioRepresentacionFederal.markAllAsTouched();
+     this.cd.detectChanges();
+      return false;
+    }
+    return true
+  }
 
   /**
    * @description

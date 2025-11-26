@@ -9,6 +9,7 @@ import { Tramite110102State } from '../../estados/store/tramite110102.store';
 import { ComercializadoresProductosResponse } from '../../models/response/comercializadores-productos-response.model';
 import { DatosDeLaMercanciaComponent } from '../../components/datos-de-la-mercancia/datos-de-la-mercancia.component';
 import { ExportadorAutorizadoService } from '../../service/exportador-autorizado.service';
+import { RepresentacionFederalComponent } from '../../components/representacion-federal/representacion-federal.component';
 import { Tramite110102Query } from '../../estados/queries/tramite110102.query';
 
 /**
@@ -30,11 +31,19 @@ export class DatosMercanciaComponent implements OnInit, OnDestroy {
   @Output() tabChanged = new EventEmitter<number>();
 
   /**
-   * @property Mercancia - Referencia al componente `TratadosComponent` encargado de manejar
-   *                      la lógica y validación relacionada con los tratados del trámite.
+   * @property Mercancia - Referencia al componente `DatosDeLaMercanciaComponent` encargado de manejar
+   *                      la lógica y validación relacionada con la mercancia del trámite.
    * @command El decorador `@ViewChild` permite acceder al componente hijo para interactuar con sus métodos y propiedades.
    */
   @ViewChild('mercanciaRef', { static: false }) mercanciaView!: DatosDeLaMercanciaComponent;
+
+  /**
+   * @property Mercancia - Referencia al componente `RepresentacionFederalComponent` encargado de manejar
+   *                      la lógica y validación relacionada con representacion del trámite.
+   * @command El decorador `@ViewChild` permite acceder al componente hijo para interactuar con sus métodos y propiedades.
+   */
+  @ViewChild('representacionRef', { static: false }) representacionView!: RepresentacionFederalComponent;
+
   /**
    * Indica si los datos de respuesta del servidor están disponibles.
    */
@@ -160,25 +169,50 @@ public validarFormularios(): boolean | undefined{
     return true;
   }
 
-  /**
+/**
  * @method validarDatosMercancia
  * @description
- * Valida el formulario del tab de **Mercancia**.  
- * Si el formulario es inválido, se mantiene en el mismo tab; si es válido, avanza al siguiente.
- * @returns {boolean | undefined} `true` si es válido, `false` si es inválido, `undefined` si el componente no está disponible.
+ * Valida ambos formularios del tab de **Mercancía** y **Representación**.
+ * Ejecuta ambas validaciones aunque uno de los componentes aún no esté disponible.
+ * @returns {boolean | undefined} 
+ *  - `true` si ambos formularios son válidos  
+ *  - `false` si alguno es inválido  
+ *  - `undefined` si faltan componentes requeridos
  */
-  private validarDatosMercancia(): boolean | undefined {
-    if (!this.mercanciaView || !this.mercanciaView.validarFormularioMercancia) {
-      return undefined;
-    }
+private validarDatosMercancia(): boolean | undefined {
+  let esValidoMercancia: boolean | undefined = undefined;
+  let esValidoRepresentacion: boolean | undefined = undefined;
 
-    const ESVALIDO = this.mercanciaView.validarFormularioMercancia();
-    if (!ESVALIDO) {
-      this.seleccionarPestana(2);
-      return false;
-    }
-    return true;
+  // Validación de mercancia
+  if (this.mercanciaView?.validarFormularioMercancia) {
+    esValidoMercancia = this.mercanciaView.validarFormularioMercancia();
   }
+
+  // Validación de representación
+  if (this.representacionView?.validarFormulario) {
+    esValidoRepresentacion = this.representacionView.validarFormulario();
+  }
+
+  // Si faltarón componentes, retornar undefined
+  if (esValidoMercancia === undefined || esValidoRepresentacion === undefined) {
+    return undefined;
+  }
+
+  // Si mercancia es inválido
+  if (!esValidoMercancia) {
+    this.seleccionarPestana(2);
+    return false;
+  }
+
+  // Si representación es inválida
+  if (!esValidoRepresentacion) {
+    this.seleccionarPestana(2);
+    return false;
+  }
+
+  return true;
+}
+
 
   /**
    * Hook del ciclo de vida que se llama cuando la directiva se destruye.
