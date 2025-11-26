@@ -115,9 +115,8 @@ export class ProsecService {
     return this.http.post<JSONResponse>(API_ROUTES('/sat-t90101').buscarSectorFraccionArancelaria, body)
   }
 
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  obtenerProductorIndirectoDatos(body: any): Observable<JSONResponse> {
-    return this.http.post<JSONResponse>(API_ROUTES('/sat-t90101').buscarProductorIndirecto, body)
+  obtenerProductorIndirectoDatos(rfc: string): Observable<JSONResponse> {
+    return this.http.get<JSONResponse>(API_ROUTES('/sat-t90101').buscarProductorIndirecto(rfc))
   }
   
 }

@@ -20,7 +20,7 @@ export class GuardarMappingAdapter {
   static toFormPayload(state: ProsecState): unknown {
     return {
       "tipoDeSolicitud": "guardar",
-      "idSolicitud": 0,
+      "idSolicitud": state.idSolicitud || 0,
       "cveUnidadAdministrativa": null,
       "costoTotal": null,
       "certificadoSerialNumber": null,
