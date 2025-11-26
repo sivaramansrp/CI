@@ -85,7 +85,7 @@ export interface TratadoAgregadoRequest {
     clave_pais: string | null;
 
     /** Clave del bloque económico */
-    id_bloque: string | null;
+    id_bloque: number | null;
 
     /** Clave del grupo de criterio */
     clave_grupo_criterio: string | null;

@@ -222,16 +222,16 @@ export class PasoTresComponent implements OnInit, OnDestroy {
         /** Nombre del país */
         clave_pais: item.cve_pais,
 
-        /** duda*/
-        id_bloque: null,
+        /** ID bloque*/
+        id_bloque: item.id_bloque,
 
         /** Nombre del grupo de criterio */
         clave_grupo_criterio: item.cve_grupo_criterio,
 
-        /** Duda */
+        /** Cumple juegos */
         cumple_juego: null,
 
-        /** DUDA*/
+        /** Proceso mercancia*/
         ide_tipo_proceso_mercancia: null
       })
       ),
