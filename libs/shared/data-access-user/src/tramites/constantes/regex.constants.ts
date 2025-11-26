@@ -1357,3 +1357,12 @@ export const REGEX_REMOVE_NON_NUMERIC_WITH_DECIMAL = /[^0-9.]/g;
  * - "abc" (no es un número)
  */
 export const REGEX_NUMERO_DECIMAL_3_DIGITOS = /^\d+(\.\d{0,3})?$/;
+
+/**
+ * Expresión regular para validar números con hasta 12 dígitos enteros y 5 decimales opcionales.
+ * Ejemplos no válidos:
+ * - "1234567890123" (más de 12 dígitos enteros)
+ * - "123.456789" (más de 5 decimales)
+ * - "abc" (no es un número)
+ */
+export const REGEX_NUMERO_DECIMAL_5_DIGITOS = /^\d{1,12}(\.\d{1,5})?$/;

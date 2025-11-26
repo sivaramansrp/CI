@@ -181,6 +181,8 @@ export class DatosGeneralesDelTramiteComponent implements OnInit, OnDestroy {
         this.folioTramite = FOLIO_TRAMITE;
         this.idSolicitud = ID_SOLICITUD;
         this.selectTramite(this.tramite)
+        this.tareas = TAREAS_ACTIVAS;
+        
 
         this.consultaioStore.establecerConsultaio(
             TIPO_TRAMITE,

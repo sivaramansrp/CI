@@ -16,6 +16,15 @@ export interface FilaData {
 }
 
 /**
+ * Interfaz que representa la información de NICO.
+ */
+ export interface NicoInfo {
+  claveScian: string;
+  descripcionDelScian: string;
+}
+
+
+/**
  * Interfaz que representa los datos de una fila extendida.
  */
 export interface FilaData2 {

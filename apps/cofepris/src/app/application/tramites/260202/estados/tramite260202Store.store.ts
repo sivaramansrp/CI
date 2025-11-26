@@ -185,7 +185,7 @@ export function createInitialState(): Tramite260202State {
       especifique: '',
       especifiqueForma: '',
     },
-    opcionConfigDatos: TABLA_OPCION_DATA,
+    opcionConfigDatos: [],
     scianConfigDatos: [], // SCIAN_TABLA_DATA
     tablaMercanciasConfigDatos: [],
     seleccionadoopcionDatos: [],
@@ -195,7 +195,7 @@ export function createInitialState(): Tramite260202State {
     pagoDerechos: {
       claveReferencia: '',
       cadenaDependencia: '',
-      estado: '',
+      banco: '',
       llavePago: '',
       fechaPago: '',
       importePago: '',
@@ -264,7 +264,20 @@ export class Tramite260202Store extends Store<Tramite260202State> {
   constructor() {
     super(createInitialState());
   }
-
+    /**
+   * @método
+   * @nombre establecerDatos
+   * @descripción
+   * Actualiza el estado con los valores proporcionados.
+   *
+   * @param {Partial<Tramite260202State>} values - Valores parciales para actualizar el estado.
+   */
+  public establecerDatos(values: Partial<Tramite260202State>): void {
+    this.update((state) => ({
+      ...state,
+      ...values,
+    }));
+  }
   /**
    * @method updateDatosSolicitudFormState
    * @description Actualiza el estado del formulario de datos de la solicitud.

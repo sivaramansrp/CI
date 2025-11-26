@@ -18,97 +18,86 @@ import { TablaScianConfig } from '../../../shared/models/datos-solicitud.model';
  * @description
  * Representa el estado de la tienda para el trámite 260208. Contiene datos relacionados
  * con destinatarios, facturadores, proveedores, fabricantes, formularios y configuraciones.
+ * Representa el estado de la gestión del trámite 260208.
  */
 export interface Tramite260208State {
-    idSolicitud: number;
-  
   /**
-   * Array of final recipient data for the recipients table
-   * @type {Destinatario[]}
+   * Identificador de la solicitud (opcional).
+  */
+  idSolicitud: number;
+
+  /**
+   * Lista de destinatarios finales en la tabla de datos.
    */
   destinatarioFinalTablaDatos: Destinatario[];
 
   /**
-   * Array of biller/invoicer data for the billers table
-   * @type {Facturador[]}
+   * Lista de facturadores en la tabla de datos.
    */
   facturadorTablaDatos: Facturador[];
 
   /**
-   * Array of supplier data for the suppliers table
-   * @type {Proveedor[]}
+   * Lista de proveedores en la tabla de datos.
    */
   proveedorTablaDatos: Proveedor[];
 
   /**
-   * Array of manufacturer data for the manufacturers table
-   * @type {Fabricante[]}
+   * Lista de fabricantes en la tabla de datos.
    */
   fabricanteTablaDatos: Fabricante[];
 
   /**
-   * State object containing request form data
-   * @type {DatosSolicitudFormState}
+   * Estado del formulario de datos de la solicitud.
    */
   datosSolicitudFormState: DatosSolicitudFormState;
 
   /**
-   * Form data structure for merchandise information
-   * @type {MercanciaForm}
+   * Información del formulario de mercancías.
    */
   mercanciaForm: MercanciaForm;
 
   /**
-   * Array of configuration options for data tables
-   * @type {TablaOpcionConfig[]}
+   * Configuración de opciones para la tabla.
    */
   opcionConfigDatos: TablaOpcionConfig[];
 
   /**
-   * Array of SCIAN (Mexican industry classification) configuration data
-   * @type {TablaScianConfig[]}
+   * Configuración de SCIAN para la tabla.
    */
   scianConfigDatos: TablaScianConfig[];
 
   /**
-   * Array of merchandise table configuration data
-   * @type {TablaMercanciasDatos[]}
+   * Configuración de datos de la tabla de mercancías.
    */
   tablaMercanciasConfigDatos: TablaMercanciasDatos[];
 
   /**
-   * Array of selected configuration options
-   * @type {TablaOpcionConfig[]}
+   * Opciones seleccionadas en la tabla de configuración.
    */
   seleccionadoopcionDatos: TablaOpcionConfig[];
 
   /**
-   * Array of selected SCIAN configuration data
-   * @type {TablaScianConfig[]}
+   * Datos seleccionados de SCIAN en la tabla.
    */
   seleccionadoScianDatos: TablaScianConfig[];
 
   /**
-   * Array of selected merchandise table data
-   * @type {TablaMercanciasDatos[]}
+   * Datos seleccionados de la tabla de mercancías.
    */
   seleccionadoTablaMercanciasDatos: TablaMercanciasDatos[];
 
   /**
-   * Boolean flag indicating the collapsible options state (expanded/collapsed)
-   * @type {boolean}
+   * Estado de colapsabilidad de las opciones.
    */
   opcionesColapsableState: boolean;
 
   /**
-   * State object containing payment rights form data
-   * @type {PagoDerechosFormState}
+   * Estado del formulario de pago de derechos.
    */
   pagoDerechos: PagoDerechosFormState;
 
   /**
-   * Optional index of the currently selected tab
-   * @type {number | undefined}
+   * Identificador de la pestaña seleccionada (opcional).
    */
   tabSeleccionado?: number;
 }
@@ -185,7 +174,6 @@ export function createInitialState(): Tramite260208State {
       llavePago: '',
       fechaPago: '',
       importePago: '',
-      banco:''
     },
     tabSeleccionado: 1,
   };
@@ -224,14 +212,38 @@ export class Tramite260208Store extends Store<Tramite260208State> {
 
   /**
    * @method updateFabricanteTablaDatos
-   * @description Agrega nuevos fabricantes a la lista existente.
-   * @param {Fabricante[]} newFabricantes - Lista de nuevos fabricantes.
+   * @description
+   * Agrega nuevos fabricantes a la tabla de datos de fabricantes.
+   *
+   * @param {Fabricante[]} newFabricantes
+   * Lista de nuevos fabricantes a agregar.
    */
   public updateFabricanteTablaDatos(newFabricantes: Fabricante[]): void {
-    this.update((state) => ({
-      ...state,
-      fabricanteTablaDatos: [...state.fabricanteTablaDatos, ...newFabricantes],
-    }));
+    this.update((state) => {
+      const ACTUALIZADA = [...state.fabricanteTablaDatos];
+
+      newFabricantes.forEach((nuevo) => {
+        if (!nuevo?.id) {
+          nuevo.id =
+            ACTUALIZADA.length > 0
+              ? Math.max(...ACTUALIZADA.map((f) => f.id ?? 0)) + 1
+              : 1;
+        }
+
+        const INDICE = ACTUALIZADA.findIndex((f) => f.id === nuevo.id);
+
+        if (INDICE > -1) {
+          ACTUALIZADA[INDICE] = { ...ACTUALIZADA[INDICE], ...nuevo };
+        } else {
+          ACTUALIZADA.push(nuevo);
+        }
+      });
+
+      return {
+        ...state,
+        fabricanteTablaDatos: ACTUALIZADA,
+      };
+    });
   }
 
   /**
@@ -244,10 +256,7 @@ export class Tramite260208Store extends Store<Tramite260208State> {
   ): void {
     this.update((state) => ({
       ...state,
-      destinatarioFinalTablaDatos: [
-        // ...state.destinatarioFinalTablaDatos,
-        ...newDestinatarios,
-      ],
+      destinatarioFinalTablaDatos: [...newDestinatarios],
     }));
   }
 
@@ -259,7 +268,7 @@ export class Tramite260208Store extends Store<Tramite260208State> {
   public updateProveedorTablaDatos(newProveedores: Proveedor[]): void {
     this.update((state) => ({
       ...state,
-      proveedorTablaDatos: [...state.proveedorTablaDatos, ...newProveedores],
+      proveedorTablaDatos: [...newProveedores],
     }));
   }
 
@@ -271,7 +280,7 @@ export class Tramite260208Store extends Store<Tramite260208State> {
   public updateFacturadorTablaDatos(newFacturadores: Facturador[]): void {
     this.update((state) => ({
       ...state,
-      facturadorTablaDatos: [...state.facturadorTablaDatos, ...newFacturadores],
+      facturadorTablaDatos: [...newFacturadores],
     }));
   }
 
@@ -312,6 +321,7 @@ export class Tramite260208Store extends Store<Tramite260208State> {
     this.update((state) => ({
       ...state,
       tablaMercanciasConfigDatos,
+      seleccionadoTablaMercanciasDatos: [],
     }));
   }
   /**
