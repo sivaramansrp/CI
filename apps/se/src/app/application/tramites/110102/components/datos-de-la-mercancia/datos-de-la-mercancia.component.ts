@@ -2,12 +2,12 @@
  * Este componente maneja los datos de la mercancía, incluyendo la validación y la interacción con el estado global.
  */
 
-import { Component, EventEmitter, OnDestroy, OnInit, Output } from '@angular/core';
+import { ChangeDetectorRef, Component, EventEmitter, OnDestroy, OnInit, Output } from '@angular/core';
 import { CodigoRespuesta } from '../../../../core/enum/se-core-enum';
 import { CommonModule } from '@angular/common';
 
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { Subject, takeUntil } from 'rxjs';
+import { Subject, takeUntil, tap } from 'rxjs';
 
 import { CategoriaMensaje, ConsultaioQuery, Notificacion, NotificacionesComponent, REG_X, TituloComponent } from '@ng-mf/data-access-user';
 import { Tramite110102Query } from '../../estados/queries/tramite110102.query';
@@ -18,6 +18,7 @@ import { CriterioConfiguracionResponse } from '../../models/response/tratado-con
 import { DatosMercanciaService } from '../../service/datos-mercancia.service';
 
 import { ComercializadoresProductosResponse } from '../../models/response/comercializadores-productos-response.model';
+import { MercanciaStateService } from '../../service/mercancia-state.service';
 
 /**
  * Componente que gestiona los datos de la mercancía, incluyendo la validación de formularios y la interacción con el estado global.
@@ -70,6 +71,9 @@ export class DatosDeLaMercanciaComponent implements OnInit, OnDestroy {
    */
   @Output() mercancia = new EventEmitter<ComercializadoresProductosResponse>();
 
+  /** Variable para validar el formulario */
+  validarFormulario: boolean = false;
+
   /**
    * Constructor del componente.
    * @param {FormBuilder} formBuilder - Servicio para la creación de formularios reactivos.
@@ -82,7 +86,9 @@ export class DatosDeLaMercanciaComponent implements OnInit, OnDestroy {
     private tramiteStore: Tramite110102Store,
     private consultaQuery: ConsultaioQuery,
     private tramiteQuery: Tramite110102Query,
-    private datosMercanciaService: DatosMercanciaService
+    private datosMercanciaService: DatosMercanciaService,
+    private mercanciaState: MercanciaStateService,
+    private cd: ChangeDetectorRef
   ) {}
 
   /**
@@ -95,24 +101,27 @@ export class DatosDeLaMercanciaComponent implements OnInit, OnDestroy {
       .pipe(takeUntil(this.destruido$))
       .subscribe((estadoConsulta) => {
         this.esSoloLectura = estadoConsulta.readonly;
-        this.habilitarDeshabilitarFormulario();
       });
+
+    this.formularioDatosMercancia.statusChanges
+      .pipe(
+        takeUntil(this.destruido$),
+        tap((_value) => {
+          this.validarFormulario = this.formularioDatosMercancia.valid;
+        })
+      )
+      .subscribe();
   }
 
   /**
    * Inicializa el formulario con los valores del estado global.
    */
   inicializarFormulario(): void {
-    this.obtenerValoresDelEstado();
     this.formularioDatosMercancia = this.formBuilder.group({
       cveRegistroProductor: [
         this.estadoTramite?.cveRegistroProductor,
         [Validators.required, Validators.pattern(REG_X.SOLO_NUMEROS)],
       ],
-      solicitud: this.formBuilder.group({
-        idSolicitud: [null],
-        idSolicitudProductor: [''],
-      }),
     });
   }
 
@@ -126,27 +135,6 @@ export class DatosDeLaMercanciaComponent implements OnInit, OnDestroy {
     this.tramiteStore.establecerDatos({ [campo]: VALOR });
   }
 
-  /**
-   * Habilita o deshabilita el formulario según el estado de solo lectura.
-   */
-  habilitarDeshabilitarFormulario(): void {
-    if (this.esSoloLectura) {
-      this.formularioDatosMercancia.disable();
-    } else {
-      this.formularioDatosMercancia.enable();
-    }
-  }
-
-  /**
-   * Obtiene los valores del estado global y los asigna al formulario.
-   */
-  obtenerValoresDelEstado(): void {
-    this.tramiteQuery.selectTramite110102$
-      .pipe(takeUntil(this.destruido$))
-      .subscribe((estado) => {
-        this.estadoTramite = estado;
-      });
-  }
 
   /**
    * Verifica si un control del formulario es inválido.
@@ -211,6 +199,9 @@ export class DatosDeLaMercanciaComponent implements OnInit, OnDestroy {
         next: (response) => {
           if (response.codigo === CodigoRespuesta.EXITO) {
             this.respuestaRegistroProductos = response.datos;
+            if (this.respuestaRegistroProductos) {
+              this.mercanciaState.setMercancia(this.respuestaRegistroProductos);
+            }
             let PAYLOADRESPUESTA: CriterioConfiguracionRequest[] = [];
             if (this.respuestaRegistroProductos?.criterios_tratado) {
               PAYLOADRESPUESTA = this.respuestaRegistroProductos.criterios_tratado.map(item => ({
@@ -308,6 +299,21 @@ export class DatosDeLaMercanciaComponent implements OnInit, OnDestroy {
           }
         }
       });
+  }
+
+  /**
+ * @description Valida el formulario principal y el de otras instancias antes de continuar.
+ * Verifica que existan datos en la tabla y que los formularios asociados sean válidos.
+ * @method validarFormulario
+ * @returns {boolean} Retorna `true` si todos los formularios son válidos, de lo contrario `false`.
+ */
+  validarFormularioMercancia(): boolean {
+    if(this.formularioDatosMercancia.valid === false){
+      this.formularioDatosMercancia.markAllAsTouched();
+      this.cd.detectChanges();
+      return false;
+    }
+    return true;
   }
 
   /**
