@@ -103,11 +103,11 @@ export class GuardarAdapter_260202 {
               "cantidadUMTConComas": mercancia.cantidadUmtValor,
               "presentacion": mercancia.presentacion,
               "registroSanitarioConComas": mercancia.numeroRegistroSanitario,
-              "nombreCortoPaisOrigen": mercancia.paisOrigen.toString(),
-              "nombreCortoPaisProcedencia": mercancia.paisProcedencia.toString(),
+              "nombreCortoPaisOrigen": mercancia.paisOrigenDatosClave,
+              "nombreCortoPaisProcedencia": mercancia.paisProcedenciaDatosClave,
               "idTipoProductoTipoTramite": mercancia.tipoProducto,
               "tipoProductoDescripcionOtros": mercancia.especifique,
-              "nombreCortoUsoEspecifico": mercancia.usoEspecifico.toString(),
+              "nombreCortoUsoEspecifico": mercancia.usoEspecificoDatosClave,
               "fechaCaducidadStr": mercancia.fechaCaducidad
           }
       }),
@@ -380,6 +380,9 @@ export class GuardarAdapter_260202 {
             paisOrigen: m.nombreCortoPaisOrigen ?? "",
             paisProcedencia: m.nombreCortoPaisProcedencia ?? "",
             id: m.idMercancia || null,
+            paisOrigenDatosClave: m.nombreCortoPaisOrigen ?? "",
+            paisProcedenciaDatosClave: m.nombreCortoPaisProcedencia ?? "",
+            usoEspecificoDatosClave: m.nombreCortoUsoEspecifico ?? ""
         }));
     }
 
