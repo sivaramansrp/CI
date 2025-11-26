@@ -203,12 +203,11 @@ export class ControlPermisosPreviosExportacionComponent implements OnDestroy {
     const SOLICITANTE = this.controlPermisosPreviosExportacionService.getPayloadSolicitante();
     const REPRESENTACION_FEDERAL = this.controlPermisosPreviosExportacionService.getPayloadRepresentacionFederal(item);
     const ENTIDAD_FEDERATIVA = this.controlPermisosPreviosExportacionService.getPayloadEntidadFederativa(item);
-    console.log(this.solicitudState.idSolicitud);
     const PAYLOAD = {
       "tipoDeSolicitud": "guardar",
       "tipo_solicitud_pexim": item.defaultSelect,
       "mercancia": MERCANCIA,
-      "id_solcitud": this.solicitudState.idSolicitud,
+      "id_solcitud": this.solicitudState.idSolicitud || 0,
       "cve_regimen": item.regimen,
       "cve_clasificacion_regimen": item.clasificacion,
       "productor": PRODUCTOR,
@@ -235,7 +234,7 @@ export class ControlPermisosPreviosExportacionComponent implements OnDestroy {
               esValidObject(API_RESPONSE.datos)
             ) {
               if (getValidDatos(API_RESPONSE.datos.id_solicitud)) {
-                this.folioTemporal = API_RESPONSE.datos.idSolicitud || API_RESPONSE.datos.id_solicitud;
+                this.folioTemporal = API_RESPONSE.datos.id_solicitud;
                 this.tramite130217Store.setIdSolicitud(API_RESPONSE.datos.id_solicitud);
               } else {
                 this.tramite130217Store.setIdSolicitud(0);
