@@ -1,15 +1,9 @@
-import { Component, OnDestroy,OnInit, ViewChild } from '@angular/core';
-import {
-  Destinatario,
-  Fabricante,
-  Facturador,
-  Proveedor,
-  TercerosRelacionadosDatos,
-} from '../../../../shared/models/terceros-relacionados.model';
-import { Observable, Subject, map, takeUntil } from 'rxjs';
+import { Component, Input, OnDestroy,OnInit, ViewChild } from '@angular/core';
+import { Destinatario, Fabricante, Facturador, Proveedor } from '../../../../shared/models/terceros-relacionados.model';
+import { Subject, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { ConsultaioQuery } from '@ng-mf/data-access-user';
-import { ELEMENTOS_REQUERIDOS_TR } from '../../constants/medicamentos-destinados-uso.enum';
+import { ELEMENTOS_REQUERIDOS } from '../../constants/medicamentos-destinados-uso.enum';
 import { TercerosRelacionadosComponent } from '../../../../shared/components/terceros-relacionados/terceros-relacionados.component';
 import { Tramite260208Query } from '../../estados/tramite260208Query.query';
 import { Tramite260208Store } from '../../estados/tramite260208Store.store';
@@ -29,6 +23,14 @@ import { Tramite260208Store } from '../../estados/tramite260208Store.store';
   styleUrl: './terceros-relacionados-vista.component.scss',
 })
 export class TercerosRelacionadosVistaComponent implements OnInit, OnDestroy {
+  /**
+   * @property {TercerosRelacionadosComponent} TercerosRelacionadosComponent
+   * @description Referencia al componente hijo `TercerosRelacionadosComponent`
+   * que se utiliza para mostrar las tablas de terceros relacionados.
+   */
+  @ViewChild(TercerosRelacionadosComponent)
+  TercerosRelacionadosComponent!: TercerosRelacionadosComponent;
+
   /**
    * @property {Fabricante[]} fabricanteTablaDatos
    * Datos de la tabla de fabricantes.
@@ -54,32 +56,25 @@ export class TercerosRelacionadosVistaComponent implements OnInit, OnDestroy {
   facturadorTablaDatos: Facturador[] = [];
 
   /**
+   * @property {Subject<void>} destroy$
+   * Subject para cancelar suscripciones y evitar fugas de memoria.
+   * @private
+   */
+  private destroy$ = new Subject<void>();
+
+  /**
    * @property {string[]} elementosRequeridos
    * @description
-   * Lista de elementos requeridos para el trámite.
+   * Lista de elementos requeridos para completar el formulario o proceso.
    */
-  public readonly elementosRequeridos = ELEMENTOS_REQUERIDOS_TR;
+  public readonly elementosRequeridos = ELEMENTOS_REQUERIDOS;
 
-    /**
-     * @property {Subject<void>} destroy$
-     * Subject para cancelar suscripciones y evitar fugas de memoria.
-     * @private
-     */
-    private destroy$ = new Subject<void>();
-
-      /**
-   * Indica si el formulario está en modo solo lectura.
-   * Cuando es `true`, los campos del formulario no se pueden editar.
+  /**
+   * @property {boolean} formularioDeshabilitado
+   * @description
+   * Indica si el formulario está deshabilitado. Por defecto es `false`.
    */
-  public esFormularioSoloLectura: boolean = false; 
-
-     /**
-      * Observable de datos de terceros relacionados.
-      * @type {Observable<TercerosRelacionadosDatos>}
-      */
-    public tercerosDatos$!: Observable<TercerosRelacionadosDatos>;
-
-    @ViewChild ('tercerosRelacionados') tercerosRelacionados!: TercerosRelacionadosComponent;
+  @Input() formularioDeshabilitado: boolean = false;
 
   /**
    * @constructor
@@ -93,14 +88,7 @@ export class TercerosRelacionadosVistaComponent implements OnInit, OnDestroy {
     private tramiteQuery: Tramite260208Query,
     private consultaQuery: ConsultaioQuery
   ) {
-      this.consultaQuery.selectConsultaioState$
-      .pipe(
-        takeUntil(this.destroy$),
-        map((seccionState) => {
-          this.esFormularioSoloLectura = seccionState.readonly;
-        })
-      )
-      .subscribe();
+    // Constructor vacío, se inyectan los servicios necesarios para el funcionamiento del componente.
   }
 
   /**
@@ -109,7 +97,29 @@ export class TercerosRelacionadosVistaComponent implements OnInit, OnDestroy {
    * Suscribe los observables para mostrar los datos en la vista.
    */
   ngOnInit(): void {
-    this.tercerosDatos$ = this.tramiteQuery.getTercerosDatos$;
+    this.tramiteQuery.getFabricanteTablaDatos$
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((data) => {
+        this.fabricanteTablaDatos = data;
+      });
+
+    this.tramiteQuery.getDestinatarioFinalTablaDatos$
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((data) => {
+        this.destinatarioFinalTablaDatos = data;
+      });
+
+    this.tramiteQuery.getProveedorTablaDatos$
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((data) => {
+        this.proveedorTablaDatos = data;
+      });
+
+    this.tramiteQuery.getFacturadorTablaDatos$
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((data) => {
+        this.facturadorTablaDatos = data;
+      });
   }
 
   /**
@@ -121,22 +131,6 @@ export class TercerosRelacionadosVistaComponent implements OnInit, OnDestroy {
   addFabricantes(newFabricantes: Fabricante[]): void {
     this.tramiteStore.updateFabricanteTablaDatos(newFabricantes);
   }
-
-  /**
-     * @method eliminarFabricante
-     * @description Método público que elimina fabricantes específicos de la tabla de datos.
-     * Recibe la lista actualizada después de la eliminación y actualiza el store
-     * utilizando el tipo de actualización ELIMINAR para mantener la integridad de los datos.
-     * 
-     * @param {Fabricante[]} fabricante - Arreglo actualizado de fabricantes después
-     *   de realizar la operación de eliminación
-     * @returns {void}
-     * @access public
-     * @since 1.0.0
-     */
-    eliminarFabricante(fabricante: Fabricante[]): void {
-      this.tramiteStore.updateFabricanteTablaDatos(fabricante);
-    }
 
   /**
    * @method addDestinatarios
@@ -168,13 +162,28 @@ export class TercerosRelacionadosVistaComponent implements OnInit, OnDestroy {
     this.tramiteStore.updateFacturadorTablaDatos(newFacturadores);
   }
 
-  validarFormulario(): boolean {
+  /**
+   * @description
+   * Método que se encarga de validar el formulario contenido en
+   * el componente `TercerosRelacionadosComponent`.
+   *
+   * Utiliza el método `formularioSolicitudValidacion()` del componente hijo
+   * para comprobar si el formulario es válido.
+   * En caso de que el hijo no esté inicializado o devuelva `null/undefined`,
+   * se retorna `false` por defecto.
+   *
+   * @returns {boolean}
+   * - `true`: si el formulario es válido.
+   * - `false`: si el formulario no es válido o el componente hijo aún no está disponible.
+   */
+  validarContenedor(): boolean {
     return (
-      this.tercerosRelacionados?.formularioSolicitudValidacion() ?? false
+      this.TercerosRelacionadosComponent?.formularioSolicitudValidacion() ??
+      false
     );
   }
 
-   /**
+  /**
    * Método del ciclo de vida de Angular que se llama justo antes de que el componente sea destruido.
    *
    * Este método emite un valor a través del observable `destroyNotifier$` para notificar a los suscriptores
@@ -182,7 +191,7 @@ export class TercerosRelacionadosVistaComponent implements OnInit, OnDestroy {
    *
    * @returns {void} No retorna ningún valor.
    */
-   ngOnDestroy(): void {
+  ngOnDestroy(): void {
     this.destroy$.next();
     this.destroy$.complete();
   }
