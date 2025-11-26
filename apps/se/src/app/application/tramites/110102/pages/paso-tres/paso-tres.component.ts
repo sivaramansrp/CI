@@ -286,12 +286,17 @@ export class PasoTresComponent implements OnInit, OnDestroy {
           tipo_metodo:this.respuestaRegistroProductos.registro_cuestionario.mercancia_asociada.ide_tipo_metodo,
 
           /** Procesos solicitados para la mercancía */
-          procesos_solicitados: this.respuestaRegistroProductos.registro_cuestionario.mercancia_asociada.procesos_solicitados.map(item =>
-          ({
-            id_proceso_ceror: item.id_proceso_ceror,
-            cumple_proceso: item.cumple_proceso
-          })) || [],
-        }
+          procesos_solicitados: this.respuestaRegistroProductos
+          .registro_cuestionario
+          .mercancia_asociada
+          .procesos_solicitados === null
+          ? null
+          : this.respuestaRegistroProductos.registro_cuestionario.mercancia_asociada
+              .procesos_solicitados.map(proceso => ({
+                id_proceso_ceror: proceso.id_proceso_ceror,
+                cumple_proceso: proceso.cumple_proceso,
+              })),
+          }
       }
     };
     this.solicitudService.postGenerarCadenaOriginal(this.solicitudState.id_solcitud, PAYLOAD)

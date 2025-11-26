@@ -155,7 +155,7 @@ export interface MercanciaRequest {
     tipo_metodo: string | null;
 
     /** Procesos solicitados para la mercancía */
-    procesos_solicitados: ProcesoSolicitadoRequest[];
+    procesos_solicitados: ProcesoSolicitadoRequest[] | null;
 }
 
 /**
