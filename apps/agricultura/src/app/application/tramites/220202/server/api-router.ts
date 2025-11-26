@@ -92,9 +92,15 @@ export const API_GET_TABS = (TRAMITE: string, IDSOLICITUD: string, PROCESO?: num
 
 /**
  * API para Consultar solicitud del tramite 220202.
- * @see https://api-v30.cloud-ultrasist.net/api/sat-t220202/swagger-ui/index.html#/Consulta-Solicitudes
+ * @see https://api-v30.cloud-ultrasist.net/api/sat-t220202/swagger-ui/index.html#/Consulta-Solicitud/consulta-datos-solicitud_2
  */
 export const API_GET_CONSULTA_SOLICITUD = (TRAMITE: string, NUMFOLIOTRAMITE: string) : string => `sat-t${TRAMITE}/consulta/tramite/${NUMFOLIOTRAMITE}/datos-solicitud`;
+
+/**
+ * API para Consultar solicitud del tramite 220202.
+ * @see https://api-v30.cloud-ultrasist.net/api/sat-t220202/swagger-ui/index.html#/Consulta-Solicitud/consulta-movilizacion-nacional_2
+ */
+export const API_GET_CONSULTA_MOVILIZACION_NACIONAL = (TRAMITE: string, NUMFOLIOTRAMITE: string) : string => `sat-t${TRAMITE}/consulta/tramite/${NUMFOLIOTRAMITE}/movilizacion-nacional`;
 
 /**
  * ID de la resolucion.

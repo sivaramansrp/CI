@@ -544,7 +544,7 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
           FORMA_VALIDA_ACTUALIZADA
         );
       });
-    if (this.ocultarForm === true) {
+    if (this.ocultarForm) {
       this.obtenerTodosLosDatosDeLaLista();
       this.createFromFields();
       this.initActionFormBuild();

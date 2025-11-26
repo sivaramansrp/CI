@@ -1,10 +1,14 @@
-import { HttpClient } from '@angular/common/http';
-import { Injectable } from '@angular/core';
-import { ENVIRONMENT } from '@ng-mf/data-access-user';
-import { API_GET_CONSULTA_SOLICITUD } from '../../../server/api-router';
-import { Observable } from 'rxjs';
+import {
+  API_GET_CONSULTA_MOVILIZACION_NACIONAL,
+  API_GET_CONSULTA_SOLICITUD,
+} from '../../../server/api-router';
 import { BaseResponse } from '@libs/shared/data-access-user/src/core/models/shared/base-response.model';
 import { ConsultaSolicitudResponse } from '../../../models/220202/response/consultar-solicitud-response.model';
+import { ConsultarMovilizacionResponse } from '../../../models/220202/response/consultar-movilizacion-response.model';
+import { ENVIRONMENT } from '@ng-mf/data-access-user';
+import { HttpClient } from '@angular/common/http';
+import { Injectable } from '@angular/core';
+import { Observable } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -27,7 +31,7 @@ export class ConsultaSolicitudService {
   }
 
   /**
-   * Método para consultar los criterios de una solicitud de dictamen.
+   * Método para consultar el detalle de la pestaña datos de la solicitud mediante un numero de folio.
    * @param tramite - Identificador del trámite asociado al requerimiento.
    * @param numFolio Número de folio del trámite a consultar.
    * @returns Observable que emite la respuesta de la consulta.
@@ -35,5 +39,16 @@ export class ConsultaSolicitudService {
   getDetalleSolicitud(tramite: number,numFolio: string): Observable<BaseResponse<ConsultaSolicitudResponse>> {
     const ENDPOINT = `${this.host}${API_GET_CONSULTA_SOLICITUD(tramite.toString(), numFolio)}`;
     return this.http.get<BaseResponse<ConsultaSolicitudResponse>>(ENDPOINT);
+  }
+
+  /**
+   * Método para consultar el detalle de la pestaña movilizacion navional mediante un numero de folio.
+   * @param tramite - Identificador del trámite asociado al requerimiento.
+   * @param numFolio Número de folio del trámite a consultar.
+   * @returns Observable que emite la respuesta de la consulta.
+   */
+  getDetalleMovilizacion(tramite: number,numFolio: string): Observable<BaseResponse<ConsultarMovilizacionResponse>> {
+    const ENDPOINT = `${this.host}${API_GET_CONSULTA_MOVILIZACION_NACIONAL(tramite.toString(), numFolio)}`;
+    return this.http.get<BaseResponse<ConsultarMovilizacionResponse>>(ENDPOINT);
   }
 }
