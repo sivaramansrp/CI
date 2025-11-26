@@ -811,9 +811,55 @@ export class SolicitudComponent
       this.tramite5701Store.setDescripcionGenerica(data.mercancia.descripcion_generica ?? '');
       this.tramite5701Store.setJustificacion(data.mercancia.justificacion ?? '');
     }
+    // Mapea y actualiza los pedimentos en el store
+    if(data.pedimentos && data.pedimentos.length > 0) {
+        const arregloPedimentos: Pedimento[] = [];
+        data.pedimentos.forEach((pedimento) => {
+          arregloPedimentos.push({
+            idPedimento: pedimento.id_pedimento,
+            patente: pedimento.patente.toString(),
+            pedimento: parseInt(pedimento.pedimento),
+            aduana: parseInt(pedimento.aduana),
+            tipoPedimento: 0,
+            estadoPedimento: pedimento.estado_pedimento,
+            subEstadoPedimento: pedimento.sub_estado_pedimento,
+            descTipoPedimento: '',
+            numero: pedimento.numero_pedimento,
+            comprobanteValor: pedimento.cove,
+            pedimentoValidado: ''
 
-}
+        });
+        this.tramite5701Store.setPedimentos(arregloPedimentos);
+        this.changeAgregarPedimento(arregloPedimentos);
+      });
+    }
+    
+    // Setea datos del transporte despacho
+    if(data.transporte_despacho) {
+      const vehiculos: TransporteDespacho[] = [];
+      /**
+       * setear datos de transporte despacho
+       */
+      this.changeSeleccionTipoVehiculo(data.transporte_despacho.tipo_transporte ?? '');
+      const vehiculo: TransporteDespacho = {
 
+        tipo_transporte: data.transporte_despacho.tipo_transporte ?? '',
+        placas_transporte: data.transporte_despacho.placas ?? '',
+        contenedor_transporte: data.transporte_despacho.contenedor ?? '',
+        observaciones: data.transporte_despacho.observaciones ?? '',
+        modelo_transporte: data.transporte_despacho.modelo ?? '',
+        marca_transporte: data.transporte_despacho.marca ?? '',
+        emp_transportista: data.transporte_despacho.empresa_transportista ?? '',
+        fecha_porte: data.transporte_despacho.fecha_carta_porte ?? '',
+
+      };
+      vehiculos.push(vehiculo);
+      this.tramite5701Store.setTransporte(vehiculos);
+      this.changeAgregarVehiculo(vehiculos, 'vehiculo');
+     
+    };
+    
+  }
 
   // Método para forzar validación
   validarFormulario(): boolean {

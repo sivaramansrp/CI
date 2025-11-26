@@ -158,16 +158,15 @@ export class PagoDeDerechoComponent implements OnDestroy, OnInit, AfterViewInit,
     }
     this.sharedService.dataPagoDerechos$.pipe(takeUntil(this.destroyNotifier$)).subscribe((data) => {
       if (data) {
-        console.warn('Prellenado de Pago de Derechos recibido en PagoDeDerechoComponent:', data);
         this.pagoForm.patchValue({
-          exentoPago: data.exento_pago || '',
+          exentoPago: data.ide_motivo_exento_pago || '',
           justificacion: '',
           claveReferencia: data.cve_referencia_bancaria,
           cadenaDependencia: data.cadena_pago_dependencia,
-          banco: data.cve_banco,
+          banco: data.cve_banco || '',
           llavePago: data.llave_pago || '',
           importePago: data.imp_pago,
-          fechaPago: data.fec_pago
+          fechaPago: data.fec_pago || ''
         });
       }
     });
@@ -276,24 +275,24 @@ export class PagoDeDerechoComponent implements OnDestroy, OnInit, AfterViewInit,
     if (!fecha) {
       return;
     }
-
+    
     const FECHA_PARTES = fecha.split('/');
     if (FECHA_PARTES.length !== 3) {
       return;
     }
-
+    
     const DIA = parseInt(FECHA_PARTES[0], 10);
     // Los meses en JavaScript son 0-indexed
     const MES = parseInt(FECHA_PARTES[1], 10) - 1;
     const ANIO = parseInt(FECHA_PARTES[2], 10);
-
+    
     const FECHA_SELECCIONADA = new Date(ANIO, MES, DIA);
     const FECHA_ACTUAL = new Date();
-
+    
     // Normalizar las fechas para comparar solo días (sin horas)
     FECHA_SELECCIONADA.setHours(0, 0, 0, 0);
     FECHA_ACTUAL.setHours(0, 0, 0, 0);
-
+    
     const CONTROL = this.pagoForm.get('fechaPago');
     if (CONTROL) {
       if (FECHA_SELECCIONADA > FECHA_ACTUAL) {
@@ -368,7 +367,6 @@ export class PagoDeDerechoComponent implements OnDestroy, OnInit, AfterViewInit,
       llavePago: '',
       banco: '',
       justificacion: ''
-
     });
     setTimeout(() => {
       this.setFecha = true;

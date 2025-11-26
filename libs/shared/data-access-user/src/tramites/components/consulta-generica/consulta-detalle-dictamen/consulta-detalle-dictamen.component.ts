@@ -101,6 +101,18 @@ export class ConsultaDetalleDictamenComponent implements OnInit, OnChanges, OnDe
   }
 
   /**
+   * Formatea una fecha en formato string reemplazando los guiones por barras.
+   * @param fecha Fecha en formato string que se desea formatear.
+   * @returns Fecha formateada con los guiones reemplazados por barras.
+   */
+  static formatoFecha(fecha: string): string {
+    if (!fecha) {
+      return '';
+    }
+    return fecha.replace(/-/g, '/');
+  }
+
+  /**
    * Método para obtener la información de la solicitud para detalle de dictamen.
    * @returns {void}
    */
@@ -114,12 +126,12 @@ export class ConsultaDetalleDictamenComponent implements OnInit, OnChanges, OnDe
       this.detalleForm.patchValue({
         estatus: SOLICITUDDATA.estado_dictamen,
         sentidoDictamen: SOLICITUDDATA.sentido_dictamen,
-        fechaCreacion: SOLICITUDDATA.fecha_creacion,
+        fechaCreacion: ConsultaDetalleDictamenComponent.formatoFecha(SOLICITUDDATA.fecha_creacion),
         tipoDictamen: SOLICITUDDATA.tipo_dictamen,
         dictaminadoPor: SOLICITUDDATA.dictaminado,
-        fechaGeneracion: SOLICITUDDATA.fecha_emision,
+        fechaGeneracion: ConsultaDetalleDictamenComponent.formatoFecha(SOLICITUDDATA.fecha_emision),
         autorizadoPor: SOLICITUDDATA.autorizado,
-        fechaAutorizacion: SOLICITUDDATA.fecha_autorizacion,
+        fechaAutorizacion: ConsultaDetalleDictamenComponent.formatoFecha(SOLICITUDDATA.fecha_autorizacion),
         justificacionDictamen: SOLICITUDDATA.justificacion,
       });
       

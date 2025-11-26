@@ -1,10 +1,11 @@
-import { Component, Input, ViewChild } from '@angular/core';
-import { Observable, map } from 'rxjs';
+import { Component, Input, OnInit, ViewChild } from '@angular/core';
+import { Observable, Subject, map, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { ConsultaioQuery } from '@libs/shared/data-access-user/src';
 import { ID_PROCEDIMIENTO } from '../../constantes/permiso-sanitario-importacion-medicamentos.enum';
 import { PagoDeDerechosComponent } from '../../../../shared/components/pago-de-derechos/pago-de-derechos.component';
 import { PagoDerechosFormState } from '../../../../shared/models/terceros-relacionados.model';
+import { Tramite260204Query } from '../../estados/queries/tramite260204Query.query';
 import { Tramite260204Store } from '../../estados/stores/tramite260204Store.store';
 
 /**
@@ -40,7 +41,7 @@ import { Tramite260204Store } from '../../estados/stores/tramite260204Store.stor
   templateUrl: './pago-de-derechos-contenedora.component.html',
   styleUrl: './pago-de-derechos-contenedora.component.scss',
 })
-export class PagoDeDerechosContenedoraComponent {
+export class PagoDeDerechosContenedoraComponent implements OnInit {
     /**
    * @property {boolean} formularioDeshabilitado
    * @description
@@ -70,6 +71,7 @@ export class PagoDeDerechosContenedoraComponent {
   */
   esFormularioSoloLectura!: Observable<boolean>;
 
+    private destroyNotifier$: Subject<void> = new Subject();
   /**
    * @property {number} idProcedimiento
    * @description Identificador del procedimiento.
@@ -83,7 +85,8 @@ export class PagoDeDerechosContenedoraComponent {
    * @param {ConsultaioQuery} consultaQuery - Query para obtener el estado de la sección de consulta.
    */
   constructor(public tramiteStore: Tramite260204Store,
-         private consultaQuery: ConsultaioQuery 
+         private consultaQuery: ConsultaioQuery,
+          private tramiteQuery: Tramite260204Query
   ){
    this.pagoDerechos = this.tramiteStore.getValue().pagoDerechos;
    this.esFormularioSoloLectura = this.consultaQuery.selectConsultaioState$
@@ -97,6 +100,14 @@ export class PagoDeDerechosContenedoraComponent {
        );
   }
 
+
+   ngOnInit(): void {
+    this.tramiteQuery.selectTramiteState$
+          .pipe(takeUntil(this.destroyNotifier$))
+          .subscribe((data) => {
+            this.pagoDerechos = data.pagoDerechos;
+          });
+  }
   /**
    * Actualiza la información de pago de derechos en el store del trámite.
    *

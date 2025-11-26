@@ -2,7 +2,7 @@ import { AfterViewInit,Input,OnInit } from '@angular/core';
 import { AlertComponent, InputCheckComponent, REGEX_LOCALIDAD, REGEX_SOLO_DIGITOS } from '@libs/shared/data-access-user/src';
 import { Component, ElementRef, EventEmitter, Output, ViewChild } from '@angular/core';
 
-import { AbstractControl, FormBuilder, FormControl } from '@angular/forms';
+import { FormBuilder, FormControl } from '@angular/forms';
 import { ID_PROCEDIMIENTO, OPCIONES_DE_BOTON_DE_RADIO } from '../../enums/domicilio-del-establecimiento.enum';
 import { ConsultaioQuery} from "@ng-mf/data-access-user";
 
@@ -42,6 +42,8 @@ import { Tramite260912Query } from '../../estados/tramite-260912.query';
 
 import { Validators } from '@angular/forms';
 
+import{ ManifiestosComponent} from '../../../../shared/components/manifiestos-declaraciones/manifiestos-declaraciones.component'
+
 
 /**
  * Componente para gestionar el domicilio del establecimiento.
@@ -78,7 +80,8 @@ import { Validators } from '@angular/forms';
     TablaDinamicaComponent,
     InputRadioComponent,
     InputCheckComponent,
-    DatosMercanciaContenedoraComponent
+    DatosMercanciaContenedoraComponent,
+    ManifiestosComponent
   ],
   /** @description Servicios específicos provistos por este componente */
   providers: [DomicilioDelEstablecimientoService],
@@ -105,7 +108,7 @@ export class DomicilioDelEstablecimientoComponent implements OnInit, OnDestroy, 
    */
   @Input() tipoTramite: string = '';
 
-  @Input() emitirSeleccionEstablecimiento : boolean = false;
+  @Input() emitirSeleccionEstablecimiento : boolean = true;
 
 
  /**
@@ -1760,25 +1763,5 @@ public markMercanciasTableTouched(): void {
   // O podrías marcar un campo de error en el formulario principal si lo deseas
   this.mercanciasTableTouched = true;
 }
-/**
-   * Valida si el campo de un formulario no contiene errores
-   * @param {AbstractControl} control  : Control del formulario
-   * @param {string} campo  : Nombre del campo a validar, si el control es un FormGroup
-   * @returns {boolean | null} : Retorna true si el campo contiene errores y ha sido tocado, de lo contrario retorna false
-   */
- 
-  public static isValid(control: AbstractControl, campo?: string): boolean | null {
-    if (!control) {
-      return null;
-    }
-    if (control instanceof FormGroup && campo) {
-      const CHILD = control.controls[campo];
-      if (!CHILD) {
-        return null;
-      }
-      return CHILD.errors && CHILD.touched;
-    }
-    return control.errors && control.touched;
-  }
-
-  }
+  
+}

@@ -25,9 +25,12 @@
   [modificarPartidasDelaMercanciaForm]="modificarPartidasDelaMercanciaForm"
   [formForTotalCount]="formForTotalCount"
   [tableHeaderData]="tableHeaderData"
+  [mostrarMensajeMercanciaRequerida]="true"
+  [mostrarMensajeFraccionArancelariaRequerida]="true"
+  [isFraccionTIGIE]="true"
   [tableBodyData]="tableBodyData"
   [mostrarTabla]="mostrarTabla"
-  [fraccionDescripcionPartidasDeLaMercancia]="fraccionDescription"
+  [fraccionDescripcionPartidasDeLaMercancia]="fraccionDescripcionPartidasDeLaMercancia"
   [esFormularioSoloLectura] ="esFormularioSoloLectura"
   [mostrarErrores]="mostrarErroresPartidas"
   (filaSeleccionadaChange)="manejarlaFilaSeleccionada($event)"
@@ -50,11 +53,13 @@
 [esFormularioSoloLectura] ="esFormularioSoloLectura"
 (bloqueCambiar)="enCambioDeBloque($event)"
 (setValoresStoreEvent)="setValoresStore($event)"
+(fechasSeleccionadas)="onFechasSeleccionadasChange($event)"
 ></app-pais-procendencia>
 
 <app-representacion 
 [frmRepresentacionForm]="frmRepresentacionForm"
 [entidadFederativa]="entidadFederativa"
+[idProcedimiento] = "130112"
 [representacionFederal]="representacionFederal"
 [esFormularioSoloLectura] ="esFormularioSoloLectura"
 (setValoresStoreEvent)="setValoresStore($event)">

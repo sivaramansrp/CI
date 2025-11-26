@@ -11,19 +11,41 @@
     </div>
 
     <div class="row">
-      @switch (indice) { @case (1) {
-      <app-paso-uno></app-paso-uno>
-      } @case (2) {
-      <!-- <app-paso-dos></app-paso-dos> -->
-        <paso-firma [idSolicitud]="idSolicitudState" [procedure]="90202" [procedureUrl]="'ampliacion-prosec-productor/prosec'"></paso-firma>
-      } @case (3) {
-      <app-paso-tres></app-paso-tres>
-      } }
-
-      <btn-continuar
-        [datos]="datosPasos"
-        (continuarEvento)="getValorIndice($event)"
-      ></btn-continuar>
+      @switch (indice) { 
+        @case (1) {
+          <app-paso-uno></app-paso-uno>
+        } 
+        @case (2) {
+          <!-- Step 2: Show conditional buttons for file upload and continue -->
+          <div class="mt-5 mb-3 d-flex justify-content-end">
+            <button
+              type="button"
+              class="btn btn-default"
+              (click)="anterior()"
+              *ngIf="seccionCargarDocumentos"
+            >
+              Anterior
+            </button>
+            <button
+              class="btn btn-primary ms-3"
+              (click)="seccionCargarDocumentos ? onClickCargaArchivos() : siguiente()"
+              [disabled]="!activarBotonCargaArchivos && seccionCargarDocumentos"
+            >
+              {{ seccionCargarDocumentos ? 'Cargar archivos' : 'Continuar' }}
+            </button>
+          </div>
+        } 
+        @case (3) {
+          <app-paso-tres></app-paso-tres>
+        } 
+      }
+      <!-- Keep btn-continuar for steps other than 2 -->
+      <ng-container *ngIf="indice !== 2">
+        <btn-continuar
+          [datos]="datosPasos"
+          (continuarEvento)="getValorIndice($event)"
+        ></btn-continuar>
+      </ng-container>
     </div>
   </div>
 </div>

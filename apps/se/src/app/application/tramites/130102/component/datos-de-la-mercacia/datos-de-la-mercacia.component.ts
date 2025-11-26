@@ -33,8 +33,8 @@ import { Solicitud130102State, Tramite130102Store } from '../../../130102/estado
 import { Tramite130102Query } from '../../estados/queries/tramite130102.query';
 
 import { Subject, map, takeUntil } from 'rxjs';
-import { FormularioRegistroService } from '../../services/octava-temporal.service';
 import { CatOctavaTemporalService } from '../../services/cat-octava-temporal.service';
+import { FormularioRegistroService } from '../../services/octava-temporal.service';
 
 
 /**
@@ -204,8 +204,8 @@ export class DetosDelLaMarcaciaComponent implements OnInit , OnDestroy {
           DetosDelLaMarcaciaComponent.noLeadingSpacesValidator
         ],
       ],
-      fraccionArancelaria: [this.solicitudState?.fraccionArancelaria, [Validators.required]],
-      unidadMedida: [this.solicitudState?.unidadMedida, [Validators.required]],
+      fraccionArancelaria: [this.solicitudState?.fraccionArancelaria || null, [Validators.required]],
+      unidadMedida: [this.solicitudState?.unidadMedida || null, [Validators.required]],
       cantidad: [
         this.solicitudState?.cantidad,
         [

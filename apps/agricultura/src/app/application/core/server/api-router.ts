@@ -171,7 +171,7 @@ export const API_GET_CATALOGO_ESPECIES = (TRAMITE: string) : string => `sat-t${T
  * Servicio que permite consultar las entidades federativas ordenados por el nombre ascendente.
  * @see https://api-v30.cloud-ultrasist.net/api/sat-t220201/swagger-ui/index.html#/Catalogos/consulta-entidades-federativas
  */
-export const API_GET_CATALOGO_ENTIDADES_FEDERATIVAS_GENERAL = (TRAMITE: string) : string => `sat-t${TRAMITE}/catalogo/entidades-federativas`;
+export const API_GET_CATALOGO_ENTIDADES_FEDERATIVAS_GENERAL = (TRAMITE: string, PAIS: string = 'MEX') : string => `sat-t${TRAMITE}/catalogo/pais/${PAIS}/entidades-federativas`;
 
 /**
  * Servicio que permite consultar los datos de las delegaciones o municipios por medio de la clave de la entidad federativa.
@@ -329,15 +329,6 @@ export const API_GET_SOLICITUDES_PAGO_DERECHOS = (TRAMITE: string, esPrellenado:
  */
 export const API_POST_CADENA_ORIGINAL = (TRAMITE: string, IDSOLICITUD: string) : string => `sat-t${TRAMITE}/solicitud/${IDSOLICITUD}/generar-cadena-original`;
 
-
-/**
- * Genera la ruta de la API para guardar una solicitud relacionada con un trámite específico.
- *
- * @param TRAMITE - Identificador del trámite que se utilizará en el endpoint.
- * @returns La ruta de la API como cadena de texto.
- */
-export const API_POST_GUARDAR = (TRAMITE: string) : string => `sat-t${TRAMITE}/solicitud/guardar`;
-
 /**
  * Genera la ruta de la API para obtener los documentos opcionales de una solicitud.
  *
@@ -362,7 +353,4 @@ export const API_GET_DOCUMENTOS_OPCIONALES = (TRAMITE: string, idSolicitud: numb
 }
 
 
-/**
- * API para firmar una solicitud de un trámite específico.
- */
-export const API_POST_FIRMA = (TRAMITE: string, IDSOLICITUD: string) : string => `sat-t${TRAMITE}/solicitud/${IDSOLICITUD}/firmar`;
+export const API_POST_GUARDAR = (TRAMITE: string) : string => `sat-t${TRAMITE}/solicitud/guardar`;

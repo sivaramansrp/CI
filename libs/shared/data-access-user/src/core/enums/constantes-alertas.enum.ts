@@ -130,6 +130,11 @@ export const MENSAJE_ALERTA_TRATADOS = {
 `,
 };
 
+export const FIRMAR_SOLICITUD = {
+  MENSAJE: `<p>La solicitud ha quedado registrada con el numero temporal {NUMERO}. Éste no tiene validez legal y sirve solamente para efectos de
+  identificar tu solicitud. Un folio oficial le será asignado a la solicitud al momento en que ésta sea firmada.</p>`,
+};
+
 export const INSTANCIA = {
   MENSAJE: `<p>Seleccione al menos 1 de las opciones por lo cual cumple el criterio de otras instancias.</p>`,
 };

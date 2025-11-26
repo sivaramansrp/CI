@@ -690,7 +690,8 @@
           [mercanciaFormState]="mercanciaFormState || {}"
           [datoSeleccionado]="mercanciaSeleccionada"
           (cerrarModal)="cerrarMercanciaModal()"
-          (mercanciaSeleccionado)="onMercanciaSeleccionado($event)">        
+          (mercanciaSeleccionado)="onMercanciaSeleccionado($event)"
+          [detalleMercancia]="detalleMercancia">        
         </app-datos-mercancia>
       </div>
     </div>

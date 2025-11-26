@@ -1,18 +1,22 @@
-import { AlertComponent, AnexarDocumentosComponent, BtnContinuarComponent, FirmaElectronicaComponent, SolicitanteComponent, TituloComponent, WizardComponent } from '@libs/shared/data-access-user/src';
+import { AlertComponent, AnexarDocumentosComponent, BtnContinuarComponent, FirmaElectronicaComponent, NotificacionesComponent, PasoCargaDocumentoComponent, PasoFirmaComponent, SolicitanteComponent, TituloComponent, WizardComponent } from '@libs/shared/data-access-user/src';
 import { BsModalService } from 'ngx-bootstrap/modal';
 import { CommonModule } from '@angular/common';
-import { DatosDeLaSolicitudComponent } from '../components/datos-de-la-solicitud/datos-de-la-solicitud.component';
 import { ImportacionesAgropecuariasRoutingModule } from './importaciones-agropecuarias-routing.module';
 import { ImportacionesAgropecuariasService } from '../services/importaciones-agropecuarias.service';
 import { NgModule } from '@angular/core';
-import { PasoDosComponent } from '../pages/paso-dos/paso-dos.component';
-import { PasoTresComponent } from '../pages/paso-tres/paso-tres.component';
 import { PasoUnoComponent } from '../pages/paso-uno/paso-uno.component';
+import { SolicitudComponent } from '../components/solicitud/solicitud.component';
 import { TodosPasosComponent } from '../pages/todos-pasos/todos-pasos.component';
 import { provideHttpClient } from '@angular/common/http';
 
+/**
+ * Módulo para gestionar las importaciones agropecuarias.
+ */
 @NgModule({
-  declarations: [TodosPasosComponent,PasoUnoComponent,PasoDosComponent,PasoTresComponent],
+  declarations: [
+    TodosPasosComponent,
+    PasoUnoComponent
+  ],
   imports: [
     CommonModule,
     ImportacionesAgropecuariasRoutingModule,
@@ -23,7 +27,10 @@ import { provideHttpClient } from '@angular/common/http';
     AnexarDocumentosComponent,
     FirmaElectronicaComponent,
     SolicitanteComponent,
-    DatosDeLaSolicitudComponent
+    SolicitudComponent,
+    PasoCargaDocumentoComponent,
+    PasoFirmaComponent,
+    NotificacionesComponent
   ],
   providers: [
     provideHttpClient(),
@@ -31,4 +38,14 @@ import { provideHttpClient } from '@angular/common/http';
     ImportacionesAgropecuariasService
   ],
 })
+/**
+ * Clase ImportacionesAgropecuariasModule
+ * Módulo que encapsula la funcionalidad relacionada con las importaciones agropecuarias.
+ * Incluye componentes, servicios y rutas específicas para este trámite.
+ * @export
+ * @class ImportacionesAgropecuariasModule
+ * @typedef {ImportacionesAgropecuariasModule}
+ * @description Módulo que encapsula la funcionalidad relacionada con las importaciones agropecuarias.
+ * Incluye componentes, servicios y rutas específicas para este trámite.
+ */
 export class ImportacionesAgropecuariasModule { }

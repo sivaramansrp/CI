@@ -1,9 +1,14 @@
-import { Adquiriente, Complementaria, DetallesLicitacion, LicitacionesDisponibles } from '@libs/shared/data-access-user/src/tramites/constantes/120501/licitaciones-disponibles-table-data.enum';
+import { CATALOGO_ENTIDADES_FEDERATIVAS, CATALOGO_REPRESENTACION_FEDERAL, COMUN_URL, Catalogo, JSONResponse } from '@libs/shared/data-access-user/src';
 import { Solicitud120501State, Tramite120501Store } from '../estados/tramites/tramite120501.store';
-import { Catalogo } from '@libs/shared/data-access-user/src';
+import { catchError, map, throwError } from 'rxjs';
+import { BaseResponse } from '@libs/shared/data-access-user/src/core/models/shared/base-response.model';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { LicitacionesDisponibles } from '@libs/shared/data-access-user/src/tramites/constantes/120501/licitaciones-disponibles-table-data.enum';
 import { Observable } from 'rxjs/internal/Observable';
+import { PROC_120501 } from '../servers/api-route';
+import { ParticipantesData } from '../models/solicitud.model';
+import { Tramite120501Query } from '../estados/queries/tramite120501.query';
 
 /**
  * Servicio encargado de gestionar las operaciones relacionadas con las licitaciones disponibles,
@@ -19,12 +24,24 @@ import { Observable } from 'rxjs/internal/Observable';
 export class LicitacionesDisponiblesService {
 
   /**
+   * URL base del host para todas las consultas de catálogos.
+   *
+   * Esta propiedad almacena la URL base configurada desde las variables de entorno
+   * y se utiliza como prefijo para construir todos los endpoints de los catálogos.
+   *
+   * @type {string}
+   * @readonly
+   * @since 1.0.0
+   */
+  host: string;
+
+  /**
    * Constructor del servicio.
    * Servicio HttpClient para realizar peticiones HTTP.
    * Store para gestionar el estado del trámite 120501.
    */
-  constructor(private http: HttpClient, private tramite120501Store: Tramite120501Store) { 
-    // Lógica de inicialización si es necesario
+  constructor(private http: HttpClient, private tramite120501Store: Tramite120501Store, private tramiteQuery: Tramite120501Query) {
+    this.host = `${COMUN_URL.BASE_URL}`;
   }
 
   /**
@@ -34,40 +51,89 @@ export class LicitacionesDisponiblesService {
     return this.http.get<LicitacionesDisponibles[]>('assets/json/120501/licitaciones-disponibles.json');
   }
 
-  /**
-   * Obtiene el catálogo de entidades federativas.
+  /*
+    * Obtiene el catálogo de entidades federativas.
+    * @param {string} tramite - El ID del trámite.
+    * @returns {Observable<BaseResponse<Catalogo[]>>}
+    */
+  entidadesFederativasCatalogo(tramite: string): Observable<BaseResponse<Catalogo[]>> {
+    const ENDPOINT = `${this.host}${CATALOGO_ENTIDADES_FEDERATIVAS(tramite)}`;
+    return this.http.get<BaseResponse<Catalogo[]>>(ENDPOINT);
+  }
+
+  /*
+   * Obtiene el catálogo de representación federal.
+   * @param {string} tramite - El ID del trámite.
+   * @param {string} cveEntidad - La clave de la entidad.
+   * @returns {Observable<BaseResponse<Catalogo[]>>}
    */
-  getEntidadFederativa(): Observable<Catalogo[]> {
-    return this.http.get<Catalogo[]>('assets/json/120501/entidad-federativa.json');
+  representacionFederalCatalogo(tramite: string, cveEntidad: string): Observable<BaseResponse<Catalogo[]>> {
+    const ENDPOINT = `${this.host}${CATALOGO_REPRESENTACION_FEDERAL(tramite, cveEntidad)}`;
+    return this.http.get<BaseResponse<Catalogo[]>>(ENDPOINT);
   }
 
   /**
-   * Obtiene el catálogo de representaciones federales.
+    * Obtiene todos los datos del estado almacenado en el store.
+    * @returns {Observable<TramiteState>} Observable con todos los datos del estado.
+    */
+    getAllState(): Observable<Solicitud120501State> {
+      return this.tramiteQuery.selectSolicitud$;
+    }
+    
+  /**
+   *  Obtiene las licitaciones disponibles para un RFC específico.
+   * @param RFC  - El RFC del participante.
+   * @returns  Observable con los datos de las licitaciones disponibles.
    */
-  getRepresentacionFederal(): Observable<Catalogo[]> {
-    return this.http.get<Catalogo[]>('assets/json/120501/representacion-federal.json');
+  getLicitacionesDisponiblesData(RFC: string): Observable<JSONResponse> {
+      const ENDPOINT = `${PROC_120501.PREFILLED}/` + RFC;
+      return this.http.get<JSONResponse>(ENDPOINT);
+    }
+
+    /**
+     *  Obtiene los datos asociados a un RFC y una licitación específica.
+     * @param RFC  - El RFC del participante.
+     * @param idLicitacion  - El ID de la licitación.
+     * @returns  Observable con los datos del participante.
+     */
+  fetchRFCData(RFC: string, idLicitacion: number): Observable<ParticipantesData> {
+    const ENDPOINT = `${PROC_120501.FETCH_RFC}/` + RFC + '/' + idLicitacion;
+
+    return this.http.get<BaseResponse<ParticipantesData>>(ENDPOINT).pipe(map((response) => {
+      if (!response.datos) {
+          throw new Error('No se encontraron datos en la respuesta');
+        }
+      return response.datos;
+    }),
+      catchError(() => {
+        const ERROR = new Error(
+          `Ocurrió un error al devolver la información ${ENDPOINT} `
+        );
+        return throwError(() => ERROR);
+      })
+    );
   }
 
   /**
-   * Obtiene los detalles de una licitación específica.
+   *  Obtiene las licitaciones para el formulario basado en los datos proporcionados.
+   * @param body  - Objeto que contiene los datos necesarios para la consulta.
+   * @returns Observable con la respuesta de la solicitud POST.
    */
-  getDetallesDelalicitacion(): Observable<DetallesLicitacion> {
-    return this.http.get<DetallesLicitacion>('assets/json/120501/detalles-licitacion.json');
+  getLicitacionesFormData(body: Record<string, unknown>): Observable<JSONResponse> {
+    const ENDPOINT = `${PROC_120501.BUSCAR}`;
+    return this.http.post<JSONResponse>(ENDPOINT, body)
+}
+
+ /**
+     * Envía los datos proporcionados mediante una solicitud HTTP POST a la ruta especificada.
+     *
+     * @param body - Objeto que contiene los datos a enviar en el cuerpo de la solicitud.
+     * @returns Observable con la respuesta de la solicitud POST.
+     */
+  guardarDatosPost(body: Record<string, unknown>): Observable<JSONResponse> {
+    return this.http.post<JSONResponse>(PROC_120501.GUARDAR, body);
   }
 
-  /**
-   * Obtiene los datos del adquiriente.
-   */
-  getAdquiriente(): Observable<Adquiriente> {
-    return this.http.get<Adquiriente>('assets/json/120501/adquiriente.json');
-  }
-
-  /**
-   * Obtiene los datos para poblar la tabla dinámica.
-   */
-  getTableData(): Observable<Complementaria[]> {
-    return this.http.get<Complementaria[]>('assets/json/120501/datos-de-la-tabla.json');
-  }
 
   /**
    * Obtiene los datos vigentes de licitaciones para el formulario principal.
@@ -81,5 +147,84 @@ export class LicitacionesDisponiblesService {
    */
   actualizarEstadoFormulario(DATOS: Solicitud120501State): void {
     this.tramite120501Store.actualizarEstado(DATOS);
+  }
+
+  /**
+   *  Genera el payload para guardar la solicitud basado en el estado actual del formulario.
+   * @param item  - Estado actual del formulario.
+   * @returns 
+   */
+  getGuardarPayload(item: Solicitud120501State): Record<string, unknown> {
+    return {
+        "entidadFederativa": {
+          "entidad": {
+          "clave": item.entidadFederativa
+          }
+        },
+        "idSolicitud":null,
+        "unidadAdministrativaRepresentacionFederal": {
+        "clave": item.representacionFederal
+        },
+        "licitacion": {
+          "idLicitacion": item.licitacionesDatos?.licitacionPublica?.idLicitacion || 0,
+          "anio": item.licitacionesDatos?.licitacionPublica?.anio,
+          "cantidadMaxima": item.licitacionesDatos?.licitacionPublica?.cantidadMaxima,
+          "fechaLimiteCalificacion": item.licitacionesDatos?.licitacionPublica?.fechaLimiteCalificacion,
+          "fechaConcurso": item.licitacionesDatos?.licitacionPublica?.fechaConcurso,
+          "fechaInicioVigencia": item.licitacionesDatos?.licitacionPublica?.fechaInicioVigencia,
+          "fechaFinVigencia": item.licitacionesDatos?.licitacionPublica?.fechaFinVigencia,
+          "fundamento": item.licitacionesDatos?.licitacionPublica?.fundamento,
+          "ideTipoConstancia": item.licitacionesDatos?.licitacionPublica?.ideTipoConstancia,
+          "ideTipoLicitacion": item.licitacionesDatos?.licitacionPublica?.ideTipoLicitacion,
+          "numeroLicitacion": item.licitacionesDatos?.licitacionPublica?.numeroLicitacion,
+          "idMecanismoAsignacion": item.licitacionesDatos?.licitacionPublica?.idMecanismoAsignacion,
+          "producto": item.licitacionesDatos?.licitacionPublica?.producto,
+          "unidadMedidaTarifaria": item.licitacionesDatos?.licitacionPublica?.unidadMedidaTarifaria,
+          "bloqueComercial": item.licitacionesDatos?.licitacionPublica?.bloqueComercial,
+          "paises": item.licitacionesDatos?.licitacionPublica?.paises
+        },
+        "fraccionArancelaria": item.licitacionesDatos.fraccionArancelaria,
+        "solicitud": {
+          "participante": {
+            "rfc": item.rfc
+          },
+          "solicitante": {
+            "rfc": item.rfc,
+            "nombre": "ACEROS ALVARADO S.A. DE C.V.",
+            "actividad_economica": "Fabricación de productos de hierro y acero",
+            "correo_electronico": "contacto@acerosalvarado.com",
+            "certificado_serial_number": "SN123456789",
+            "domicilio": {
+              "pais": "México",
+              "codigo_postal": "06700",
+              "estado": "Ciudad de México",
+              "municipio_alcaldia": "Cuauhtémoc",
+              "localidad": "Centro",
+              "colonia": "Roma Norte",
+              "calle": "Av. Insurgentes Sur",
+              "numero_exterior": "123",
+              "numero_interior": "Piso 5, Oficina A",
+              "lada": "55",
+              "telefono": "123456",
+              "entidad_federativa": {
+                      "cveEntidad": "BCS",
+                      "nombre": "Ciudad de México",
+                      "codEntidadIdc": "CDMX",
+                      "cvePais": "MEX",
+                      "fechaCaptura": "2025-06-09",
+                      "fechaInicioVigencia": "2025-06-01",
+                      "fechaFinVigencia": "2025-12-31",
+                      "activo": true,
+                      "pais": "México",
+                      "claveEnIDC": "CDMX09"
+                  }
+            }
+          },
+          "maximoTransferir": item.licitacionesDatos?.maximoTransferir,
+          "montoTransferir": item.licitacionesDatos?.montoTransferir,
+          "montoRecibir":item.montoRecibir,
+          "idAsignacion":item.idAsignacion
+        }
+      }
   }
 }

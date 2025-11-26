@@ -129,6 +129,10 @@ filasSeleccionadasDestinatario: Set<number> = new Set();
 
   /** Datos de los fabricantes para 260702 */
   fabricanteDatos: Destinatario[] = [];
+  /**
+   * Identificador del procedimiento que se recibe como entrada desde el componente padre.
+   */
+   @Input() idProcedimiento!: number;
 
     /**
    * Indica si se ha activado el evento de continuar.
@@ -150,7 +154,8 @@ filasSeleccionadasDestinatario: Set<number> = new Set();
     private registrarsolicitudmcp: RegistrarSolicitudMcpService,
     private solicitud260702Store: Solicitud260702Store,
     private solicitud260702Query: Solicitud260702Query,
-    private consultaioQuery: ConsultaioQuery
+    private consultaioQuery: ConsultaioQuery,
+    private service: RegistrarSolicitudMcpService,
   ) {
     /**
      * Se suscribe al estado de `Consultaio` para obtener información actualizada del estado del formulario.
@@ -169,6 +174,8 @@ filasSeleccionadasDestinatario: Set<number> = new Set();
       )
       .subscribe();
     this.crearFormTransporte();
+   
+    
   }
 
   /**
@@ -272,6 +279,12 @@ filasSeleccionadasDestinatario: Set<number> = new Set();
         })
       )
       .subscribe();
+      this.solicitud260702Query.selectSolicitud$
+    .pipe(takeUntil(this.destroyed$))
+    .subscribe(state => {
+      this.fabricanteDatos = [...state.fabricanteDatos];
+      this.destinatarioDatos = [...state.destinatarioDatos];
+    });
     this.crearFormTransporte();
     this.getPaisData();
   }
@@ -339,13 +352,22 @@ filasSeleccionadasDestinatario: Set<number> = new Set();
   /**
    * Obtiene los datos del catálogo de países.
    */
-  getPaisData(): void {
-    this.registrarsolicitudmcp
+  getPaisData(): void { 
+     if (this.idProcedimiento) {
+    this.service
+      .obtenerPaises(this.idProcedimiento?.toString())
+      .pipe(takeUntil(this.destroyed$))
+      .subscribe((data): void => {
+        this.paisData.catalogos = data.datos as Catalogo[];
+      });
+    } else {
+      this.service
       .getPaisData()
       .pipe(takeUntil(this.destroyed$))
-      .subscribe((data: Catalogo[]) => {
+      .subscribe((data): void => {
         this.paisData.catalogos = data as Catalogo[];
       });
+    }
   }
 
   /**
@@ -378,7 +400,7 @@ onGuardar(): void {
       targetTable = this.destinatarioDatos;
       break;
     default:
-      console.error('Invalid table selection');
+      
       return;
   }
 
@@ -393,10 +415,10 @@ onGuardar(): void {
       };
       targetTable[INDEX] = UPDATED_ROW;
 
-      if (this.tablaActual === 'fabricante') {
-        this.fabricanteDatos = [...targetTable];
+      if (this.tablaActual === 'fabricante') {        
+         this.solicitud260702Store.setFabricanteDatos([...targetTable]);
       } else if (this.tablaActual === 'destinatario') {
-        this.destinatarioDatos = [...targetTable];
+                 this.solicitud260702Store.setFabricanteDatos([...targetTable]);
       }
     }
   } else {
@@ -412,9 +434,11 @@ onGuardar(): void {
     };
 
     if (this.tablaActual === 'fabricante') {
-      this.fabricanteDatos = [...this.fabricanteDatos, NEW_ROW];
+           
+      this.solicitud260702Store.setFabricanteDatos([...this.fabricanteDatos, NEW_ROW])
     } else if (this.tablaActual === 'destinatario') {
-      this.destinatarioDatos = [...this.destinatarioDatos, NEW_ROW];
+      
+       this.solicitud260702Store.setDestinatarioDatos([...this.destinatarioDatos, NEW_ROW]);
     }
   }
 
@@ -423,18 +447,6 @@ onGuardar(): void {
   this.esFormularioVisible = false;
   this.selectedRow = null;
 }
-  /**
-   * Obtiene el nombre del país a partir de su ID.
-   * @param paisId ID del país.
-   * @returns Nombre del país o 'N/A' si no se encuentra.
-   */
-  private getPaisName(paisId: string): string {
-    const PAIS_ENCONTRADO = this.paisData.catalogos.find(
-      (catalogo) => catalogo.id === Number(paisId)
-    );
-    return PAIS_ENCONTRADO ? PAIS_ENCONTRADO.descripcion : 'N/A';
-  }
-
   /**
    * Maneja el cambio de filas seleccionadas en la tabla.
    * @param filasSeleccionadas Filas seleccionadas.
@@ -466,15 +478,18 @@ eliminarMercancias(): void {
       this.fabricanteDatos = this.fabricanteDatos.filter(
         (row) => !filasseleccionadas.has(row.id)
       );
+       
+this.solicitud260702Store.setFabricanteDatos(this.fabricanteDatos)
       break;
     case 'destinatario':
       filasseleccionadas = this.filasSeleccionadasDestinatario;
       this.destinatarioDatos = this.destinatarioDatos.filter(
         (row) => !filasseleccionadas.has(row.id)
       );
+       this.solicitud260702Store.setDestinatarioDatos(this.destinatarioDatos);
       break;
     default:
-      console.error('Invalid table selection:', this.tablaActual);
+     
       return;
   }
 
@@ -509,7 +524,7 @@ openModificarMercancias(): void {
       filasseleccionadas = this.filasSeleccionadasDestinatario;
       break;
     default:
-      console.error('Invalid table selection:', this.tablaActual);
+    
       return;
   }
 
@@ -614,7 +629,7 @@ enEliminado(tableName: string): void {
       filasseleccionadas = this.filasSeleccionadasDestinatario;
       break;
     default:
-      console.error('Invalid table selection:', this.tablaActual);
+    
       return;
   }
 

@@ -10,7 +10,7 @@ const ROUTES: Routes = [
     canActivate: [IniciarTramiteResolver],
         data: {
           iniciarConfig: {
-            procedureId: '260218'
+            procedureId: '90101'
           }
         }
   },

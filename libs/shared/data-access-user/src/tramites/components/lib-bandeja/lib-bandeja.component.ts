@@ -321,6 +321,21 @@ export class LibBandejaComponent<T extends BandejaRegistroBase> implements OnIni
     this.tramiteData = tramiteDetailsData.filter(
       (v) => v.tramite === Number(ROW_OBJETO.numeroDeProcedimiento) && v.department === ROW_OBJETO.departamento.toLowerCase()
     );
+    this.consultaioStore.establecerConsultaio(
+      String(ROW_OBJETO.numeroDeProcedimiento),
+      '',
+      this.tramiteData[0].department,
+      '',
+      ROW_OBJETO.tipoDeTramite,
+      '',
+      false,
+      false,
+      false,
+      '',
+      '',
+      ROW_OBJETO.id_solicitud,
+      ''
+    );
     this.router.navigate([`/${this.tramiteData[0].linkDashboard}`]);
     // Falta hacer la petición para obtener los datos de la solicitud
   }

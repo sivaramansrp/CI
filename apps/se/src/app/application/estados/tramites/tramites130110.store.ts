@@ -7,10 +7,13 @@
 
 import { Store, StoreConfig } from '@datorama/akita';
 import { Injectable } from '@angular/core';
+import { MostrarPartidas } from '@libs/shared/data-access-user/src';
 import { PartidasDeLaMercanciaModelo } from '../../shared/models/partidas-de-la-mercancia.model';
 
 
 export interface Tramite130110State {
+
+  idSolicitud: number | null;
   /**
    * Producto seleccionado en el formulario.
    */
@@ -40,6 +43,8 @@ export interface Tramite130110State {
    * Unidad de medida seleccionada en el formulario.
    */
   unidadMedida: string;
+
+  fraccionDescripcionPartidasDeLaMercancia: string;
 
   /**
    * Solicitud seleccionada en el formulario.
@@ -137,6 +142,15 @@ export interface Tramite130110State {
   Valor total en USD de las partidas de la mercancía.
   */
   valorTotalUSD: string;
+
+    /**
+     * Lista de partidas a mostrar.
+     */
+    mostrarPartidas: MostrarPartidas[];
+    /**   
+     * Fechas seleccionadas en el formulario.
+     */
+   fechasSeleccionadas: string[];
 }
 
 /**
@@ -149,6 +163,7 @@ export interface Tramite130110State {
  */
 export function createInitialState(): Tramite130110State {
   return {
+    idSolicitud: 0,
     filaSeleccionada: [],
     mostrarTabla: true,
     solicitud: '',
@@ -159,6 +174,7 @@ export function createInitialState(): Tramite130110State {
     cantidad: '',
     valorPartidaUSD: 0,
     unidadMedida: '',
+    fraccionDescripcionPartidasDeLaMercancia: '',
     defaultProducto: 'Nuevo',
     regimen: '',
     clasificacion: '',
@@ -174,7 +190,9 @@ export function createInitialState(): Tramite130110State {
     representacion: '',
     tableBodyData: [],
     cantidadTotal: '',
-    valorTotalUSD: ''
+    valorTotalUSD: '',
+    mostrarPartidas: [],
+    fechasSeleccionadas: []
   };
 }
 
@@ -210,6 +228,18 @@ export class Tramite130110Store extends Store<Tramite130110State> {
     this.update((state) => ({
       ...state,
       ...valores,
+    }));
+  }
+
+  /**
+   * Guarda el ID de la solicitud en el estado.
+   *
+   * @param idSolicitud - El ID de la solicitud que se va a guardar.
+   */
+  public setIdSolicitud(idSolicitud: number): void {
+    this.update((state) => ({
+      ...state,
+      idSolicitud,
     }));
   }
 }

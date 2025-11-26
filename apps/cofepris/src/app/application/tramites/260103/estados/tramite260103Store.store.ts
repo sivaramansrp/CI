@@ -1,12 +1,9 @@
-import {
-  DatosSolicitudFormState,
-  MercanciaForm,
-  TablaOpcionConfig,
-  TablaScianConfig,
-} from '../../../shared/models/datos-solicitud.model';
-import { Destinatario, Fabricante, PagoDerechosFormState } from '../../../shared/models/terceros-relacionados.model';
+
+import { DatosSolicitudFormState, MercanciaForm,TablaMercanciaClaveConfig, TablaMercanciasDatos, TablaOpcionConfig, TablaScianConfig, } from '../../../shared/components/shared26010/models/datos-solicitud.model';
+import { Destinatario, Fabricante } from '../../../shared/components/shared26010/models/terceros-relacionados.model';
 import { Store, StoreConfig } from '@datorama/akita';
 import { Injectable } from '@angular/core';
+import { PagoDerechosFormState } from '../../../shared/models/terceros-relacionados.model';
 import { TABLA_OPCION_DATA } from '../../../shared/constantes/datos-solicitud.enum';
 import { TablaMercanciasImportacion } from '../models/importicon-retorno.model';
 
@@ -15,11 +12,24 @@ import { TablaMercanciasImportacion } from '../models/importicon-retorno.model';
  * @description Estado que representa los datos de un trámite 260103, incluyendo tablas de datos, formularios y configuraciones.
  */
 export interface Tramite260103State {
+  destinatarioFinalTablaDatos: Destinatario[];
+    /**
+   * Identificador de la solicitud (opcional).
+  */
+  idSolicitud: number;
   /** Lista de destinatarios registrados */
   destinatarioTableDatos: Destinatario[];
 
   /** Lista de fabricantes registrados */
   fabricanteTablaDatos: Fabricante[];
+  /**
+     * @property tablaMercanciasConfigDatos
+     * @description Datos y configuración para la tabla de mercancías mostrada en pantalla.
+     * Utilizado para listar productos o bienes relacionados con el trámite.
+     */
+    tablaMercanciasConfigDatos: TablaMercanciasDatos[];
+
+    tablaMercanciaClaveConfigDatos: TablaMercanciaClaveConfig[];
 
   /** Estado del formulario con datos generales de la solicitud */
   datosSolicitudFormState: DatosSolicitudFormState;
@@ -33,8 +43,6 @@ export interface Tramite260103State {
   /** Configuración SCIAN disponible */
   scianConfigDatos: TablaScianConfig[];
 
-  /** Configuración de mercancías disponibles */
-  tablaMercanciasConfigDatos: TablaMercanciasImportacion[];
 
   /** Opciones seleccionadas por el usuario */
   seleccionadoopcionDatos: TablaOpcionConfig[];
@@ -63,9 +71,13 @@ export interface Tramite260103State {
  */
 export function createInitialState(): Tramite260103State {
   return {
+    destinatarioFinalTablaDatos:[],
+    idSolicitud:0,
     fabricanteTablaDatos: [],
     destinatarioTableDatos: [],
     datosSolicitudFormState: {
+      cumplimiento:'',
+      mensaje:'',
       rfcSanitario: '',
       denominacionRazon: '',
       correoElectronico: '',
@@ -128,6 +140,7 @@ export function createInitialState(): Tramite260103State {
       importePago: '',
     },
     tabSeleccionado: 1,
+    tablaMercanciaClaveConfigDatos: [],
   };
 }
 
@@ -235,6 +248,23 @@ export class Tramite260103Store extends Store<Tramite260103State> {
     }));
   }
 
+
+   /**
+     * @method updateDestinatarioFinalTablaDatos
+     * @description Agrega nuevos destinatarios finales a la lista existente.
+     * @param {Destinatario[]} newDestinatarios - Lista de nuevos destinatarios.
+     */
+    public updateDestinatarioFinalTablaDatos(
+      newDestinatarios: Destinatario[]
+    ): void {
+      this.update((state) => ({
+        ...state,
+        destinatarioFinalTablaDatos: [
+          ...newDestinatarios,
+        ],
+      }));
+    }
+
   /**
    * @method updatePagoDerechos
    * @description Actualiza el estado del formulario de pago de derechos.
@@ -258,4 +288,33 @@ export class Tramite260103Store extends Store<Tramite260103State> {
       tabSeleccionado: tabSeleccionado,
     }));
   }
+    /**
+   * @method setIdSolicitud
+   * @description Establece el identificador de la solicitud.
+   * @param {number} idSolicitud - Nuevo identificador de la solicitud.
+   */
+  public setIdSolicitud(idSolicitud: number): void {
+    this.update((state) => ({
+        ...state,
+        idSolicitud,
+    }));
+  }
+    /**
+   * Establece el estado de cumplimiento.
+   * @param cumplimiento - El valor de cumplimiento.
+   */
+  public setCumplimiento(cumplimiento: string): void {
+    this.update((state) => ({
+      ...state,
+      cumplimiento,
+    }));
+  }
+    public updateTablaMercanciaClaveConfigDatos(
+      tablaMercanciaClaveConfigDatos: TablaMercanciaClaveConfig[]
+    ): void {
+      this.update((state) => ({
+        ...state,
+        tablaMercanciaClaveConfigDatos,
+      }));
+    }
 }
