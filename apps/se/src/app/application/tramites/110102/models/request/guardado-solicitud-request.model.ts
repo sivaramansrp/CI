@@ -39,7 +39,7 @@ export interface SolicitudCompletaRequest {
     declaraciones_solicitud: DeclaracionSolicitud[];
     
     /** Procesos asociados */
-    procesos: Proceso[];
+    procesos: Proceso[] | null;
 
     /** ID de la solicitud del productor */
     id_solicitud_productor: number | null;

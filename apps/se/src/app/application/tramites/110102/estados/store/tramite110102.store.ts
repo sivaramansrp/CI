@@ -255,4 +255,18 @@ export class Tramite110102Store extends Store<Tramite110102State> {
       [campo]: valor,
     }));
   }
+
+   /**
+   * Restablece el estado a sus valores iniciales, preservando únicamente
+   * la información de la declaración de solicitud.
+   */
+  public resetExceptDeclaracion(): void {
+  const DECLARACIONES = this.getValue().declaracion_solicitud;
+
+  this.reset();
+
+  this.update({
+    declaracion_solicitud: DECLARACIONES, 
+  });
+}
 }

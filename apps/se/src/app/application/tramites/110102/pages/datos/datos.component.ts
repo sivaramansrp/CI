@@ -98,10 +98,18 @@ export class DatosComponent implements OnInit {
   class: string = 'alert-danger';
 
   /**
+ * Mensaje estándar mostrado cuando existen campos obligatorios sin completar.
+ * @constant
+ * @readonly
+ * @type {string}
+ */
+  private readonly MENSAJE_FALTAN_CAMPOS = 'Faltan campos por capturar.';
+
+  /**
    * Título del mensaje principal.
    * @property {string | null} tituloMensaje - Título que se muestra en la parte superior del formulario.
    */
-  tituloMensaje: string | null = 'Faltan campos por capturar.';
+ tituloMensaje: string | null = this.MENSAJE_FALTAN_CAMPOS;
 
   /**
    * Contiene el mensaje de error que se muestra cuando la validación de formularios falla.
@@ -229,11 +237,9 @@ export class DatosComponent implements OnInit {
     const PAYLOAD: ValidarRequest = {
       rfc: "AAL0409235E6",
       id_solicitud: null,
-      id_solicitud_productor: null,
-      //catalogo
+      id_solicitud_productor: this.respuestaRegistroProductos.id_solicitud_productor,
       clave_entidad: this.estadoTramite.claveEntidadFederativa,
       clave_entidad_solicitante: "DGO",
-      //catalogo
       clave_unidad_admin: this.estadoTramite.claveUnidadAdministrativa,
       tratados: TRATADOS,
       registro_cuestionario: {
@@ -308,7 +314,6 @@ export class DatosComponent implements OnInit {
       id_solicitud: null,
       id_tipo_tramite: null,
       rfc: "LEQI8101314S7",
-      //Duda ya que tambien viene en el response 
       cve_unidad_administrativa: this.estadoTramite.claveUnidadAdministrativa,
       costo_total: null,
       certificado_serial_number: null,
@@ -383,8 +388,7 @@ export class DatosComponent implements OnInit {
               id_bloque: criterio.id_bloque,
               id_tratado_acuerdo: criterio.id_tratado_acuerdo,
               cve_pais: criterio.cve_pais,
-              //DUDA
-              cve_tratado_acuerdo: criterio.tratado_acuerdo,
+              cve_tratado_acuerdo: criterio.cve_tratado_acuerdo,
               cve_tratado_acuerdo_bloque: criterio.cve_tratado_acuerdo_bloque,
             })
 
@@ -407,13 +411,11 @@ export class DatosComponent implements OnInit {
             descripcion: null,
             criterios_tratados: item.tratados_originarios.map(criterio => ({
               id_criterio_tratado: criterio.id_criterio_tratado,
-              
               id_solicitud: null,
               cve_grupo_criterio: criterio.cve_grupo_criterio,
               id_bloque: criterio.id_bloque,
               id_tratado_acuerdo: criterio.id_tratado_acuerdo,
               cve_pais: criterio.cve_pais,
-              //DUDA
               cve_tratado_acuerdo: criterio.tratado_acuerdo,
               cve_tratado_acuerdo_bloque: criterio.cve_tratado_acuerdo_bloque,
             })
@@ -450,10 +452,18 @@ export class DatosComponent implements OnInit {
           cve_declaracion: item.clave,
           aceptado: this.estadoTramite.protestoDecirVerdad ? 1 : 0,
       })),
-      procesos: this.respuestaRegistroProductos.registro_cuestionario.mercancia_asociada.procesos_solicitados.map(proceso => ({
-          id_proceso_ceror: proceso.id_proceso_ceror ? proceso.id_proceso_ceror.toString() : null,
-          aprobado: proceso.cumple_proceso,
-      })) || [],
+      procesos: this.respuestaRegistroProductos
+      .registro_cuestionario
+      .mercancia_asociada
+      .procesos_solicitados === null
+      ? null
+      : this.respuestaRegistroProductos.registro_cuestionario.mercancia_asociada
+          .procesos_solicitados.map(proceso => ({
+            id_proceso_ceror: proceso.id_proceso_ceror
+              ? proceso.id_proceso_ceror.toString()
+              : null,
+            aprobado: proceso.cumple_proceso,
+          })),
 
       id_solicitud_productor: this.respuestaRegistroProductos.id_solicitud_productor,
     };
@@ -507,14 +517,13 @@ export class DatosComponent implements OnInit {
   enTabChange(selectedTab: number): void {
     switch (selectedTab) {
       case 1:
-        this.tituloMensaje = 'Faltan campos por capturar.';
+        this.tituloMensaje = this.MENSAJE_FALTAN_CAMPOS;
         break;
       case 2:
-        this.tituloMensaje =
-          'Faltan campos por capturar.';
+       this.tituloMensaje = this.MENSAJE_FALTAN_CAMPOS;
         break;
       default:
-        this.tituloMensaje = 'Faltan campos por capturar.';
+        this.tituloMensaje = this.MENSAJE_FALTAN_CAMPOS;
         break;
     }
   }

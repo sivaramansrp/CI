@@ -105,6 +105,12 @@ export interface CriterioTratadoDetalle {
     
     /** Clave tratado acuerdo bloque */
     cve_tratado_acuerdo_bloque: string | null;
+
+    /** Tipo proceso mercancia */
+    ide_tipo_proceso_mercancia:string | null;
+
+    /** Cumple juego*/
+    cumple_juego: boolean;
 }
 
 /**
@@ -625,6 +631,9 @@ export interface TratadoOriginarioInsumo {
     
     /** Clave tratado acuerdo bloque */
     cve_tratado_acuerdo_bloque: string | null;
+
+    /** Clave tratado acuerdo*/
+    cve_tratado_acuerdo: string | null
 }
 
 /**

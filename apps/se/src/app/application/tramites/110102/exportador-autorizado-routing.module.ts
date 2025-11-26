@@ -8,7 +8,6 @@ const ROUTES: Routes = [
   {
     path: 'registrar-solicitud',
     component: DatosComponent,
-    canActivate: [IniciarTramiteResolver],
     resolve: { iniciarResolverData: IniciarTramiteResolver },
     data: {
       iniciarConfig: {

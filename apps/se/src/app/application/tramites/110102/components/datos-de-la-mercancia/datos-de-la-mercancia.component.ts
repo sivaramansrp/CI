@@ -202,15 +202,14 @@ export class DatosDeLaMercanciaComponent implements OnInit, OnDestroy {
             if (this.respuestaRegistroProductos) {
               this.mercanciaState.setMercancia(this.respuestaRegistroProductos);
             }
-            let PAYLOADRESPUESTA: CriterioConfiguracionRequest[] = [];
-            if (this.respuestaRegistroProductos?.criterios_tratado) {
-              PAYLOADRESPUESTA = this.respuestaRegistroProductos.criterios_tratado.map(item => ({
+            const PAYLOADRESPUESTA: CriterioConfiguracionRequest[] = 
+             this.respuestaRegistroProductos?.criterios_tratado ? this.respuestaRegistroProductos.criterios_tratado.map(item => ({
                 cve_grupo_criterio: item.cve_grupo_criterio,
                 cve_tratado_acuerdo: item.tratado_acuerdo.cve_tratado_acuerdo,
                 cve_pais: item.cve_pais,
                 id_tratado_acuerdo: item.id_tratado_acuerdo
-              }));
-            }
+              }))
+              : [];
            
             this.mercancia.emit(this.respuestaRegistroProductos);
             
@@ -265,6 +264,7 @@ export class DatosDeLaMercanciaComponent implements OnInit, OnDestroy {
         next: (resp) => {
           if (resp.codigo === CodigoRespuesta.EXITO) {
             this.respuestaTratadosConfiguracion = resp.datos;
+            this.tramiteStore.resetExceptDeclaracion();
             this.tramiteStore.clearRespuestaServicioDatosConfiguracion();
             this.tramiteStore.setRespuestaServicioDatosConfiguracion(this.respuestaTratadosConfiguracion ?? {} as CriterioConfiguracionResponse);
           } else {

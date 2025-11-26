@@ -55,10 +55,11 @@ export class CatalogosTramiteService {
 
   /**
    * Consulta el catálogo de declaración de datos.
+   * @param tramite - numero del tramite
    * @returns Observable con la respuesta del servidor que contiene el catálogo
    */
-  getCatDeclaracionDatos(): Observable<BaseResponse<DeclaracionDatosResponse[]>> {
-    const ENDPOINT = `${this.host}${API_GET_CAT_DECLARACION_DATOS('110102')}`;
+  getCatDeclaracionDatos(tramite: string): Observable<BaseResponse<DeclaracionDatosResponse[]>> {
+    const ENDPOINT = `${this.host}${API_GET_CAT_DECLARACION_DATOS(tramite)}`;
     return this.http.get<BaseResponse<DeclaracionDatosResponse[]>>(ENDPOINT);
   }
   

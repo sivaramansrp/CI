@@ -330,7 +330,7 @@ export class RepresentacionFederalComponent implements OnInit, OnDestroy {
      * @returns {void}
      */
     public getDeclaracionDatos(): void {
-      this.catalogoTramiteService.getCatDeclaracionDatos()
+      this.catalogoTramiteService.getCatDeclaracionDatos("110102")
         .pipe(takeUntil(this.destruido$))
         .subscribe((response) => {
           if (response.codigo === CodigoRespuesta.EXITO) {          

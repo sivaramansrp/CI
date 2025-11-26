@@ -212,7 +212,8 @@ export class PasoTresComponent implements OnInit, OnDestroy {
       cve_usuario_capturista: "Gubernamental",
       fecha_firma: PasoTresComponent.formatFecha(new Date()),
       clave_unidad_admin: this.solicitudState.claveUnidadAdministrativa,
-      clave_entidad: null,
+      //Representacion federal
+      clave_entidad: this.solicitudState.claveEntidadFederativa,
 
       tratados_agregados: this.respuestaRegistroProductos.criterios_tratado.map(item =>
       ({
@@ -229,10 +230,10 @@ export class PasoTresComponent implements OnInit, OnDestroy {
         clave_grupo_criterio: item.cve_grupo_criterio,
 
         /** Cumple juegos */
-        cumple_juego: null,
+        cumple_juego: item.cumple_juego,
 
         /** Proceso mercancia*/
-        ide_tipo_proceso_mercancia: null
+        ide_tipo_proceso_mercancia: item.ide_tipo_proceso_mercancia
       })
       ),
 
