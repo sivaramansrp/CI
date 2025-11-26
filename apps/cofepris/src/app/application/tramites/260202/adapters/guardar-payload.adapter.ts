@@ -96,18 +96,18 @@ export class GuardarAdapter_260202 {
               "unidadMedidaComercial": {
                   "descripcion": mercancia.cantidadUMCObj?.descripcion
               },
-              "cantidadUMCConComas": mercancia.cantidadUMC,
+              "cantidadUMCConComas": mercancia.cantidadUmcValor,
               "unidadMedidaTarifa": {
                   "descripcion": mercancia.cantidadUMT
               },
               "cantidadUMTConComas": mercancia.cantidadUmtValor,
               "presentacion": mercancia.presentacion,
               "registroSanitarioConComas": mercancia.numeroRegistroSanitario,
-              "nombreCortoPaisOrigen": mercancia.paisOrigen.toString(),
-              "nombreCortoPaisProcedencia": mercancia.paisProcedencia.toString(),
+              "nombreCortoPaisOrigen": mercancia.paisOrigenDatosClave,
+              "nombreCortoPaisProcedencia": mercancia.paisProcedenciaDatosClave,
               "idTipoProductoTipoTramite": mercancia.tipoProducto,
               "tipoProductoDescripcionOtros": mercancia.especifique,
-              "nombreCortoUsoEspecifico": mercancia.usoEspecifico.toString(),
+              "nombreCortoUsoEspecifico": mercancia.usoEspecificoDatosClave,
               "fechaCaducidadStr": mercancia.fechaCaducidad
           }
       }),
