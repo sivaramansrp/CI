@@ -1,13 +1,15 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
-import { ConsultaioQuery, ConsultaioState, SolicitanteComponent } from '@ng-mf/data-access-user';
-import { Observable, Subject, map, takeUntil } from 'rxjs';
-import { Tramite260212State, Tramite260212Store } from '../../estados/tramite260212.store';
+import { Component, Input, OnChanges, OnDestroy, SimpleChanges } from '@angular/core';
+import {
+  ConsultaioQuery,
+  ConsultaioState,
+  SolicitanteComponent,
+} from '@ng-mf/data-access-user';
+import { Subject, map, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { ContenedorDeDatosSolicitudComponent } from '../../components/contenedor-de-datos-solicitud/contenedor-de-datos-solicitud.component';
-import { HttpClient } from '@angular/common/http';
 import { PagoDeDerechosContenedoraComponent } from '../../components/pago-de-derechos-contenedora/pago-de-derechos-contenedora/pago-de-derechos-contenedora.component';
+import { PermisoSanitarioImportacionMedicamentosService } from '../../services/permiso-sanitario-importacion-medicamentos.service';
 import { TercerosRelacionadosVistaComponent } from '../../components/terceros-relacionados-vista/terceros-relacionados-vista.component';
-import { Tramite260212Query } from '../../estados/tramite260212.query';
 import { ViewChild } from '@angular/core';
 /**
  * @component PasoUnoComponent
@@ -24,46 +26,42 @@ import { ViewChild } from '@angular/core';
     TercerosRelacionadosVistaComponent,
     PagoDeDerechosContenedoraComponent,
   ],
+  providers: [PermisoSanitarioImportacionMedicamentosService],
   templateUrl: './paso-uno.component.html',
   styleUrl: './paso-uno.component.css',
 })
-export class PasoUnoComponent implements OnInit, OnDestroy {
+export class PasoUnoComponent implements OnDestroy, OnChanges {
   /**
-   * @property indice
-   * @description Indicates the index of the selected tab within the form step.
-   * @type {number | undefined}
+   * @input confirmarSinPagoDeDerechos
+   * @description Indica si se confirma el paso sin pago de derechos.
    */
-  public indice: number | undefined = 1;
+  @Input() confirmarSinPagoDeDerechos: number = 0;
 
   /**
-   * @property {ContenedorDeDatosSolicitudComponent} contenedorDeDatosSolicitudComponent
-   * @description
-   * Referencia al componente hijo `ContenedorDeDatosSolicitudComponent` obtenida
-   * mediante el decorador `@ViewChild`.
-   *
-   * Esta propiedad permite invocar métodos públicos del contenedor y acceder
-   * a sus propiedades, por ejemplo para delegar la validación del formulario
-   * interno (`validarContenedor()`).
-   *
-   * > Nota: Angular inicializa esta referencia después de que la vista
-   * ha sido cargada, comúnmente en el ciclo de vida `ngAfterViewInit`.
+   * @viewChild contenedorDeDatosSolicitudComponent
+   * @description Referencia al componente hijo ContenedorDeDatosSolicitudComponent.
    */
   @ViewChild(ContenedorDeDatosSolicitudComponent)
   contenedorDeDatosSolicitudComponent!: ContenedorDeDatosSolicitudComponent;
 
+  /**
+   * @viewChild pagoDeDerechosContenedoraComponent
+   * @description Referencia al componente hijo PagoDeDerechosContenedoraComponent.
+   */
   @ViewChild(PagoDeDerechosContenedoraComponent)
   pagoDeDerechosContenedoraComponent!: PagoDeDerechosContenedoraComponent;
 
+  /**
+   * @viewChild tercerosRelacionadosVistaComponent
+   * @description Referencia al componente hijo TercerosRelacionadosVistaComponent.
+   */
   @ViewChild(TercerosRelacionadosVistaComponent)
   tercerosRelacionadosVistaComponent!: TercerosRelacionadosVistaComponent;
 
   /**
-   * @property destroyNotifier$
-   * @description Observable notifier to unsubscribe active subscriptions when the component is destroyed.
-   * Helps prevent memory leaks.
-   * @type {Subject<void>}
+   * @description Índice de la pestaña seleccionada.
    */
-  private destroyNotifier$: Subject<void> = new Subject();
+  indice: number = 2;
 
   /**
    * Esta variable se utiliza para almacenar el índice del subtítulo.
@@ -72,17 +70,23 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
 
   /** Datos de respuesta del servidor utilizados para actualizar el formulario. */
   public esDatosRespuesta: boolean = false;
+
+  /** Subject para notificar la destrucción del componente. */
+  private destroyNotifier$: Subject<void> = new Subject();
+  
   /**
-   * Initializes the component with required query and store for state management.
-   *
-   * @param Tramite260212Query Query to access procedure state.
-   * @param Tramite260212Store Store to update procedure state.
+   * Constructor del componente PasoUnoComponent.
+   * 
+   * @param consultaQuery Instancia de ConsultaioQuery para consultar el estado.
+   * @param servico Servicio para gestionar los datos del trámite.
+   * 
+   * Suscribe al estado de consulta y actualiza la propiedad consultaState.
+   * Si el procedimiento es '260212' y requiere actualización, guarda los datos del formulario.
+   * Si no, marca que los datos de respuesta están listos.
    */
   constructor(
-    private Tramite260212Query: Tramite260212Query,
-    private Tramite260212Store: Tramite260212Store,
-    private consultaQuery: ConsultaioQuery,
-    private readonly http: HttpClient
+    public consultaQuery: ConsultaioQuery,
+    public servico: PermisoSanitarioImportacionMedicamentosService
   ) {
     this.consultaQuery.selectConsultaioState$
       .pipe(
@@ -92,15 +96,6 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
         })
       )
       .subscribe();
-  }
-
-  /**
-   * Angular lifecycle method that runs on component initialization.
-   * Subscribes to the selected tab from state and updates `indice`.
-   *
-   * @returns {void}
-   */
-  ngOnInit(): void {
     if (
       this.consultaState &&
       this.consultaState.procedureId === '260212' &&
@@ -110,96 +105,89 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
     } else {
       this.esDatosRespuesta = true;
     }
-    this.Tramite260212Query.getTabSeleccionado$
-      .pipe(takeUntil(this.destroyNotifier$))
-      .subscribe((tab) => {
-        this.indice = tab;
-      });
   }
 
   /**
-   * Carga datos desde un archivo JSON y actualiza el store con la información obtenida.
-   * Luego reinicializa el formulario con los valores actualizados desde el store.
+   * Método del ciclo de vida de Angular que se llama cuando cambian las propiedades de entrada.
+   * 
+   * @param changes Cambios detectados en las propiedades de entrada.
+   * 
+   * Si cambia 'confirmarSinPagoDeDerechos' y no es el primer cambio, selecciona la pestaña correspondiente.
+   */
+  ngOnChanges(changes: SimpleChanges): void {
+    if (
+      changes['confirmarSinPagoDeDerechos'] &&
+      !changes['confirmarSinPagoDeDerechos'].firstChange
+    ) {
+      const CONFIRMAR_VALOR =
+        changes['confirmarSinPagoDeDerechos'].currentValue;
+      if (CONFIRMAR_VALOR) {
+        this.seleccionaTab(CONFIRMAR_VALOR);
+      }
+    }
+  }
+
+  /**
+   * @method guardarDatosFormulario
+   * @description
+   * Guarda los datos del formulario y actualiza el estado del formulario en base a la respuesta obtenida.
+   *
+   * Este método utiliza el servicio `PermisoSanitarioImportacionMedicamentosService` para obtener los datos
+   * del trámite y actualiza el estado del formulario si se recibe una respuesta válida. Además, se asegura
+   * de que la suscripción se cancele correctamente utilizando el operador `takeUntil` con el observable
+   * `destroyNotifier$`.
+   *
+   * @returns {void} No devuelve ningún valor.
    */
   guardarDatosFormulario(): void {
-    this.getRegistroTomaMuestrasMercanciasData()
+    this.servico
+      .getTramiteDatos()
       .pipe(takeUntil(this.destroyNotifier$))
       .subscribe((resp) => {
         if (resp) {
           this.esDatosRespuesta = true;
-          this.actualizarEstadoFormulario(resp);
+          this.servico.actualizarEstadoFormulario(
+            resp
+          );
         }
       });
   }
 
   /**
-   * Actualiza el estado del formulario con los datos proporcionados.
+   * Selecciona una pestaña (tab) en función del índice proporcionado.
    *
-   * @param DATOS - Estado de la solicitud `Solicitud230401State` con la información
-   *                del tipo de solicitud a actualizar en el store.
+   * @param {number} i - Índice de la pestaña a seleccionar.
    */
-  actualizarEstadoFormulario(DATOS: Tramite260212State): void {
-    this.Tramite260212Store.update((state) => ({
-      ...state,
-      ...DATOS,
-    }));
+  seleccionaTab(i: number): void {
+    this.indice = i;
   }
 
   /**
+   * Método del ciclo de vida de Angular que se llama justo antes de que el componente sea destruido.
+   *
+   * Este método emite un valor a través del observable `destroyNotifier$` para notificar a los suscriptores
+   * que el componente está siendo destruido, y luego completa el observable para liberar recursos.
+   *
+   * @returns {void} No retorna ningún valor.
+   */
+  ngOnDestroy(): void {
+    this.destroyNotifier$.next();
+    this.destroyNotifier$.complete();
+  }
+
+  /**
+   * @method validarPasoUno
    * @description
-   * Método que se encarga de validar el primer paso del flujo.
+   * Valida el primer paso del formulario verificando que tanto el contenedor de datos de la solicitud
+   * como el de terceros relacionados sean válidos.
    *
-   * Invoca al método `validarContenedor()` del componente hijo
-   * `ContenedorDeDatosSolicitudComponent` para comprobar si los
-   * datos del formulario son correctos.
-   *
-   * En caso de que el componente hijo no esté disponible o
-   * retorne `null/undefined`, se devuelve `false` por defecto.
-   *
-   * @returns {boolean}
-   * - `true`: si el contenedor y su formulario interno son válidos.
-   * - `false`: si el contenedor no es válido o no está disponible.
+   * @returns {boolean} Retorna true si ambos contenedores son válidos, de lo contrario false.
    */
   validarPasoUno(): boolean {
     const ESTABVALIDO =
       this.contenedorDeDatosSolicitudComponent?.validarContenedor() ?? false;
     const ESTERCEROSVALIDO =
-      this.tercerosRelacionadosVistaComponent.validarContenedor() ?? false;
-    const ESPAGOVALIDO =
-      this.pagoDeDerechosContenedoraComponent.validarContenedor() ?? false;
-    return ESTABVALIDO && ESTERCEROSVALIDO && ESPAGOVALIDO ? true : false;
-  }
-
-  /**
-   * Obtiene los datos del registro de toma de muestras de mercancías desde un archivo JSON.
-   *
-   * @returns Observable con los datos del estado de la solicitud `Solicitud230401State`,
-   *          cargados desde el archivo JSON especificado en la ruta de `assets`.
-   */
-  getRegistroTomaMuestrasMercanciasData(): Observable<Tramite260212State> {
-    return this.http.get<Tramite260212State>(
-      'assets/json/260212/respuestaDeActualizacionDe.json'
-    );
-  }
-
-  /**
-   * Updates the selected tab index in the store.
-   *
-   * @param i Index of the selected tab.
-   * @returns {void}
-   */
-  public seleccionaTab(i: number): void {
-    this.Tramite260212Store.updateTabSeleccionado(i);
-  }
-
-  /**
-   * Angular lifecycle method that runs just before the component is destroyed.
-   * Emits and completes the `destroyNotifier$` to unsubscribe observables.
-   *
-   * @returns {void}
-   */
-  ngOnDestroy(): void {
-    this.destroyNotifier$.next();
-    this.destroyNotifier$.complete();
+      this.tercerosRelacionadosVistaComponent?.validarContenedor() ?? false;
+    return ESTABVALIDO && ESTERCEROSVALIDO;
   }
 }

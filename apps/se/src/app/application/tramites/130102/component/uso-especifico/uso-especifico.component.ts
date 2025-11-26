@@ -14,8 +14,8 @@ import { TituloComponent } from "libs/shared/data-access-user/src/tramites/compo
 
 import fraccionOptionJson from 'libs/shared/theme/assets/json/130102/fracciónarancelaria-options.json';
 
-import { CatalogoSelectComponent } from '@libs/shared/data-access-user/src/tramites/components/catalogo-select/catalogo-select.component';
 import { CatalogoSelectClaveComponent } from '@libs/shared/data-access-user/src/tramites/components/catalogo-select-clave/catalogo-select.component';
+import { CatalogoSelectComponent } from '@libs/shared/data-access-user/src/tramites/components/catalogo-select/catalogo-select.component';
 
 import { CommonModule } from '@angular/common';
 
@@ -27,8 +27,8 @@ import { FormularioRegistroService } from '../../services/octava-temporal.servic
 
 import { ConsultaioQuery, ConsultaioState, Notificacion, NotificacionesComponent, TablaDinamicaComponent, TablaSeleccion } from '@ng-mf/data-access-user';
 import { ESPECIFICO_PREFILL, FRACCIONES_ANARCIA_TABLA } from '../../constantes/octava-temporal.enum';
-import { FraccionArancelariaProsec } from '../../models/octava-temporal.model';
 import { CatOctavaTemporalService } from '../../services/cat-octava-temporal.service';
+import { FraccionArancelariaProsec } from '../../models/octava-temporal.model';
 import { FraccionesProsecRequest } from '../../models/request/regla-octava-request.model';
 
 @Component({

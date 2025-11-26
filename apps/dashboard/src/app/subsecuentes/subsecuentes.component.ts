@@ -1,3 +1,4 @@
+import { AcusesYResolucionesBusquedaFolioComponent } from "../acuses-y-resoluciones-busqueda-folio/acuses-y-resoluciones-busqueda-folio.component";
 import { AcusesYResolucionesFolioDelTramiteBusquedaComponent } from '@ng-mf/data-access-user';
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
@@ -23,7 +24,8 @@ import { TituloComponent } from '@ng-mf/data-access-user';
     TituloComponent,
     ReactiveFormsModule,
     AcusesYResolucionesFolioDelTramiteBusquedaComponent,
-  ],
+    AcusesYResolucionesBusquedaFolioComponent
+],
   templateUrl: './subsecuentes.component.html',
   styleUrl: './subsecuentes.component.css',
 })

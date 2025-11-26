@@ -1,10 +1,11 @@
+import { Catalogo, CatalogoServices, JSONResponse } from '@ng-mf/data-access-user';
+import { Observable, map } from 'rxjs';
 import { Tramite130217State, Tramite130217Store } from '../../../estados/tramites/tramite130217.store';
-import { Catalogo } from '@ng-mf/data-access-user';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
-import { PartidasDeLaMercanciaModelo } from '../../../shared/models/partidas-de-la-mercancia.model';
+import { PROC_130217 } from '../servers/api-route';
 import { ProductoResponse } from '../../../shared/constantes/vehiculos-adaptados.enum';
+import { Tramite130217Query } from '../../../estados/queries/tramite130217.query';
 
 @Injectable({
   providedIn: 'root',
@@ -13,45 +14,134 @@ export class ControlPermisosPreviosExportacionService {
   constructor(
     private http: HttpClient,
     private tramite130217Store: Tramite130217Store,
+    private tramite130217Query: Tramite130217Query,
+    private catalogoServices: CatalogoServices
   ) {
     //
   }
+
   /**
-   * Obtiene la lista de países disponibles desde un archivo JSON.
-   * @returns {Observable<Catalogo[]>}
+   * Obtiene todos los datos del estado almacenado en el store.
+   * @returns {Observable<TramiteState>} Observable con todos los datos del estado.
    */
-  getListaDePaisesDisponibles(): Observable<Catalogo[]> {
-    return this.http.get<Catalogo[]>('/assets/json/130217/pais-procenia.json');
+  getAllState(): Observable<Tramite130217State> {
+    return this.tramite130217Query.selectSolicitud$;
   }
+
   /**
-   * Obtiene la lista de países por bloque desde un archivo JSON.
-   * @param {number} _bloqueId - El ID del bloque.
-   * @returns {Observable<Catalogo[]>}
-   */
-  getPaisesPorBloque(_bloqueId: number): Observable<Catalogo[]> {
-    return this.http.get<Catalogo[]>(
-      '/assets/json/130217/paises-por-bloque.json'
-    );
+  * Actualiza el estado del formulario en el store.
+  * @param DATOS Estado actualizado del trámite.
+  */
+  actualizarEstadoFormulario(DATOS: Tramite130217State): void {
+    this.tramite130217Store.actualizarEstado(DATOS);
   }
+
   /**
-   * Obtiene la lista de entidades federativas desde un archivo JSON.
-   * @returns {Observable<Catalogo[]>}
-   */
-  getEntidadFederativa(): Observable<Catalogo[]> {
-    return this.http.get<Catalogo[]>(
-      '/assets/json/130217/entidad-federativa.json'
-    );
+    * Obtiene el catálogo de tratados/acuerdos asociados a un trámite.
+    * @param tramitesID - Identificador del trámite
+    * @returns Observable con un arreglo de tratados (o vacío si no hay datos)
+    */
+  getRegimenCatalogo(tramitesID: string): Observable<Catalogo[]> {
+    return this.catalogoServices.regimenesCatalogo(tramitesID)
+      .pipe(
+        map(res => res?.datos ?? [])
+      );
   }
+
   /**
-   * Obtiene la lista de representaciones federales desde un archivo JSON.
-   * @returns {Observable<Catalogo[]>}
+   * Obtiene el catálogo de clasificaciones de régimen asociado a un trámite.
+   * @param tramitesID Identificador del trámite
+   * @returns Observable con un arreglo de clasificaciones de régimen (o vacío si no hay datos)
    */
-  getRepresentacionFederal(): Observable<Catalogo[]> {
-    return this.http.get<Catalogo[]>(
-      '/assets/json/130217/representacion-federal.json'
+  getClasificacionRegimenCatalogo(ID: string, CLASSIFICACIONES_REGIMEN: string): Observable<Catalogo[]> {    
+    return this.catalogoServices.getClasificacionRegimen(ID, CLASSIFICACIONES_REGIMEN)
+      .pipe(
+        map(res => res?.datos ?? [])
+      );
+  }
+
+  /**
+   *  Obtiene el catálogo de fracciones arancelarias asociado a un identificador.
+   * @param ID Identificador para obtener las fracciones arancelarias
+   * @returns Observable con un arreglo de fracciones arancelarias (o vacío si no hay datos)
+   */
+  getFraccionCatalogoService(ID: string): Observable<Catalogo[]> {
+    return this.catalogoServices.fraccionesArancelariasCatalogo(ID, 'TITPEX.130217').pipe(
+        map(res => res?.datos ?? [])
+      );
+  }
+
+  /**
+   *  Obtiene el catálogo de unidades de medida tarifaria asociado a un identificador y fracción arancelaria.
+   * @param ID Identificador para obtener las unidades de medida tarifaria
+   * @param FRACCION_ID Identificador de la fracción arancelaria
+   * @returns Observable con un arreglo de unidades de medida tarifaria (o vacío si no hay datos)
+   */
+  getUMTService(ID: string, FRACCION_ID: string): Observable<Catalogo[]> {
+    return this.catalogoServices.unidadesMedidaTarifariaCatalogo(ID, FRACCION_ID)
+      .pipe(
+        map(res => res?.datos ?? [])
+      );
+  }
+
+  /**
+   *  Obtiene el catálogo de entidades federativas asociado a un identificador.
+   * @param ID Identificador para obtener las entidades federativas
+   * @returns Observable con un arreglo de entidades federativas (o vacío si no hay datos)
+   */
+  getEntidadesFederativasCatalogo(ID: string): Observable<Catalogo[]> {
+    return this.catalogoServices.entidadesFederativasCatalogo(ID).pipe(
+      map(res => res?.datos ?? [])
     );
   }
 
+  /**
+   *  Obtiene el catálogo de representación federal asociado a un identificador y clave de entidad.
+   * @param ID Identificador para obtener la representación federal
+   * @param cveEntidad Clave de la entidad para filtrar la representación federal
+   * @returns Observable con un arreglo de representación federal (o vacío si no hay datos)
+   */
+  getRepresentacionFederalCatalogo(ID: string, cveEntidad: string): Observable<Catalogo[]> {
+    return this.catalogoServices.representacionFederalCatalogo(ID, cveEntidad).pipe(
+      map(res => res?.datos ?? [])
+    );
+  }
+
+  /**
+   *  Obtiene el catálogo de todos los países seleccionados asociado a un identificador.
+   * @param ID Identificador para obtener los países seleccionados
+   * @returns Observable con un arreglo de países seleccionados (o vacío si no hay datos)
+   */
+  getTodosPaisesSeleccionados(ID: string): Observable<Catalogo[]> {
+    return this.catalogoServices.todosPaisesSeleccionados(ID).pipe(
+      map(res => res?.datos ?? [])
+    );
+  }
+
+  /**
+   * Obtiene la lista de bloques comerciales (tratados o acuerdos) según el trámite proporcionado.
+   * @param {string} tramite - Identificador del trámite o tipo de operación para la consulta del catálogo.
+   * @returns {Observable<Catalogo[]>} Un observable que emite un arreglo de elementos del catálogo de bloques.
+   */
+  getBloqueService(tramite: string): Observable<Catalogo[]> {
+    return this.catalogoServices.tratadosAcuerdoCatalogo(tramite, 'TITRAC.TA')
+      .pipe(
+        map(res => res?.datos ?? [])
+      );
+  }
+
+  /**
+   * Obtiene la lista de países asociados a un bloque comercial según el trámite y el identificador proporcionado.
+   * @param {string} tramite - Identificador del trámite o tipo de operación que se está realizando.
+   * @param {string} ID - Identificador del bloque o parámetro necesario para la consulta.
+   * @returns {Observable<Catalogo[]>} Un observable que emite un arreglo de elementos del catálogo de países.
+   */
+  getPaisesPorBloqueService(tramite: string, ID: string): Observable<Catalogo[]> {
+    return this.catalogoServices.getpaisesBloqueCatalogo(tramite, ID)
+      .pipe(
+        map(res => res?.datos ?? [])
+      );
+  }
   /**
    * Obtiene las opciones de solicitud desde un archivo JSON.
    * @returns {Observable<ProductoResponse>}
@@ -63,39 +153,112 @@ export class ControlPermisosPreviosExportacionService {
   }
 
   /**
-   * Obtiene las opciones de producto desde un archivo JSON.
-   * @returns {Observable<ProductoResponse>}
-   */
-  getProductoOptions(): Observable<ProductoResponse> {
-    return this.http.get<ProductoResponse>(
-      'assets/json/130217/producto-otions.json'
-    );
-  }
-
-  getTablaDatos(): Observable<PartidasDeLaMercanciaModelo[]> {
-        return this.http.get<PartidasDeLaMercanciaModelo[]>(
-              'assets/json/130217/partidas-de-la.json'
-            );
-      }
-
-
-   /**
-   * Actualiza el estado del formulario en el store global.
+   * Envía los datos proporcionados mediante una solicitud HTTP POST a la ruta especificada.
    *
-   * @param datos - Objeto de tipo Tramite130217State con los datos a establecer en el store.
-   * @returns {void}
+   * @param body - Objeto que contiene los datos a enviar en el cuerpo de la solicitud.
+   * @returns Observable con la respuesta de la solicitud POST.
    */
-  actualizarEstadoFormulario(datos: Tramite130217State): void {
-      this.tramite130217Store.actualizarEstado(datos);
+  guardarDatosPost(body: Record<string, unknown>): Observable<JSONResponse> {
+    return this.http.post<JSONResponse>(PROC_130217.GUARDAR, body);
+  }
+  /**
+   * Genera el payload de datos de las partidas de mercancía basado en el estado del trámite.
+   * @param item - Estado actual del trámite 130217
+   * @returns Array con los datos procesados de las partidas
+   */
+  getPayloadDatos(item: Tramite130217State): unknown {
+    const ROWS = Array.isArray(item.tableBodyData) ? item.tableBodyData : [];
+    return ROWS.map(row => ({
+      unidadesSolicitadas: Number(row.cantidad),
+      unidadesAutorizadas: Number(item.cantidad),
+      descripcionSolicitada: row.descripcion,
+      descripcionAutorizada: item.descripcion,
+      importeUnitarioUSD: Number(row.precioUnitarioUSD),
+      importeTotalUSD: Number(row.totalUSD),
+      autorizada: true,
+      importeUnitarioUSDAutorizado: Number(row.precioUnitarioUSD),
+      importeTotalUSDAutorizado: Number(item.valorFacturaUSD),
+      fraccionArancelariaClave: item.fraccion,
+      unidadMedidaClave: item.unidadMedida
+    }));
   }
 
   /**
-   * Obtiene los datos de toma de muestras de mercancías desde un archivo JSON local.
-   *
-   * @returns {Observable<Tramite130217State>} Un observable que emite los datos del trámite 80210.
+   * Genera el payload de mercancía para el trámite 130217.
+   * @param item - Estado actual del trámite 130217
+   * @returns Objeto con los datos de mercancía formateados
    */
-  getRegistroTomaMuestrasMercanciasData(): Observable<Tramite130217State> {
-    return this.http.get<Tramite130217State>('assets/json/130217/control-permisos-datos.json');
+  getPayloadMercancia(item: Tramite130217State): unknown {
+    return {
+      "cantidadComercial": 0,
+      "cantidadTarifaria": Number(item.cantidad),
+      "valorFacturaUSD": Number(item.valorFacturaUSD),
+      "condicionMercancia": item.producto,
+      "descripcion": item.descripcion,
+      "usoEspecifico": item.usoEspecifico,
+      "justificacionImportacionExportacion": item.justificacionImportacionExportacion,
+      "observaciones": item.observaciones,
+      "unidadMedidaTarifaria": {
+        "clave": item.unidadMedida
+      },
+      "fraccionArancelaria": {
+        "cveFraccion": item.fraccion
+      },
+      "partidasMercancia": this.getPayloadDatos(item),
+    };
+  }
+
+  /**
+   * Genera el payload de productor para el trámite 130217.
+   * @returns Objeto con los datos del productor
+   */
+  getPayloadProductor(): unknown {
+    return {
+      "tipo_persona": true,
+      "nombre": "Juan",
+      "apellido_materno": "López",
+      "apellido_paterno": "Norte",
+      "razon_social": "Aceros Norte",
+      "descripcion_ubicacion": "Calle Acero, No. 123, Col. Centro",
+      "rfc": "AAL0409235E6",
+      "pais": "SIN"
+    };
+  }
+
+  /**
+   * Genera el payload de solicitante para el trámite 130217.
+   * @returns Objeto con los datos del solicitante
+   */
+  getPayloadSolicitante(): unknown {
+    return {
+      "rfc": "AAL0409235E6",
+      "nombre": "Juan Pérez",
+      "es_persona_moral": true,
+      "certificado_serial_number": "string"
+    };
+  }
+
+  /**
+   * Genera el payload de representación federal para el trámite 130217.
+   * @param item - Estado actual del trámite 130217
+   * @returns Objeto con los datos de representación federal
+   */
+  getPayloadRepresentacionFederal(item: Tramite130217State): unknown {
+    return {
+      "cve_entidad_federativa": item.entidad,
+      "cve_unidad_administrativa": item.representacion
+    };
+  }
+
+  /**
+   * Genera el payload de entidad federativa para el trámite 130217.
+   * @param item - Estado actual del trámite 130217
+   * @returns Objeto con los datos de entidad federativa
+   */
+  getPayloadEntidadFederativa(item: Tramite130217State): unknown {
+    return {
+      "cveEntidad": item.entidad
+    };
   }
 
 }

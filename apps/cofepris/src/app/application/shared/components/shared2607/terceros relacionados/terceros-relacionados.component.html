@@ -9,6 +9,7 @@
             [tipoSeleccionTabla]="destinatarioSeleccionTabla"
             [configuracionTabla]="destinatarioConfiguracionTabla"
             [datos]="fabricanteDatos"
+            [isInvalida]="fabricanteDatos && fabricanteDatos.length === 0 && isContinuarTriggered"
             (listaDeFilaSeleccionada)="enCambioDeFilasSeleccionadas($event, 'fabricante')"
             [disableSeleccionTablaCheckBox]="esFormularioSoloLectura">
           </app-tabla-dinamica>
@@ -55,6 +56,7 @@
             [tipoSeleccionTabla]="destinatarioSeleccionTabla"
             [configuracionTabla]="destinatarioConfiguracionTabla"
             [datos]="destinatarioDatos"
+             [isInvalida]="destinatarioDatos && destinatarioDatos.length === 0 && isContinuarTriggered"
             (listaDeFilaSeleccionada)="enCambioDeFilasSeleccionadas($event, 'destinatario')"
             [disableSeleccionTablaCheckBox]="esFormularioSoloLectura"
           >

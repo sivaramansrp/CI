@@ -279,8 +279,8 @@ const ROUTES: Routes = [
     path: 'importacion-materias-primas-estupefacientes',
     loadChildren: () =>
       import(
-        './tramites/260301/importacion-materias-primas-estupefacientes.module'
-      ).then((m) => m.ImportacionMateriasPrimasEstupefacientesModule),
+        './tramites/260301/certificados-licencias-permisos/certificados-licencias-permisos.module'
+      ).then((m) => m.CertificadosLicenciasPermisosModule),
   },
   {
     path: 'solicitud-permiso',
@@ -462,8 +462,8 @@ const ROUTES: Routes = [
     path: 'exportacion-medicamentos-contengan',
     loadChildren: () =>
       import(
-        './tramites/260304/exportacion-medicamentos-contengan.module'
-      ).then((m) => m.ExportacionMedicamentosContenganModule),
+        './tramites/260304/certificados-licencias-permisos/certificados-licencias-permisos.module'
+      ).then((m) => m.CertificadosLicenciasPermisosModule),
   },
 
   {
@@ -491,8 +491,8 @@ const ROUTES: Routes = [
     path: 'exportacion-materias-primas-estupefacientes',
     loadChildren: () =>
       import(
-        './tramites/260302/exportacion-materias-primas-estupefacientes.module'
-      ).then((m) => m.ExportacionMateriasPrimasEstupefacientesModule),
+        './tramites/260302/certificados-licencias-permisos/certificados-licencias-permisos.module'
+      ).then((m) => m.CertificadosLicenciasPermisosModule),
   },
   {
     path: 'permiso-sanitario-productos',

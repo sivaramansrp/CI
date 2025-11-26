@@ -1,7 +1,4 @@
-import {
-  Tramite260208State,
-  Tramite260208Store,
-} from './tramite260208Store.store';
+import { Tramite260208State, Tramite260208Store } from './tramite260208Store.store';
 import { Injectable } from '@angular/core';
 import { Query } from '@datorama/akita';
 
@@ -36,29 +33,41 @@ export class Tramite260208Query extends Query<Tramite260208State> {
   });
 
   /**
+   * @property {Observable<Fabricante[]>} getFabricanteTablaDatos$
+   * @description
+   * Selecciona la lista de fabricantes del estado.
+   */
+  public getFabricanteTablaDatos$ = this.select(
+    (state) => state.fabricanteTablaDatos
+  );
+  /**
+   * @property {Observable<Destinatario[]>} getDestinatarioFinalTablaDatos$
+   * @description
+   * Selecciona la lista de destinatarios finales del estado.
+   */
+  public getDestinatarioFinalTablaDatos$ = this.select(
+    (state) => state.destinatarioFinalTablaDatos
+  );
+  /**
+   * @property {Observable<Proveedor[]>} getProveedorTablaDatos$
+   * @description
+   * Selecciona la lista de proveedores del estado.
+   */
+  public getProveedorTablaDatos$ = this.select(
+    (state) => state.proveedorTablaDatos
+  );
+  /**
+   * @property {Observable<Facturador[]>} getFacturadorTablaDatos$
+   * @description
+   * Selecciona la lista de facturadores del estado.
+   */
+  public getFacturadorTablaDatos$ = this.select(
+    (state) => state.facturadorTablaDatos
+  );
+  /**
    * @property {Observable<number | undefined>} getTabSeleccionado$
    * @description
    * Selecciona el índice de la pestaña actualmente seleccionada en el estado.
    */
   public getTabSeleccionado$ = this.select((state) => state.tabSeleccionado);
-
-  /**
-   * Observable que selecciona y retorna datos de terceros desde el estado.
-   * @returns {Observable<TercerosRelacionadosDatos>} 
-   * Un observable con los datos de fabricante, destinatario final, proveedor y facturador.
-   */
-  public getTercerosDatos$ = this.select((state) => ({
-    fabricanteTablaDatos: state.fabricanteTablaDatos,
-    destinatarioFinalTablaDatos: state.destinatarioFinalTablaDatos,
-    proveedorTablaDatos: state.proveedorTablaDatos,
-    facturadorTablaDatos: state.facturadorTablaDatos,
-  }));
-      /**
-     * @propiedad selectImmexRegistro$
-     * @tipo Observable<ImmexRegistroState>
-     * @descripción Selector que permite obtener el estado completo de `ImmexRegistroState`.
-     */
-    selectImmexRegistro$ = this.select((state) => {
-        return state;
-    });
 }

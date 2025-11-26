@@ -1374,26 +1374,30 @@ this.editFabricanteIndex = this.fabricanteRowData.findIndex(
 
   const COLONIA_VALOR = this.coloniaDropdownData.find(
     item => item.id === this.agregarFabricanteFormGroup.value.colonia
-  )?.descripcion || this.agregarFabricanteFormGroup.get('colonia')?.value;
+  )?.descripcion || this.agregarFabricanteFormGroup.get('colonia')?.value ;
+
+  const NOMBRE = this.agregarFabricanteFormGroup.get('nombre')?.value + ' ' +
+    this.agregarFabricanteFormGroup.get('primerApellido')?.value + ' ' +
+    this.agregarFabricanteFormGroup.get('segundoApellido')?.value;
 
  
   const FABRICANTE_FILA = {
     tbodyData: [
-      this.agregarFabricanteFormGroup.get('denominacionRazonSocial')?.value,
-      this.agregarFabricanteFormGroup.get('rfc')?.value,
-      this.agregarFabricanteFormGroup.get('curp')?.value,
-      this.agregarFabricanteFormGroup.get('telefono')?.value,
-      this.agregarFabricanteFormGroup.get('correoElectronico')?.value,
-      this.agregarFabricanteFormGroup.get('calle')?.value,
-      this.agregarFabricanteFormGroup.get('numeroExterior')?.value,
-      this.agregarFabricanteFormGroup.get('numeroInterior')?.value,
-      this.agregarFabricanteFormGroup.get('pais')?.value,
+      this.agregarFabricanteFormGroup.get('denominacionRazonSocial')?.value ? this.agregarFabricanteFormGroup.get('denominacionRazonSocial')?.value : NOMBRE,
+      this.agregarFabricanteFormGroup.get('rfc')?.value ?? '---',
+      this.agregarFabricanteFormGroup.get('curp')?.value ?? '---',
+      this.agregarFabricanteFormGroup.get('telefono')?.value ?? '---',
+      this.agregarFabricanteFormGroup.get('correoElectronico')?.value ?? '---',
+      this.agregarFabricanteFormGroup.get('calle')?.value ?? '---',
+      this.agregarFabricanteFormGroup.get('numeroExterior')?.value ?? '---',
+      this.agregarFabricanteFormGroup.get('numeroInterior')?.value ?? '---',
+      this.agregarFabricanteFormGroup.get('pais')?.value ?? '---',
       COLONIA_VALOR,
       MUNICIPIO_VALOR,
       LOCALIDAD_VALOR,
-      this.agregarFabricanteFormGroup.get('entidadFederativa')?.value,
-      this.agregarFabricanteFormGroup.get('estadoLocalidad')?.value,
-      CODIGO_POSTAL_VALOR,
+      this.agregarFabricanteFormGroup.get('entidadFederativa')?.value ?? '---',
+      this.agregarFabricanteFormGroup.get('estadoLocalidad')?.value ?? '---',
+      CODIGO_POSTAL_VALOR ?? '---',
     ],
   };
 
@@ -1457,6 +1461,10 @@ this.editFabricanteIndex = this.fabricanteRowData.findIndex(
         item.id === this.agregarFormuladorFormGroup.value.colonia
     )?.descripcion || this.agregarFormuladorFormGroup.get('colonia')?.value;
 
+    const NOMBRE = this.agregarFormuladorFormGroup.get('nombre')?.value + ' ' +
+    this.agregarFormuladorFormGroup.get('primerApellido')?.value + ' ' +
+    this.agregarFormuladorFormGroup.get('segundoApellido')?.value;
+
     /**
      * Crea una nueva fila para la tabla de formuladors.
      * Esta fila contiene los datos del formulario de agregar un formulador.
@@ -1472,47 +1480,47 @@ this.editFabricanteIndex = this.fabricanteRowData.findIndex(
         /**
          * Denominación o razón social del formulador.
          */
-        this.agregarFormuladorFormGroup.get('denominacionRazonSocial')?.value,
+        this.agregarFormuladorFormGroup.get('denominacionRazonSocial')?.value ?? NOMBRE,
 
         /**
          * RFC del formulador.
          */
-        this.agregarFormuladorFormGroup.get('rfc')?.value,
+        this.agregarFormuladorFormGroup.get('rfc')?.value ?? '---',
 
         /**
          * CURP del formulador.
          */
-        this.agregarFormuladorFormGroup.get('curp')?.value,
+        this.agregarFormuladorFormGroup.get('curp')?.value ?? '---',
 
         /**
          * Teléfono del formulador, incluyendo lada.
          */
-        this.agregarFormuladorFormGroup.get('telefono')?.value,
+        this.agregarFormuladorFormGroup.get('telefono')?.value ?? '---',
 
         /**
          * Correo electrónico del formulador.
          */
-        this.agregarFormuladorFormGroup.get('correoElectronico')?.value,
+        this.agregarFormuladorFormGroup.get('correoElectronico')?.value ?? '---',
 
         /**
          * Calle del formulador.
          */
-        this.agregarFormuladorFormGroup.get('calle')?.value,
+        this.agregarFormuladorFormGroup.get('calle')?.value ?? '---',
 
         /**
          * Número exterior del formulador.
          */
-        this.agregarFormuladorFormGroup.get('numeroExterior')?.value,
+        this.agregarFormuladorFormGroup.get('numeroExterior')?.value ?? '---',
 
         /**
          * Número interior del formulador.
          */
-        this.agregarFormuladorFormGroup.get('numeroInterior')?.value,
+        this.agregarFormuladorFormGroup.get('numeroInterior')?.value ?? '---',
 
         /**
          * País del formulador.
          */
-        this.agregarFormuladorFormGroup.get('pais')?.value,
+        this.agregarFormuladorFormGroup.get('pais')?.value ?? '---',
 
         /**
          * Colonia del formulador.
@@ -1532,12 +1540,12 @@ this.editFabricanteIndex = this.fabricanteRowData.findIndex(
         /**
          * Entidad federativa del formulador.
          */
-        this.agregarFormuladorFormGroup.get('entidadFederativa')?.value,
+        this.agregarFormuladorFormGroup.get('entidadFederativa')?.value ?? '---',
 
         /**
          * Estado o localidad del formulador.
          */
-        this.agregarFormuladorFormGroup.get('estadoLocalidad')?.value,
+        this.agregarFormuladorFormGroup.get('estadoLocalidad')?.value ?? '---',
 
         /**
          * Código postal del formulador.
@@ -1608,8 +1616,11 @@ this.editFabricanteIndex = this.fabricanteRowData.findIndex(
     const COLONIA_VALOR = this.coloniaDropdownData.find(
       (item: Catalogo) =>
         item.id === this.agregarProveedorFormGroup.value.colonia
-    )?.descripcion || this.agregarFormuladorFormGroup.get('colonia')?.value;
+    )?.descripcion || this.agregarProveedorFormGroup.get('colonia')?.value;
 
+    const NOMBRE = this.agregarProveedorFormGroup.get('nombre')?.value + ' ' +
+    this.agregarProveedorFormGroup.get('primerApellido')?.value + ' ' +
+    this.agregarProveedorFormGroup.get('segundoApellido')?.value;
     /**
      * Crea una nueva fila para la tabla de proveedor.
      * Esta fila contiene los datos del formulario de agregar un proveedor.
@@ -1625,47 +1636,47 @@ this.editFabricanteIndex = this.fabricanteRowData.findIndex(
         /**
          * Denominación o razón social del proveedor.
          */
-        this.agregarProveedorFormGroup.get('denominacionRazonSocial')?.value,
+        this.agregarProveedorFormGroup.get('denominacionRazonSocial')?.value ?? NOMBRE,
 
         /**
          * RFC del proveedor.
          */
-        this.agregarProveedorFormGroup.get('rfc')?.value,
+        this.agregarProveedorFormGroup.get('rfc')?.value ?? '---',
 
         /**
          * CURP del proveedor.
          */
-        this.agregarProveedorFormGroup.get('curp')?.value,
+        this.agregarProveedorFormGroup.get('curp')?.value ?? '---',
 
         /**
          * Teléfono del proveedor, incluyendo lada.
          */
-        this.agregarProveedorFormGroup.get('telefono')?.value,
+        this.agregarProveedorFormGroup.get('telefono')?.value ?? '---',
 
         /**
          * Correo electrónico del proveedor.
          */
-        this.agregarProveedorFormGroup.get('correoElectronico')?.value,
+        this.agregarProveedorFormGroup.get('correoElectronico')?.value ?? '---',
 
         /**
          * Calle del proveedor.
          */
-        this.agregarProveedorFormGroup.get('calle')?.value,
+        this.agregarProveedorFormGroup.get('calle')?.value ?? '---',
 
         /**
          * Número exterior del proveedor.
          */
-        this.agregarProveedorFormGroup.get('numeroExterior')?.value,
+        this.agregarProveedorFormGroup.get('numeroExterior')?.value ?? '---',
 
         /**
          * Número interior del proveedor.
          */
-        this.agregarProveedorFormGroup.get('numeroInterior')?.value,
+        this.agregarProveedorFormGroup.get('numeroInterior')?.value ?? '---',
 
         /**
          * País del proveedor.
          */
-        this.agregarProveedorFormGroup.get('pais')?.value,
+        this.agregarProveedorFormGroup.get('pais')?.value ?? '---',
 
         /**
          * Colonia del proveedor.
@@ -1685,12 +1696,12 @@ this.editFabricanteIndex = this.fabricanteRowData.findIndex(
         /**
          * Entidad federativa del proveedor.
          */
-        this.agregarProveedorFormGroup.get('entidadFederativa')?.value,
+        this.agregarProveedorFormGroup.get('entidadFederativa')?.value ?? '---',
 
         /**
          * Estado o localidad del proveedor.
          */
-        this.agregarProveedorFormGroup.get('estadoLocalidad')?.value,
+        this.agregarProveedorFormGroup.get('estadoLocalidad')?.value ?? '---',
 
         /**
          * Código postal del proveedor.
@@ -1996,6 +2007,21 @@ this.editFabricanteIndex = this.fabricanteRowData.findIndex(
    */
   public esValido(campo: string, form: FormGroup): boolean | null {
     return this.validacionesService.isValid(form, campo);
+  }
+
+  /**
+ * Llama dinámicamente al método correspondiente del store para actualizar el país seleccionado.
+ * @param event Objeto de tipo Catalogo que representa el país seleccionado.
+ * @param metodoNombre Nombre del método del store que se debe invocar.
+ */
+  onPaisChange(event: Catalogo, metodoNombre: keyof TercerosFabricanteStore): void {
+    if (event) {
+    (
+      this.tercerosFabricanteStore[metodoNombre] as (
+        value: Catalogo
+      ) => void
+    )(event);
+    }
   }
 
   /**

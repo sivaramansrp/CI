@@ -1,17 +1,17 @@
 <div class="modal-body">
-        @if (permisoDefinitivoTitulo[0] === 260302 || permisoDefinitivoTitulo[0] === 260304) {
+        @if (permisoDefinitivoTitulo && (permisoDefinitivoTitulo.includes(260302) || permisoDefinitivoTitulo.includes(260304))) {
             <ng-titulo titulo="Agregar destinatario (destino final)"></ng-titulo>
         } @else {
             <ng-titulo titulo="{{titulo}}"></ng-titulo>
         }
     <form [formGroup]="tercerosRelacionadosForm">
-        @if(titulo !== 'Agregar otros') {
+        @if(titulo !== 'Agregar otros' && !(permisoDefinitivoTitulo && permisoDefinitivoTitulo.includes(260304))) {
         <h5>Datos generales</h5>
         <div class="row mb-5">
             <div class="col-md-8">
                 <div class="form-group">
-                    <label for="denominacion" class="form-label">Denominación/razón social<span [ngClass]="{'text-danger': tercerosRelacionadosForm.get('denominacionSocial')?.invalid && (tercerosRelacionadosForm.get('denominacionSocial')?.touched || tercerosRelacionadosForm.get('denominacionSocial')?.dirty)}">*</span>:</label>
-                    <input type="text" class="form-control" id="denominacion" formControlName="denominacionSocial"
+                    <label for="denominacion_general_1" class="form-label">Denominación/razón social<span [ngClass]="{'text-danger': tercerosRelacionadosForm.get('denominacionSocial')?.invalid && (tercerosRelacionadosForm.get('denominacionSocial')?.touched || tercerosRelacionadosForm.get('denominacionSocial')?.dirty)}">*</span>:</label>
+                    <input type="text" class="form-control" id="denominacion_general_1" formControlName="razonSocial"
                         maxlength="254" size="19"
                         (change)="establecerValorStore(tercerosRelacionadosForm,'denominacionSocial', 'setTercerosRelacionadosDenominacionSocial')">
 
@@ -22,8 +22,7 @@
                         <span class="mensaje-error">Este campo es obligatorio</span>
                         }
                         @else if(tercerosRelacionadosForm.controls['denominacionSocial'].errors?.['pattern']) {
-                        <span class="mensaje-error">Existen datos incorrectos que no cumplen con el formato
-                            esperado.</span>
+                        <span class="mensaje-error">Existen datos incorrectos que no cumplen con el formato esperado.</span>
                         }
                     </div>
                     }
@@ -31,7 +30,10 @@
 
             </div>
         </div>
-        } @else {
+        }
+        
+        @if (titulo === 'Agregar otros' || (permisoDefinitivoTitulo && permisoDefinitivoTitulo.includes(260304))) {
+        @if (titulo === 'Agregar otros') {
         <div class="row mb-5">
             <div class="col-md-12">
                 <div class="form-group">
@@ -47,6 +49,8 @@
                 </div>
             </div>
         </div>
+        }
+        @if (!(permisoDefinitivoTitulo && permisoDefinitivoTitulo.includes(260304)) || titulo === 'Agregar otros') {
         <h5>Datos generales</h5>
         <div class="row mb-3">
             <div class="col-md-6">
@@ -58,13 +62,49 @@
 
                 </div>
             </div>
-            <div class="col-md-6">
+            <div class="col-md-6 ms-auto">
                 <label class="form-label " for="tipoPersona">Tipo persona*:</label>
                 <app-input-radio [radioOptions]="opcionesTipoPersonaFiltradas" id="tipoPersona" formControlName="tipoPersona"
                     [layout]="'vertical'" [isRequired]="true"
                     (valueChange)="eventoCambioValor($event, tercerosRelacionadosForm,'tipoPersona', 'setTipoPersona')"></app-input-radio>
             </div>
         </div>
+        } @else {
+        <h5>Datos generales</h5>
+        <div class="row mb-3">
+            <div class="col-md-6 ms-auto">
+                <label class="form-label " for="tipoPersona">Tipo persona*:</label>
+                <app-input-radio [radioOptions]="opcionesTipoPersonaFiltradas" id="tipoPersona" formControlName="tipoPersona"
+                    [layout]="'vertical'" [isRequired]="true"
+                    (valueChange)="eventoCambioValor($event, tercerosRelacionadosForm,'tipoPersona', 'setTipoPersona')"></app-input-radio>
+            </div>
+        </div>
+        }
+        
+        @if ((!tercerosRelacionadosForm.get('tipoPersona')?.value || tercerosRelacionadosForm.get('tipoPersona')?.value === 'moral') && !(permisoDefinitivoTitulo && permisoDefinitivoTitulo.includes(260304))) {
+        <div class="row mt-3">
+            <div class="col-md-8">
+                <div class="form-group">
+                    <label for="denominacion_general_2" class="form-label ">Denominación/razón social<span [ngClass]="{'text-danger': tercerosRelacionadosForm.get('razonSocial')?.invalid && (tercerosRelacionadosForm.get('razonSocial')?.touched || tercerosRelacionadosForm.get('razonSocial')?.dirty)}">*</span>:</label>
+                    <input type="text" id="denominacion_general_2" formControlName="razonSocial" maxlength="254" size="75"
+                        (change)="establecerValorStore(tercerosRelacionadosForm,'razonSocial', 'setTercerosRelacionadosRazonSocial')"
+                        class="form-control">
+                            @if(tercerosRelacionadosForm.controls['razonSocial'].invalid &&
+                                tercerosRelacionadosForm.controls['razonSocial'].touched) {
+                            <div class="d-block">
+                                @if(tercerosRelacionadosForm.controls['razonSocial'].errors?.['required']) {
+                                    <span class="mensaje-error">Este campo es obligatorio</span>
+                                }
+                                @else if(tercerosRelacionadosForm.controls['razonSocial'].errors?.['pattern']) {
+                                    <span class="mensaje-error">Existen datos incorrectos que no cumplen con el formato esperado.</span>
+                                }
+                            </div>
+                         }                        
+                </div>
+            </div>
+        </div>
+        }
+        
         <div class="row mb-2">
             @if (
                 tercerosRelacionadosForm.get('tercerosNacionalidad')?.value === 'nacional' &&
@@ -125,12 +165,12 @@
             }
         </div>
         @if (tercerosRelacionadosForm.get('tercerosNacionalidad')?.value &&
-        tercerosRelacionadosForm.get('tipoPersona')?.value === 'moral') {
+            tercerosRelacionadosForm.get('tipoPersona')?.value === 'moral' && (!permisoDefinitivoTitulo || !permisoDefinitivoTitulo.includes(260304))) {
         <div class="row mt-5">
             <div class="col-md-8">
                 <div class="form-group">
-                    <label for="denominacion" class="form-label ">Denominación/razón social<span [ngClass]="{'text-danger': tercerosRelacionadosForm.get('razonSocial')?.invalid && (tercerosRelacionadosForm.get('razonSocial')?.touched || tercerosRelacionadosForm.get('razonSocial')?.dirty)}">*</span>:</label>
-                    <input type="text" id="denominacion" formControlName="razonSocial" maxlength="254" size="75"
+                    <label for="denominacion_general_3" class="form-label ">Denominación/razón social<span [ngClass]="{'text-danger': tercerosRelacionadosForm.get('razonSocial')?.invalid && (tercerosRelacionadosForm.get('razonSocial')?.touched || tercerosRelacionadosForm.get('razonSocial')?.dirty)}">*</span>:</label>
+                    <input type="text" id="denominacion_general_3" formControlName="razonSocial" maxlength="254" size="75"
                         (change)="establecerValorStore(tercerosRelacionadosForm,'razonSocial', 'setTercerosRelacionadosRazonSocial')"
                         class="form-control">
                                 @if(tercerosRelacionadosForm.controls['razonSocial'].invalid &&
@@ -154,26 +194,48 @@
             (tercerosRelacionadosForm.get('tercerosNacionalidad')?.value === 'extranjero' && tercerosRelacionadosForm.get('tipoPersona')?.value === 'fisica') ||
             (tercerosRelacionadosForm.get('tercerosNacionalidad')?.value === 'nacional' && tercerosRelacionadosForm.get('tipoPersona')?.value === 'fisica') ||
             (tercerosRelacionadosForm.get('tercerosNacionalidad')?.value === 'nacional' && tercerosRelacionadosForm.get('tipoPersona')?.value === 'noContribuyente')
-        )) {
+        ) || (permisoDefinitivoTitulo && permisoDefinitivoTitulo.includes(260304) && (!tercerosRelacionadosForm.get('tipoPersona')?.value || tercerosRelacionadosForm.get('tipoPersona')?.value === 'fisica' || tercerosRelacionadosForm.get('tipoPersona')?.value === 'moral'))
+        || (tercerosRelacionadosForm.get('tercerosNacionalidad')?.value && tercerosRelacionadosForm.get('tipoPersona')?.value === 'moral' && !(permisoDefinitivoTitulo && permisoDefinitivoTitulo.includes(260304)))) {
         <div class="row mt-5">
             <h5>Datos personales</h5>
+            @if (tercerosRelacionadosForm.get('tercerosNacionalidad')?.value && tercerosRelacionadosForm.get('tipoPersona')?.value === 'moral' && (!permisoDefinitivoTitulo || !permisoDefinitivoTitulo.includes(260304))) {
+            <div class="col-md-8">
+                <div class="form-group">
+                    <label for="denominacion_general_4" class="form-label ">Denominación/razón social<span [ngClass]="{'text-danger': tercerosRelacionadosForm.get('razonSocial')?.invalid && (tercerosRelacionadosForm.get('razonSocial')?.touched || tercerosRelacionadosForm.get('razonSocial')?.dirty)}">*</span>:</label>
+                    <input type="text" id="denominacion_general_4" formControlName="razonSocial" maxlength="254" size="75"
+                        (change)="establecerValorStore(tercerosRelacionadosForm,'razonSocial', 'setTercerosRelacionadosRazonSocial')"
+                        class="form-control">
+                    @if(tercerosRelacionadosForm.controls['razonSocial'].invalid &&
+                        tercerosRelacionadosForm.controls['razonSocial'].touched) {
+                        <div class="d-block">
+                            @if(tercerosRelacionadosForm.controls['razonSocial'].errors?.['required']) {
+                                <span class="mensaje-error">Este campo es obligatorio</span>
+                            }
+                            @else if(tercerosRelacionadosForm.controls['razonSocial'].errors?.['pattern']) {
+                                <span class="mensaje-error">Existen datos incorrectos que no cumplen con el formato esperado.</span>
+                            }
+                        </div>
+                    }
+                </div>
+            </div>
+            }
             <div class="col-md-4">
                 <div class="form-group">
                     <label for="datosPersonalesNombre" class="form-label ">Nombre(s)<span [ngClass]="{'text-danger': tercerosRelacionadosForm.get('datosPersonalesNombre')?.invalid && (tercerosRelacionadosForm.get('datosPersonalesNombre')?.touched || tercerosRelacionadosForm.get('datosPersonalesNombre')?.dirty)}">*</span>:</label>
                     <input type="text" id="datosPersonalesNombre" formControlName="datosPersonalesNombre"
                         (change)="establecerValorStore(tercerosRelacionadosForm,'datosPersonalesNombre', 'setDatosPersonalesNombre')"
                         class="form-control">
-                                @if(tercerosRelacionadosForm.controls['datosPersonalesNombre'].invalid &&
-                                    tercerosRelacionadosForm.controls['datosPersonalesNombre'].touched) {
-                                <div class="d-block">
-                                    @if(tercerosRelacionadosForm.controls['datosPersonalesNombre'].errors?.['required']) {
-                                        <span class="mensaje-error">Este campo es obligatorio</span>
-                                    }
-                                    @else if(tercerosRelacionadosForm.controls['datosPersonalesNombre'].errors?.['pattern']) {
-                                        <span class="mensaje-error">Existen datos incorrectos que no cumplen con el formato esperado.</span>
-                                    }
-                                </div>
-                             }                          
+                    @if(tercerosRelacionadosForm.controls['datosPersonalesNombre'].invalid &&
+                        tercerosRelacionadosForm.controls['datosPersonalesNombre'].touched) {
+                        <div class="d-block">
+                            @if(tercerosRelacionadosForm.controls['datosPersonalesNombre'].errors?.['required']) {
+                                <span class="mensaje-error">Este campo es obligatorio</span>
+                            }
+                            @else if(tercerosRelacionadosForm.controls['datosPersonalesNombre'].errors?.['pattern']) {
+                                <span class="mensaje-error">Existen datos incorrectos que no cumplen con el formato esperado.</span>
+                            }
+                        </div>
+                    }
                 </div>
             </div>
             <div class="col-md-4">
@@ -183,17 +245,17 @@
                         formControlName="datosPersonalesPrimerApellido"
                         (change)="establecerValorStore(tercerosRelacionadosForm,'datosPersonalesPrimerApellido', 'setDatosPersonalesPrimerApellido')"
                         class="form-control">
-                                @if(tercerosRelacionadosForm.controls['datosPersonalesPrimerApellido'].invalid &&
-                                    tercerosRelacionadosForm.controls['datosPersonalesPrimerApellido'].touched) {
-                                <div class="d-block">
-                                    @if(tercerosRelacionadosForm.controls['datosPersonalesPrimerApellido'].errors?.['required']) {
-                                        <span class="mensaje-error">Este campo es obligatorio</span>
-                                    }
-                                    @else if(tercerosRelacionadosForm.controls['datosPersonalesPrimerApellido'].errors?.['pattern']) {
-                                        <span class="mensaje-error">Existen datos incorrectos que no cumplen con el formato esperado.</span>
-                                    }
-                                </div>
-                             }                          
+                    @if(tercerosRelacionadosForm.controls['datosPersonalesPrimerApellido'].invalid &&
+                        tercerosRelacionadosForm.controls['datosPersonalesPrimerApellido'].touched) {
+                        <div class="d-block">
+                            @if(tercerosRelacionadosForm.controls['datosPersonalesPrimerApellido'].errors?.['required']) {
+                                <span class="mensaje-error">Este campo es obligatorio</span>
+                            }
+                            @else if(tercerosRelacionadosForm.controls['datosPersonalesPrimerApellido'].errors?.['pattern']) {
+                                <span class="mensaje-error">Existen datos incorrectos que no cumplen con el formato esperado.</span>
+                            }
+                        </div>
+                    }
                 </div>
             </div>
             <div class="col-md-4">
@@ -203,16 +265,39 @@
                         formControlName="datosPersonalesSegundoApellido"
                         (change)="establecerValorStore(tercerosRelacionadosForm,'datosPersonalesSegundoApellido', 'setDatosPersonalesSegundoApellido')"
                         class="form-control">
-                                @if(tercerosRelacionadosForm.controls['datosPersonalesSegundoApellido'].invalid &&
-                                    tercerosRelacionadosForm.controls['datosPersonalesSegundoApellido'].touched) {
-                                <div class="d-block">
-                                    @if(tercerosRelacionadosForm.controls['datosPersonalesSegundoApellido'].errors?.['pattern']) {
-                                        <span class="mensaje-error">Existen datos incorrectos que no cumplen con el formato esperado.</span>
-                                    }
-                                </div>
-                             }                        
+                    @if(tercerosRelacionadosForm.controls['datosPersonalesSegundoApellido'].invalid &&
+                        tercerosRelacionadosForm.controls['datosPersonalesSegundoApellido'].touched) {
+                        <div class="d-block">
+                            @if(tercerosRelacionadosForm.controls['datosPersonalesSegundoApellido'].errors?.['pattern']) {
+                                <span class="mensaje-error">Existen datos incorrectos que no cumplen con el formato esperado.</span>
+                            }
+                        </div>
+                    }
                 </div>
             </div>
+            @if (permisoDefinitivoTitulo && permisoDefinitivoTitulo.includes(260304) && (!tercerosRelacionadosForm.get('tipoPersona')?.value || tercerosRelacionadosForm.get('tipoPersona')?.value === 'moral')) {
+                <div class="row mt-3">
+                    <div class="col-md-8">
+                        <div class="form-group">
+                            <label for="denominacion_general_5" class="form-label ">Denominación/razón social<span [ngClass]="{'text-danger': tercerosRelacionadosForm.get('razonSocial')?.invalid && (tercerosRelacionadosForm.get('razonSocial')?.touched || tercerosRelacionadosForm.get('razonSocial')?.dirty)}">*</span>:</label>
+                            <input type="text" id="denominacion_general_5" formControlName="razonSocial" maxlength="254" size="75"
+                                (change)="establecerValorStore(tercerosRelacionadosForm,'razonSocial', 'setTercerosRelacionadosRazonSocial')"
+                                class="form-control">
+                                    @if(tercerosRelacionadosForm.controls['razonSocial'].invalid &&
+                                        tercerosRelacionadosForm.controls['razonSocial'].touched) {
+                                    <div class="d-block">
+                                        @if(tercerosRelacionadosForm.controls['razonSocial'].errors?.['required']) {
+                                            <span class="mensaje-error">Este campo es obligatorio</span>
+                                        }
+                                        @else if(tercerosRelacionadosForm.controls['razonSocial'].errors?.['pattern']) {
+                                            <span class="mensaje-error">Existen datos incorrectos que no cumplen con el formato esperado.</span>
+                                        }
+                                    </div>
+                                }                        
+                        </div>
+                    </div>
+                </div>
+            }
         </div>
         }
         <div class="mt-5">
@@ -221,7 +306,9 @@
                 <div class="col-md-4">
                     <div class="form-group">
                         <app-catalogo-select id="pais" [catalogo]="paisCatalogo || []" formControlName="pais"
-                                                    label="País" [required]="true" [isDisabled]="titulo === 'Agregar otros' ? !(tercerosRelacionadosForm.get('tercerosNacionalidad')?.value === 'extranjero' && (tercerosRelacionadosForm.get('tipoPersona')?.value === 'fisica' || tercerosRelacionadosForm.get('tipoPersona')?.value === 'moral')) : false" name="pais"
+                                                    label="País" [required]="true"
+                                                    [isDisabled]="(permisoDefinitivoTitulo && permisoDefinitivoTitulo.includes(260304) && !(tercerosRelacionadosForm.get('tipoPersona')?.value === 'fisica' || tercerosRelacionadosForm.get('tipoPersona')?.value === 'moral')) ? true : (titulo === 'Agregar otros' ? !(tercerosRelacionadosForm.get('tercerosNacionalidad')?.value === 'extranjero' && (tercerosRelacionadosForm.get('tipoPersona')?.value === 'fisica' || tercerosRelacionadosForm.get('tipoPersona')?.value === 'moral')) : false)"
+                                                    name="pais"
                                                     [markTouched]="tercerosRelacionadosForm.get('pais')?.touched??false"
                                                     placeholder=""
                                                     (change)="eventoCambioValor($event, tercerosRelacionadosForm,'pais', 'setTercerosRelacionadosPais')"></app-catalogo-select>
@@ -433,14 +520,14 @@
             </div>
         </div>
     </form>
-</div>
-<div class="mt-5 mb-5 d-flex justify-content-between align-items-center col-md-12">
-    <div>
-        <p class="text-muted m-0">* Campos obligatorios</p>
-    </div>
-    <div class="d-flex">
-        <button type="button" class="btn btn-danger ms-3" (click)="bsModalRef.hide()">Cancelar</button>
-        <button type="button" class="btn btn-default ms-3" (click)="limpiar()">Limpiar</button>
-        <button type="button" class="btn btn-primary ms-3" (click)="guardar()">Guardar</button>
+    <div class="mt-5 mb-5 d-flex justify-content-between align-items-center col-md-12">
+        <div>
+            <p class="text-muted m-0">* Campos obligatorios</p>
+        </div>
+        <div class="d-flex">
+            <button type="button" class="btn btn-danger ms-3" (click)="bsModalRef.hide()">Cancelar</button>
+            <button type="button" class="btn btn-default ms-3" (click)="limpiar()">Limpiar</button>
+            <button type="button" class="btn btn-primary ms-3" (click)="guardar()">Guardar</button>
+        </div>
     </div>
 </div>

@@ -1,6 +1,7 @@
-import { ADUANA_DATA, CLASIFICACION_PRODUCTO_DATA, CLAVE_SCIAN_DATA, DESCRIPCION_SCIAN_DATA, ESPECIFICAR_DATA, ESTADO_DATA, REGIMEN_AL_QUE_DATA, TIPO_PRODUCTO_DATA } from '../../../constantes/catalogs.enum';
+/* eslint-disable no-implicit-coercion */
+import { AL_DAR, AlertComponent, Catalogo, InputFecha, InputRadioComponent, Notificacion, NotificacionesComponent, Pedimento, REGEX_CORREO_ELECTRONICO, REGEX_NO_ESPACIOS_AL_INICIO_NI_AL_FINAL, REGEX_SOLO_DIGITOS, REGEX_TEXTO_ALFANUMERICO_EXTENDIDO, TablaDinamicaComponent, TablaSeleccion } from '@libs/shared/data-access-user/src';
+import { CLASIFICACION_PRODUCTO_DATA, CLAVE_SCIAN_DATA, DESCRIPCION_SCIAN_DATA, ESPECIFICAR_DATA, ESTADO_DATA, REGIMEN_AL_QUE_DATA, TIPO_PRODUCTO_DATA } from '../../../constantes/catalogs.enum';
 import { CONFIGURACION_COLUMNAS_LISTA_CLAVE, CONFIGURACION_COLUMNAS_MERCANCIAS, CONFIGURACION_COLUMNAS_SOLI } from '../../../constantes/column-config.enum';
-import { AL_DAR, Catalogo, InputFecha, InputRadioComponent, Notificacion, NotificacionesComponent, Pedimento, REGEX_CORREO_ELECTRONICO, REGEX_NO_ESPACIOS_AL_INICIO_NI_AL_FINAL, REGEX_SOLO_DIGITOS, REGEX_TEXTO_ALFANUMERICO_EXTENDIDO, TablaSeleccion } from '@libs/shared/data-access-user/src'; 
 import { ChangeDetectorRef, Component, ElementRef, EventEmitter, Input, OnChanges, OnDestroy, OnInit, Output, ViewChild } from '@angular/core';
 import { CrossList, MercanciaCrossList } from '../../../models/mercancia.model';
 import { FilaData, FilaData2, ListaClave } from '../../../models/fila-modal';
@@ -11,6 +12,7 @@ import { CatalogoSelectComponent } from '@libs/shared/data-access-user/src';
 import { CommonModule } from '@angular/common';
 import { ConsultaioQuery } from '@ng-mf/data-access-user';
 import { CrosslistComponent } from '@libs/shared/data-access-user/src';
+import { DatosServiceService } from '../../../services/datos-service.service';
 import { InputCheckComponent } from '@libs/shared/data-access-user/src';
 import { InputFechaComponent } from '@libs/shared/data-access-user/src';
 import { Modal } from 'bootstrap';
@@ -18,9 +20,7 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { RegistrarSolicitudMcpService } from '../../../services/shared2607/registrar-solicitud-mcp.service';
 import { Solicitud260702Query } from '../../../estados/queries/shared2607/tramites260702.query';
 import { TEXTOS } from '../../../constantes/constantes.enum';
-import { TablaDinamicaComponent, AlertComponent } from '@libs/shared/data-access-user/src';
 import { TituloComponent } from '@libs/shared/data-access-user/src';
-import { DatosServiceService } from '../../../services/datos-service.service';
 
 /**
  * Componente para gestionar los datos de la solicitud.
@@ -39,21 +39,21 @@ import { DatosServiceService } from '../../../services/datos-service.service';
     InputFechaComponent,
     CrosslistComponent,
     InputCheckComponent,
-  NotificacionesComponent,
-  AlertComponent,
+    NotificacionesComponent,
+    AlertComponent,
   ],
   templateUrl: './datos-de-la-solicitud.component.html',
   styleUrls: ['./datos-de-la-solicitud.component.scss'],
 })
 export class DatosdelasolicitudComponent implements OnInit, OnDestroy, OnChanges {
 
-   /**
-   * Indica si la sección es colapsable.
-   * @type {boolean}
-   * @default true
-   */
+  /**
+  * Indica si la sección es colapsable.
+  * @type {boolean}
+  * @default true
+  */
   public colapsable: boolean = true;
-  
+
   /** Formulario principal para los datos de la solicitud */
   dataDeLaSolicitudForm!: FormGroup;
 
@@ -159,7 +159,10 @@ export class DatosdelasolicitudComponent implements OnInit, OnDestroy, OnChanges
 
   /** Datos de la tabla */
   tableData: FilaData[] = [];
-
+  /**
+   * Datos de la tabla NICO
+   */
+  nicoTabla: FilaData[] = [];
   /** Conjunto de filas seleccionadas */
   filasSeleccionadas: Set<number> = new Set();
 
@@ -176,9 +179,9 @@ export class DatosdelasolicitudComponent implements OnInit, OnDestroy, OnChanges
    * Control de formulario para la aduanasDeEntradaFechaSeleccionada.
    */
   estadoData: Catalogo[] = [];
-/**
- * Configuración de datos de estado
- */
+  /**
+   * Configuración de datos de estado
+   */
   claveScianDatos: Catalogo[] = [];
 
   /** Configuración de datos de clave SCIAN */
@@ -188,7 +191,7 @@ export class DatosdelasolicitudComponent implements OnInit, OnDestroy, OnChanges
   public descripcionDelScianData = DESCRIPCION_SCIAN_DATA;
 
   /** Configuración de datos del régimen */
-  public regimenalqueData : Catalogo[] = [];
+  public regimenalqueData: Catalogo[] = [];
 
   /** Configuración de datos de la aduana */
   public aduanaData: Catalogo[] = [];
@@ -201,7 +204,11 @@ export class DatosdelasolicitudComponent implements OnInit, OnDestroy, OnChanges
 
   /** Configuración para el campo de selección del tipo de producto */
   public tipoProductoData = TIPO_PRODUCTO_DATA;
-
+  /**
+   * Indica si se debe mostrar un error en la tabla.
+   * Cuando es `true`, se muestra un mensaje de error indicando que la tabla no contiene datos válidos.
+   */
+  public mostrarErrorTabla: boolean = false;
   /**
    * Indica si el formulario está en modo solo lectura.
    * Cuando es `true`, los campos del formulario no se pueden editar.
@@ -219,22 +226,22 @@ export class DatosdelasolicitudComponent implements OnInit, OnDestroy, OnChanges
  * Ejemplo: 'MAVL621207C95'.
  */
   rfc: string = 'MAVL621207C95';
-/**
- * ID del procedimiento.
- * Este campo almacena el identificador único del procedimiento asociado a la solicitud.
- */
-   @Input() idProcedimiento!: number;
+  /**
+   * ID del procedimiento.
+   * Este campo almacena el identificador único del procedimiento asociado a la solicitud.
+   */
+  @Input() idProcedimiento!: number;
 
-   /**
-    * idTramite
-    * Este campo almacena el identificador único del trámite asociado a la solicitud.
-    */
-   public idTramite : string ='260201'
-/** 
- * ID de clasificación.
- * Este campo almacena el identificador de la clasificación del producto.
-*/
-   public idClasificacion: string ='1';
+  /**
+   * idTramite
+   * Este campo almacena el identificador único del trámite asociado a la solicitud.
+   */
+  public idTramite: string = '260201'
+  /** 
+   * ID de clasificación.
+   * Este campo almacena el identificador de la clasificación del producto.
+  */
+  public idClasificacion: string = '1';
   /**
    * Evento que emite el estado de validez del formulario.
    * Se emite un valor booleano: `true` si el formulario es válido, `false` en caso contrario.
@@ -242,13 +249,13 @@ export class DatosdelasolicitudComponent implements OnInit, OnDestroy, OnChanges
    */
   @Output() formValidityChange = new EventEmitter<boolean>();
 
-  
+
   /**
    * Indica si se ha activado el evento de continuar.
    * Este valor se utiliza para controlar el flujo de la solicitud
    * dependiendo de si el usuario ha decidido continuar con el proceso.
    */
-   @Input() isContinuarTriggered: boolean = false;
+  @Input() isContinuarTriggered: boolean = false;
 
   /**
    * Constructor del componente.
@@ -295,7 +302,7 @@ export class DatosdelasolicitudComponent implements OnInit, OnDestroy, OnChanges
           this.inicializarEstadoFormulario();
         })
       )
-      
+
       .subscribe();
   }
 
@@ -307,9 +314,9 @@ export class DatosdelasolicitudComponent implements OnInit, OnDestroy, OnChanges
 
   /** Configuración de columnas para la lista de claves */
   listaClave = CONFIGURACION_COLUMNAS_LISTA_CLAVE;
-/**
- * Indica si la opción de modificación está seleccionada.
- */
+  /**
+   * Indica si la opción de modificación está seleccionada.
+   */
   isModificacionSelected = false;
   /** Inicialización del componente */
   ngOnInit(): void {
@@ -317,28 +324,29 @@ export class DatosdelasolicitudComponent implements OnInit, OnDestroy, OnChanges
   }
 
 
-   /**
- * Detecta cambios en las propiedades de entrada del componente y ejecuta validaciones cuando se activa el botón continuar.
- * Utiliza Promise.resolve() para asegurar que la validación se ejecute en el próximo ciclo del event loop.
- */
+  /**
+* Detecta cambios en las propiedades de entrada del componente y ejecuta validaciones cuando se activa el botón continuar.
+* Utiliza Promise.resolve() para asegurar que la validación se ejecute en el próximo ciclo del event loop.
+*/
   ngOnChanges(): void {
     if (this.isContinuarTriggered) {
-    this.dataDeLaSolicitudForm.markAllAsTouched();
-    this.clavaScianForm.markAllAsTouched();
+      Promise.resolve().then(() => {
+        this.validarFormularios();
+      });
     }
   }
-    /**
-   * Alterna el estado colapsable de la sección del formulario.
-   * @returns {void}
-   */
+  /**
+ * Alterna el estado colapsable de la sección del formulario.
+ * @returns {void}
+ */
   public mostrar_colapsable(): void {
     this.colapsable = !this.colapsable;
   }
-    /**
-     * Constantes importadas desde el archivo de enumeración que contienen textos importantes y advertencias.
-     * @type {typeof AL_DAR}
-     */
-    public TEXTO = AL_DAR;
+  /**
+   * Constantes importadas desde el archivo de enumeración que contienen textos importantes y advertencias.
+   * @type {typeof AL_DAR}
+   */
+  public TEXTO = AL_DAR;
 
   /**
    * Evalúa si se debe inicializar o cargar datos en el formulario.
@@ -351,26 +359,48 @@ export class DatosdelasolicitudComponent implements OnInit, OnDestroy, OnChanges
       this.inicializarFormulario();
     }
   }
+  /**
+   * Valida los formularios del componente.
+   * @returns  {boolean} - `true` si el formulario es válido, `false` en caso contrario.
+   */
+  validarFormularios(): boolean {
+    const FORM_GROUP = this.dataDeLaSolicitudForm.get('datosDelTramiteRealizar');
+  const DATOS_DEL_MANIFIESTOS = this.dataDeLaSolicitudForm.get('datosDelManifiestos');
+
+  const VALID =
+    (FORM_GROUP?.valid ?? false) &&
+    (DATOS_DEL_MANIFIESTOS?.valid ?? false);
+
+  const TABLA_VALID = !!(this.tableData && this.tableData.length > 0);
+
+  this.mostrarErrorTabla = !TABLA_VALID;
+
+  if (!VALID) {
+    FORM_GROUP?.markAllAsTouched();
+    DATOS_DEL_MANIFIESTOS?.markAllAsTouched();
+  }
+  return VALID;
+  }
 
   /**
    * Maneja el cambio de selección en el botón de radio.
    * @param event 
    */
-  onRadioChange(event: string | number): void { 
- /**
-  * Actualiza la propiedad `isModificacionSelected` basada en el valor seleccionado.
-  *   * - Si el valor seleccionado es 'modificacion', `isModificacionSelected` se establece en `true`.
-  *   * - Para cualquier otro valor, se establece en `false`.
-  */
-  const SELECTED_VALUE = String(event); 
-  const JUSTIFICATION_CTRL = this.datosDelTramiteRealizar.get('justification');
+  onRadioChange(event: string | number): void {
+    /**
+     * Actualiza la propiedad `isModificacionSelected` basada en el valor seleccionado.
+     *   * - Si el valor seleccionado es 'modificacion', `isModificacionSelected` se establece en `true`.
+     *   * - Para cualquier otro valor, se establece en `false`.
+     */
+    const SELECTED_VALUE = String(event);
+    const JUSTIFICATION_CTRL = this.datosDelTramiteRealizar.get('justification');
 
-  if (SELECTED_VALUE === 'modificacion') {
-    JUSTIFICATION_CTRL?.enable();
-  } else {
-    JUSTIFICATION_CTRL?.disable();
+    if (SELECTED_VALUE === 'modificacion') {
+      JUSTIFICATION_CTRL?.enable();
+    } else {
+      JUSTIFICATION_CTRL?.disable();
+    }
   }
-}
 
   /**
    * Inicializa el formulario reactivo para capturar el valor de 'registro'.
@@ -394,10 +424,16 @@ export class DatosdelasolicitudComponent implements OnInit, OnDestroy, OnChanges
           } else if (seccionState.tableData) {
             this.tableData = [...seccionState.tableData];
           }
-          
+
         })
       )
       .subscribe();
+      this.solicitud260702Query.selectSolicitud$
+    .pipe(takeUntil(this.destroyed$))
+    .subscribe(state => {
+      this.tableData = [...state.tableData];
+      
+    });
 
     this.createForm();
     this.getEstadosData();
@@ -493,20 +529,26 @@ export class DatosdelasolicitudComponent implements OnInit, OnDestroy, OnChanges
         this.dataDeLaSolicitudState?.fraccionArancelaria,
         [Validators.required, Validators.pattern(REGEX_SOLO_DIGITOS)],
       ],
+
+      datosDelManifiestos: this.fb.group({
+      mensaje: [this.dataDeLaSolicitudState?.mensaje, Validators.required],
+      hacerlosPublicos: [this.dataDeLaSolicitudState?.hacerlosPublicos, Validators.required],
+     
+      }),
       datosDelTramiteRealizar: this.fb.group({
-         tipoOperacion: [
-        { value: this.dataDeLaSolicitudState?.tipoOperacion, disabled: false },
-        Validators.required,
-      ],
+        tipoOperacion: [
+          { value: this.dataDeLaSolicitudState?.tipoOperacion, disabled: false }
+        ],
         justification: [
-          { value: this.dataDeLaSolicitudState?.justification ,
+          {
+            value: this.dataDeLaSolicitudState?.justification,
             disabled: true
           },
           [Validators.maxLength(2000)],
         ],
         denominacion: [
           this.dataDeLaSolicitudState?.denominacion,
-         [Validators.required, Validators.maxLength(100)],
+          [Validators.required, Validators.maxLength(100)],
         ],
         correoElectronico: [
           this.dataDeLaSolicitudState?.correoElectronico,
@@ -514,50 +556,44 @@ export class DatosdelasolicitudComponent implements OnInit, OnDestroy, OnChanges
         ],
         codigopostal: [
           this.dataDeLaSolicitudState?.codigopostal,
-         [
-            Validators.required,
+          [
             Validators.maxLength(12),
-             Validators.pattern(REGEX_SOLO_DIGITOS),
+            Validators.pattern(REGEX_SOLO_DIGITOS),
           ],
         ],
         estado: [this.dataDeLaSolicitudState?.estado, Validators.required],
         municipoyalcaldia: [
           this.dataDeLaSolicitudState?.municipoyalcaldia,
-          Validators.required,
         ],
         localidad: [
           this.dataDeLaSolicitudState?.localidad,
-         [
-            Validators.required,
+          [
             Validators.maxLength(120),
             Validators.pattern(REGEX_TEXTO_ALFANUMERICO_EXTENDIDO),
           ],
         ],
         colonia: [this.dataDeLaSolicitudState?.colonia, [Validators.maxLength(120)]],
-        calle: [this.dataDeLaSolicitudState?.calle,[Validators.required, Validators.maxLength(100)]],
-        lada: [this.dataDeLaSolicitudState?.lada,[
-                    Validators.required,
-                    Validators.minLength(5),
-                    Validators.maxLength(5),
-                    Validators.pattern(REGEX_SOLO_DIGITOS),
-                  ],],
+        calle: [this.dataDeLaSolicitudState?.calle, [Validators.required, Validators.maxLength(100)]],
+        lada: [this.dataDeLaSolicitudState?.lada, [
+          Validators.minLength(5),
+          Validators.maxLength(5),
+          Validators.pattern(REGEX_SOLO_DIGITOS),
+        ],],
         telefono: [this.dataDeLaSolicitudState?.telefono, [
-                    Validators.required,
-                    Validators.maxLength(30),
-                    Validators.pattern(REGEX_SOLO_DIGITOS),
-                  ],],
+          Validators.required,
+          Validators.maxLength(30),
+          Validators.pattern(REGEX_SOLO_DIGITOS),
+        ],],
         avisoDeFuncionamiento: [
           this.dataDeLaSolicitudState?.avisoDeFuncionamiento,
-          Validators.required,
         ],
         licenciaSanitaria: [
           this.dataDeLaSolicitudState?.licenciaSanitaria,
-          Validators.required,
         ],
         regimenalque: [
           this.dataDeLaSolicitudState?.regimenalque
         ],
-        aduana: [this.dataDeLaSolicitudState?.aduana, Validators.required],
+        aduana: [this.dataDeLaSolicitudState?.aduana],
         rfc: [this.dataDeLaSolicitudState?.rfc || this.rfc, [Validators.required, Validators.maxLength(13)]],
         legalRazonSocial: [
           this.dataDeLaSolicitudState?.legalRazonSocial,
@@ -569,11 +605,8 @@ export class DatosdelasolicitudComponent implements OnInit, OnDestroy, OnChanges
         ],
         apellidoMaterno: [
           this.dataDeLaSolicitudState?.apellidoMaterno,
-          Validators.required,
         ],
       }),
-      hacerlosPublicos: [{value: this.dataDeLaSolicitudState?.hacerlosPublicos, disabled: this.esFormularioSoloLectura}, Validators.required],
-
     });
   }
 
@@ -683,9 +716,9 @@ export class DatosdelasolicitudComponent implements OnInit, OnDestroy, OnChanges
     this.clavaScianForm = this.fb.group({
       claveScianG: this.fb.group({
         claveScian: ['',],
-        descripcionDelScian: [ 
-        { value: this.dataDeLaSolicitudState?.descripcionDelScian, disabled: true },
-        Validators.required,],
+        descripcionDelScian: [
+          { value: this.dataDeLaSolicitudState?.descripcionDelScian, disabled: true },
+          Validators.required,],
       }),
     });
   }
@@ -696,7 +729,7 @@ export class DatosdelasolicitudComponent implements OnInit, OnDestroy, OnChanges
    * y actualiza las propiedades `paisOrigenCrossList`, `paisProcedencisCrossList` y `usoEspecificoCrossList`.
    * En caso de error, muestra un mensaje en la consola.
    */
-  
+
   getMercanciaCrosslistData(): void {
     this.registrarsolicitudmcp
       .getMercanciaCrosslistData()
@@ -736,39 +769,39 @@ export class DatosdelasolicitudComponent implements OnInit, OnDestroy, OnChanges
   }
 
   /** Obtiene los datos de los estados */
-  getEstadosData(): void { 
-     if (this.idProcedimiento) {
-    this.service
-      .obtenerEstadoList(this.idProcedimiento?.toString())
-      .pipe(takeUntil(this.destroyed$))
-      .subscribe((data): void => {
-        this.estadoData = data.datos ?? [];
-      });
+  getEstadosData(): void {
+    if (this.idProcedimiento) {
+      this.service
+        .obtenerEstadoList(this.idProcedimiento?.toString())
+        .pipe(takeUntil(this.destroyed$))
+        .subscribe((data): void => {
+          this.estadoData = data.datos ?? [];
+        });
     } else {
       this.service
-      .getEstadosData()
-      .pipe(takeUntil(this.destroyed$))
-      .subscribe((data): void => {
-        this.estadoData = data;
-      });
+        .getEstadosData()
+        .pipe(takeUntil(this.destroyed$))
+        .subscribe((data): void => {
+          this.estadoData = data;
+        });
     }
   }
   /** Obtiene los datos de clave SCIAN */
   getClaveScianData(): void {
-if (this.idProcedimiento) {
-    this.service
-      .obtenerClavesScian(this.idProcedimiento?.toString())
-      .pipe(takeUntil(this.destroyed$))
-      .subscribe((data): void => {
-        this.claveScianDatos = data.datos ?? [];
-      });
+    if (this.idProcedimiento) {
+      this.service
+        .obtenerClavesScian(this.idProcedimiento?.toString())
+        .pipe(takeUntil(this.destroyed$))
+        .subscribe((data): void => {
+          this.claveScianDatos = data.datos ?? [];
+        });
     } else {
       this.service
-      .getClaveScianData()
-      .pipe(takeUntil(this.destroyed$))
-      .subscribe((data): void => {
-        this.claveScianDatos = data;
-      });
+        .getClaveScianData()
+        .pipe(takeUntil(this.destroyed$))
+        .subscribe((data): void => {
+          this.claveScianDatos = data;
+        });
     }
   }
 
@@ -776,12 +809,12 @@ if (this.idProcedimiento) {
    * Maneja el cambio en la selección de la clave SCIAN. 
    * @param event Evento de cambio del elemento select. 
    */
-   onClaveScianChange(event: Event): void {
+  onClaveScianChange(event: Event): void {
     const SELECTED_VALUE = (event.target as HTMLSelectElement).value;
     let SELECTED_OPTION;
     if (this.idProcedimiento) {
       SELECTED_OPTION = this.claveScianDatos?.find((item) => Number(item.clave) === Number(SELECTED_VALUE));
-    } 
+    }
 
     if (SELECTED_OPTION) {
       const CLAVE_SCIAN_G_CONTROL = this.clavaScianForm.get('claveScianG');
@@ -804,39 +837,39 @@ if (this.idProcedimiento) {
 
   /** Obtiene los datos del régimen */
   getRegimenalqueData(): void {
-     if (this.idProcedimiento) {
-    this.service
-      .obtenerRegimenes(this.idProcedimiento?.toString())
-      .pipe(takeUntil(this.destroyed$))
-      .subscribe((data): void => {
-        this.regimenalqueData = data.datos ?? [];
-      });
+    if (this.idProcedimiento) {
+      this.service
+        .obtenerRegimenes(this.idProcedimiento?.toString())
+        .pipe(takeUntil(this.destroyed$))
+        .subscribe((data): void => {
+          this.regimenalqueData = data.datos ?? [];
+        });
     } else {
       this.service
-      .getRegimenalqueData()
-      .pipe(takeUntil(this.destroyed$))
-      .subscribe((data): void => {
-        this.regimenalqueData = data;
-      });
+        .getRegimenalqueData()
+        .pipe(takeUntil(this.destroyed$))
+        .subscribe((data): void => {
+          this.regimenalqueData = data;
+        });
     }
   }
 
   /** Obtiene los datos de la aduana */
   getAduanaData(): void {
-   if (this.idProcedimiento) {
-    this.service
-      .obtenerAduanas(this.idProcedimiento?.toString())
-      .pipe(takeUntil(this.destroyed$))
-      .subscribe((data): void => {
-        this.aduanaData = data.datos ?? [];
-      });
+    if (this.idProcedimiento) {
+      this.service
+        .obtenerAduanas(this.idProcedimiento?.toString())
+        .pipe(takeUntil(this.destroyed$))
+        .subscribe((data): void => {
+          this.aduanaData = data.datos ?? [];
+        });
     } else {
       this.service
-      .getAduanaData()
-      .pipe(takeUntil(this.destroyed$))
-      .subscribe((data): void => {
-        this.aduanaData = data;
-      });
+        .getAduanaData()
+        .pipe(takeUntil(this.destroyed$))
+        .subscribe((data): void => {
+          this.aduanaData = data;
+        });
     }
   }
   /**
@@ -861,12 +894,12 @@ if (this.idProcedimiento) {
   }
   /** Obtiene los datos de clasificación del producto */
   getClasificacionDelProductoData(): void {
-     if (this.idProcedimiento) {
+    if (this.idProcedimiento) {
       this.service
-        .obtenerClasificacionProductos(this.idProcedimiento?.toString(),this.idTramite)
+        .obtenerClasificacionProductos(this.idProcedimiento?.toString(), this.idTramite)
         .pipe(takeUntil(this.destroyed$))
         .subscribe((data): void => {
-           this.delProducto.catalogos = data.datos as Catalogo[];
+          this.delProducto.catalogos = data.datos as Catalogo[];
         });
     } else {
       this.service
@@ -880,12 +913,12 @@ if (this.idProcedimiento) {
   }
   /** Obtiene los datos para especificar clasificación del producto */
   getEspificarData(): void {
- if (this.idProcedimiento) {
+    if (this.idProcedimiento) {
       this.service
-        .obtenerEspecificarClasificacionProducto(this.idProcedimiento?.toString(),this.idClasificacion)
+        .obtenerEspecificarClasificacionProducto(this.idProcedimiento?.toString(), this.idClasificacion)
         .pipe(takeUntil(this.destroyed$))
         .subscribe((data): void => {
-           this.especificarData.catalogos = data.datos as Catalogo[];
+          this.especificarData.catalogos = data.datos as Catalogo[];
         });
     } else {
       this.service
@@ -900,12 +933,12 @@ if (this.idProcedimiento) {
   /** Obtiene los datos del tipo de producto */
   getTipoProductoData(): void {
 
- if (this.idProcedimiento) {
+    if (this.idProcedimiento) {
       this.service
-        .obtenerTipoProducto(this.idProcedimiento?.toString(),this.idProcedimiento?.toString())
+        .obtenerTipoProducto(this.idProcedimiento?.toString(), this.idProcedimiento?.toString())
         .pipe(takeUntil(this.destroyed$))
         .subscribe((data): void => {
-           this.tipoProductoData.catalogos = data.datos as Catalogo[];
+          this.tipoProductoData.catalogos = data.datos as Catalogo[];
         });
     } else {
       this.service
@@ -937,75 +970,79 @@ if (this.idProcedimiento) {
   /** Maneja el evento de envío del formulario */
 
   onSubmit(): void {
-     const MODAL_ELEMENT = document.getElementById('claveScianModal');
-  if (MODAL_ELEMENT) {
-    const MODAL_INSTANCE = Modal.getInstance(MODAL_ELEMENT) || new Modal(MODAL_ELEMENT);
-    MODAL_INSTANCE.hide();
-  }
-
-  const CLAVE_SCIAN_G_VALUE = this.clavaScianForm.get('claveScianG')?.value;
-  if (!CLAVE_SCIAN_G_VALUE || !CLAVE_SCIAN_G_VALUE.claveScian) {
-    return;
-  }
-
-  // Find the selected claveScian in the catalog
-  const SELECTED_CATALOG = this.claveScianDatos.find(
-    (item: Catalogo) => String(item.id) === String(CLAVE_SCIAN_G_VALUE.claveScian)
-  );
-
-  // Prepare the row to add
-  const NEW_ROW: FilaData = {
-    id: this.tableData.length > 0 ? Math.max(...this.tableData.map(row => row.id)) + 1 : 1,
-    claveScianG: {
-      claveScian: SELECTED_CATALOG ? SELECTED_CATALOG.descripcion : CLAVE_SCIAN_G_VALUE.claveScian,
-      descripcionDelScian: SELECTED_CATALOG ? SELECTED_CATALOG.descripcion : CLAVE_SCIAN_G_VALUE.descripcionDelScian
+    const MODAL_ELEMENT = document.getElementById('claveScianModal');
+    if (MODAL_ELEMENT) {
+      const MODAL_INSTANCE = Modal.getInstance(MODAL_ELEMENT) || new Modal(MODAL_ELEMENT);
+      MODAL_INSTANCE.hide();
     }
-  };
 
-  this.tableData = [...this.tableData, NEW_ROW];
-  this.showClavaScianForm = false;
-  this.clavaScianForm.reset();
+    const CLAVE_SCIAN_G_VALUE = this.clavaScianForm.get('claveScianG')?.value;
+    if (!CLAVE_SCIAN_G_VALUE || !CLAVE_SCIAN_G_VALUE.claveScian) {
+      return;
+    }
+
+    // Find the selected claveScian in the catalog
+    const SELECTED_CATALOG = this.claveScianDatos.find(
+      (item: Catalogo) => String(item.id) === String(CLAVE_SCIAN_G_VALUE.claveScian)
+    );
+
+    // Prepare the row to add
+    const NEW_ROW: FilaData = {
+      id: this.tableData.length > 0 ? Math.max(...this.tableData.map(row => row.id)) + 1 : 1,
+      claveScianG: {
+        claveScian: SELECTED_CATALOG ? SELECTED_CATALOG.descripcion : CLAVE_SCIAN_G_VALUE.claveScian,
+        descripcionDelScian: SELECTED_CATALOG ? SELECTED_CATALOG.descripcion : CLAVE_SCIAN_G_VALUE.descripcionDelScian
+      }
+    };
+
+    this.tableData = [...this.tableData, NEW_ROW];
+    this.nicoTabla = this.tableData;
+    this.solicitud260702Store.setNicoTabla(this.nicoTabla);
+    this.showClavaScianForm = false;
+    this.clavaScianForm.reset();
+
+    this.mostrarErrorTabla = false;
   }
 
   /** Última fila seleccionada */
-lastSelectedRow: FilaData2 | null = null;
+  lastSelectedRow: FilaData2 | null = null;
 
   /** Maneja la selección de filas */
   onfilasSeleccionadas(filasSeleccionadas: FilaData[] | ListaClave[] | FilaData2[]): void {
 
-  if (
-    filasSeleccionadas.length > 0 &&
-    'claveDeLosLotes' in filasSeleccionadas[0]
-  ) {
-    this.filasSeleccionadas = new Set(
-      (filasSeleccionadas as ListaClave[]).map((row) =>
-        Number(row.claveDeLosLotes)
-      )
-    );
-        this.lastSelectedRow = null;
+    if (
+      filasSeleccionadas.length > 0 &&
+      'claveDeLosLotes' in filasSeleccionadas[0]
+    ) {
+      this.filasSeleccionadas = new Set(
+        (filasSeleccionadas as ListaClave[]).map((row) =>
+          Number(row.claveDeLosLotes)
+        )
+      );
+      this.lastSelectedRow = null;
 
-  } else if (filasSeleccionadas.length > 0 && 'id' in filasSeleccionadas[0]) {
-    // Handles both FilaData and FilaData2 if both have 'id'
-    this.filasSeleccionadas = new Set(
-      (filasSeleccionadas as (FilaData | FilaData2)[]).map((row) => Number(row.id))
-    );
-  } else if (
-    filasSeleccionadas[0] &&
-    'claveScianG' in filasSeleccionadas[0] &&
-    'claveScian' in filasSeleccionadas[0].claveScianG
-  ) {
-    this.filasSeleccionadas = new Set(
-      (filasSeleccionadas as FilaData[]).map((row) =>
-        Number(row.claveScianG.claveScian)
-      )
-    );
-    
-  } else {
-    this.filasSeleccionadas.clear();
-    this.lastSelectedRow = null;
+    } else if (filasSeleccionadas.length > 0 && 'id' in filasSeleccionadas[0]) {
+      // Handles both FilaData and FilaData2 if both have 'id'
+      this.filasSeleccionadas = new Set(
+        (filasSeleccionadas as (FilaData | FilaData2)[]).map((row) => Number(row.id))
+      );
+    } else if (
+      filasSeleccionadas[0] &&
+      'claveScianG' in filasSeleccionadas[0] &&
+      'claveScian' in filasSeleccionadas[0].claveScianG
+    ) {
+      this.filasSeleccionadas = new Set(
+        (filasSeleccionadas as FilaData[]).map((row) =>
+          Number(row.claveScianG.claveScian)
+        )
+      );
 
+    } else {
+      this.filasSeleccionadas.clear();
+      this.lastSelectedRow = null;
+
+    }
   }
-}
   /** Elimina las filas seleccionadas */
   onEliminar(): void {
     if (!this.filasSeleccionadas || this.filasSeleccionadas.size === 0) {
@@ -1031,11 +1068,11 @@ lastSelectedRow: FilaData2 | null = null;
       (row) => !this.filasSeleccionadas.has(Number(row.claveDeLosLotes))
     );
 
-    
+
     this.filasSeleccionadas.clear();
     this.dataDeLaSolicitudForm.reset();
     this.abrirModal();
-    
+
   }
   /** Limpia el formulario de clave SCIAN */
   onLimpiar(): void {
@@ -1046,15 +1083,15 @@ lastSelectedRow: FilaData2 | null = null;
    * Muestra el formulario para agregar una nueva clave SCIAN.
    */
   onAgregar(): void {
-        this.showClavaScianForm = true;
+    this.showClavaScianForm = true;
 
- setTimeout(() => {
-    const MODAL_ELEMENT = document.getElementById('claveScianModal');
-    if (MODAL_ELEMENT) {
-      const MODAL_INSTANCE = Modal.getInstance(MODAL_ELEMENT) || new Modal(MODAL_ELEMENT);
-      MODAL_INSTANCE.show(); 
-    }
-  }, 0);
+    setTimeout(() => {
+      const MODAL_ELEMENT = document.getElementById('claveScianModal');
+      if (MODAL_ELEMENT) {
+        const MODAL_INSTANCE = Modal.getInstance(MODAL_ELEMENT) || new Modal(MODAL_ELEMENT);
+        MODAL_INSTANCE.show();
+      }
+    }, 0);
   }
 
   /**
@@ -1077,7 +1114,7 @@ lastSelectedRow: FilaData2 | null = null;
     }
     this.clavaScianForm.reset();
     this.abrirModal();
-    
+
   }
 
   /** Cancela la acción de agregar clave SCIAN */
@@ -1085,71 +1122,71 @@ lastSelectedRow: FilaData2 | null = null;
   onCancelar(): void {
     this.showClavaScianForm = false;
     this.clavaScianForm.reset();
-    
+
   }
   /** Agrega una nueva mercancia a la tabla */
-agregarMercanciaGrid(): void {
-  const SELECTED_ID = Array.from(this.filasSeleccionadas)[0];
-  const SELECTED_ROW_INDEX = this.mercanciasConfiguracionTabla.findIndex(
-     (row) => row.id === SELECTED_ID
-  );
+  agregarMercanciaGrid(): void {
+    const SELECTED_ID = Array.from(this.filasSeleccionadas)[0];
+    const SELECTED_ROW_INDEX = this.mercanciasConfiguracionTabla.findIndex(
+      (row) => row.id === SELECTED_ID
+    );
 
-  if (SELECTED_ROW_INDEX === -1) {
-    return;
+    if (SELECTED_ROW_INDEX === -1) {
+      return;
+    }
+    this.ediciondeindicedefila = SELECTED_ROW_INDEX;
+    const SELECTED_ROW = this.mercanciasConfiguracionTabla[SELECTED_ROW_INDEX];
+
+    this.dataDeLaSolicitudForm.patchValue({
+      clasificaionProductos: this.delProducto.catalogos.find(
+        (item) => item.descripcion === SELECTED_ROW.clasificaionProductos
+      )?.id || SELECTED_ROW.clasificaionProductos || '',
+      especificarProducto: this.especificarData.catalogos.find(
+        (item) => item.descripcion === SELECTED_ROW.especificarProducto
+      )?.id || SELECTED_ROW.especificarProducto || '',
+      nombreProductoEspecifico: SELECTED_ROW.nombreProductoEspecifico || '',
+      marca: SELECTED_ROW.marca || '',
+      tipoProducto: this.tipoProductoData.catalogos.find(
+        (item) => item.descripcion === SELECTED_ROW.tipoProducto
+      )?.id || SELECTED_ROW.tipoProducto || '',
+      fraccionArancelaria: SELECTED_ROW.fraccionArancelaria || '',
+      descripcionFraccionArancelaria: SELECTED_ROW.descripcionFraccionArancelaria || '',
+      cantidadUMT: SELECTED_ROW.cantidadUMT || '',
+      umt: SELECTED_ROW.umt || '',
+      cantidadUMC: SELECTED_ROW.cantidadUMC || '',
+      umc: SELECTED_ROW.umc || '',
+      paisDeOrigen: SELECTED_ROW.paisDeOrigen || '',
+      paisDeProcedencia: SELECTED_ROW.paisDeProcedencia || '',
+      usoEspecifico: SELECTED_ROW.usoEspecifico || '',
+    });
+
+    // abrir el modal
+    if (this.modalElement) {
+      const MODAL_INSTANCE = new Modal(this.modalElement.nativeElement);
+      MODAL_INSTANCE.show();
+    }
   }
-  this.ediciondeindicedefila = SELECTED_ROW_INDEX;
-  const SELECTED_ROW = this.mercanciasConfiguracionTabla[SELECTED_ROW_INDEX];
-
-  this.dataDeLaSolicitudForm.patchValue({
-    clasificaionProductos: this.delProducto.catalogos.find(
-      (item) => item.descripcion === SELECTED_ROW.clasificaionProductos
-    )?.id || SELECTED_ROW.clasificaionProductos || '',
-    especificarProducto: this.especificarData.catalogos.find(
-      (item) => item.descripcion === SELECTED_ROW.especificarProducto
-    )?.id || SELECTED_ROW.especificarProducto || '',
-    nombreProductoEspecifico: SELECTED_ROW.nombreProductoEspecifico || '',
-    marca: SELECTED_ROW.marca || '',
-    tipoProducto: this.tipoProductoData.catalogos.find(
-      (item) => item.descripcion === SELECTED_ROW.tipoProducto
-    )?.id || SELECTED_ROW.tipoProducto || '',
-    fraccionArancelaria: SELECTED_ROW.fraccionArancelaria || '',
-    descripcionFraccionArancelaria: SELECTED_ROW.descripcionFraccionArancelaria || '',
-    cantidadUMT: SELECTED_ROW.cantidadUMT || '',
-    umt: SELECTED_ROW.umt || '',
-    cantidadUMC: SELECTED_ROW.cantidadUMC || '',
-    umc: SELECTED_ROW.umc || '',
-    paisDeOrigen: SELECTED_ROW.paisDeOrigen || '',
-    paisDeProcedencia: SELECTED_ROW.paisDeProcedencia || '',
-    usoEspecifico: SELECTED_ROW.usoEspecifico || '',
-  });
-
-  // abrir el modal
-  if (this.modalElement) {
-    const MODAL_INSTANCE = new Modal(this.modalElement.nativeElement);
-    MODAL_INSTANCE.show();
-  }
-}
   /** Maneja el evento de modificación de mercancias */
-onModificarMercancias(): void {
-  if (!this.filasSeleccionadas || this.filasSeleccionadas.size === 0) {
-    this.abrirModal(0,false);
-  } else if (this.filasSeleccionadas.size > 1) {
-    this.nuevaNotificacion = {
-      tipoNotificacion: 'alert',
-      categoria: 'warning',
-      modo: 'action',
-      titulo: '',
-      mensaje: 'Debe seleccionar exactamente un registro para modificar.',
-      cerrar: false,
-      tiempoDeEspera: 0,
-      txtBtnAceptar: 'Aceptar',
-      txtBtnCancelar: '',
-      tamanioModal: 'modal-sm',
-    };
-  } else {
-    this.onChange();
+  onModificarMercancias(): void {
+    if (!this.filasSeleccionadas || this.filasSeleccionadas.size === 0) {
+      this.abrirModal(0, false);
+    } else if (this.filasSeleccionadas.size > 1) {
+      this.nuevaNotificacion = {
+        tipoNotificacion: 'alert',
+        categoria: 'warning',
+        modo: 'action',
+        titulo: '',
+        mensaje: 'Debe seleccionar exactamente un registro para modificar.',
+        cerrar: false,
+        tiempoDeEspera: 0,
+        txtBtnAceptar: 'Aceptar',
+        txtBtnCancelar: '',
+        tamanioModal: 'modal-sm',
+      };
+    } else {
+      this.onChange();
+    }
   }
-}
   /**
    * Maneja el cambio en el campo "Clave de los lotes".
    * Actualiza el valor de la clave en la fila seleccionada de la tabla.
@@ -1234,7 +1271,7 @@ onModificarMercancias(): void {
       return;
     }
 
-    this.ediciondeindicedefila = ROW_INDEX; 
+    this.ediciondeindicedefila = ROW_INDEX;
 
     const SELECTED_ROW = this.listaClaveTabla[ROW_INDEX];
 
@@ -1251,120 +1288,126 @@ onModificarMercancias(): void {
       'datosDelTramiteRealizar'
     ) as FormGroup;
   }
-/**
- * Obtiene el grupo de formulario para la clave SCIAN.
- * @return El grupo de formulario `claveScianG`.
- */
+
+  get datosDelManifiestos(): FormGroup {
+    return this.dataDeLaSolicitudForm.get(
+      'datosDelManifiestos'
+    ) as FormGroup;
+  }
+  /**
+   * Obtiene el grupo de formulario para la clave SCIAN.
+   * @return El grupo de formulario `claveScianG`.
+   */
   get claveScianG(): FormGroup {
     return this.clavaScianForm.get('claveScianG') as FormGroup;
   }
 
-/** Establece valores en el store */
-onSave(): void {
-  const FORM_DATA = { ...this.dataDeLaSolicitudForm.value };
+  /** Establece valores en el store */
+  onSave(): void {
+    const FORM_DATA = { ...this.dataDeLaSolicitudForm.value };
 
-  FORM_DATA.tipoProducto = this.tipoProductoData.catalogos.find(
-    (item: Catalogo) => String(item.id) === String(FORM_DATA.tipoProducto)
-  )?.descripcion || FORM_DATA.tipoProducto;
+    FORM_DATA.tipoProducto = this.tipoProductoData.catalogos.find(
+      (item: Catalogo) => String(item.id) === String(FORM_DATA.tipoProducto)
+    )?.descripcion || FORM_DATA.tipoProducto;
 
-  FORM_DATA.clasificaionProductos = this.delProducto.catalogos.find(
-    (item: Catalogo) => String(item.id) === String(FORM_DATA.clasificaionProductos)
-  )?.descripcion || FORM_DATA.clasificaionProductos;
+    FORM_DATA.clasificaionProductos = this.delProducto.catalogos.find(
+      (item: Catalogo) => String(item.id) === String(FORM_DATA.clasificaionProductos)
+    )?.descripcion || FORM_DATA.clasificaionProductos;
 
-  FORM_DATA.especificarProducto = this.especificarData.catalogos.find(
-    (item: Catalogo) => String(item.id) === String(FORM_DATA.especificarProducto)
-  )?.descripcion || FORM_DATA.especificarProducto;
+    FORM_DATA.especificarProducto = this.especificarData.catalogos.find(
+      (item: Catalogo) => String(item.id) === String(FORM_DATA.especificarProducto)
+    )?.descripcion || FORM_DATA.especificarProducto;
 
 
-  if (this.indiceFilaSeleccionada !== null) {
-    this.mercanciasConfiguracionTabla = [
-      ...this.mercanciasConfiguracionTabla.slice(0, this.indiceFilaSeleccionada),
-      {
-        ...this.mercanciasConfiguracionTabla[this.indiceFilaSeleccionada],
-        ...FORM_DATA
-      },
-      ...this.mercanciasConfiguracionTabla.slice(this.indiceFilaSeleccionada + 1)
-    ];
+    if (this.indiceFilaSeleccionada !== null) {
+      this.mercanciasConfiguracionTabla = [
+        ...this.mercanciasConfiguracionTabla.slice(0, this.indiceFilaSeleccionada),
+        {
+          ...this.mercanciasConfiguracionTabla[this.indiceFilaSeleccionada],
+          ...FORM_DATA
+        },
+        ...this.mercanciasConfiguracionTabla.slice(this.indiceFilaSeleccionada + 1)
+      ];
 
-  } else {
-    const NEW_ID = this.mercanciasConfiguracionTabla.length > 0
-      ? Math.max(...this.mercanciasConfiguracionTabla.map(item => item.id || 0)) + 1
-      : 1;
-    this.mercanciasConfiguracionTabla = [
-      ...this.mercanciasConfiguracionTabla,
-      { ...FORM_DATA, id: NEW_ID }
-    ];
+    } else {
+      const NEW_ID = this.mercanciasConfiguracionTabla.length > 0
+        ? Math.max(...this.mercanciasConfiguracionTabla.map(item => item.id || 0)) + 1
+        : 1;
+      this.mercanciasConfiguracionTabla = [
+        ...this.mercanciasConfiguracionTabla,
+        { ...FORM_DATA, id: NEW_ID }
+      ];
 
-   
-  }
-  
-  this.dataDeLaSolicitudForm.reset();
-      this.filasSeleccionadas.clear();
-        this.indiceFilaSeleccionada = null; 
 
-  this.cdr.detectChanges();
-  this.closeModal();
-}
+    }
 
-/*
-  * Maneja el evento de cambio en la selección de filas.
-  * Si se selecciona una fila, actualiza el índice de la fila seleccionada y los valores del formulario.
-  * Muestra el modal para agregar o modificar mercancías.
-  */
-onChange(): void {
+    this.dataDeLaSolicitudForm.reset();
+    this.filasSeleccionadas.clear();
+    this.indiceFilaSeleccionada = null;
 
-  if (!this.filasSeleccionadas || this.filasSeleccionadas.size !== 1) {
-
-    return;
+    this.cdr.detectChanges();
+    this.closeModal();
   }
 
-  const SELECTED_ID = Array.from(this.filasSeleccionadas)[0];
-  const SELECTED_ROW_INDEX = this.mercanciasConfiguracionTabla.findIndex((row) => row.id === SELECTED_ID);
+  /*
+    * Maneja el evento de cambio en la selección de filas.
+    * Si se selecciona una fila, actualiza el índice de la fila seleccionada y los valores del formulario.
+    * Muestra el modal para agregar o modificar mercancías.
+    */
+  onChange(): void {
 
-  if (SELECTED_ROW_INDEX === -1) {
-    return;
-  }
+    if (!this.filasSeleccionadas || this.filasSeleccionadas.size !== 1) {
 
-  this.indiceFilaSeleccionada = SELECTED_ROW_INDEX;
-  const SELECTED_ROW = this.mercanciasConfiguracionTabla[SELECTED_ROW_INDEX];
+      return;
+    }
 
-  // Parche los valores del formulario con la asignación correcta para los campos del catálogo
-   this.dataDeLaSolicitudForm.patchValue({
+    const SELECTED_ID = Array.from(this.filasSeleccionadas)[0];
+    const SELECTED_ROW_INDEX = this.mercanciasConfiguracionTabla.findIndex((row) => row.id === SELECTED_ID);
 
-    clasificaionProductos: this.delProducto.catalogos.find(
-      (item) => item.descripcion === SELECTED_ROW.clasificaionProductos
-    )?.id || SELECTED_ROW.clasificaionProductos,
-    especificarProducto: this.especificarData.catalogos.find(
-      (item) => item.descripcion === SELECTED_ROW.especificarProducto
-    )?.id || SELECTED_ROW.especificarProducto,
-    nombreProductoEspecifico: SELECTED_ROW.nombreProductoEspecifico,
-    marca: SELECTED_ROW.marca,
-    fraccionArancelaria: SELECTED_ROW.fraccionArancelaria,
-    descripcionFraccionArancelaria: SELECTED_ROW.descripcionFraccionArancelaria,
-    cantidadUMT: SELECTED_ROW.cantidadUMT,
-    umt: SELECTED_ROW.umt,
-    cantidadUMC: SELECTED_ROW.cantidadUMC,
-    umc: SELECTED_ROW.umc,
-    paisDeOrigen: SELECTED_ROW.paisDeOrigen,
-    paisDeProcedencia: SELECTED_ROW.paisDeProcedencia,
-    usoEspecifico: SELECTED_ROW.usoEspecifico,
-  });
+    if (SELECTED_ROW_INDEX === -1) {
+      return;
+    }
+
+    this.indiceFilaSeleccionada = SELECTED_ROW_INDEX;
+    const SELECTED_ROW = this.mercanciasConfiguracionTabla[SELECTED_ROW_INDEX];
+
+    // Parche los valores del formulario con la asignación correcta para los campos del catálogo
+    this.dataDeLaSolicitudForm.patchValue({
+
+      clasificaionProductos: this.delProducto.catalogos.find(
+        (item) => item.descripcion === SELECTED_ROW.clasificaionProductos
+      )?.id || SELECTED_ROW.clasificaionProductos,
+      especificarProducto: this.especificarData.catalogos.find(
+        (item) => item.descripcion === SELECTED_ROW.especificarProducto
+      )?.id || SELECTED_ROW.especificarProducto,
+      nombreProductoEspecifico: SELECTED_ROW.nombreProductoEspecifico,
+      marca: SELECTED_ROW.marca,
+      fraccionArancelaria: SELECTED_ROW.fraccionArancelaria,
+      descripcionFraccionArancelaria: SELECTED_ROW.descripcionFraccionArancelaria,
+      cantidadUMT: SELECTED_ROW.cantidadUMT,
+      umt: SELECTED_ROW.umt,
+      cantidadUMC: SELECTED_ROW.cantidadUMC,
+      umc: SELECTED_ROW.umc,
+      paisDeOrigen: SELECTED_ROW.paisDeOrigen,
+      paisDeProcedencia: SELECTED_ROW.paisDeProcedencia,
+      usoEspecifico: SELECTED_ROW.usoEspecifico,
+    });
 
     this.filasSeleccionadas.clear();
-  // mostrar el modal
-  const MODAL_ELEMENT = document.getElementById('modalAgregarMercancia');
-  if (MODAL_ELEMENT) {
-    const MODAL_INSTANCE = new Modal(MODAL_ELEMENT);
-    MODAL_INSTANCE.show();
-  } 
-}
+    // mostrar el modal
+    const MODAL_ELEMENT = document.getElementById('modalAgregarMercancia');
+    if (MODAL_ELEMENT) {
+      const MODAL_INSTANCE = new Modal(MODAL_ELEMENT);
+      MODAL_INSTANCE.show();
+    }
+  }
 
-/**
- * Establece los valores en el store a partir del formulario.
- * @param form El formulario que contiene los valores.
- * @param campo El campo del formulario que se va a establecer en el store.
- * @param metodoNombre El nombre del método en el store que se va a utilizar para establecer el valor.
- */
+  /**
+   * Establece los valores en el store a partir del formulario.
+   * @param form El formulario que contiene los valores.
+   * @param campo El campo del formulario que se va a establecer en el store.
+   * @param metodoNombre El nombre del método en el store que se va a utilizar para establecer el valor.
+   */
   setValoresStore(
     form: FormGroup,
     campo: string,

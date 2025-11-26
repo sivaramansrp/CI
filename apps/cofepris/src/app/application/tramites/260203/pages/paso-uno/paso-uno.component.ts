@@ -67,7 +67,7 @@ export class PasoUnoComponent implements OnDestroy, OnChanges {
    *
    * @type {number}
    */
-  indice: number = 2;
+  indice: number | undefined = 1;
 
   /**
    * Notificador utilizado para manejar la destrucción o desuscripción de observables.
@@ -98,13 +98,11 @@ export class PasoUnoComponent implements OnDestroy, OnChanges {
     private consultaQuery: ConsultaioQuery,
     private importacionService: ImportacionService
   ) {
-    this.query.indicePrevioRuta$
-      .pipe(takeUntil(this.destroyNotifier$))
-      .subscribe((indice: number) => {
-        if (indice) {
-          this.indice = indice;
-        }
-      });
+    this.query.getTabSeleccionado$
+          .pipe(takeUntil(this.destroyNotifier$))
+          .subscribe((tab) => {
+            this.indice = tab;
+          });
       this.consultaQuery.selectConsultaioState$.pipe(takeUntil(this.destroyNotifier$)).subscribe((seccionState) => {
         this.consultaState = seccionState;
         if (this.consultaState && this.consultaState.procedureId === '260203' &&
@@ -155,7 +153,7 @@ export class PasoUnoComponent implements OnDestroy, OnChanges {
    * @param i - El índice a seleccionar.
    */
   seleccionaTab(i: number): void {
-    this.store.setIndice(i);
+    this.store.updateTabSeleccionado(i);
   }
      /**
    * @description

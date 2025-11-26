@@ -190,10 +190,12 @@ export class PasoTresComponent implements OnInit, OnDestroy {
           );
         }),
         tap((tramite) => {
+          // Solo se ejecuta si todo fue exitoso
           this.tramiteStore.establecerTramite(
-            tramite.data,
+            this.folio,
             firma,
-            ID_SOLICITUD ?? 0
+            ID_SOLICITUD ?? 0,
+            this.procedure
           );
           this.tramiteStore.establecerTramite(
             this.folio,
@@ -204,6 +206,7 @@ export class PasoTresComponent implements OnInit, OnDestroy {
           if (this.router.url.includes('autorizar')) {
             this.router.navigate([this.router.url.replace('/autorizar-dictamen', '/acuse')]);
           } else {
+            
             this.router.navigate([`${this.url}/acuse`]);
           }
           this.tramite5701Store.limpiarSolicitud();

@@ -70,6 +70,11 @@ export class ContenedorDePasosComponent implements OnInit {
    */
   indice: number = 1;
 
+    /**
+     * Identificador del tipo de trámite.
+     * Valor estático usado en llamadas al servicio para asociar acciones al trámite 260202.
+     */
+    idTipoTramite: string = '260202';
   /**
    * @property {WizardComponent} wizardComponent
    * @description Referencia al componente del wizard.
@@ -222,7 +227,7 @@ export class ContenedorDePasosComponent implements OnInit {
   postGuardarDatos(e: AccionBoton): void {
     const PAYLOAD = GuardarAdapter_260202.toFormPayload(this.storeData);
       let shouldNavigate = false;
-      this.registroSolicitudService.postGuardarDatos('260202', PAYLOAD).subscribe(response => {
+      this.registroSolicitudService.postGuardarDatos(this.idTipoTramite, PAYLOAD).subscribe(response => {
         shouldNavigate = response.codigo === '00';
         if (!shouldNavigate) {
           const ERROR_MESSAGE = response.error || 'Error desconocido en la solicitud';
@@ -373,6 +378,11 @@ export class ContenedorDePasosComponent implements OnInit {
     if(value){
       this.mostrarAlerta = false;
       this.requiresPaymentData = true;
+       if(!this.pasoUnoComponent.datosSolicitud?.validarFormularioDatos() && this.requiresPaymentData) {
+          this.confirmarSinPagoDeDerechos = 2;
+        }else {
+          this.confirmarSinPagoDeDerechos = 3;
+        }
     } else {
       this.mostrarAlerta = false;
       this.confirmarSinPagoDeDerechos = 4;

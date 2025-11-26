@@ -64,7 +64,7 @@ export class DatosExportadorComponent implements OnInit, OnDestroy {
    * @property {RadioOpcion[]} tipo_opcion
    * @description Opciones disponibles para el tipo de persona exportador.
    */
-  tipo_opcion : RadioOpcion[] = OPCION_DE_RADIO_EXPORTADOR
+  tipo_opcion: RadioOpcion[] = OPCION_DE_RADIO_EXPORTADOR
 
   /**
    * @property {Subject<void>} destroyNotifier$
@@ -98,7 +98,7 @@ export class DatosExportadorComponent implements OnInit, OnDestroy {
     public consultaquery: ConsultaioQuery,
     private formValidation: FormValidationService,
     private cdr: ChangeDetectorRef,
-  ){}
+  ) { }
 
   /**
    * @method ngOnInit
@@ -106,27 +106,29 @@ export class DatosExportadorComponent implements OnInit, OnDestroy {
    */
   async ngOnInit(): Promise<void> {
     this.query.selectDatos$
-    .pipe(
-      takeUntil(this.destroyNotifier$),
-      map((state) => {
-        this.datosState = state as DatosGrupos;
-        if(state.datosExportador.persona_tipo) {
-          this.onTipoPersonaExportadorChange(state.datosExportador.persona_tipo);
-        }
-      })
-    )
-    .subscribe();
+      .pipe(
+        takeUntil(this.destroyNotifier$),
+        map((state) => {
+          this.datosState = state as DatosGrupos;
+          const PERSONA_TIPO = this.datosState?.datosExportador?.persona_tipo;
+          // Validar que no sea null, undefined ni cadena vacía
+          if (PERSONA_TIPO !== null && PERSONA_TIPO !== undefined && PERSONA_TIPO !== '') {
+            this.tipoPersonaExportador = PERSONA_TIPO;
+          }
+        })
+      )
+      .subscribe();
     await this.initActionFormBuild();
     this.consultaquery.selectConsultaioState$
-    .pipe(
-      takeUntil(this.destroyNotifier$),
-      map((seccionState) => {
-        this.esFormularioSoloLectura = seccionState.readonly;
-      })
-    )
-    .subscribe();
+      .pipe(
+        takeUntil(this.destroyNotifier$),
+        map((seccionState) => {
+          this.esFormularioSoloLectura = seccionState.readonly;
+        })
+      )
+      .subscribe();
 
-    if(this.esFormularioSoloLectura) {
+    if (this.esFormularioSoloLectura) {
       this.datosExportador.disable();
     }
   }
@@ -155,7 +157,6 @@ export class DatosExportadorComponent implements OnInit, OnDestroy {
   onTipoPersonaExportadorChange(value: string | number): void {
     this.tipoPersonaExportador = String(value);
     const GRUPO = this.datosExportador as FormGroup;
-
     this.store.setExportadorPersona_tipo(this.tipoPersonaExportador);
 
     // Siempre requerido

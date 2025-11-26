@@ -1,8 +1,8 @@
+import { Fabricante, Proveedor } from '../../../shared/models/shared2606/terceros-relacionados.model';
+import { ManifiestosRespuesta, MercanciaCrossList,ProductoTable, RepresentanteLegalRespuesta,ScianTable, SolicitudTable } from '../models/aviso-model';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-
-import { ManifiestosRespuesta, MercanciaCrossList,ProductoTable, RepresentanteLegalRespuesta,ScianTable, SolicitudTable } from '../models/aviso-model';
 import { RespuestaCatalogos } from '@ng-mf/data-access-user';
 import { map } from 'rxjs/operators';
 
@@ -137,8 +137,8 @@ export class AvisoSanitarioService {
    * 
    * @returns Observable con los datos del catálogo de proveedores.
    */
-  obtenerProveedorDatos(): Observable<RespuestaCatalogos> {
-    return this.http.get<RespuestaCatalogos>('assets/json/260601/proveedor-table.json');
+  obtenerProveedorDatos(): Observable<Proveedor[]> {
+    return this.http.get<Proveedor[]>('assets/json/260601/proveedor-table.json');
   }
 
   /**
@@ -208,6 +208,10 @@ export class AvisoSanitarioService {
   obtenerSolicitudDatos(): Observable<SolicitudTable[]> {
     return this.http.get<SolicitudTable[]>('assets/json/260601/solicitudDatos.json')
       .pipe(map((res) => res));
+  }
+
+  getFabricanteTablaDatos(): Observable<Fabricante[]> {
+    return this.http.get<Fabricante[]>('assets/json/260101/fabricante.json');
   }
 
 }

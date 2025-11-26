@@ -20,12 +20,12 @@ export class SharedFormService {
     }
 
     // // Método para enviar datos de prellenado de terceros relacionados
-    enviarTercerosRelacionadosPrellenado(data: PrellenadoTercerosRelacionados): void {
-        this.dataSourceTerceros.next(data);
+    enviarTercerosRelacionadosPrellenado(dataSourceTerceros: PrellenadoTercerosRelacionados): void {
+        this.dataSourceTerceros.next(dataSourceTerceros);
     }
 
     // // Método para enviar datos de prellenado de terceros relacionados
-    enviarPagoDerechosPrellenado(data: PrellenadoPagoDerechos): void {
-        this.dataSourcePagoDerechos.next(data);
+    enviarPagoDerechosPrellenado(dataSourcePagoDerechos: PrellenadoPagoDerechos): void {
+        this.dataSourcePagoDerechos.next(dataSourcePagoDerechos);
     }
 }

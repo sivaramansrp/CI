@@ -1,81 +1,73 @@
+import { Tramite260203State, Tramite260203Store } from '../stores/tramite260203Store.store';
 import { Injectable } from '@angular/core';
-
 import { Query } from '@datorama/akita';
 
-import {
-  Tramite260203State,
-  Tramite260203Store,
-} from '../stores/tramite260203Store.store';
-
 /**
- * Decorador que marca esta clase como un servicio inyectable en Angular.
- * 
- * Este servicio está registrado en el nivel raíz del inyector, lo que significa que estará disponible
- * en toda la aplicación sin necesidad de declararlo explícitamente en los módulos. 
- * 
- * La anotación `@Injectable({ providedIn: 'root' })` asegura que Angular gestione la creación y el ciclo de vida 
- * de esta clase como un singleton, proporcionando una única instancia compartida en toda la aplicación.
+ * @class
+ * @name Tramite260203Query
+ * @description
+ * Clase que proporciona consultas para acceder al estado del trámite 260203.
+ * Extiende la clase `Query` de Akita para realizar selecciones del estado almacenado.
+ *
+ * @extends {Query<Tramite260203State>}
  */
 @Injectable({ providedIn: 'root' })
 export class Tramite260203Query extends Query<Tramite260203State> {
   /**
-   * Constructor para el servicio de consulta del estado del trámite 260203.
-   * @param {Tramite260203Store} store - Almacén de datos del trámite 260203
+   * @constructor
+   * @description
+   * Inicializa la consulta con la tienda correspondiente.
+   *
+   * @param {Tramite260203Store} store - La tienda que contiene el estado del trámite 260203.
    */
   constructor(protected override store: Tramite260203Store) {
     super(store);
   }
   /**
-   * Selecciona el estado completo de la solicitud.
-   * @returns {Observable<Tramite260203State>} El estado completo del trámite
+   * @property {Observable<Tramite260203State>} selectTramiteState$
+   * @description
+   * Selecciona el estado completo del trámite 260203.
    */
   selectTramiteState$ = this.select((state) => {
     return state;
   });
 
   /**
-   * Obtiene los datos de la tabla de fabricantes.
-   * @returns {Observable<Fabricante[]>} Los datos de los fabricantes
+   * @property {Observable<Fabricante[]>} getFabricanteTablaDatos$
+   * @description
+   * Selecciona la lista de fabricantes del estado.
    */
   public getFabricanteTablaDatos$ = this.select(
     (state) => state.fabricanteTablaDatos
   );
-
   /**
-   * Obtiene los datos de la tabla de destinatarios finales.
-   * @returns {Observable<Destinatario[]>} Los datos de los destinatarios finales
+   * @property {Observable<Destinatario[]>} getDestinatarioFinalTablaDatos$
+   * @description
+   * Selecciona la lista de destinatarios finales del estado.
    */
   public getDestinatarioFinalTablaDatos$ = this.select(
     (state) => state.destinatarioFinalTablaDatos
   );
-
   /**
-   * Obtiene los datos de la tabla de proveedores.
-   * @returns {Observable<Proveedor[]>} Los datos de los proveedores
+   * @property {Observable<Proveedor[]>} getProveedorTablaDatos$
+   * @description
+   * Selecciona la lista de proveedores del estado.
    */
   public getProveedorTablaDatos$ = this.select(
     (state) => state.proveedorTablaDatos
   );
-
   /**
-   * Obtiene los datos de la tabla de facturadores.
-   * @returns {Observable<Facturador[]>} Los datos de los facturadores
+   * @property {Observable<Facturador[]>} getFacturadorTablaDatos$
+   * @description
+   * Selecciona la lista de facturadores del estado.
    */
   public getFacturadorTablaDatos$ = this.select(
     (state) => state.facturadorTablaDatos
   );
-
   /**
-   * Obtiene los detalles de la tabla de mercancía.
-   * @returns {Observable<DetalleMercancia[]>} Los detalles de la mercancía
+   * @property {Observable<number | undefined>} getTabSeleccionado$
+   * @description
+   * Selecciona el índice de la pestaña actualmente seleccionada en el estado.
    */
-  public getDetalleMercancia$ = this.select(
-    (state) => state.detalleMercanciaTabla
-  );
-
-  /**
-   * Obtiene el índice previo de la ruta.
-   * @returns {Observable<number>} El índice previo de la ruta
-   */
-  public indicePrevioRuta$ = this.select((state) => state.indice);
+  public getTabSeleccionado$ = this.select((state) => state.tabSeleccionado);
 }

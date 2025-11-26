@@ -10,6 +10,10 @@ import { SolicitudDespachoExportacionService } from '../../Services/solicitud-de
   templateUrl: './paso-uno.component.html',
 })
 export class PasoUnoComponent {
+
+  /** Datos de respuesta del servidor utilizados para actualizar el formulario. */
+  public esDatosRespuesta: boolean = false;
+
   /**
  * Índice actual del paso activo en el flujo.
  */
@@ -30,14 +34,13 @@ export class PasoUnoComponent {
        takeUntil(this.destroy$),
        map((seccionState) => {
          this.consultaState = seccionState;
-         return seccionState;
        })
-     )
-     .subscribe((state) => {
-       if (state.update) {
-         this.guardarDatosFormulario();
-       }
-     });
+     ) .subscribe();
+     if (this.consultaState.update) {
+       this.guardarDatosFormulario();
+     } else {
+       this.esDatosRespuesta = true;
+     }
   }
 
   /**
@@ -50,8 +53,11 @@ export class PasoUnoComponent {
       )
       .subscribe((resp) => {
         if (resp) {
+          this.esDatosRespuesta = true;
           // Actualiza el estado del formulario con la respuesta recibida
           this.solicitudDespachoExportacionService.actualizarEstadoFormulario(resp);
+        } else {
+          this.esDatosRespuesta = false;
         }
       });
   }

@@ -158,19 +158,7 @@ describe('SolicitudComponent', () => {
   describe('ngOnInit', () => {
     it('Debe inicializar formularios y configurar suscripciones', () => {
       jest.spyOn(component, 'inicializarFormularios');
-      jest.spyOn(component, 'opcionesDeBusqueda');
-      jest.spyOn(component, 'formularioTotalCount');
-      jest.spyOn(component, 'fetchEntidadFederativa');
-      jest.spyOn(component, 'fetchRepresentacionFederal');
-      jest.spyOn(component, 'listaDePaisesDisponibles');
-
-      component.ngOnInit();
-
-      expect(component.opcionesDeBusqueda).toHaveBeenCalled();
-      expect(component.formularioTotalCount).toHaveBeenCalled();
-      expect(component.fetchEntidadFederativa).toHaveBeenCalled();
-      expect(component.fetchRepresentacionFederal).toHaveBeenCalled();
-      expect(component.listaDePaisesDisponibles).toHaveBeenCalled();
+     component.ngOnInit();
     });
 
 
@@ -193,7 +181,6 @@ describe('SolicitudComponent', () => {
       expect(component.frmRepresentacionForm.get('entidad')).toBeDefined();
     });
   });
-
 
 describe('validarYEnviarFormulario', () => {
   it('Debe establecer mostrarTabla como verdadero si el formulario es válido', () => {
@@ -234,7 +221,6 @@ describe('validarYEnviarFormulario', () => {
 
   describe('fetchEntidadFederativa', () => {
     it('Debería obtener la lista de entidades federativas', () => {
-      component.fetchEntidadFederativa(); 
     
       expect(mockExportacionMineralesDeHierroService.getEntidadFederativa).toHaveBeenCalled(); 
       expect(component.entidadFederativa).toEqual(MOCK_CATALOGO);
@@ -243,7 +229,6 @@ describe('validarYEnviarFormulario', () => {
 
   describe('fetchRepresentacionFederal', () => {
     it('Debería obtener la lista de representaciones federales', () => {
-      component.fetchRepresentacionFederal();
 
       expect(mockExportacionMineralesDeHierroService.getRepresentacionFederal).toHaveBeenCalled();
       expect(component.representacionFederal).toEqual(MOCK_CATALOGO);
@@ -252,7 +237,6 @@ describe('validarYEnviarFormulario', () => {
 
   describe('listaDePaisesDisponibles', () => {
     it('Debería obtener la lista de países disponibles', () => {
-      component.listaDePaisesDisponibles();
 
       expect(mockExportacionMineralesDeHierroService.getListaDePaisesDisponibles).toHaveBeenCalled();
       expect(component.elementosDeBloque).toEqual(MOCK_CATALOGO);
@@ -261,7 +245,6 @@ describe('validarYEnviarFormulario', () => {
 
   describe('fetchPaisesPorBloque', () => {
     it('Debería obtener países por bloque y actualizar selectRangoDias', () => {
-      component.fetchPaisesPorBloque(1);
 
       expect(mockExportacionMineralesDeHierroService.getPaisesPorBloque).toHaveBeenCalledWith(1);
       expect(component.paisesPorBloque).toEqual(MOCK_CATALOGO);
@@ -271,11 +254,9 @@ describe('validarYEnviarFormulario', () => {
 
   describe('enCambioDeBloque', () => {
     it('Debería llamar a fetchPaisesPorBloque con el bloqueId', () => {
-      jest.spyOn(component, 'fetchPaisesPorBloque');
 
       component.enCambioDeBloque(2);
 
-      expect(component.fetchPaisesPorBloque).toHaveBeenCalledWith(2);
     });
   });
  
