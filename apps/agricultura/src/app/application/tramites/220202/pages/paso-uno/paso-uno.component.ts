@@ -211,6 +211,10 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
    * Nombre de la pantalla solicitante
    */
   nombreSolicitante: string = '';
+  /**
+   * Indica si se debe mostrar el formulario o no.
+   */
+  ocultarForm: boolean = false;
 
   /**
    * Constructor del componente.
@@ -245,6 +249,9 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
             this.guardarDatosFormulario();
           } else {
             this.esDatosRespuesta = true;
+          }
+          if (this.consultaState.readonly === true) {
+            this.ocultarForm = true;
           }
         })
       )

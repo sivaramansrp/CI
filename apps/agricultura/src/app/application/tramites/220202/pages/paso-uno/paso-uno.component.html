@@ -37,7 +37,7 @@
       <solicitante [hidden]="indice !== 1"></solicitante>
 
       @if (esDatosRespuesta) {
-        <app-datos-de-la-solicitud [hidden]="indice !== 2"></app-datos-de-la-solicitud>
+        <app-datos-de-la-solicitud [hidden]="indice !== 2" [consultaState]="consultaState" [ocultarForm]="ocultarForm"></app-datos-de-la-solicitud>
       }
 
       @if (esDatosRespuesta) {
