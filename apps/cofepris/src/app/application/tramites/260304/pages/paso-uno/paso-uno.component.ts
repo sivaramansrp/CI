@@ -1,152 +1,107 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { Subject, takeUntil } from 'rxjs';
+import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { ConsultaioQuery } from '@ng-mf/data-access-user';
-import { ContenedorDeDatosSolicitudComponent } from '../../components/contenedor-de-datos-solicitud/contenedor-de-datos-solicitud.component';
-import { ExportacionMedicamentosContenganService } from '../../service/exportacion-medicamentos-contengan.service';
-import { PagoDeDerechosContenedoraComponent } from '../../components/pago-de-derechos-contenedora/pago-de-derechos-contenedora/pago-de-derechos-contenedora.component';
-import { SolicitanteComponent } from '@libs/shared/data-access-user/src';
-import { TercerosRelacionadosVistaComponent } from '../../components/terceros-relacionados-vista/terceros-relacionados-vista.component';
-import { Tramite260304Query } from '../../estados/tramite260304Query.query';
-import { Tramite260304Store } from '../../estados/tramite260304Store.store';
 
+import { ConsultaioQuery, ConsultaioState } from '@ng-mf/data-access-user';
+import { DatosDeLaSolicitudContenedoraComponent } from '../../components/datos-de-la-solicitud-contenedora/datos-de-la-solicitud.contenedora';
+
+import { PagoDeDerechosContenedoraComponent } from '../../components/pago-de-derechos-contenedora/pago-de-derechos-contenedora';
+import { SolicitanteComponent } from '@libs/shared/data-access-user/src/tramites/components/solicitante/solicitante.component';
+import { TercerosRelacionadosContenedoraComponent } from '../../components/terceros-relacionados-contenedora/terceros-relacionados.contenedora';
+
+import { CertificadosLicenciasPermisosService } from '../../../../shared/services/shared2603/certificados-licencias-permisos.service';
+
+import { Subject, map, takeUntil } from 'rxjs';
 /**
- * @component
- * @name PasoUnoComponent
- * @description
- * Componente principal para el paso uno del trámite 260304.
- * Gestiona la visualización y manipulación de los datos del solicitante, terceros relacionados,
- * pago de derechos y datos de la solicitud. Permite la selección de pestañas y controla el estado
- * de solo lectura del formulario según el estado de la solicitud.
- * 
- * @author
- * Equipo de desarrollo Cofepris
- * 
- * @version
- * 1.0.0
- * 
- * @example
- * <app-paso-uno></app-paso-uno>
+ * PasoUnoComponent es responsable de manejar el primer paso del proceso.
+ * para actualizar el componente actual que se está mostrando.
  */
 @Component({
   selector: 'app-paso-uno',
-  templateUrl: './paso-uno.component.html',
-  styleUrl: './paso-uno.component.scss',
   standalone: true,
-  imports: [ SolicitanteComponent, ContenedorDeDatosSolicitudComponent, TercerosRelacionadosVistaComponent, PagoDeDerechosContenedoraComponent, ReactiveFormsModule, FormsModule, CommonModule ]
+  imports: [
+    CommonModule,
+    SolicitanteComponent,
+    DatosDeLaSolicitudContenedoraComponent,
+    TercerosRelacionadosContenedoraComponent,
+    PagoDeDerechosContenedoraComponent
+  ],
+  templateUrl: './paso-uno.component.html',
 })
-export class PasoUnoComponent implements OnDestroy, OnInit {
-  /**
-   * Índice utilizado para realizar selecciones o identificaciones de elementos. 
-   * Puede ser un número o estar indefinido.
-   * @type {number | undefined}
-   */
-  indice: number | undefined = 1;
+export class PasoUnoComponent implements OnInit {
 
   /**
-   * Notificador para gestionar la destrucción de observables y evitar fugas de memoria.
-   * @private
-   * @type {Subject<void>}
+   * Esta variable se utiliza para almacenar el índice del subtítulo.
    */
+  indice: number = 1;
+  /**
+   * Este método se utiliza para establecer el índice del subtítulo.
+   */
+  seleccionaTab(i: number): void {
+    this.indice = i;
+  }
+
+    /** Datos de respuesta del servidor utilizados para actualizar el formulario. */
+  public esDatosRespuesta: boolean = false;
+
+  /** Subject para notificar la destrucción del componente. */
   private destroyNotifier$: Subject<void> = new Subject();
 
-  /**
-   * @descripcion
-   * Indica si el formulario debe estar deshabilitado (solo lectura).
-   * Cuando es verdadero, los controles del formulario estarán deshabilitados y no se podrán editar.
-   * @type {boolean}
-   */
-  formularioDeshabilitado: boolean = false;
+  /** Estado actual de la consulta obtenido del store. */
+  public consultaState!: ConsultaioState;
 
   /**
    * Constructor del componente.
-   * Inyecta los servicios y stores necesarios para la gestión del estado y la obtención de datos.
-   * 
-   * @param tramite260304Query Consulta el estado del trámite 260304.
-   * @param tramite260304Store Store para actualizar el estado del trámite 260304.
-   * @param consultaQuery Consulta el estado general de la solicitud.
-   * @param exportacionMedicamentosContenganService Servicio para obtener y actualizar datos de acuicultura.
+   * @param consultaQuery Servicio para consultar el estado de la consulta.
+   * @param certificadosLicenciasPermisosService Servicio para manejar los datos del formulario de certificados, licencias y permisos.
    */
   constructor(
-    private tramite260304Query:Tramite260304Query,
-    private tramite260304Store: Tramite260304Store,
     private consultaQuery: ConsultaioQuery,
-    private exportacionMedicamentosContenganService: ExportacionMedicamentosContenganService
-  ) {
-    // Constructor necesario para inyectar el store del trámite
-  }
+    private certificadosLicenciasPermisosService: CertificadosLicenciasPermisosService
+  ) {}
 
-  /**
-   * Método de ciclo de vida de Angular que se ejecuta al inicializar el componente.
-   * Se suscribe al flujo de datos `getTabSeleccionado$` para obtener el índice de la pestaña seleccionada
-   * y actualizar el valor de `indice`. Se utiliza `takeUntil` para desuscribirse cuando el componente se destruya.
-   * 
-   * También se suscribe al estado de consulta para habilitar o deshabilitar el formulario según corresponda.
-   * 
-   * @returns {void}
-   */
-  ngOnInit(): void {
-      this.tramite260304Query.getTabSeleccionado$
-        .pipe(takeUntil(this.destroyNotifier$))
-        .subscribe((tab) => {
-          this.indice = tab;
-        });
-
+    /**
+     * Método de ciclo de vida de Angular que se ejecuta al inicializar el componente.
+     * Se suscribe al estado de consulta y actualiza la variable local.
+     * Si el estado indica que hay una actualización, guarda los datos del formulario.
+     * De lo contrario, marca que ya existen datos de respuesta.
+     */
+    ngOnInit(): void {
       this.consultaQuery.selectConsultaioState$
-      .pipe(takeUntil(this.destroyNotifier$))
-      .subscribe((seccionState) => {
-        if(seccionState.update){
-          this.formularioDeshabilitado = false;
-            this.guardarDatosFormulario();
+      .pipe(
+        takeUntil(this.destroyNotifier$),
+        map((seccionState) => {
+        // Actualiza el estado local con el valor obtenido del store
+        this.consultaState = seccionState;
+        
+        // Verifica si se debe actualizar el formulario o solo mostrar los datos existentes
+        if (this.consultaState && this.consultaState.update) {
+          this.guardarDatosFormulario();
+        } else {
+          this.esDatosRespuesta = true;
         }
-        if (seccionState.readonly) {
-          this.formularioDeshabilitado = true;
-        }
-      });
-  }
+        })
+      )
+      .subscribe();
+    }
+
 
   /**
-   * @descripcion
-   * Obtiene los datos de acuicultura y actualiza el estado del formulario.
-   * 
-   * @remarks
-   * Realiza una suscripción al observable que retorna los datos de acuicultura.
-   * Utiliza `takeUntil` para evitar fugas de memoria al destruir el componente.
-   * Si la respuesta es válida, actualiza el estado del formulario con los datos recibidos.
+   * Método para guardar los datos del formulario.
+   * Obtiene los datos del formulario desde el servicio y actualiza el estado si la respuesta es válida.
    */
   guardarDatosFormulario(): void {
-    this.exportacionMedicamentosContenganService
-      .getAcuiculturaData().pipe(
-        takeUntil(this.destroyNotifier$)
+    this.certificadosLicenciasPermisosService
+      .getFormularioData().pipe(
+        takeUntil(this.destroyNotifier$) // Cancela la suscripción al destruir el componente
       )
       .subscribe((resp) => {
         if (resp) {
-          this.exportacionMedicamentosContenganService.actualizarEstadoFormulario(resp);
+          // Si la respuesta existe, marca que hay datos de respuesta y actualiza el estado del formulario
+          this.esDatosRespuesta = true;
+          this.certificadosLicenciasPermisosService.actualizarEstadoFormulario(resp);
         }
       });
   }
 
-  /**
-   * Método para seleccionar una pestaña. Actualiza el estado de la pestaña seleccionada en el store.
-   * 
-   * @param {number} i - El índice de la pestaña que se desea seleccionar.
-   * @returns {void}
-   */
-  seleccionaTab(i: number): void {
-      this.tramite260304Store.updateTabSeleccionado(i);
-  }
 
-  /**
-   * Método del ciclo de vida de Angular que se llama justo antes de que el componente sea destruido.
-   *
-   * Este método emite un valor a través del observable `destroyNotifier$` para notificar a los suscriptores
-   * que el componente está siendo destruido, y luego completa el observable para liberar recursos.
-   *
-   * @returns {void} No retorna ningún valor.
-   */
-  ngOnDestroy(): void {
-    this.destroyNotifier$.next();
-    this.destroyNotifier$.complete();
-  }
 }

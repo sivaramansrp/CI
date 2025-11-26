@@ -414,7 +414,7 @@ describe('DatosDeLaSolicitudComponent', () => {
   });
   it('should emit selectionChange output event', () => {
     const spy = jest.spyOn(component.selectionChange, 'emit');
-    const value = { id: 1, descripcion: 'Producto' };
+    const value = { id: 1, nombre: 'Nombre', descripcion: 'Producto', codigo: 123 };
     component.selectionChange.emit(value);
     expect(spy).toHaveBeenCalledWith(value);
   });
