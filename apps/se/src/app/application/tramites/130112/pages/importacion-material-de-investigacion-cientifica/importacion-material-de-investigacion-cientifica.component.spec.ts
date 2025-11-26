@@ -73,7 +73,6 @@ describe('ImportacionMaterialDeInvestigacionCientificaComponent', () => {
     fixture = TestBed.createComponent(ImportacionMaterialDeInvestigacionCientificaComponent);
     component = fixture.componentInstance;
     
-    // Mock pasoNavegarPor globally to prevent wizard component errors
     jest.spyOn(component, 'pasoNavegarPor').mockImplementation(() => {});
     
     fixture.detectChanges();
@@ -99,7 +98,6 @@ describe('ImportacionMaterialDeInvestigacionCientificaComponent', () => {
   });
 
   it('should update indice and call wizardComponent.siguiente() when accion is "cont"', () => {
-    // Clear the global mock to create a specific one for this test
     (component.pasoNavegarPor as jest.Mock).mockClear();
 
     const accionBoton: AccionBoton = { accion: 'cont', valor: 2 };
@@ -159,7 +157,6 @@ describe('ImportacionMaterialDeInvestigacionCientificaComponent', () => {
   });
 
   it('should handle getValorIndice correctly for valid values and actions', () => {
-    // Clear the existing mock and create a new spy
     (component.pasoNavegarPor as jest.Mock).mockClear();
 
     const accionBotonCont: AccionBoton = { accion: 'cont', valor: 2 };
@@ -249,7 +246,6 @@ describe('ImportacionMaterialDeInvestigacionCientificaComponent', () => {
 
   describe('pasoNavegarPor', () => {
     beforeEach(() => {
-      // Restore the original method for direct testing
       (component.pasoNavegarPor as jest.Mock).mockRestore();
     });
     
@@ -729,7 +725,6 @@ describe('ImportacionMaterialDeInvestigacionCientificaComponent', () => {
 
   describe('Response Processing', () => {
     beforeEach(() => {
-      // Mock pasoNavegarPor for async tests to prevent wizard component errors
       (component.pasoNavegarPor as jest.Mock).mockClear();
     });
     
@@ -880,7 +875,6 @@ describe('ImportacionMaterialDeInvestigacionCientificaComponent', () => {
 
   describe('Component Lifecycle', () => {
     it('should handle component initialization properly', () => {
-      // Reset component to test initialization
       const newFixture = TestBed.createComponent(ImportacionMaterialDeInvestigacionCientificaComponent);
       const newComponent = newFixture.componentInstance;
 
@@ -904,7 +898,6 @@ describe('ImportacionMaterialDeInvestigacionCientificaComponent', () => {
     it('should handle maximum step value correctly', () => {
       (component.pasoNavegarPor as jest.Mock).mockClear();
 
-      // Assuming max steps is length of pasosSolicitar
       const maxSteps = component.pasosSolicitar.length;
       
       const accionBoton: AccionBoton = { accion: 'cont', valor: maxSteps };
@@ -936,7 +929,6 @@ describe('ImportacionMaterialDeInvestigacionCientificaComponent', () => {
       const accionBoton: AccionBoton = { accion: 'cont', valor: 5 };
       component.pasoNavegarPor(accionBoton);
 
-      // Should update indice but not call wizard methods
       expect(component.indice).toBe(5);
       expect(wizardComponentSpy.siguiente).not.toHaveBeenCalled();
       expect(wizardComponentSpy.atras).not.toHaveBeenCalled();
@@ -952,7 +944,6 @@ describe('ImportacionMaterialDeInvestigacionCientificaComponent', () => {
       component.obtenerDatosDelStore();
 
       expect(mockImportacionService.getAllState).toHaveBeenCalled();
-      // Wait for async operations
       await new Promise(resolve => setTimeout(resolve, 0));
       expect(component.guardar).toHaveBeenCalledWith(mockState);
     });
@@ -961,7 +952,6 @@ describe('ImportacionMaterialDeInvestigacionCientificaComponent', () => {
       const errorMessage = 'Service error';
       mockImportacionService.getAllState.mockReturnValue(throwError(() => new Error(errorMessage)));
 
-      // The method subscribes to an observable that can error, but doesn't throw synchronously
       expect(() => {
         component.obtenerDatosDelStore();
       }).not.toThrow();
@@ -982,8 +972,8 @@ describe('ImportacionMaterialDeInvestigacionCientificaComponent', () => {
       await component.guardar(stateWithUndefined as Tramite130112State);
 
       const callArgs = mockImportacionService.guardarDatosPost.mock.calls[0][0];
-      expect(callArgs.id_solcitud).toBe(0); // Should default to 0
-      expect(callArgs.lista_paises).toEqual([]); // Should default to empty array
+      expect(callArgs.id_solcitud).toBe(0);
+      expect(callArgs.lista_paises).toEqual([]);
     });
 
     it('should handle null solicitudState', () => {
@@ -1002,7 +992,6 @@ describe('ImportacionMaterialDeInvestigacionCientificaComponent', () => {
 
   describe('Observable Patterns', () => {
     it('should use takeUntil pattern correctly', () => {
-      // This tests that the subscription uses takeUntil with destroyNotifier$
       const spy = jest.spyOn(component.destroyNotifier$, 'next');
       
       component.destroyNotifier$.next();
@@ -1011,10 +1000,8 @@ describe('ImportacionMaterialDeInvestigacionCientificaComponent', () => {
     });
 
     it('should handle subscription errors gracefully', () => {
-      // Test that the component can handle observable errors without crashing
       const subscription = component.destroyNotifier$.subscribe({
         error: (err) => {
-          // Error handler exists
           expect(err).toBeDefined();
         }
       });

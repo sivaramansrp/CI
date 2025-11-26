@@ -10,6 +10,10 @@ export interface LicitacionesDisponibles {
      */
     idAsignacion?: number;
 
+    /**
+   * Representa la información de una licitación disponible, incluyendo datos de asignación,
+   * participante, montos adjudicados, fechas relevantes y compatibilidad con campos antiguos.
+   */
     idSolicitud?: number;
 
     /**
@@ -21,6 +25,9 @@ export interface LicitacionesDisponibles {
       numeroLicitacion: string;
     };
 
+    /**
+     * Número de folio del certificado.
+     */
     numeroFolioCertificado?: string;
 
     /**
@@ -139,6 +146,9 @@ export interface LicitacionesDisponibles {
      */
     descripcion?: string;
 
+    /**
+     * Descripción de la mercancía.
+     */
     descripcionMercancia?: string;
 
     /**
@@ -147,16 +157,34 @@ export interface LicitacionesDisponibles {
      */
     fechaFinVigencia?: string;
 
+    /**
+     * Fecha de expedición del certificado.
+     */
     fechaExpedicion?: string;
 
+    /**
+     * Cantidad del producto o mercancía.
+     */
     cantidad?: number;
 
+    /**
+     * Estado o número del certificado aprobado.
+     */
     certificadoAprobado?: string;
 
+    /**
+     * Número del pedimento comprobado.
+     */
     comprobadoPedimento?: string;
 
+    /**
+     * Importe total en moneda fiscal (FC).
+     */
     impTotalFc?: number;
 
+    /**
+     * Importe en dólares americanos (USD).
+     */
     impDls?: number;
 }
 
@@ -201,22 +229,70 @@ export interface DistribucionSaldo {
  * @property {string} descripcionDelProducto - Descripción del producto relacionado con la licitación.
  */
 export interface DetalledelaLicitacion{
+        /**
+         * Número de la licitación.
+         */
         numeraDelicitacion:string,
+        /**
+         * Fecha del evento de licitación.
+         */
         fechaDelEventoDelicitacion:string,
+        /**
+         * Descripción del producto de la licitación.
+         */
         descripcionDelProducto:string,
+        /**
+         * Unidad de medida tarifaria aplicable.
+         */
         unidadMedidaTarifaria:string,
+        /**
+         * Monto adjudicado en la licitación.
+         */
         montoAdjudicado:string,
+        /**
+         * Régimen aduanero aplicable.
+         */
         regimenAduanero:string,
+        /**
+         * Fracción arancelaria del producto.
+         */
         fraccionArancelaria:string,
+        /**
+         * Fecha de inicio de vigencia del cupo.
+         */
         fechaInicioVigenciaCupo:string,
+        /**
+         * Fecha de fin de vigencia del cupo.
+         */
         fechaFinVigenciaCupo:string,
+        /**
+         * Observaciones adicionales de la licitación.
+         */
         observaciones:string,
+        /**
+         * Bloque comercial al que pertenece.
+         */
         bloqueComercial:string,
+        /**
+         * Países involucrados en la licitación.
+         */
         paises:string,
+        /**
+         * Fecha de inicio de vigencia de la licitación.
+         */
         fechaInicioVigencia:string
+        /**
+         * Mecanismo de asignación utilizado.
+         */
         mecanismoAsignacion: {
+            /**
+             * Observaciones del mecanismo de asignación.
+             */
             observaciones: string;
         },
+        /**
+         * Monto disponible para la licitación.
+         */
         montoDisponible: number,
 }
 
