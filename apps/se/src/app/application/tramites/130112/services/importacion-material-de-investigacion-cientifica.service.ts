@@ -1,5 +1,5 @@
-import { Catalogo, CatalogoServices, HttpCoreService } from '@ng-mf/data-access-user';
-import { Observable, map} from 'rxjs';
+import { Catalogo, CatalogoServices, HttpCoreService, LoginQuery } from '@ng-mf/data-access-user';
+import { Observable, Subject, map, takeUntil} from 'rxjs';
 import { Tramite130112State, Tramite130112Store } from '../estados/tramites/tramites130112.store';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
@@ -20,12 +20,29 @@ import { Tramite130112Query } from '../estados/queries/tramite130112.query';
   providedIn: 'root',
 })
 export class ImportacionMaterialDeInvestigacionCientificaService {
+  // Valor de RFC de ejemplo
+  private loginRfc: string = '';
+
+  /**
+   * @property {Subject<void>} destroyed$
+   * @description Sujeto utilizado para manejar la destrucción de suscripciones y evitar fugas de memoria.
+   */
+  private destroyed$ = new Subject<void>();
   /**
    * @descripcion
    * Constructor del servicio. Inyecta el cliente HTTP para realizar solicitudes.
    * @param {HttpClient} http - Cliente HTTP para realizar solicitudes.
    */
-  constructor(private http: HttpClient, private tramite130112Store:Tramite130112Store, private catalogoServices: CatalogoServices, private httpService: HttpCoreService, private query: Tramite130112Query,) {}
+  constructor(private http: HttpClient, private tramite130112Store:Tramite130112Store, private catalogoServices: CatalogoServices, private httpService: HttpCoreService, private query: Tramite130112Query, private loginQuery: LoginQuery) {
+    this.loginQuery.selectLoginState$
+      .pipe(
+        takeUntil(this.destroyed$),
+        map((seccionState) => {
+          this.loginRfc = seccionState.rfc;
+        })
+      )
+      .subscribe();
+  }
 
   /** Obtiene el catálogo de bloques para el trámite especificado.  
  *  @param {string} tramite - El identificador del trámite.
@@ -135,7 +152,7 @@ export class ImportacionMaterialDeInvestigacionCientificaService {
    *  @returns {Observable<Catalogo[]>} - Un observable que emite una lista de catálogos de clasificaciones de régimen.
    */
   getRegimenClasificacion(tramite: string, cveClasificacion: string): Observable<Catalogo[]> {
-    return this.catalogoServices.getRegimenClasificacion(tramite, cveClasificacion).pipe(
+    return this.catalogoServices.getClasificacionRegimen(tramite, cveClasificacion).pipe(
       map(res => res?.datos ?? [])
     );
   }
@@ -244,7 +261,7 @@ export class ImportacionMaterialDeInvestigacionCientificaService {
       apellido_paterno: "Norte",
       razon_social: "Aceros Norte",
       descripcion_ubicacion: "Calle Acero, No. 123, Col. Centro",
-      rfc: "AAL0409235E6",
+      rfc: this.loginRfc,
       pais: "SIN"
     };
   }
@@ -255,7 +272,7 @@ export class ImportacionMaterialDeInvestigacionCientificaService {
    */
   buildSolicitante(): unknown {
     return {
-      rfc: "AAL0409235E6",
+      rfc: this.loginRfc,
       nombre: "Juan Pérez",
       es_persona_moral: true,
       certificado_serial_number: ""
