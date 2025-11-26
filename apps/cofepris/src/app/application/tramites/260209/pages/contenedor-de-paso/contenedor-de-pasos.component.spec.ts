@@ -59,13 +59,16 @@ describe('ContenedorDePasosComponent', () => {
   });
 
   describe('getValorIndice', () => {
-    // wizardComponent mock is already set in the top-level beforeEach
-
     it('should update indice and call siguiente when accion is "cont" and valor is valid', () => {
+      fixture.detectChanges();
+      const wizardMock = {
+        siguiente: jest.fn(),
+        atras: jest.fn(),
+        iconClasses: []
+      };
+      Object.defineProperty(component, 'wizardComponent', { value: wizardMock });
       const accionBoton: AccionBoton = { accion: 'cont', valor: 2 };
-      
       component.getValorIndice(accionBoton);
-      
       expect(component.indice).toBe(2);
       expect(component.tituloMensaje).toBe('Cargar archivos');
       expect(component.wizardComponent.siguiente).toHaveBeenCalled();
@@ -73,10 +76,15 @@ describe('ContenedorDePasosComponent', () => {
     });
 
     it('should update indice and call atras when accion is not "cont" and valor is valid', () => {
+      fixture.detectChanges();
+      const wizardMock = {
+        siguiente: jest.fn(),
+        atras: jest.fn(),
+        iconClasses: []
+      };
+      Object.defineProperty(component, 'wizardComponent', { value: wizardMock });
       const accionBoton: AccionBoton = { accion: 'atras', valor: 2 };
-      
       component.getValorIndice(accionBoton);
-      
       expect(component.indice).toBe(2);
       expect(component.tituloMensaje).toBe('Cargar archivos');
       expect(component.wizardComponent.atras).toHaveBeenCalled();
@@ -84,43 +92,63 @@ describe('ContenedorDePasosComponent', () => {
     });
 
     it('should update indice and title for valor 3', () => {
+      fixture.detectChanges();
+      const wizardMock = {
+        siguiente: jest.fn(),
+        atras: jest.fn(),
+        iconClasses: []
+      };
+      Object.defineProperty(component, 'wizardComponent', { value: wizardMock });
       const accionBoton: AccionBoton = { accion: 'cont', valor: 3 };
-      
       component.getValorIndice(accionBoton);
-      
       expect(component.indice).toBe(3);
       expect(component.tituloMensaje).toBe('Firmar');
       expect(component.wizardComponent.siguiente).toHaveBeenCalled();
     });
 
     it('should not update indice when valor is 0', () => {
+      fixture.detectChanges();
+      const wizardMock = {
+        siguiente: jest.fn(),
+        atras: jest.fn(),
+        iconClasses: []
+      };
+      Object.defineProperty(component, 'wizardComponent', { value: wizardMock });
       const originalIndice = component.indice;
       const accionBoton: AccionBoton = { accion: 'cont', valor: 0 };
-      
       component.getValorIndice(accionBoton);
-      
       expect(component.indice).toBe(originalIndice);
       expect(component.wizardComponent.siguiente).not.toHaveBeenCalled();
       expect(component.wizardComponent.atras).not.toHaveBeenCalled();
     });
 
     it('should not update indice when valor is 5 or greater', () => {
+      fixture.detectChanges();
+      const wizardMock = {
+        siguiente: jest.fn(),
+        atras: jest.fn(),
+        iconClasses: []
+      };
+      Object.defineProperty(component, 'wizardComponent', { value: wizardMock });
       const originalIndice = component.indice;
       const accionBoton: AccionBoton = { accion: 'cont', valor: 5 };
-      
       component.getValorIndice(accionBoton);
-      
       expect(component.indice).toBe(originalIndice);
       expect(component.wizardComponent.siguiente).not.toHaveBeenCalled();
       expect(component.wizardComponent.atras).not.toHaveBeenCalled();
     });
 
     it('should not update indice when valor is negative', () => {
+      fixture.detectChanges();
+      const wizardMock = {
+        siguiente: jest.fn(),
+        atras: jest.fn(),
+        iconClasses: []
+      };
+      Object.defineProperty(component, 'wizardComponent', { value: wizardMock });
       const originalIndice = component.indice;
       const accionBoton: AccionBoton = { accion: 'cont', valor: -1 };
-      
       component.getValorIndice(accionBoton);
-      
       expect(component.indice).toBe(originalIndice);
       expect(component.wizardComponent.siguiente).not.toHaveBeenCalled();
       expect(component.wizardComponent.atras).not.toHaveBeenCalled();
