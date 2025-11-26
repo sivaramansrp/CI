@@ -15,6 +15,11 @@ export class Shared2607Service {
     // Constructor del servicio
    }
 
+   /**
+    * @description
+    * Obtiene el estado completo combinando múltiples fuentes de estado.
+    * @returns {Observable<Record<string, unknown>>} Observable que emite el estado combinado.
+    */
      getAllState(): Observable<Record<string, unknown>> {
        return combineLatest([
          this.solicitud260702Query.allStoreData$,
@@ -50,11 +55,15 @@ export class Shared2607Service {
         }
       }
     }
-
     return RESULT;
   }
 
-
+/**
+ * Construye el payload para la solicitud basado en los datos proporcionados y un valor discriminador.
+ * @param data 
+ * @param discriminatorValue - El valor discriminador para la solicitud.
+ * @returns 
+ */
    buildPayload(data: Record<string, unknown>, discriminatorValue: number): Record<string, unknown> {
     const ESTABLECIMIENTO = Shared2607Service.buildEstablecimiento(data);
     const DATOS_SCIAN = Shared2607Service.buildDatosScian(data);
@@ -338,7 +347,11 @@ export class Shared2607Service {
       "aduanas": data['aduana'] || ""
     }
   }
-
+/**
+ * Construye los datos del SCIAAN a partir de los datos proporcionados.
+ * @param data 
+ * @returns 
+ */
    static buildDatosScian(data: Record<string, unknown>): {cveScian: string, descripcion: string, selected: boolean}[] {
     const NICOTABLA = data['nicoTabla'] as Array<{ [key: string]: unknown }> | undefined;
     if (!Array.isArray(NICOTABLA)) {
@@ -352,6 +365,11 @@ export class Shared2607Service {
     }));
   }
 
+  /**
+   * Construye la lista de mercancías a partir de los datos proporcionados.
+   * @param data 
+   * @returns 
+   */
 static buildMercancias(data: Record<string, unknown>): Record<string, unknown>[] {
     const MERCANCIA_TABLA = data['mercanciaTabla'] as Array<{ [key: string]: unknown }> | undefined;
     if (!Array.isArray(MERCANCIA_TABLA)) {
@@ -396,6 +414,11 @@ static buildMercancias(data: Record<string, unknown>): Record<string, unknown>[]
     }));
   }
 
+  /**
+   * Construye el objeto del representante legal a partir de los datos proporcionados.
+   * @param data 
+   * @returns 
+   */
     static buildRepresentanteLegal(data: Record<string, unknown>): Record<string, unknown> {
     return {
       "rfc": data['rfc'] || '',

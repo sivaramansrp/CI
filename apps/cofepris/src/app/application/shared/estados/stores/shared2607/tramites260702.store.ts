@@ -1,4 +1,4 @@
-import { FilaData, FilaData2, ListaClave } from '../../../models/fila-modal';
+import {FilaData,FilaData2,ListaClave, NicoInfo } from '../../../models/fila-modal';
 import { Store, StoreConfig } from '@datorama/akita';
 import { Destinatario } from '../../../models/destinatario.model';
 import { Injectable } from '@angular/core';
@@ -158,8 +158,10 @@ export interface Solicitud260702State {
 
   /** Fracción arancelaria del producto */
   fraccionArancelaria: string;
-  mensaje:boolean
-  
+  /**
+   * Mensaje relacionado con el aviso de privacidad.
+   */
+  mensaje: boolean;
   /** Indica si los datos deben hacerse públicos. */
   hacerlosPublicos: string;
 
@@ -172,7 +174,7 @@ export interface Solicitud260702State {
       /**
        * El valor de nicoTabla.
        */
-      nicoTabla: FilaData[],
+      nicoTabla: NicoInfo[],
     
       /**
        * El valor de mercanciaTabla.
@@ -184,7 +186,11 @@ export interface Solicitud260702State {
  * Método para actualizar la descripción del SCIAN en el estado.
  */
 descripcionDelScian: string;
-    
+    /**
+     * Cualquier otra propiedad dinámica que pueda ser añadida al estado.
+     */
+ [key: string]: any;
+    idSolicitud: number;
   formValidity?: {
     datosDelSolicitude?: boolean;
   }
@@ -352,7 +358,9 @@ export function createInitialSolicitudState(): Solicitud260702State {
 
     /** Fracción arancelaria del producto */
     fraccionArancelaria: '',
-    mensaje:false,
+
+   /** Mensaje relacionado con el aviso de privacidad. */
+    mensaje: false,
     /** Indica si los datos deben hacerse públicos. */
     hacerlosPublicos: '',
     /** Datos de la tabla */
@@ -364,19 +372,28 @@ export function createInitialSolicitudState(): Solicitud260702State {
      */
     descripcionDelScian: '',
     
-      /**
+  /**
    * El valor de nicoTabla.
    */
     nicoTabla: [],
 
-    /**
+  /**
    * El valor de mercanciaTabla.
    */
     mercanciaTabla: [],
+/**
+ * El ID de la solicitud.
+ */
+     idSolicitud: 0,
+    /**
+     * Validez de los formularios dentro del estado.
+    */
     fabricanteDatos:[],
     destinatarioDatos:[],
     
     formValidity: {},
+
+    /** Indica si se ha activado la acción de continuar */
     continuarTriggered:false
   };
 }
@@ -992,6 +1009,8 @@ export class Solicitud260702Store extends Store<Solicitud260702State> {
       fraccionArancelaria,
     }));
   }
+
+
   /**
    * Método para actualizar si los datos deben hacerse públicos en el estado.
    * @param hacerlosPublicos Indica si los datos deben hacerse públicos.
@@ -1034,6 +1053,18 @@ export class Solicitud260702Store extends Store<Solicitud260702State> {
     }));
   }
 
+    /**
+     * Set a value dynamically in the store by field name.
+     * @param fieldName The name of the field to update.
+     * @param value The value to set.
+     */
+    public setDynamicFieldValue(fieldName: string, value: any): void {
+        this.update((state) => ({
+        ...state,
+        [fieldName]: value,
+        }));
+    }
+
   /**
  * Actualiza el estado de validez de un formulario específico dentro del trámite.
  * @param formName Nombre del formulario a actualizar.
@@ -1049,6 +1080,10 @@ export class Solicitud260702Store extends Store<Solicitud260702State> {
     }));
   }
 
+  /** Establece el ID de la solicitud en el estado actual. */
+  public setIdSolicitud(idSolicitud: number): void {
+    this.update((state) => ({ ...state, idSolicitud }));
+  }
 
    /**
  * Establece el estado del botón continuar para activar o desactivar las validaciones del formulario.
