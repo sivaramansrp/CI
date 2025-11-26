@@ -203,12 +203,12 @@ export class ControlPermisosPreviosExportacionComponent implements OnDestroy {
     const SOLICITANTE = this.controlPermisosPreviosExportacionService.getPayloadSolicitante();
     const REPRESENTACION_FEDERAL = this.controlPermisosPreviosExportacionService.getPayloadRepresentacionFederal(item);
     const ENTIDAD_FEDERATIVA = this.controlPermisosPreviosExportacionService.getPayloadEntidadFederativa(item);
-    
+    console.log(this.solicitudState.idSolicitud);
     const PAYLOAD = {
       "tipoDeSolicitud": "guardar",
       "tipo_solicitud_pexim": item.defaultSelect,
       "mercancia": MERCANCIA,
-      "id_solcitud": this.solicitudState.idSolicitud || 0,
+      "id_solcitud": this.solicitudState.idSolicitud,
       "cve_regimen": item.regimen,
       "cve_clasificacion_regimen": item.clasificacion,
       "productor": PRODUCTOR,

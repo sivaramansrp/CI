@@ -53,11 +53,8 @@ export class ControlPermisosPreviosExportacionService {
    * @param tramitesID Identificador del trámite
    * @returns Observable con un arreglo de clasificaciones de régimen (o vacío si no hay datos)
    */
-  getClasificacionRegimenCatalogo(tramitesID: string): Observable<Catalogo[]> {
-    // const PAYLOAD_DATOS = { tramite: 'TITPEX.130108', id: tramitesID };
-    
-    return this.catalogoServices.getClasificacionRegimen('130217', "02")
-    // return this.catalogoServices.clasificacionRegimenCatalogo('130217', PAYLOAD_DATOS)
+  getClasificacionRegimenCatalogo(ID: string, CLASSIFICACIONES_REGIMEN: string): Observable<Catalogo[]> {    
+    return this.catalogoServices.getClasificacionRegimen(ID, CLASSIFICACIONES_REGIMEN)
       .pipe(
         map(res => res?.datos ?? [])
       );

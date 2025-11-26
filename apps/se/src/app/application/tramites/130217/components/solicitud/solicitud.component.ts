@@ -2,7 +2,7 @@
 // Este conjunto de importaciones cubre funcionalidades relacionadas con la gestión de formularios, validaciones,
 // permisos, configuraciones, así como la obtención y manipulación de datos externos para la aplicación.
 
-import { Catalogo, ConsultaioQuery, REGEX_NUMERO_DECIMAL_ENTERO, REG_X } from '@ng-mf/data-access-user';
+import { CLASSIFICACIONES_REGIMEN, Catalogo, ConsultaioQuery, REGEX_NUMERO_DECIMAL_ENTERO, REG_X } from '@ng-mf/data-access-user';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ID_PROCEDIMIENTO, OPINIONES_SOLICITUD, PRODUCTO_OPCION } from '../../enums/accion-botton.enum';
@@ -568,8 +568,8 @@ disabledModificar() : boolean {
    *
    * @returns {void}
    */
-  getClasificacionRegimenCatalogo(VALOR: string): void {
-    this.ControlPermisosPreviosExportacionService.getClasificacionRegimenCatalogo(VALOR).subscribe((data) => {
+  getClasificacionRegimenCatalogo(CLASSIFICACIONES_REGIMEN: string): void {
+    this.ControlPermisosPreviosExportacionService.getClasificacionRegimenCatalogo(this.idProcedimiento.toString(), CLASSIFICACIONES_REGIMEN).subscribe((data) => {
       this.catalogosArray[1] = data as Catalogo[];
     });
   }
