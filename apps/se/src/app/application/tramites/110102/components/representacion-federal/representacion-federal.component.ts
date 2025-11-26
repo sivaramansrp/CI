@@ -324,8 +324,8 @@ export class RepresentacionFederalComponent implements OnInit, OnDestroy {
         .subscribe((response) => {
           if (response.codigo === CodigoRespuesta.EXITO) {          
            this.textos = response.datos?.[0]?.descripcion ?? undefined;
-          /*  this.tramite110101Store.clearDeclaraciones();
-           this.tramite110101Store.addDeclaraciones(response.datos ?? []); */
+           this.estadoGuardadoAkite.clearDeclaraciones();
+           this.estadoGuardadoAkite.addDeclaraciones(response.datos ?? []); 
           }else {
           this.textos = PROTESTA.ADJUNTAR;}
         });
