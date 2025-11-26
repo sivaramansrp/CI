@@ -52,6 +52,47 @@ import { TooltipModule } from 'ngx-bootstrap/tooltip';
   encapsulation: ViewEncapsulation.None,
 })
 export class DatosDeLaSolicitudModificacionComponent implements OnInit, AfterViewInit, OnDestroy {
+  /**
+     * Updates descripcionScian in the form when the SCIAN dropdown changes
+     */
+   public onScianChange(event: any): void {
+      this.scianForm.get('descripcionScian')?.setValue(event.target.value ? event.target.value : '');
+    }
+
+
+      /**
+       * Filas SCIAN seleccionadas (checkbox)
+       */
+      public selectedScianRows: any[] = [];
+
+      /**
+       * Maneja la selección de filas SCIAN por checkbox
+       */
+      onSelectScianRows(rows: any[]): void {
+        this.selectedScianRows = rows;
+      }
+
+  /**
+   * Elimina las filas SCIAN seleccionadas
+   */
+ public eliminarScianSeleccionado(): void {
+    if (this.selectedScianRows.length > 0) {
+      this.personaparas = this.personaparas.filter(
+        item => !this.selectedScianRows.some(sel => sel.clave === item.claveScian && sel.descripcion === item.descripcionScian)
+      );
+      this.datosData = this.personaparas.map(item => ({
+        clave: item.claveScian,
+        descripcion: item.descripcionScian
+      }));
+      this.selectedScianRows = [];
+    }
+  }
+  /**
+   * Valor que habilita el campo Justificación
+   * Cambia según la opción seleccionada en 'genericos'.
+   */
+  public valorModificacionGenericos: string = 'modificacion';
+
 
   /**
    * @description
@@ -489,6 +530,8 @@ export class DatosDeLaSolicitudModificacionComponent implements OnInit, AfterVie
     if (this.datosSolicitudform && this.manifiestosRepresentanteForm && this.scianForm) {
       this.datosSolicitudform.disable();
       this.datosSolicitudform.get('noLicenciaSanitaria')?.enable();
+      this.datosSolicitudform.get('genericos')?.enable();
+      this.toggleJustificacionByGenericos(this.datosSolicitudform.get('genericos')?.value);
       this.manifiestosRepresentanteForm.disable();
       this.scianForm.disable();
     } else {
@@ -496,6 +539,38 @@ export class DatosDeLaSolicitudModificacionComponent implements OnInit, AfterVie
       this.manifiestosRepresentanteForm.enable();
       this.scianForm.enable();
     }
+    this.datosSolicitudform.get('genericos')?.valueChanges
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((value) => {
+        this.toggleJustificacionByGenericos(value);
+      });
+  }
+
+  /**
+   * Habilita o deshabilita el campo Justificación según el valor de 'genericos'.
+   */
+  toggleJustificacionByGenericos(value: string): void {
+    // List of controls to enable/disable
+    const controlNames = [
+      'observaciones',
+      'establecimientoDomicilioCodigoPostal',
+      'descripcionMunicipio',
+      'localidad',
+      'establishomentoColonias',
+      'calle',
+      'lada',
+      'telefono'
+    ];
+    controlNames.forEach(name => {
+      const ctrl = this.datosSolicitudform.get(name);
+      if (!ctrl) return;
+      if (value === this.valorModificacionGenericos) {
+        ctrl.enable();
+      } else {
+        ctrl.disable();
+        ctrl.reset();
+      }
+    });
   }
 
 
@@ -533,6 +608,10 @@ export class DatosDeLaSolicitudModificacionComponent implements OnInit, AfterVie
   actualizarValoresStore(form: FormGroup, campo: string, metodoNombre: keyof DatosSolicitudStore): void {
     const VALOR = form.get(campo)?.value;
     (this.datosSolicitudStore[metodoNombre] as (value: string | number) => void)(VALOR);
+    // Si el campo es 'genericos', también alternar el campo Justificación
+    if (campo === 'genericos') {
+      this.toggleJustificacionByGenericos(VALOR);
+    }
   }
 
   enControlCambioFormulario(event: Event,controlName: string): void {
@@ -628,14 +707,27 @@ export class DatosDeLaSolicitudModificacionComponent implements OnInit, AfterVie
    * Guarda un nuevo dato SCIAN y lo agrega a la tabla.
    */
   guardarScian(): void {
-    if (this.scianForm.valid) {
+    if (this.scianForm?.value?.scian) {
+      const claveScian = this.scianForm.get('scian')?.value;
+      let descripcionScian = this.scianForm.get('descripcionScian')?.value;
+      // If descripcionScian is empty, get it from the selected option
+      if (!descripcionScian && claveScian) {
+        const selected = this.scianJson.find((item: any) => item.clave === claveScian);
+        descripcionScian = selected ? selected.descripcion : '';
+      }
       const SCIAN_DATA: ScianModel = {
-        claveScian: this.scianForm.get('scian')?.value,
-        descripcionScian: this.scianForm.get('descripcionScian')?.value,
+        claveScian,
+        descripcionScian,
       };
 
-      // Agregar el nuevo dato a la tabla
-      this.personaparas.push(SCIAN_DATA);
+
+      // Agregar el nuevo dato a la tabla usando nueva referencia para disparar change detection
+      this.personaparas = [...this.personaparas, SCIAN_DATA];
+      // Actualizar datosData para que la tabla se actualice, mapeando a la estructura correcta
+      this.datosData = this.personaparas.map(item => ({
+        clave: item.claveScian,
+        descripcion: item.descripcionScian
+      }));
 
       // Limpiar el formulario
       this.scianForm.reset();

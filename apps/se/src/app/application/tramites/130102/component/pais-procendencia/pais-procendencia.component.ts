@@ -35,8 +35,8 @@ import { Subject, map, takeUntil } from 'rxjs';
 import { FormularioRegistroService } from '../../services/octava-temporal.service';
 
 import { CROSLISTA_DE_PAISES } from '../../../130103/constantes/importacion-definitiva.enum';
-import { ConsultaioQuery } from '@ng-mf/data-access-user';
 import { CatOctavaTemporalService } from '../../services/cat-octava-temporal.service';
+import { ConsultaioQuery } from '@ng-mf/data-access-user';
 import { PaisesBloqueCatalogo } from '../../models/octava-temporal.model';
 /**
  * Componente para la gestión de la selección de países de procedencia.
@@ -229,7 +229,7 @@ export class PaisProcendenciaComponent implements OnInit {
         .subscribe();
 
     this.paisForm = this.fb.group({
-      bloque: [this.solicitudState?.bloque],
+      bloque: [this.solicitudState?.bloque || null],
       descripcionJustificacion: [this.solicitudState?.descripcionJustificacion, [Validators.required,PaisProcendenciaComponent.noLeadingSpacesValidator]],
       observaciones: [this.solicitudState?.observaciones,[PaisProcendenciaComponent.noLeadingSpacesValidator]],
       fechasSeleccionadas: this.fb.array([])
@@ -271,11 +271,11 @@ export class PaisProcendenciaComponent implements OnInit {
    * @param fechas - Arreglo de fechas a agregar.
    * @returns void
    */
-  changeCrosslist(fechas:any): void {
-    let  paisesSelect = this.paisesFuente.filter(pais=> fechas.includes(pais.descripcion));
-    const clavesSelect: string[] =  [];
-    clavesSelect.push(...paisesSelect.map(pais=> pais?.clave || ''));
-    this.tramite130102Store.setPaises(clavesSelect);
+  changeCrosslist(fechas: string[] | Event): void {
+    const PAISES_SELECT = this.paisesFuente.filter(pais=> (fechas as string[]).includes(pais.descripcion));
+    const CLAVES_SELECT: string[] = [];
+    CLAVES_SELECT.push(...PAISES_SELECT.map(pais=> pais?.clave || ''));
+    this.tramite130102Store.setPaises(CLAVES_SELECT);
   }
   /**
    * Elimina elementos de la lista de fechas según el tipo especificado.

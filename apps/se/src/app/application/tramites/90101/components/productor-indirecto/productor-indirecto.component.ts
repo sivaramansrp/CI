@@ -278,13 +278,8 @@ export class ProductorIndirectoComponent implements OnInit, OnDestroy {
    * Si la respuesta es un arreglo, se castea como FilaProductos[].
    */
   recuperarDatos(): void {
-    const PAYLOAD = {
-      "rfc_productor_indirecto": this.productorIndirecto.get('contribuyentes')?.value,
-      "rfc_solicitante": null,
-      "id_programa_autorizado": null,
-      "discriminador": "90101"
-    }
-    this.ProsecService.obtenerProductorIndirectoDatos(PAYLOAD).subscribe(
+    const RFC = this.productorIndirecto.get('contribuyentes')?.value;
+    this.ProsecService.obtenerProductorIndirectoDatos(RFC).subscribe(
       (response) => {
         const API_DATOS = doDeepCopy(response);
         if(API_DATOS.codigo === '00'){

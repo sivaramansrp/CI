@@ -23,6 +23,7 @@ import { DatosDeLaSolicitudComponent } from '../../components/datos-de-la-solici
 import { ReactiveFormsModule } from '@angular/forms';
 import { Service260601Service } from '../../services/service260601.service';
 import { TercerosRelacionadosComponent } from '../../components/terceros-relacionados/terceros-relacionados.component';
+import { TercerosRelacionadosVistaComponent } from '../../components/terceros-relacionados-vista/terceros-relacionados-vista.component';
 import { Tramite260601Query } from '../../../../estados/queries/tramite260601.query';
 
 /**
@@ -36,6 +37,7 @@ import { Tramite260601Query } from '../../../../estados/queries/tramite260601.qu
     ReactiveFormsModule,
     SolicitanteComponent,
     TercerosRelacionadosComponent,
+    TercerosRelacionadosVistaComponent,
     DatosDeLaSolicitudComponent
   ],
   templateUrl: './datos.component.html',

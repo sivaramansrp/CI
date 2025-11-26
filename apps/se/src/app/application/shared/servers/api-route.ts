@@ -65,7 +65,7 @@ export const API_ROUTES = (procedure: string=PROCEDURE, procedureNo: string = PR
     buscarDomicilios: `${BASE_URL}${API}${procedure}${SOLICITUD}/buscar-domicilios`,
     sectoresDatos:(sectorClave:string): string => `${BASE_URL}${API}${procedure}${SOLICITUD}/buscar-sectores/${sectorClave}`,
     buscarSectorFraccionArancelaria: `${BASE_URL}${API}${procedure}${SOLICITUD}/buscar-fraccion-arancelaria`,
-    buscarProductorIndirecto: `${BASE_URL}${API}${procedure}${SOLICITUD}/buscar-productor-indirecto`,
+    buscarProductorIndirecto:(rfc:string): string => `${BASE_URL}${API}${procedure}${SOLICITUD}/buscar-productor-indirecto/${rfc}`,
 });
 
 

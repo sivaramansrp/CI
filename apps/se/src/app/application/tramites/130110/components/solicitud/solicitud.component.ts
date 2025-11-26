@@ -107,6 +107,9 @@ export class SolicitudComponent implements OnInit, OnDestroy {
    */
   unidadCatalogo: Catalogo[] = [];
 
+  /**
+   * Catálogo con opciones de descripción de fracción para las partidas de la mercancía.
+   */
   fraccionDescripcionPartidasDeLaMercanciaCatalogo: Catalogo[] = [];
 
   /**
@@ -130,7 +133,7 @@ export class SolicitudComponent implements OnInit, OnDestroy {
   /**
    * Matriz de catálogos adicionales para el formulario.
    */
-  catalogosArray: Catalogo[][] = solicitudeSelectVal;
+  catalogosArray: Catalogo[][] = [[], []];
 
   /**
    * Opciones de solicitud configurables.
@@ -212,14 +215,25 @@ export class SolicitudComponent implements OnInit, OnDestroy {
    */
   @ViewChild(PartidasDeLaMercanciaComponent) partidasDeLaMercanciaComponent!: PartidasDeLaMercanciaComponent;
 
+  /**
+   * Catálogo con opciones de clasificación de régimen.
+   */
   catalogoClasificacionRegimen: Catalogo[] = [];
 
+  /**
+   * Catálogo con opciones de regímenes disponibles.
+   */
   catalogoRegimenes: Catalogo[] = [];
 
   /**
    *  jest.spyOnIndica si las partidas seleccionadas son inválidas. 
    */
   isInvalidaPartidas: boolean = false;
+
+  /**
+   * Identificador del procedimiento de trámite.
+   */
+  procedureId: string = "130110"
   
   /**
    * Constructor del componente.
@@ -284,6 +298,7 @@ export class SolicitudComponent implements OnInit, OnDestroy {
   /**
    * Carga datos desde un archivo JSON y actualiza el store con la información obtenida.
    * Luego reinicializa el formulario con los valores actualizados desde el store.
+   * Utilizado cuando el formulario está en modo solo lectura.
    */
   guardarDatosFormulario(): void {
     this.inicializarFormularios();
@@ -409,8 +424,9 @@ export class SolicitudComponent implements OnInit, OnDestroy {
 
 
  /**
-   * formularioTotalCount
    * Crea el formulario reactivo para capturar los totales de las partidas.
+   * @param cantidadTotal - Cantidad total de todas las partidas.
+   * @param valorTotalUSD - Valor total en USD de todas las partidas.
    */
   formularioTotalCount(cantidadTotal: string , valorTotalUSD: string): void {
   this.formForTotalCount = this.fb.group({
@@ -454,7 +470,7 @@ export class SolicitudComponent implements OnInit, OnDestroy {
 
   /**
    * Maneja la selección de filas en la tabla dinámica y actualiza el estado global.
-   * Lista de filas seleccionadas.
+   * @param filasSeleccionadas - Lista de filas seleccionadas.
    */
   manejarlaFilaSeleccionada(filasSeleccionadas: PartidasDeLaMercanciaModelo[]): void {
     this.filaSeleccionada = filasSeleccionadas.length
@@ -467,8 +483,8 @@ export class SolicitudComponent implements OnInit, OnDestroy {
 
   	
 	  /**
-	   * onModificarPartidaSeleccionada
 	   * Maneja la modificación de una partida seleccionada.
+	   * Carga los datos de la partida seleccionada en el formulario de modificación.
 	   * @param partida - La partida que se va a modificar.
 	   */
 	  onModificarPartidaSeleccionada(partida: PartidasDeLaMercanciaModelo) :void{
@@ -479,8 +495,8 @@ export class SolicitudComponent implements OnInit, OnDestroy {
 	      });
 	  }
 	  /**
-	   * onPartidaModificada
-	   * Maneja la modificación de una partida.
+	   * Maneja la modificación de una partida existente en la tabla.
+	   * Actualiza los datos de la tabla y recalcula los totales después de la modificación.
 	   * @param partida - La partida que se va a modificar.
 	   */
 	  onPartidaModificada(partida: PartidasDeLaMercanciaModelo): void {
@@ -572,8 +588,8 @@ export class SolicitudComponent implements OnInit, OnDestroy {
     cantidad: this.partidasDelaMercanciaForm.get('cantidadPartidasDeLaMercancia')?.value,
     totalUSD: this.partidasDelaMercanciaForm.get('valorPartidaUSDPartidasDeLaMercancia')?.value,
     descripcion: this.partidasDelaMercanciaForm.get('descripcionPartidasDeLaMercancia')?.value,
-    unidadDeMedida: this.unidadCatalogo.find(f => String(f.id) === String(this.mercanciaForm.get('unidadMedida')?.value))?.descripcion || '',
-    fraccionFrancelaria: this.fraccionCatalogo.find(f => String(f.id) === String(this.mercanciaForm.get('fraccion')?.value))?.descripcion || '',
+    unidadDeMedida: this.unidadCatalogo.find(f => String(f.clave) === String(this.mercanciaForm.get('unidadMedida')?.value))?.descripcion || '',
+    fraccionFrancelaria: this.fraccionCatalogo.find(f => String(f.clave) === String(this.mercanciaForm.get('fraccion')?.value))?.descripcion || '',
     fraccionDescripcionPartidasDeLaMercancia: this.fraccionCatalogo.find(f => String(f.id) === String(this.partidasDelaMercanciaForm.get('fraccionDescripcionPartidasDeLaMercancia')?.value))?.descripcion || '',
     precioUnitarioUSD: PRECIOUNITARIO_USD
   };
@@ -605,6 +621,7 @@ this.tramite130110Store.actualizarEstado({
 
   /**
    * Navega para modificar una partida específica y actualiza el estado global.
+   * Utiliza la fila seleccionada para habilitar la funcionalidad de modificación.
    */
   navegarParaModificarPartida(): void {
     if (this.filaSeleccionada) {
@@ -618,9 +635,8 @@ this.tramite130110Store.actualizarEstado({
    * Actualiza las propiedades del componente con los datos obtenidos.
    */
   getRegimenes(): void {
-    this.importacionNeumaticosComercializarService.getRegimenes('130110').subscribe((data) => {
-      this.catalogoRegimenes = data;
-      this.getClasificacionRegimen();
+    this.importacionNeumaticosComercializarService.getRegimenes(this.procedureId).subscribe((data) => {
+      this.catalogosArray[0] = data;
     });
   }
 
@@ -628,12 +644,9 @@ this.tramite130110Store.actualizarEstado({
    * Obtiene el catálogo de clasificaciones de régimen desde el servicio.
    * Actualiza las propiedades del componente con los datos obtenidos.
    */
-  getClasificacionRegimen(): void {
-    this.importacionNeumaticosComercializarService.getRegimenClasificacion('130110', "01").subscribe((data) => {
-      this.catalogoClasificacionRegimen = data;
-
-      this.catalogoRegimenes = [...this.catalogoRegimenes, ...data];
-      this.catalogosArray = [this.catalogoRegimenes, this.catalogoClasificacionRegimen];
+  getClasificacionRegimen(valor: string): void {
+    this.importacionNeumaticosComercializarService.getRegimenClasificacion(this.procedureId, valor).subscribe((data) => {
+      this.catalogosArray[1] = data;
     });
   }
 
@@ -642,7 +655,7 @@ this.tramite130110Store.actualizarEstado({
     * Actualiza la propiedad del componente con los datos obtenidos.
     */
  getFraccionArancelaria(): void {
-   this.importacionNeumaticosComercializarService.getFraccionesArancelarias('130110').subscribe((data) => {
+   this.importacionNeumaticosComercializarService.getFraccionesArancelarias(this.procedureId).subscribe((data) => {
      this.fraccionCatalogo = data || [];
    });
  }
@@ -652,11 +665,19 @@ this.tramite130110Store.actualizarEstado({
   * Actualiza la propiedad del componente con los datos obtenidos.
   */
  getUMTCatalogo(): void {
-   this.importacionNeumaticosComercializarService.getUMTCatalogo('130110').subscribe((data) => {
+   this.importacionNeumaticosComercializarService.getUMTCatalogo(this.procedureId).subscribe((data) => {
      this.unidadCatalogo = data || [];
    });
  }
 
+ /**
+  * Maneja el cambio de fechas seleccionadas y actualiza el estado del store.
+  * @param evento - Array de fechas seleccionadas.
+  */
+ /**
+  * Maneja el cambio de fechas seleccionadas y actualiza el estado del store.
+  * @param evento - Array de fechas seleccionadas.
+  */
  onFechasSeleccionadasChange(evento: string[]): void {
   this.tramite130110Store.actualizarEstado({ fechasSeleccionadas: evento });
  }
@@ -666,7 +687,7 @@ this.tramite130110Store.actualizarEstado({
    */
   fetchEntidadFederativa(): void {
     this.importacionNeumaticosComercializarService
-      .getEntidadFederativa('130110')
+      .getEntidadFederativa(this.procedureId)
       .pipe(takeUntil(this.destroyed$))
       .subscribe((data) => {
         this.entidadFederativa = data;
@@ -678,7 +699,7 @@ this.tramite130110Store.actualizarEstado({
    */
   fetchRepresentacionFederal(): void {
     this.importacionNeumaticosComercializarService
-    .getRepresentacionFederal('130110',"SIN")
+    .getRepresentacionFederal(this.procedureId,"SIN")
     .subscribe((data) => {
       this.representacionFederal = data;
     });
@@ -689,7 +710,7 @@ this.tramite130110Store.actualizarEstado({
    */
   listaDePaisesDisponibles(): void {
     this.importacionNeumaticosComercializarService
-      .getBloque('130110')
+      .getBloque(this.procedureId)
       .pipe(takeUntil(this.destroyed$))
       .subscribe((data) => {
         this.elementosDeBloque = data;
@@ -698,11 +719,11 @@ this.tramite130110Store.actualizarEstado({
 
   /**
    * Método para obtener la lista de países por bloque.
-   * Identificador del bloque.
+   * @param _bloqueId - Identificador del bloque.
    */
   fetchPaisesPorBloque(_bloqueId: number): void {
     this.importacionNeumaticosComercializarService
-      .getPaisesPorBloque('130110', String(_bloqueId))
+      .getPaisesPorBloque(this.procedureId, String(_bloqueId))
       .pipe(takeUntil(this.destroyed$))
       .subscribe((data) => {
         this.paisesPorBloque = data;
@@ -714,7 +735,7 @@ this.tramite130110Store.actualizarEstado({
 
   /**
    * Maneja el cambio de bloque seleccionado.
-   * Identificador del bloque seleccionado.
+   * @param bloqueId - Identificador del bloque seleccionado.
    */
   enCambioDeBloque(bloqueId: number): void {
     this.fetchPaisesPorBloque(bloqueId);
@@ -722,19 +743,20 @@ this.tramite130110Store.actualizarEstado({
 
   /**
    * Actualiza el almacén con nuevos valores basados en eventos de formulario.
-   * Evento que incluye el formulario, el campo y el método a ejecutar.
-   * Evento con información del formulario y campo.
+   * @param $event - Evento que incluye el formulario, el campo y el método a ejecutar.
    */
   setValoresStore($event: { form: FormGroup; campo: string }): void {
     const VALOR = $event.form.get($event.campo)?.value;
 
     if ($event.campo === 'regimen') {
+      const VALOR = this.formDelTramite.get('regimen')?.value;
       this.formDelTramite.get('clasificacion')?.setValue('');
       this.mostrarErrorClasificacion = false;
       this.tramite130110Store.actualizarEstado({
         [$event.campo]: VALOR,
         clasificacion: ''
       });
+      this.getClasificacionRegimen(VALOR);
     } else {
       this.tramite130110Store.actualizarEstado({ [$event.campo]: VALOR });
       if ($event.campo === 'clasificacion' && VALOR) {
@@ -753,7 +775,7 @@ this.tramite130110Store.actualizarEstado({
   /**
    * Determina si el botón "Modificar" debe estar deshabilitado.
    * Este método verifica si no hay filas seleccionadas en la tabla dinámica.
-   * true si el botón debe estar deshabilitado, false en caso contrario.
+   * @returns {boolean} true si el botón debe estar deshabilitado, false en caso contrario.
    */
   disabledModificar(): boolean {
     let disabled = false;
@@ -773,8 +795,8 @@ this.tramite130110Store.actualizarEstado({
 
   /**
    * Valida que un string no contenga el carácter de ángulo derecho (›).
-   * Control de formulario a validar.
-   * Objeto de error si contiene el carácter, null si es válido.
+   * @param control - Control de formulario a validar.
+   * @returns {ValidationErrors | null} Objeto de error si contiene el carácter, null si es válido.
    */
   static validarSinCaracterAnguloDerecho(control: AbstractControl): ValidationErrors | null {
     if (typeof control.value === 'string' && control.value.includes('›')) {
@@ -785,8 +807,8 @@ this.tramite130110Store.actualizarEstado({
 
   /**
    * Valida que un número tenga como máximo tres decimales.
-   * Control de formulario a validar.
-   * Objeto de error si tiene más de tres decimales, null si es válido.
+   * @param control - Control de formulario a validar.
+   * @returns {ValidationErrors | null} Objeto de error si tiene más de tres decimales, null si es válido.
    */
   static validarNumeroTresDecimales(control: AbstractControl): ValidationErrors | null {
     const VALOR = control.value;
@@ -805,8 +827,8 @@ this.tramite130110Store.actualizarEstado({
 
   /**
    * Valida que un número tenga como máximo 14 enteros y 3 decimales.
-   * Control de formulario a validar.
-   * Objeto de error si no cumple con el formato, null si es válido.
+   * @param control - Control de formulario a validar.
+   * @returns {ValidationErrors | null} Objeto de error si no cumple con el formato, null si es válido.
    */
   static validarCatorceEnterosTresDecimales(control: AbstractControl): ValidationErrors | null {
     const VALOR = control.value;
@@ -880,10 +902,11 @@ this.tramite130110Store.actualizarEstado({
       this.partidasDeLaMercanciaComponent.abrirCargarArchivoModalReal();
     }
 
-    /*
-    * Método que se ejecuta cuando se eliminan partidas de la tabla.
-    * Actualiza los datos de la tabla y recalcula los totales.  
-    */
+    /**
+     * Método que se ejecuta cuando se eliminan partidas de la tabla.
+     * Actualiza los datos de la tabla y recalcula los totales.
+     * @param ids - Array de identificadores de las partidas a eliminar.
+     */
     onPartidasEliminadas(ids: string[]): void {
       this.tableBodyData = this.tableBodyData.filter(row => !ids.includes(row.id));
       this.mostrarTabla = this.tableBodyData.length > 0;

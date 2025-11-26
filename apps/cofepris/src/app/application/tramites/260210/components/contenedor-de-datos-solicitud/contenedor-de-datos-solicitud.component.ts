@@ -239,7 +239,7 @@ export class ContenedorDeDatosSolicitudComponent implements OnInit, OnDestroy {
 
 enIdSolicitudPrellenado($event:number): void {
     const SOLICITUDE_ID = $event;
-    this.registroSolicitudService.parcheOpcionesPrellenadas(260213, SOLICITUDE_ID).subscribe((res:any) => {
+    this.registroSolicitudService.parcheOpcionesPrellenadas(260210, SOLICITUDE_ID).subscribe((res:any) => {
       if(res && res.datos){
         GuardarMappingAdapter.patchToStore(res.datos, this.tramite260210Store);
       }

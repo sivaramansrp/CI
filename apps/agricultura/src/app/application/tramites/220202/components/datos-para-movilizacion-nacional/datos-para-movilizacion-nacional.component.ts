@@ -1,11 +1,11 @@
 import {
   Catalogo,
   CatalogoSelectComponent,
+  ConsultaioState,
   Notificacion,
   TituloComponent,
 } from '@libs/shared/data-access-user/src';
-import { Component, OnDestroy, OnInit } from '@angular/core';
-import { ConsultaioQuery } from '@ng-mf/data-access-user';
+import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 
 import {
   FormBuilder,
@@ -14,11 +14,14 @@ import {
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
+import { Subject, map, takeUntil } from 'rxjs';
 
 import { AgriculturaApiService } from '../../services/220202/agricultura-api.service';
 import {CatalogosService} from '../../services/220202/catalogos/catalogos.service';
+import { ConsultaSolicitudService } from '../../services/220202/consulta-solicitud/consulta-solicitud.service';
+import { ConsultaioQuery } from '@ng-mf/data-access-user';
+import { ConsultarMovilizacionResponse } from '../../models/220202/response/consultar-movilizacion-response.model';
 
-import { Subject, map, takeUntil } from 'rxjs';
 import { Movilizacion } from '../../models/220202/fitosanitario.model';
 
 
@@ -94,6 +97,16 @@ export class DatosParaMovilizacionNacionalComponent implements OnInit, OnDestroy
 * bandera para indicar que el formulario fue tocado
 */
   markTouched: boolean = false;
+  /**
+   * @property {ConsultaioState[]} consultaState
+   * @description Consulta solicitud.
+   */
+  @Input() consultaState!: ConsultaioState;
+  /**
+   * booleano para ocultar el formulario
+   * @property {boolean} ocultarForm
+   */
+  @Input() ocultarForm: boolean = false;
 
   /**
    * @constructor
@@ -105,7 +118,7 @@ export class DatosParaMovilizacionNacionalComponent implements OnInit, OnDestroy
     private consultaioQuery: ConsultaioQuery,
     public catalogosService: CatalogosService,
     private readonly fb: FormBuilder,
-
+    public consultaSolicitudService: ConsultaSolicitudService
   ) {
     this.forma = this.fb.group({
       transporte: ['', Validators.required],
@@ -172,7 +185,14 @@ export class DatosParaMovilizacionNacionalComponent implements OnInit, OnDestroy
       ),
     });
     // Obtiene las listas de opciones (medio de transporte y puntos de verificación)
-    this.obtenerTodosLosDatosDeOpciones();
+    const CARGACATALOGOS = async () => {
+      await this.obtenerTodosLosDatosDeOpciones();
+    }
+    CARGACATALOGOS().then(() => {
+      if (this.ocultarForm) {
+        this.obtenerDataMovilizacion();
+      }
+    })
   }
 
   /**
@@ -181,9 +201,44 @@ export class DatosParaMovilizacionNacionalComponent implements OnInit, OnDestroy
    * @method obtenerTodosLosDatosDeOpciones
    * @returns {void}
    */
-  obtenerTodosLosDatosDeOpciones(): void {
-    this.obtenerListaDeJustificaciones();
-    this.obtenerListaDePunto();
+  async obtenerTodosLosDatosDeOpciones(): Promise<void> {
+    await this.obtenerListaDeJustificaciones();
+    await this.obtenerListaDePunto();
+  }
+
+  /**
+   * Obtiene los datos de una solicitud mediante un folio especifico y procesa la respuesta
+   * para llenar un formulario y realiza diversas acciones basadas en los datos recibidos.
+   * @method obtenerDataMovilizacion
+   * @returns {void}
+   */
+  obtenerDataMovilizacion(): void {
+    const FOLIO = this.consultaState.folioTramite;
+    this.consultaSolicitudService.getDetalleMovilizacion(Number(this.consultaState.procedureId), FOLIO)
+      .pipe(takeUntil(this.destroyNotifier$))
+      .subscribe(async (response) => {
+        if (response?.codigo === '00' && response?.datos) {
+          await this.obtenerListaDeJustificaciones();
+          await this.obtenerListaDePunto();
+          this.llenarFormularioDesdeRespuesta(response.datos);
+        }
+      })
+  }
+
+  llenarFormularioDesdeRespuesta(datos: ConsultarMovilizacionResponse): void {
+    this.forma.patchValue({
+      transporte: datos.ide_medio_transporte,
+      identificacion: datos.identificacion_transporte,
+      puntoVerificacion: datos.id_punto_verificacion,
+      empresaTransportista: datos.razon_social,
+    })
+    const GUARDAR_VALORES: Movilizacion = {
+      transporte: datos.ide_medio_transporte,
+      puntoVerificacion: datos.id_punto_verificacion !== null ? datos.id_punto_verificacion.toString() : '',
+      empresaTransportista: datos.razon_social,
+      identificacion: datos.identificacion_transporte,
+    }
+    this.agriculturaApiService.updateMovilizacion(GUARDAR_VALORES);
   }
 
   /**
@@ -192,15 +247,18 @@ export class DatosParaMovilizacionNacionalComponent implements OnInit, OnDestroy
    * @method obtenerListaDeJustificaciones
    * @returns {void}
    */
-  obtenerListaDeJustificaciones(): void {
-    this.catalogosService.obtieneCatalogoMedioTransporte(220202)
-      .pipe(
-        takeUntil(this.destroyNotifier$)
-      ).subscribe(
-      (data): void => {
-        this.transporteList = data.datos ?? [];
-      }
-    );
+  obtenerListaDeJustificaciones(): Promise<void> {
+    return new Promise((resolve) => {
+      this.catalogosService.obtieneCatalogoMedioTransporte(220202)
+        .pipe(
+          takeUntil(this.destroyNotifier$)
+        ).subscribe(
+        (data): void => {
+          this.transporteList = data.datos ?? [];
+          resolve();
+        }
+      );
+    })
   }
 
   /**
@@ -209,15 +267,18 @@ export class DatosParaMovilizacionNacionalComponent implements OnInit, OnDestroy
    * @method obtenerListaDePunto
    * @returns {void}
    */
-  obtenerListaDePunto(): void {
-    this.catalogosService.obtieneCatalogoPuntoVerificacion(220202)
-      .pipe(
-        takeUntil(this.destroyNotifier$)
-      ).subscribe(
-      (data): void => {
-        this.puntoList = data.datos ?? [];
-      }
-    );
+  obtenerListaDePunto(): Promise<void> {
+    return new Promise((resolve) => {
+      this.catalogosService.obtieneCatalogoPuntoVerificacion(220202)
+        .pipe(
+          takeUntil(this.destroyNotifier$)
+        ).subscribe(
+        (data): void => {
+          this.puntoList = data.datos ?? [];
+          resolve();
+        }
+      );
+    })
   }
 
   /**

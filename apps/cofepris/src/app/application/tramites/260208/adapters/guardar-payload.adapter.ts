@@ -1,9 +1,18 @@
 /**
- * @fileoverview
- * Este archivo contiene el servicio adaptador para convertir entre el estado de Akita y los formatos de payload de API
- * para el trámite de ampliación de servicios 80205.
+ * @method toFormPayload
+ * @static
+ * @memberof GuardarAdapter_260208
+ * @summary
+ * Convierte el estado de Akita del trámite 260208 al formato de payload requerido por la API.
+ *
+ * @param {Tramite260208State} state - El estado actual de Akita para el trámite 260208.
+ * @returns {unknown} Un objeto con la estructura y los datos necesarios para enviar a la API.
+ *
+ * @description
+ * Este método toma el estado de la tienda Akita y lo transforma en el formato de payload esperado por la API para el trámite 260208.
+ * Realiza el mapeo de las propiedades del estado a las claves requeridas por el backend, incluyendo la transformación de arreglos
+ * y objetos anidados como solicitante, solicitud, establecimiento, datosSCIAN, mercancias y diferentes tipos de terceros.
  */
-
 import { Injectable } from '@angular/core';
 import { Tramite260208State } from '../estados/tramite260208Store.store';
 
@@ -42,8 +51,8 @@ export class GuardarAdapter_260208 {
           "discriminatorValue": 260208,
           "declaracionesSeleccionadas": state.datosSolicitudFormState.manifesto,
           "regimen": state.datosSolicitudFormState.regimen,
-          "aduanaAIFA": "",
-          "informacionConfidencial": state.datosSolicitudFormState.publico === 'si' ? true : false
+          "aduanaAIFA": "", 
+          "informacionConfidencial": state.datosSolicitudFormState.publico === 'Si' ? true : false
       },
       "establecimiento": {
           "rfcResponsableSanitario": state.datosSolicitudFormState.rfcSanitario,
@@ -52,7 +61,7 @@ export class GuardarAdapter_260208 {
           "domicilio": {
               "codigoPostal": state.datosSolicitudFormState.codigoPostal,
               "entidadFederativa": {
-                  "clave": ""
+                  "clave": state.datosSolicitudFormState.estado
               },
               "descripcionMunicipio": state.datosSolicitudFormState.municipioAlcaldia,
               "informacionExtra": state.datosSolicitudFormState.localidad,
@@ -69,21 +78,24 @@ export class GuardarAdapter_260208 {
       "datosSCIAN": state.scianConfigDatos.map((datos)=>{
         return {
               "cveScian": datos.clave,
-              "descripcion": datos.descripcion
+              "descripcion": datos.descripcion,
+              "selected": true
           }
       }),
       "mercancias": (state.tablaMercanciasConfigDatos ?? []).map((mercancia) => {
         return {
-              "idMercancia": "",
+              "idMercancia": null,
               "idClasificacionProducto": mercancia.claveClasificacionProductoObj?.clave,
               "nombreClasificacionProducto": mercancia.claveClasificacionProductoObj?.descripcion,
               "ideSubClasificacionProducto": mercancia.especificarClasificacionObj?.clave,
               "nombreSubClasificacionProducto": mercancia.especificarClasificacionObj?.descripcion,
               "descDenominacionEspecifica": mercancia.denominacionEspecificaProducto,
               "descDenominacionDistintiva": mercancia.denominacionDistintiva,
-              "descripcionMercancia": "",
-              "formaFarmaceuticaDescripcionOtros": mercancia.formaFarmaceutica,
-              "estadoFisicoDescripcionOtros": mercancia.estadoFisico,
+              "descripcionMercancia": mercancia.denominacionComun,
+              "idFormaFarmaceutica": mercancia.formaFarmaceutica,
+              "formaFarmaceuticaDescripcionOtros": mercancia.especifiqueForma,
+              "idEstadoFisico": mercancia.estadoFisico,
+              "estadoFisicoDescripcionOtros": mercancia.especifiqueEstado,
               "fraccionArancelaria": {
                   "clave": mercancia.fraccionArancelaria,
                   "descripcion": mercancia.descripcionFraccion
@@ -91,27 +103,21 @@ export class GuardarAdapter_260208 {
               "unidadMedidaComercial": {
                   "descripcion": mercancia.cantidadUMCObj?.descripcion
               },
-              "cantidadUMCConComas": mercancia.cantidadUMC,
+              "cantidadUMCConComas": mercancia.cantidadUmcValor,
               "unidadMedidaTarifa": {
                   "descripcion": mercancia.cantidadUMT
               },
               "cantidadUMTConComas": mercancia.cantidadUmtValor,
               "presentacion": mercancia.presentacion,
               "registroSanitarioConComas": mercancia.numeroRegistroSanitario,
-              "nombreCortoPaisOrigen": mercancia.paisDeOriginDatos?.toString(),
-              "nombreCortoPaisProcedencia": mercancia.paisDeProcedenciaDatos?.toString(),
-              "tipoProductoDescripcionOtros": mercancia.tipoProducto,
-              "nombreCortoUsoEspecifico": mercancia.usoEspecifico?.toString(),
+              "nombreCortoPaisOrigen": mercancia.paisOrigenDatosClave,
+              "nombreCortoPaisProcedencia": mercancia.paisProcedenciaDatosClave,
+              "idTipoProductoTipoTramite": mercancia.tipoProducto,
+              "tipoProductoDescripcionOtros": mercancia.especifique,
+              "nombreCortoUsoEspecifico": mercancia.usoEspecificoDatosClave,
               "fechaCaducidadStr": mercancia.fechaCaducidad
           }
       }),
-      "representanteLegal": {
-          "rfc": state.datosSolicitudFormState.representanteRfc,
-          "resultadoIDC": "",
-          "nombre": state.datosSolicitudFormState.representanteNombre,
-          "apellidoPaterno": state.datosSolicitudFormState.apellidoPaterno,
-          "apellidoMaterno": state.datosSolicitudFormState.apellidoMaterno
-      },
       "gridTerceros_TIPERS_FAB": state.fabricanteTablaDatos.map((fabricante) => {
         return {
               "idPersonaSolicitud": "",

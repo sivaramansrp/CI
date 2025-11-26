@@ -3,15 +3,54 @@ import { HttpClientTestingModule, HttpTestingController } from '@angular/common/
 import { ImportacionMaterialDeInvestigacionCientificaService } from './importacion-material-de-investigacion-cientifica.service';
 import { Catalogo } from '@ng-mf/data-access-user';
 import { ProductoResponse } from '../../../shared/constantes/vehiculos-adaptados.enum';
+import { of } from 'rxjs';
+
+interface BaseResponse<T> {
+  codigo: string;
+  path: string;
+  timestamp: string;
+  mensaje: string;
+  datos?: T;
+}
 
 describe('ImportacionMaterialDeInvestigacionCientificaService', () => {
   let service: ImportacionMaterialDeInvestigacionCientificaService;
   let httpMock: HttpTestingController;
 
+  const mockTramite130112Store = {
+    actualizarEstado: jest.fn()
+  };
+
+  const mockCatalogoServices = {
+    tratadosAcuerdoCatalogo: jest.fn(),
+    getpaisesBloqueCatalogo: jest.fn(),
+    entidadesFederativasCatalogo: jest.fn(),
+    regimenesCatalogo: jest.fn(),
+    getRegimenClasificacion: jest.fn(),
+    fraccionesArancelariasCatalogo: jest.fn(),
+    getFraccionesArancelariasAutoCompleteCatalogo: jest.fn(),
+    representacionFederalCatalogo: jest.fn(),
+    getUMTCatalogo: jest.fn()
+  };
+
+  const mockHttpCoreService = {
+    post: jest.fn()
+  };
+
+  const mockTramite130112Query = {
+    selectSolicitud$: of({})
+  };
+
   beforeEach(() => {
     TestBed.configureTestingModule({
       imports: [HttpClientTestingModule],
-      providers: [ImportacionMaterialDeInvestigacionCientificaService],
+      providers: [
+        ImportacionMaterialDeInvestigacionCientificaService,
+        { provide: 'Tramite130112Store', useValue: mockTramite130112Store },
+        { provide: 'CatalogoServices', useValue: mockCatalogoServices },
+        { provide: 'HttpCoreService', useValue: mockHttpCoreService },
+        { provide: 'Tramite130112Query', useValue: mockTramite130112Query }
+      ],
     });
 
     service = TestBed.inject(ImportacionMaterialDeInvestigacionCientificaService);
@@ -26,41 +65,31 @@ describe('ImportacionMaterialDeInvestigacionCientificaService', () => {
     expect(service).toBeTruthy();
   });
 
-  it('should fetch lista de países disponibles', () => {
-    const mockResponse: Catalogo[] = [{ id: 1, descripcion: 'País 1' }];
-
-    service.getListaDePaisesDisponibles().subscribe((data) => {
-      expect(data).toEqual(mockResponse);
-    });
-
-    const req = httpMock.expectOne('/assets/json/130112/pais-procenia.json');
-    expect(req.request.method).toBe('GET');
-    req.flush(mockResponse);
-  });
+  // Test for getListaDePaisesDisponibles removed - method does not exist in service
 
   it('should fetch lista de países por bloque', () => {
     const mockResponse: Catalogo[] = [{ id: 1, descripcion: 'País 1' }];
+    const tramite = '130112';
+    const bloqueId = '1';
 
-    service.getPaisesPorBloque(1).subscribe((data) => {
+    jest.spyOn(service['catalogoServices'], 'getpaisesBloqueCatalogo').mockReturnValue(
+      of({ 
+        codigo: '200', 
+        path: '/test', 
+        timestamp: '2024-01-01', 
+        mensaje: 'Success', 
+        datos: mockResponse 
+      } as BaseResponse<Catalogo[]>)
+    );
+
+    service.getPaisesPorBloque(tramite, bloqueId).subscribe((data: Catalogo[]) => {
       expect(data).toEqual(mockResponse);
     });
 
-    const req = httpMock.expectOne('/assets/json/130112/paises-por-bloque.json');
-    expect(req.request.method).toBe('GET');
-    req.flush(mockResponse);
+    expect(service['catalogoServices'].getpaisesBloqueCatalogo).toHaveBeenCalledWith(tramite, bloqueId);
   });
 
-  it('should fetch lista de entidades federativas', () => {
-    const mockResponse: Catalogo[] = [{ id: 1, descripcion: 'Entidad 1' }];
-
-    service.getEntidadFederativa().subscribe((data) => {
-      expect(data).toEqual(mockResponse);
-    });
-
-    const req = httpMock.expectOne('/assets/json/130112/entidad-federativa.json');
-    expect(req.request.method).toBe('GET');
-    req.flush(mockResponse);
-  });
+  // Test for getEntidadFederativa removed - method does not exist in service
 
   it('should fetch lista de representaciones federales', () => {
     const mockResponse: Catalogo[] = [{ id: 1, descripcion: 'Representación 1' }];
@@ -106,13 +135,23 @@ describe('ImportacionMaterialDeInvestigacionCientificaService', () => {
 
   it('should fetch lista de fracciones y descripciones de partidas de la mercancía', () => {
     const mockResponse: Catalogo[] = [{ id: 1, descripcion: 'Fracción 1' }];
+    const tramite = '130112';
+    const ID = '1';
 
-    service.getFraccionDescripcionPartidasDeLaMercancia().subscribe((data) => {
+    jest.spyOn(service['catalogoServices'], 'getFraccionesArancelariasAutoCompleteCatalogo').mockReturnValue(
+      of({ 
+        codigo: '200', 
+        path: '/test', 
+        timestamp: '2024-01-01', 
+        mensaje: 'Success', 
+        datos: mockResponse 
+      } as BaseResponse<Catalogo[]>)
+    );
+
+    service.getFraccionDescripcionPartidasDeLaMercanciaService(tramite, ID).subscribe((data: Catalogo[]) => {
       expect(data).toEqual(mockResponse);
     });
 
-    const req = httpMock.expectOne('/assets/json/130112/fraccion-descripcion-partidas-de-la-mercancia.json');
-    expect(req.request.method).toBe('GET');
-    req.flush(mockResponse);
+    expect(service['catalogoServices'].getFraccionesArancelariasAutoCompleteCatalogo).toHaveBeenCalledWith(tramite, ID);
   });
 });

@@ -91,7 +91,10 @@ export class ValidadoresDeFormulariosComponent {
     }
 
     if (CONTROL.hasError('maxlength')) {
-      return null;
+      const VALIDADOR = validadores.find((v) => v.tipo === 'maxlength');
+      if (VALIDADOR && VALIDADOR.mensaje) {
+        return VALIDADOR.mensaje;
+      }
     }
 
     for (const VALIDADOR of validadores) {

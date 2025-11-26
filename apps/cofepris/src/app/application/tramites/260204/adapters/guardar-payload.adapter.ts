@@ -94,23 +94,20 @@ export class GuardarAdapter_260204 {
                   "descripcion": mercancia.descripcionFraccion
               },
               "unidadMedidaComercial": {
-                  "descripcion": mercancia.cantidadUMCObj?.descripcion
-              },
-              "cantidadUMCConComas": mercancia.cantidadUmcValor,
-              "unidadMedidaTarifa": {
-                  "descripcion": mercancia.cantidadUMT
-              },
-              "cantidadUMTConComas": mercancia.cantidadUmtValor,
+                descripcion: mercancia.cantidadUMC
+            },
+            "cantidadUMCConComas": mercancia.cantidadUmcValor,
+            "unidadMedidaTarifa": {
+                descripcion: mercancia.cantidadUMT
+            },
+            "cantidadUMTConComas": mercancia.cantidadUmtValor,
               "presentacion": mercancia.presentacion,
               "registroSanitarioConComas": mercancia.numeroRegistroSanitario,
-            //   "nombreCortoPaisOrigen": mercancia.paisOrigenDatosClave,
-            //   "nombreCortoPaisProcedencia": mercancia.paisProcedenciaDatosClave,
-            "nombreCortoPaisOrigen": mercancia.paisDeOriginDatos?.toString(),
-              "nombreCortoPaisProcedencia": mercancia.paisDeProcedenciaDatos?.toString(),
+              "nombreCortoPaisOrigen": mercancia.paisOrigenDatosClave,
+              "nombreCortoPaisProcedencia": mercancia.paisProcedenciaDatosClave,
               "idTipoProductoTipoTramite": mercancia.tipoProducto,
               "tipoProductoDescripcionOtros": mercancia.especifique,
-              //"nombreCortoUsoEspecifico": mercancia.usoEspecificoDatosClave,
-               "nombreCortoUsoEspecifico": mercancia.usoEspecifico?.toString(),
+              "nombreCortoUsoEspecifico": mercancia.usoEspecificoDatosClave,
               "fechaCaducidadStr": mercancia.fechaCaducidad
           }
       }),
@@ -367,8 +364,8 @@ export class GuardarAdapter_260204 {
             estadoFisico: m.estadoFisicoDescripcionOtros ?? '',
             fraccionArancelaria: m.fraccionArancelaria?.clave ?? '',
             descripcionFraccion: m.fraccionArancelaria?.descripcion ?? '',
-            cantidadUMC: m.cantidadUMCConComas ?? '',
-            cantidadUMT: m.cantidadUMTConComas ?? '',
+           // cantidadUMC: m.cantidadUMCConComas ?? '',
+            cantidadUMT: m.unidadMedidaTarifa?.descripcion ?? '',
             presentacion: m.presentacion ?? '',
             numeroRegistroSanitario: m.registroSanitarioConComas ?? '',
             paisDeOriginDatos: m.nombreCortoPaisOrigen ?? '',
@@ -383,6 +380,12 @@ export class GuardarAdapter_260204 {
             paisOrigen: m.nombreCortoPaisOrigen ?? "",
             paisProcedencia: m.nombreCortoPaisProcedencia ?? "",
             id: m.idMercancia || null,
+            paisOrigenDatosClave: m.nombreCortoPaisOrigen ?? "",
+            paisProcedenciaDatosClave: m.nombreCortoPaisProcedencia ?? "",
+            usoEspecificoDatosClave: m.nombreCortoUsoEspecifico ?? "",
+            cantidadUmcValor: m.cantidadUMCConComas ?? '',
+            cantidadUMC: m.unidadMedidaComercial?.descripcion ?? '',
+            cantidadUmtValor: m.cantidadUMTConComas ?? '',
         }));
     }
 

@@ -219,7 +219,7 @@ export class ContenedorDeDatosSolicitudComponent implements OnInit, OnDestroy {
 enIdSolicitudPrellenado($event:number): void {
     const SOLICITUDE_ID = $event;
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    this.registroSolicitudService.parcheOpcionesPrellenadas(260213, SOLICITUDE_ID).subscribe((res:any) => {
+    this.registroSolicitudService.parcheOpcionesPrellenadas(260202, SOLICITUDE_ID).subscribe((res:any) => {
       if(res && res.datos){
         GuardarAdapter_260202.patchToStore(res.datos, this.tramite260202Store);
       }
