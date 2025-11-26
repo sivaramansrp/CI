@@ -3,7 +3,7 @@
 // permisos, configuraciones, así como la obtención y manipulación de datos externos para la aplicación.
 
 import { Catalogo, ConsultaioQuery, REGEX_NUMERO_DECIMAL_ENTERO, REG_X } from '@ng-mf/data-access-user';
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ID_PROCEDIMIENTO, OPINIONES_SOLICITUD, PRODUCTO_OPCION } from '../../enums/accion-botton.enum';
 import { Subject, map, takeUntil } from 'rxjs';
@@ -11,7 +11,9 @@ import { Tramite130217State, Tramite130217Store } from '../../../../estados/tram
 import { ConfiguracionColumna } from '@ng-mf/data-access-user';
 import { ControlPermisosPreviosExportacionService } from '../../services/control-permisos-previos-exportacion.service';
 import { HttpClient } from '@angular/common/http';
+import { Notificacion } from '@libs/shared/data-access-user/src';
 import { PARTIDASDELAMERCANCIA_TABLA } from '../../../../shared/constantes/partidas-de-la-mercancia.enum';
+import { PartidasDeLaMercanciaComponent } from '../../../../shared/components/partidas-de-la-mercancia/partidas-de-la-mercancia.component';
 import { PartidasDeLaMercanciaModelo } from '../../../../shared/models/partidas-de-la-mercancia.model';
 import { ProductoOpción } from '../../../../shared/constantes/vehiculos-adaptados.enum';
 import { TEXTOS } from '../../../../shared/constantes/representacion-federal.enum';
@@ -51,12 +53,17 @@ export class SolicitudComponent implements OnInit, OnDestroy {
   /**
    * Formulario reactivo para la selección de países.
    */
-  paisForm!: FormGroup;
-
-  /**
+  paisForm!: FormGroup;  /**
    * Formulario reactivo para la representación.
    */
   frmRepresentacionForm!: FormGroup;
+
+  /**
+   * Referencia al componente `PartidasDeLaMercanciaComponent` dentro de la vista.
+   * Permite acceder a las propiedades y métodos públicos del componente hijo desde el componente padre.
+   */
+  @ViewChild(PartidasDeLaMercanciaComponent)
+  partidasDeLaMercanciaComponent!: PartidasDeLaMercanciaComponent;
 
   /**
    * Configuración de las columnas de la tabla dinámica.
@@ -87,6 +94,21 @@ export class SolicitudComponent implements OnInit, OnDestroy {
    * Fila seleccionada en la tabla dinámica.
    */
   filaSeleccionada: PartidasDeLaMercanciaModelo[] = [];
+
+  /**
+   * Bandera que indica si se deben mostrar los mensajes de error para el formulario de mercancía.
+   */
+  mostrarErroresMercancia = false;
+
+  /**
+   * Bandera que indica si se deben mostrar los mensajes de error para el formulario de partidas de la mercancía.
+   */
+  mostrarErroresPartidas = false;
+
+  /*
+   * @descripcion Indica si se debe mostrar una notificación.
+   */
+  mostrarNotificacion = false;
 
   /**
    * jest.spyOnOpciones de solicitud configurables.
@@ -170,6 +192,11 @@ export class SolicitudComponent implements OnInit, OnDestroy {
    * Cuando es `true`, los campos del formulario no se pueden editar.
    */
   esFormularioSoloLectura: boolean = false;
+
+  /**
+   * Objeto para mostrar notificaciones al usuario.
+   */
+  nuevaNotificacion!: Notificacion;
 
   /**
    *  jest.spyOnIndica si las partidas seleccionadas son inválidas. 
@@ -568,8 +595,8 @@ disabledModificar() : boolean {
    *
    * @returns {void}
    */
-  getClasificacionRegimenCatalogo(VALOR: string): void {
-    this.ControlPermisosPreviosExportacionService.getClasificacionRegimenCatalogo(VALOR).subscribe((data) => {
+  getClasificacionRegimenCatalogo(CLASSIFICACIONES_REGIMEN: string): void {
+    this.ControlPermisosPreviosExportacionService.getClasificacionRegimenCatalogo(this.idProcedimiento.toString(), CLASSIFICACIONES_REGIMEN).subscribe((data) => {
       this.catalogosArray[1] = data as Catalogo[];
     });
   }
@@ -663,6 +690,102 @@ disabledModificar() : boolean {
    */
   fechasSeleccionadas(evento: string[]): void {
     this.tramite130217Store.actualizarEstado({ fechasSeleccionadas: evento });
+  }
+
+  /**
+   * Modifica la partida seleccionada en el formulario.
+   * @param evento - Partida de la mercancía seleccionada
+   */
+  modificarPartidaSeleccionada(evento: PartidasDeLaMercanciaModelo): void {
+    this.modificarPartidasDelaMercanciaForm.patchValue({
+      cantidadPartidasDeLaMercancia: evento.cantidad,
+      valorPartidaUSDPartidasDeLaMercancia: evento.totalUSD,
+      descripcionPartidasDeLaMercancia: evento.descripcion,
+    });
+  }
+
+  /**
+   * Actualiza la partida modificada en la tabla de datos.
+   * @param evento - Partida de la mercancía modificada
+   */
+  partidaModificada(evento: PartidasDeLaMercanciaModelo): void {
+    this.tableBodyData = this.tableBodyData.map(item => {
+      if (item.id === evento.id) {
+        return {
+          ...item,
+          cantidad: evento.cantidad,
+          totalUSD: evento.totalUSD,
+          precioUnitarioUSD: evento.precioUnitarioUSD,
+          descripcion: evento.descripcion,
+        };
+      }
+      return item;
+    });
+    const CANTIDAD_TOTAL = this.tableBodyData.reduce((acc, item) => acc + parseInt(item.cantidad, 10), 0);
+    const TOTAL_USD = this.tableBodyData.reduce((acc, item) => acc + parseFloat(item.totalUSD), 0);
+    this.formForTotalCount.patchValue({
+      cantidadTotal: CANTIDAD_TOTAL,
+      valorTotalUSD: TOTAL_USD,
+    });
+    this.tramite130217Store.actualizarEstado({ tableBodyData: this.tableBodyData });
+  }
+
+  /**
+   * Elimina las partidas seleccionadas de la tabla.
+   * @param evento - Array de IDs de partidas a eliminar
+   */
+  partidasEliminadas(evento: string[]): void {
+    this.tableBodyData = this.tableBodyData.filter(
+      item => !evento.includes(String(item.id))
+    );
+    const CANTIDAD_TOTAL = this.tableBodyData.reduce((acc, item) => acc + parseInt(item.cantidad, 10), 0);
+    const TOTAL_USD = this.tableBodyData.reduce((acc, item) => acc + parseFloat(item.totalUSD), 0);
+    this.formForTotalCount.patchValue({
+      cantidadTotal: CANTIDAD_TOTAL,
+      valorTotalUSD: TOTAL_USD,
+    });
+    this.tramite130217Store.actualizarEstado({ tableBodyData: this.tableBodyData });
+  }
+
+  /**
+   * Valida los formularios de mercancía y partidas de la mercancía antes de permitir la carga de un archivo.
+   */
+  validarYCargarArchivo(): void {
+    ['cantidad', 'valorFacturaUSD', 'fraccion'].forEach((controlName) => {
+      const CONTROL = this.mercanciaForm.get(controlName);
+      if (CONTROL) {
+        CONTROL.markAsTouched();
+        CONTROL.updateValueAndValidity();
+      }
+    });
+
+    if (
+      this.mercanciaForm.get('cantidad')?.invalid ||
+      this.mercanciaForm.get('valorFacturaUSD')?.invalid || 
+      this.mercanciaForm.get('fraccion')?.invalid
+    ) {
+      this.mostrarErroresMercancia = true;
+      this.mostrarErroresPartidas = false;
+      return;
+    }
+
+    this.mostrarErroresMercancia = false;
+
+    if (!this.mercanciaForm.get('fraccion')?.value) {
+      this.nuevaNotificacion = {
+        tipoNotificacion: 'alert',
+        categoria: 'info',
+        modo: '',
+        titulo: '',
+        mensaje: 'Debes seleccionar una Fracción arancelaria',
+        cerrar: true,
+        txtBtnAceptar: '',
+        txtBtnCancelar: '',
+      };
+      this.mostrarNotificacion = true;
+      return;
+    }
+     this.partidasDeLaMercanciaComponent.abrirCargarArchivoModalReal();
   }
 
   /**
