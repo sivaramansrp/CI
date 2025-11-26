@@ -398,7 +398,7 @@
                   </div>
                </div>
                @if(tieneUsoEspecifico) {
-               <div class="form-group">
+               <div class="form-group" *ngIf="idProcedimiento !== 260509 && tieneUsoEspecifico">
                   <label for="usoEspecifico" class="form-label text-start">
                   Uso específico<span  [ngClass]="{'tiene-error':formMercancias.get('usoEspecifico')?.invalid && formMercancias.get('usoEspecifico')?.touched}">*</span>:
                   </label>
@@ -676,7 +676,7 @@
                      </small>
                   </div>
                </div>
-               <div class="form-group" *ngIf="mostrarNumeroRegistro">
+               <div class="form-group" *ngIf="idProcedimiento !== 260509 && mostrarNumeroRegistro">
                   <label for="numeroRegistro">
                   Número de registro sanitario<span [ngClass]="{'tiene-error':formMercancias.get('numeroRegistro')?.invalid && formMercancias.get('numeroRegistro')?.touched}">*</span>:
                   </label>
