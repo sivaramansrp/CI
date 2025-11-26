@@ -4,6 +4,7 @@
  * Proporciona la interfaz de estado, el estado inicial y el store con métodos para actualizar el estado.
  */
 import { CriterioConfiguracionResponse } from '../../models/response/tratado-configuracion-response.model';
+import { DeclaracionDatosResponse } from '../../models/response/declaracion-datos-response.model';
 
 import { Store, StoreConfig } from '@datorama/akita';
 import { Injectable } from '@angular/core';
@@ -43,6 +44,10 @@ export interface Tramite110102State {
   exportadorAutorizado: boolean;
   /** Información seleccionada en los radios del formulario por el solicitante. */
   informacionRadios: string | null;
+  /** Id solicitud de peticion de guardado */
+  id_solcitud: number;
+  /** Un array de objetos que contiene los datos de declaración de la solicitud */
+  declaracion_solicitud: DeclaracionDatosResponse[];
 }
 
 /**
@@ -96,6 +101,8 @@ export function createInitialState(): Tramite110102State {
     metodoSeparacion: false,
     exportadorAutorizado: false,
     informacionRadios: null,
+    id_solcitud: 0,
+    declaracion_solicitud:[],
   };
 }
 
@@ -199,6 +206,38 @@ export class Tramite110102Store extends Store<Tramite110102State> {
     this.update((state) => ({
       ...state,
       informacionRadios,
+    }));
+  }
+
+    /**
+     * Agrega una delcaracion `DeclaracionDatosResponse`.
+     * @param declaraciones - El objeto `DeclaracionDatosResponse` a insertar en el array.
+    */
+    public addDeclaraciones(declaraciones: DeclaracionDatosResponse[]): void {
+      this.update((state) => ({
+        ...state,
+        declaracion_solicitud: declaraciones,
+      }));
+    }
+    
+  /**
+   * Limpia la lista de declaraciones.
+   */
+  public clearDeclaraciones(): void {
+    this.update((state) => ({
+      ...state,
+      declaracion_solicitud: [],
+    }));
+  }
+
+  /**
+   * Actualiza el di de guardado.
+   * @param id_solcitud - El id de peticion guardado.
+   */
+  public setId_solicitud(id_solcitud: number):void {
+    this.update((state) => ({
+      ...state,
+      id_solcitud,
     }));
   }
 
