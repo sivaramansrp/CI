@@ -7,11 +7,13 @@ import { Component, Input, OnChanges, OnDestroy, SimpleChanges } from '@angular/
 import { CommonModule } from '@angular/common';
 
 import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
-import { Subject } from 'rxjs';
+import { Subject, takeUntil } from 'rxjs';
 import { TituloComponent } from "@ng-mf/data-access-user";
 
 import { ComercializadoresProductosResponse } from '../../models/response/comercializadores-productos-response.model';
 import { DatosTratadosAcuerdosComponent } from "../datos-tratados-acuerdos/datos-tratados-acuerdos.component";
+import { Tramite110102Query } from '../../estados/queries/tramite110102.query';
+import { Tramite110102State } from '../../estados/store/tramite110102.store';
 
 /**
  * Este componente maneja el registro de la mercancía del comercializador.
@@ -42,12 +44,25 @@ private destroyed$ = new Subject<void>();
 @Input() mercancia!: ComercializadoresProductosResponse;
 
   /**
+    * Estado actual del trámite.
+  */
+  estadoTramite!: Tramite110102State;
+
+  /**
    * Constructor del componente.
    * Servicio para la creación de formularios reactivos y para obtener datos de la mercancía asociada.
    * @param {FormBuilder} fb - Servicio para la creación de formularios reactivos.
    * @param {MercanciaasociadaService} service - Servicio para obtener datos de la mercancía asociada.
+   * @param {Tramite110102Query} consultaTramite - Servicio para consultar el estado del trámite.
    */
-  constructor(private fb: FormBuilder) {
+  constructor(private fb: FormBuilder,
+    private consultaTramite: Tramite110102Query,
+  ) {
+      this.consultaTramite.selectTramite110102$
+      .pipe(takeUntil(this.destroyed$))
+      .subscribe((estado) => {
+        this.estadoTramite = estado;
+      });
     this.registroMercanciaComercializadorFrom = this.fb.group({
       nombreComercial: [{ value: '', disabled: true }],
       nombreIngles: [{ value: '', disabled: true }],
