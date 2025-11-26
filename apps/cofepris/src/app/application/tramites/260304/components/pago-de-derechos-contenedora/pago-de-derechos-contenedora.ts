@@ -103,6 +103,17 @@ export class PagoDeDerechosContenedoraComponent implements OnDestroy {
    */
   protected destroyNotifier$: Subject<void> = new Subject();
 
+  /**
+   * Referencia al componente hijo PagoDeDerechosComponent.
+   * Permite acceder a métodos y propiedades públicas del componente de pago de derechos,
+   * como la validación del formulario o la obtención de datos ingresados.
+   *
+   * @type {PagoDeDerechosComponent}
+   * @see PagoDeDerechosComponent
+   * @example
+   * // Validar el formulario hijo desde el contenedor
+   * this.pagoDeDerechosComponent.formularioSolicitudValidacion();
+   */
   @ViewChild(PagoDeDerechosComponent)
   pagoDeDerechosComponent!: PagoDeDerechosComponent;
 
@@ -186,6 +197,17 @@ export class PagoDeDerechosContenedoraComponent implements OnDestroy {
     this.tramiteStore.updatePagoDerechos(event);
   }
 
+  /**
+   * Valida el formulario de pago de derechos a través del componente hijo.
+   * Llama al método `formularioSolicitudValidacion()` del componente PagoDeDerechosComponent
+   * para determinar si el formulario es válido.
+   *
+   * @returns {boolean} `true` si el formulario es válido, `false` en caso contrario o si el componente hijo no está disponible.
+   * @example
+   * if (this.validarContenedor()) {
+   *   // El formulario de pago de derechos es válido
+   * }
+   */
   validarContenedor(): boolean {
     return (
       this.pagoDeDerechosComponent?.formularioSolicitudValidacion() ?? false
