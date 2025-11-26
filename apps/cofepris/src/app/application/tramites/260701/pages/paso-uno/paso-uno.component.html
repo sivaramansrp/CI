@@ -25,10 +25,10 @@
                     <solicitante></solicitante>
                 }              
                 @case (2) {
-                    <app-datos-de-la-solicitud [idProcedimiento]="idProcedimiento"></app-datos-de-la-solicitud>
+                    <app-datos-de-la-solicitud [idProcedimiento]="idProcedimiento" [isContinuarTriggered]="isContinuarTriggered" (formValidityChange)="onFormValidityChange($event)"></app-datos-de-la-solicitud>
                 }
                 @case(3) {
-                    <app-terceros-relacionados [idProcedimiento]="idProcedimiento"></app-terceros-relacionados>
+                    <app-terceros-relacionados [idProcedimiento]="idProcedimiento" [isContinuarTriggered]="isContinuarTriggered"></app-terceros-relacionados>
                 }
                
                 @case(4) {
