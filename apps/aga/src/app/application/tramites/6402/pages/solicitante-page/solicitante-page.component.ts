@@ -9,8 +9,7 @@ import { Tramite6402Query } from '../../estados/tramite6402.query';
 import { Tramite6402State } from '../../estados/tramite6402.store';
 import { Tramite6402Store } from '../../estados/tramite6402.store';
 import { WizardComponent } from '@libs/shared/data-access-user/src';
-import { map } from 'rxjs';
-import { takeUntil } from 'rxjs';
+import { map, takeUntil } from 'rxjs';
 
 
 /**

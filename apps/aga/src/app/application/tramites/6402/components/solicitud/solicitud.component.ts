@@ -1,6 +1,6 @@
 import { AbstractControl, FormBuilder, ValidationErrors } from "@angular/forms";
 import { Catalogo, CatalogoLista, SolicitudTabla } from "../../models/autorizacion-importacion.model";
-import { CatalogoSelectComponent,InputFecha,InputFechaComponent,NotificacionesComponent,Pedimento,TablaDinamicaComponent,TablaSeleccion,TituloComponent,ValidacionesFormularioService} from "@libs/shared/data-access-user/src";
+import { CatalogoSelectComponent,InputFecha,InputFechaComponent,NotificacionesComponent,PATRON_LETRAS_NUMEROS_ESPACIOS,Pedimento,REGEX_SOLO_NUMEROS,TablaDinamicaComponent,TablaSeleccion,TituloComponent,ValidacionesFormularioService} from "@libs/shared/data-access-user/src";
 import { Component, ElementRef, OnDestroy, OnInit, ViewChild } from "@angular/core";
 import { ConsultaioQuery, ConsultaioState } from "@ng-mf/data-access-user";
 import { FECHA_CARTAPORTE, FECHA_DESTINO, FECHA_IMPORTACION, FECHA_VENCIMIENTO, TABLA_DE_DATOS, TEXTOS } from "../../constants/autorizacion-importacion.enum";
@@ -688,7 +688,7 @@ export class SolicitudComponent implements OnInit, OnDestroy {
         ],
         numeroActaDescruccion: [
           this.tramiteState?.solicitudFormulario?.numeroActaDescruccion,
-          [Validators.required, Validators.maxLength(30), Validators.pattern('^[a-zA-Z0-9 ]+$')],
+          [Validators.required, Validators.maxLength(30), Validators.pattern(PATRON_LETRAS_NUMEROS_ESPACIOS)],
         ],
         cveAduanaDestino: [
           this.tramiteState?.solicitudFormulario?.cveAduanaDestino,
@@ -730,7 +730,7 @@ export class SolicitudComponent implements OnInit, OnDestroy {
           [
             Validators.required,
             Validators.maxLength(25),
-            Validators.pattern('^[0-9]*$'),
+            Validators.pattern(REGEX_SOLO_NUMEROS),
           ],
         ],
       }),
