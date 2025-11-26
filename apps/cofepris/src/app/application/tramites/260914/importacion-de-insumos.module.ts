@@ -13,7 +13,7 @@ import { PantallasComponent } from './pages/pantallas/pantallas.component';
 import { PasoDosComponent } from './pages/paso-dos/paso-dos.component';
 import { PasoTresComponent } from './pages/paso-tres/paso-tres.component';
 import { SolicitanteComponent } from '@libs/shared/data-access-user/src';
-import { TercerosRelacionadosFabricanteComponent } from '../../shared/components/terceros-relacionados-fabricante/terceros-relacionados-fabricante.component';
+import { TercerosRelacionadosModificacionComponent } from '../../shared/components/shared2609/terceros-relacionados-modificacion/terceros-relacionados.component';
 import { TituloComponent } from '@libs/shared/data-access-user/src';
 import { ToastrService } from 'ngx-toastr';
 import { TramitesAsociadosSeccionComponent } from '../../shared/components/tramites-asociados-seccion/tramites-asociados-seccion.component';
@@ -35,7 +35,7 @@ import { WizardComponent } from '@libs/shared/data-access-user/src';
     SolicitanteComponent,
     PagoDeDerechosEntradaComponent,
     TramitesAsociadosSeccionComponent,
-    TercerosRelacionadosFabricanteComponent,
+    TercerosRelacionadosModificacionComponent,
     InputCheckComponent,
     TituloComponent,
     AnexarDocumentosComponent,

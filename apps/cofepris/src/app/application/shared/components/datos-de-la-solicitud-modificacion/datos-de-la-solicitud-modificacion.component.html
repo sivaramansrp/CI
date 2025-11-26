@@ -8,7 +8,7 @@
 
         <app-input-radio [radioOptions]="datosGenericos" [isRequired]="true" [layout]="'horizontal'"
           formControlName="genericos"
-          (change)="actualizarValoresStore(datosSolicitudform,'genericos', 'setGenericos')"></app-input-radio>
+          (valueChange)="actualizarValoresStore(datosSolicitudform,'genericos', 'setGenericos')"></app-input-radio>
       </div>
 
       <div class="row mt-5">

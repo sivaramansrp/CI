@@ -52,6 +52,12 @@ import { TooltipModule } from 'ngx-bootstrap/tooltip';
   encapsulation: ViewEncapsulation.None,
 })
 export class DatosDeLaSolicitudModificacionComponent implements OnInit, AfterViewInit, OnDestroy {
+  /**
+   * Valor que habilita el campo Justificación
+   * Cambia según la opción seleccionada en 'genericos'.
+   */
+  public valorModificacionGenericos: string = 'modificacion';
+
 
   /**
    * @description
@@ -489,6 +495,8 @@ export class DatosDeLaSolicitudModificacionComponent implements OnInit, AfterVie
     if (this.datosSolicitudform && this.manifiestosRepresentanteForm && this.scianForm) {
       this.datosSolicitudform.disable();
       this.datosSolicitudform.get('noLicenciaSanitaria')?.enable();
+      this.datosSolicitudform.get('genericos')?.enable();
+      this.toggleJustificacionByGenericos(this.datosSolicitudform.get('genericos')?.value);
       this.manifiestosRepresentanteForm.disable();
       this.scianForm.disable();
     } else {
@@ -496,6 +504,38 @@ export class DatosDeLaSolicitudModificacionComponent implements OnInit, AfterVie
       this.manifiestosRepresentanteForm.enable();
       this.scianForm.enable();
     }
+    this.datosSolicitudform.get('genericos')?.valueChanges
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((value) => {
+        this.toggleJustificacionByGenericos(value);
+      });
+  }
+
+  /**
+   * Habilita o deshabilita el campo Justificación según el valor de 'genericos'.
+   */
+  toggleJustificacionByGenericos(value: string): void {
+    // List of controls to enable/disable
+    const controlNames = [
+      'observaciones',
+      'establecimientoDomicilioCodigoPostal',
+      'descripcionMunicipio',
+      'localidad',
+      'establishomentoColonias',
+      'calle',
+      'lada',
+      'telefono'
+    ];
+    controlNames.forEach(name => {
+      const ctrl = this.datosSolicitudform.get(name);
+      if (!ctrl) return;
+      if (value === this.valorModificacionGenericos) {
+        ctrl.enable();
+      } else {
+        ctrl.disable();
+        ctrl.reset();
+      }
+    });
   }
 
 
@@ -533,6 +573,10 @@ export class DatosDeLaSolicitudModificacionComponent implements OnInit, AfterVie
   actualizarValoresStore(form: FormGroup, campo: string, metodoNombre: keyof DatosSolicitudStore): void {
     const VALOR = form.get(campo)?.value;
     (this.datosSolicitudStore[metodoNombre] as (value: string | number) => void)(VALOR);
+    // Si el campo es 'genericos', también alternar el campo Justificación
+    if (campo === 'genericos') {
+      this.toggleJustificacionByGenericos(VALOR);
+    }
   }
 
   enControlCambioFormulario(event: Event,controlName: string): void {
