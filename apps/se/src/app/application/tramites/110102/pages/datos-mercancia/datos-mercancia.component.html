@@ -21,7 +21,7 @@
                                 }
                                 @case (2) {
                                 @if(datosRespuestaDisponibles){
-                                <app-datos-de-la-mercancia (mercancia)="recibirMercancia($event)"></app-datos-de-la-mercancia>
+                                <app-datos-de-la-mercancia #mercanciaRef (mercancia)="recibirMercancia($event)"></app-datos-de-la-mercancia>
                                 <app-registro-mercancia-comercializador [mercancia]="mercancia"></app-registro-mercancia-comercializador>
                                 @if(this.solicitudeState.respuestaServiceConfiguracion.mostrar_exportador_autorizado_jpn === true){
                                 <app-exportador-autorizado></app-exportador-autorizado>
