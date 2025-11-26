@@ -44,7 +44,7 @@ export class GuardarMappingAdapter {
           "declaracionesSeleccionadas": state.datosSolicitudFormState.manifesto,
           "regimen": state.datosSolicitudFormState.regimen,
           "aduanaAIFA": "",
-          "informacionConfidencial": state.datosSolicitudFormState.publico === 'si' ? true : false
+          "informacionConfidencial": state.datosSolicitudFormState.publico === 'Si' ? true : false
       },
       "establecimiento": {
           "rfcResponsableSanitario": state.datosSolicitudFormState.rfcSanitario,
@@ -53,7 +53,7 @@ export class GuardarMappingAdapter {
           "domicilio": {
               "codigoPostal": state.datosSolicitudFormState.codigoPostal,
               "entidadFederativa": {
-                  "clave": ""
+                  "clave": state.datosSolicitudFormState.estado,
               },
               "descripcionMunicipio": state.datosSolicitudFormState.municipioAlcaldia,
               "informacionExtra": state.datosSolicitudFormState.localidad,
@@ -70,19 +70,20 @@ export class GuardarMappingAdapter {
       "datosSCIAN": state.scianConfigDatos.map((datos)=>{
         return {
               "cveScian": datos.clave,
-              "descripcion": datos.descripcion
+              "descripcion": datos.descripcion,
+              "selected": true
           }
       }),
       "mercancias": (state.tablaMercanciasConfigDatos ?? []).map((mercancia) => {
         return {
-              "idMercancia": "",
+              "idMercancia": mercancia.id?.toString() ?? null,
               "idClasificacionProducto": mercancia.claveClasificacionProductoObj?.clave,
               "nombreClasificacionProducto": mercancia.claveClasificacionProductoObj?.descripcion,
               "ideSubClasificacionProducto": mercancia.especificarClasificacionObj?.clave,
               "nombreSubClasificacionProducto": mercancia.especificarClasificacionObj?.descripcion,
               "descDenominacionEspecifica": mercancia.denominacionEspecificaProducto,
               "descDenominacionDistintiva": mercancia.denominacionDistintiva,
-              "descripcionMercancia": "",
+              "descripcionMercancia": mercancia.denominacionComun,
               "formaFarmaceuticaDescripcionOtros": mercancia.formaFarmaceutica,
               "estadoFisicoDescripcionOtros": mercancia.estadoFisico,
               "fraccionArancelaria": {
@@ -90,19 +91,19 @@ export class GuardarMappingAdapter {
                   "descripcion": mercancia.descripcionFraccion
               },
               "unidadMedidaComercial": {
-                  "descripcion": mercancia.cantidadUMCObj?.descripcion
-              },
-              "cantidadUMCConComas": mercancia.cantidadUMC,
-              "unidadMedidaTarifa": {
-                  "descripcion": mercancia.cantidadUMT
-              },
-              "cantidadUMTConComas": mercancia.cantidadUmtValor,
+                descripcion: mercancia.cantidadUMC
+            },
+            "cantidadUMCConComas": mercancia.cantidadUmcValor,
+            "unidadMedidaTarifa": {
+                descripcion: mercancia.cantidadUMT
+            },
+            "cantidadUMTConComas": mercancia.cantidadUmtValor,
               "presentacion": mercancia.presentacion,
               "registroSanitarioConComas": mercancia.numeroRegistroSanitario,
-              "nombreCortoPaisOrigen": mercancia.paisDeOriginDatos?.toString(),
-              "nombreCortoPaisProcedencia": mercancia.paisDeProcedenciaDatos?.toString(),
+              "nombreCortoPaisOrigen": mercancia.paisOrigenDatosClave,
+              "nombreCortoPaisProcedencia": mercancia.paisProcedenciaDatosClave,
               "tipoProductoDescripcionOtros": mercancia.tipoProducto,
-              "nombreCortoUsoEspecifico": mercancia.usoEspecifico?.toString(),
+              "nombreCortoUsoEspecifico": mercancia.usoEspecificoDatosClave,
               "fechaCaducidadStr": mercancia.fechaCaducidad
           }
       }),

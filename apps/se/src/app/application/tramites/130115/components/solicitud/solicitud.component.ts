@@ -137,7 +137,7 @@ export class SolicitudComponent implements OnInit, OnDestroy {
   /**
    * jest.spyOnMatriz de catálogos adicionales para el formulario.
    */
-  catalogosArray: Catalogo[][] = solicitudeSelectVal;
+  catalogosArray: Catalogo[][] = [[], []];
 
   /**
    * Arreglo que contiene el catálogo de clasificaciones de régimen.
@@ -318,9 +318,8 @@ export class SolicitudComponent implements OnInit, OnDestroy {
    * Actualiza las propiedades del componente con los datos obtenidos.
    */
   getRegimenes(): void {
-    this.importacionVehiculosNuevosService.getRegimenes('130115').subscribe((data) => {
-      this.catalogoRegimenes = data;
-      this.getClasificacionRegimen();
+    this.importacionVehiculosNuevosService.getRegimenes(this.idPedimento).subscribe((data) => {
+      this.catalogosArray[0] = data;
     });
   }
 
@@ -328,12 +327,9 @@ export class SolicitudComponent implements OnInit, OnDestroy {
    * Obtiene el catálogo de clasificaciones de régimen desde el servicio.
    * Actualiza las propiedades del componente con los datos obtenidos.
    */
-  getClasificacionRegimen(): void {
-    this.importacionVehiculosNuevosService.getRegimenClasificacion('130115', "01").subscribe((data) => {
-      this.catalogoClasificacionRegimen = data;
-
-      this.catalogoRegimenes = [...this.catalogoRegimenes, ...data];
-      this.catalogosArray = [this.catalogoRegimenes, this.catalogoClasificacionRegimen];
+  getClasificacionRegimen(valor: string): void {
+    this.importacionVehiculosNuevosService.getRegimenClasificacion(this.idPedimento, valor).subscribe((data) => {
+      this.catalogosArray[1] = data;
     });
   }
 
@@ -685,8 +681,8 @@ export class SolicitudComponent implements OnInit, OnDestroy {
     cantidad: this.partidasDelaMercanciaForm.get('cantidadPartidasDeLaMercancia')?.value,
     totalUSD: this.partidasDelaMercanciaForm.get('valorPartidaUSDPartidasDeLaMercancia')?.value,
     descripcion: this.partidasDelaMercanciaForm.get('descripcionPartidasDeLaMercancia')?.value,
-    unidadDeMedida: this.unidadCatalogo.find(f => String(f.id) === String(this.mercanciaForm.get('unidadMedida')?.value))?.descripcion || '',
-    fraccionFrancelaria: this.fraccionCatalogo.find(f => String(f.id) === String(this.mercanciaForm.get('fraccion')?.value))?.descripcion || '',
+    unidadDeMedida: this.unidadCatalogo.find(f => String(f.clave) === String(this.mercanciaForm.get('unidadMedida')?.value))?.descripcion || '',
+    fraccionFrancelaria: this.fraccionCatalogo.find(f => String(f.clave) === String(this.mercanciaForm.get('fraccion')?.value))?.descripcion || '',
     precioUnitarioUSD: PRECIOUNITARIO_USD
   };
 
@@ -786,12 +782,14 @@ this.tramite130115Store.actualizarEstado({
     const VALOR = $event.form.get($event.campo)?.value;
 
     if ($event.campo === 'regimen') {
+      const VALOR = this.formDelTramite.get('regimen')?.value;
       this.formDelTramite.get('clasificacion')?.setValue('');
       this.mostrarErrorClasificacion = false;
       this.tramite130115Store.actualizarEstado({
         [$event.campo]: VALOR,
         clasificacion: '',
       });
+      this.getClasificacionRegimen(VALOR);
     } else {
       this.tramite130115Store.actualizarEstado({ [$event.campo]: VALOR });
       if ($event.campo === 'clasificacion' && VALOR) {

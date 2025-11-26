@@ -143,83 +143,95 @@ export class ContenedorDePasosComponent implements OnInit {
    * @param {AccionBoton} e - Objeto con la acción y valor del botón
    */
   getValorIndice(e: AccionBoton): void {
-    if (e.accion === 'cont') {
-          let isValid = true;
-  
-          if (this.indice === 1 && this.pasoUnoComponent) {
-          isValid = this.pasoUnoComponent.validarPasoUno();
-        }
-        if(!this.pasoUnoComponent.pagoDeDerechosContenedoraComponent.validarContenedor() && !this.requiresPaymentData){
-          this.mostrarAlerta=true;
-          this.confirmarSinPagoDeDerechos = 2;
-          this.seleccionarFilaNotificacion = {
-            tipoNotificacion: 'alert',
-            categoria: 'danger',
-            modo: 'action',
-            titulo: '',
+          if (e.accion === 'cont') {
+                   let isValid = true;
+         
+                   if (this.indice === 1 && this.pasoUnoComponent) {
+                   isValid = this.pasoUnoComponent.validarPasoUno();
+                 }
+         
+                 if(!this.pasoUnoComponent.contenedorDeDatosSolicitudComponent?.validarContenedor() && this.requiresPaymentData) {
+                     this.confirmarSinPagoDeDerechos = 2;
+                   }else {
+                     this.confirmarSinPagoDeDerechos = 3;
+                   }
+         
+                 if(!this.requiresPaymentData) {
+                   if(!this.pasoUnoComponent.pagoDeDerechosContenedoraComponent.validarContenedor()){
+                     this.mostrarAlerta=true;
+                     this.seleccionarFilaNotificacion = {
+                       tipoNotificacion: 'alert',
+                       categoria: 'danger',
+                       modo: 'action',
+                       titulo: '',
           mensaje: MENSAJE_DE_PAGE,
-            cerrar: true,
-            tiempoDeEspera: 2000,
-            txtBtnAceptar: 'SI',
-            txtBtnCancelar: 'NO',
-            alineacionBtonoCerrar:'flex-row-reverse'
-          }
-          setTimeout(() => window.scrollTo({ top: 0, behavior: 'smooth' }), 0);
+                       cerrar: true,
+                       tiempoDeEspera: 2000,
+                       txtBtnAceptar: 'SI',
+                       txtBtnCancelar: 'NO',
+                       alineacionBtonoCerrar:'flex-row-reverse'
+                     }
+                setTimeout(() => window.scrollTo({ top: 0, behavior: 'smooth' }), 0);
+     } else if(this.pasoUnoComponent.pagoDeDerechosContenedoraComponent.validarContenedor() && !this.pasoUnoComponent.contenedorDeDatosSolicitudComponent?.validarContenedor()) {
+              this.confirmarSinPagoDeDerechos = 2;
+            } else if(this.pasoUnoComponent.pagoDeDerechosContenedoraComponent.validarContenedor() && this.pasoUnoComponent.contenedorDeDatosSolicitudComponent?.validarContenedor() && !this.pasoUnoComponent.tercerosRelacionadosVistaComponent.validarContenedor()) {
+              this.confirmarSinPagoDeDerechos = 3;
+            }
         }
-        if (!isValid) {
-          this.formErrorAlert = this.MENSAJE_DE_ERROR;
-          this.esFormaValido = true;
-          this.datosPasos.indice = this.indice;
-          setTimeout(() => window.scrollTo({ top: 0, behavior: 'smooth' }), 0);
-          return;
-        }
-  
-      const PAYLOAD = GuardarAdapter_260217.toFormPayload(this.storeData);
-        let shouldNavigate = false;
-          this.registroSolicitudService.postGuardarDatos('260217', PAYLOAD).subscribe(response => {
-          shouldNavigate = response.codigo === '00';
-          if (!shouldNavigate) {
-            const ERROR_MESSAGE = response.mensaje || 'Error desconocido en la solicitud';
-            this.formErrorAlert = ContenedorDePasosComponent.generarAlertaDeError(ERROR_MESSAGE);
+          if (!isValid) {
+            this.formErrorAlert = this.MENSAJE_DE_ERROR;
             this.esFormaValido = true;
-            this.indice = 1;
-            this.datosPasos.indice = 1;
-            this.wizardComponent.indiceActual = 1;
+            this.datosPasos.indice = this.indice;
             setTimeout(() => window.scrollTo({ top: 0, behavior: 'smooth' }), 0);
             return;
           }
-          if(shouldNavigate) {
-            if(esValidObject(response) && esValidObject(response.datos)) {
-              this.esFormaValido = false;
-              const DATOS = response.datos as { id_solicitud?: number };
-              const ID_SOLICITUD = getValidDatos(DATOS.id_solicitud) ? (DATOS.id_solicitud ?? 0) : 0;
+  
+          const PAYLOAD = GuardarAdapter_260217.toFormPayload(this.storeData);
+          let shouldNavigate = false;
+          this.registroSolicitudService.postGuardarDatos('260217', PAYLOAD).subscribe(response => {
+            shouldNavigate = response.codigo === '00';
+            if (!shouldNavigate) {
+              const ERROR_MESSAGE = response.mensaje || 'Error desconocido en la solicitud';
+              this.formErrorAlert = ContenedorDePasosComponent.generarAlertaDeError(ERROR_MESSAGE);
+              this.esFormaValido = true;
+              this.indice = 1;
+              this.datosPasos.indice = 1;
+              this.wizardComponent.indiceActual = 1;
+              setTimeout(() => window.scrollTo({ top: 0, behavior: 'smooth' }), 0);
+              return;
+            }
+            if(shouldNavigate) {
+              if(esValidObject(response) && esValidObject(response.datos)) {
+                this.esFormaValido = false;
+                const DATOS = response.datos as { id_solicitud?: number };
+                const ID_SOLICITUD = getValidDatos(DATOS.id_solicitud) ? (DATOS.id_solicitud ?? 0) : 0;
               this.tramiteStore.setIdSolicitud(ID_SOLICITUD);
-            }
-            // Calcular el nuevo índice basado en la acción
-            let indiceActualizado = e.valor;
-            if (e.accion === 'cont') {
-              indiceActualizado = e.valor;
-            }
-            this.toastrService.success(response.mensaje);
-            if (indiceActualizado > 0 && indiceActualizado < 5) {
-              this.indice = indiceActualizado;
-              this.datosPasos.indice = indiceActualizado;
-              if (e.accion === 'cont') {
-                this.wizardComponent.siguiente();
-              } else {
-                this.wizardComponent.atras();
               }
+              // Calcular el nuevo índice basado en la acción
+              let indiceActualizado = e.valor;
+              if (e.accion === 'cont') {
+                indiceActualizado = e.valor;
+              }
+              this.toastrService.success(response.mensaje);
+              if (indiceActualizado > 0 && indiceActualizado < 5) {
+                this.indice = indiceActualizado;
+                this.datosPasos.indice = indiceActualizado;
+                if (e.accion === 'cont') {
+                  this.wizardComponent.siguiente();
+                } else {
+                  this.wizardComponent.atras();
+                }
+              }
+            } else {
+              this.toastrService.error(response.mensaje);
             }
-          } else {
-            this.toastrService.error(response.mensaje);
-          }
-        });
-      }else{
-        this.indice = e.valor;
-        this.datosPasos.indice = this.indice;
-        this.wizardComponent.atras();
-      }
-  }
+          });
+        }else{
+          this.indice = e.valor;
+          this.datosPasos.indice = this.indice;
+          this.wizardComponent.atras();
+        }
+    }
 
   cerrarModal(value:boolean): void {
     if(value){

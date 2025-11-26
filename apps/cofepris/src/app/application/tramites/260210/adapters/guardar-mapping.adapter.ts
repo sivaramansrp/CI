@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 /**
  * @fileoverview
  * Este archivo contiene el servicio adaptador para convertir entre el estado de Akita y los formatos de payload de API
@@ -69,12 +70,13 @@ export class GuardarMappingAdapter {
       "datosSCIAN": state.scianConfigDatos.map((datos)=>{
         return {
               "cveScian": datos.clave,
-              "descripcion": datos.descripcion
+              "descripcion": datos.descripcion,
+              "selected": true
           }
       }),
       "mercancias": (state.tablaMercanciasConfigDatos ?? []).map((mercancia) => {
         return {
-              "idMercancia": "",
+              "idMercancia": mercancia.id?.toString() ?? null,
               "idClasificacionProducto": mercancia.claveClasificacionProductoObj?.clave,
               "nombreClasificacionProducto": mercancia.claveClasificacionProductoObj?.descripcion,
               "ideSubClasificacionProducto": mercancia.especificarClasificacionObj?.clave,
@@ -90,21 +92,21 @@ export class GuardarMappingAdapter {
                   "clave": mercancia.fraccionArancelaria,
                   "descripcion": mercancia.descripcionFraccion
               },
-              "unidadMedidaComercial": {
-                  "descripcion": mercancia.cantidadUMCObj?.descripcion
-              },
-              "cantidadUMCConComas": mercancia.cantidadUMC,
-              "unidadMedidaTarifa": {
-                  "descripcion": mercancia.cantidadUMT
-              },
-              "cantidadUMTConComas": mercancia.cantidadUmtValor,
+            "unidadMedidaComercial": {
+                descripcion: mercancia.cantidadUMC
+            },
+            "cantidadUMCConComas": mercancia.cantidadUmcValor,
+            "unidadMedidaTarifa": {
+                descripcion: mercancia.cantidadUMT
+            },
+            "cantidadUMTConComas": mercancia.cantidadUmtValor,
               "presentacion": mercancia.presentacion,
               "registroSanitarioConComas": mercancia.numeroRegistroSanitario,
-              "nombreCortoPaisOrigen": mercancia.paisDeOriginDatos?.toString(),
-              "nombreCortoPaisProcedencia": mercancia.paisDeProcedenciaDatos?.toString(),
+               "nombreCortoPaisOrigen": mercancia.paisOrigenDatosClave,
+              "nombreCortoPaisProcedencia": mercancia.paisProcedenciaDatosClave,
               "idTipoProductoTipoTramite": mercancia.tipoProducto,
               "tipoProductoDescripcionOtros": mercancia.especifique,
-              "nombreCortoUsoEspecifico": mercancia.usoEspecifico?.toString(),
+              "nombreCortoUsoEspecifico": mercancia.usoEspecificoDatosClave,
               "fechaCaducidadStr": mercancia.fechaCaducidad
           }
       }),
@@ -362,8 +364,8 @@ export class GuardarMappingAdapter {
             estadoFisico: m.estadoFisicoDescripcionOtros ?? '',
             fraccionArancelaria: m.fraccionArancelaria?.clave ?? '',
             descripcionFraccion: m.fraccionArancelaria?.descripcion ?? '',
-            cantidadUMC: m.cantidadUMCConComas ?? '',
-            cantidadUMT: m.cantidadUMTConComas ?? '',
+            //cantidadUMC: m.cantidadUMCConComas ?? '',
+            cantidadUMT:m.unidadMedidaTarifa?.descripcion ?? '',
             presentacion: m.presentacion ?? '',
             numeroRegistroSanitario: m.registroSanitarioConComas ?? '',
             paisDeOriginDatos: m.nombreCortoPaisOrigen ?? '',
@@ -378,7 +380,13 @@ export class GuardarMappingAdapter {
             paisOrigen: m.nombreCortoPaisOrigen ?? "",
             paisProcedencia: m.nombreCortoPaisProcedencia ?? "",
             id: m.idMercancia || null,
-        }));
+             paisOrigenDatosClave: m.nombreCortoPaisOrigen ?? "",
+            paisProcedenciaDatosClave: m.nombreCortoPaisProcedencia ?? "",
+            usoEspecificoDatosClave: m.nombreCortoUsoEspecifico ?? "",
+            cantidadUmcValor: m.cantidadUMCConComas ?? '',
+            cantidadUMC: m.unidadMedidaComercial?.descripcion ?? '',
+             cantidadUmtValor: m.cantidadUMTConComas ?? '',
+         }));
     }
 
     private static mapFabricantesData(grid?: any[]): any[] {

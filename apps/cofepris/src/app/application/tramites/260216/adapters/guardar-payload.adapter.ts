@@ -43,7 +43,7 @@ export class GuardarAdapter_260216 {
           "declaracionesSeleccionadas": state.datosSolicitudFormState.manifesto,
           "regimen": state.datosSolicitudFormState.regimen,
           "aduanaAIFA": "",
-          "informacionConfidencial": state.datosSolicitudFormState.publico === 'si' ? true : false
+          "informacionConfidencial": state.datosSolicitudFormState.publico === 'Si' ? true : false
       },
       "establecimiento": {
           "rfcResponsableSanitario": state.datosSolicitudFormState.rfcSanitario,
@@ -52,7 +52,7 @@ export class GuardarAdapter_260216 {
           "domicilio": {
               "codigoPostal": state.datosSolicitudFormState.codigoPostal,
               "entidadFederativa": {
-                  "clave": ""
+                  "clave": state.datosSolicitudFormState.estado
               },
               "descripcionMunicipio": state.datosSolicitudFormState.municipioAlcaldia,
               "informacionExtra": state.datosSolicitudFormState.localidad,
@@ -69,39 +69,43 @@ export class GuardarAdapter_260216 {
       "datosSCIAN": state.scianConfigDatos.map((datos)=>{
         return {
               "cveScian": datos.clave,
-              "descripcion": datos.descripcion
+              "descripcion": datos.descripcion,
+              "selected": true
           }
       }),
       "mercancias": (state.tablaMercanciasConfigDatos ?? []).map((mercancia) => {
         return {
-              "idMercancia": "",
-              "idClasificacionProducto": "",
-              "nombreClasificacionProducto": mercancia.clasificacionProducto,
-              "ideSubClasificacionProducto": "",
-              "nombreSubClasificacionProducto": mercancia.especificarClasificacionProducto,
+              "idMercancia": null,
+              "idClasificacionProducto": mercancia.claveClasificacionProductoObj?.clave,
+              "nombreClasificacionProducto": mercancia.claveClasificacionProductoObj?.descripcion,
+              "ideSubClasificacionProducto": mercancia.especificarClasificacionObj?.clave,
+              "nombreSubClasificacionProducto": mercancia.especificarClasificacionObj?.descripcion,
               "descDenominacionEspecifica": mercancia.denominacionEspecificaProducto,
               "descDenominacionDistintiva": mercancia.denominacionDistintiva,
-              "descripcionMercancia": "",
-              "formaFarmaceuticaDescripcionOtros": mercancia.formaFarmaceutica,
-              "estadoFisicoDescripcionOtros": mercancia.estadoFisico,
+              "descripcionMercancia": mercancia.denominacionComun,
+              "idFormaFarmaceutica": mercancia.formaFarmaceutica,
+              "formaFarmaceuticaDescripcionOtros": mercancia.especifiqueForma,
+              "idEstadoFisico": mercancia.estadoFisico,
+              "estadoFisicoDescripcionOtros": mercancia.especifiqueEstado,
               "fraccionArancelaria": {
                   "clave": mercancia.fraccionArancelaria,
-                  "descripcion": ""
+                  "descripcion": mercancia.descripcionFraccion
               },
               "unidadMedidaComercial": {
-                  "descripcion": mercancia.unidadMedidaComercializacion
+                  "descripcion": mercancia.cantidadUMCObj?.descripcion
               },
-              "cantidadUMCConComas": mercancia.cantidadUMC,
+              "cantidadUMCConComas": mercancia.cantidadUmcValor,
               "unidadMedidaTarifa": {
                   "descripcion": mercancia.cantidadUMT
               },
               "cantidadUMTConComas": mercancia.cantidadUmtValor,
               "presentacion": mercancia.presentacion,
               "registroSanitarioConComas": mercancia.numeroRegistroSanitario,
-              "nombreCortoPaisOrigen": mercancia.paisDeOriginDatos?.toString(),
-              "nombreCortoPaisProcedencia": mercancia.paisDeProcedenciaDatos?.toString(),
-              "tipoProductoDescripcionOtros": mercancia.tipoProducto,
-              "nombreCortoUsoEspecifico": mercancia.usoEspecifico?.toString(),
+              "nombreCortoPaisOrigen": mercancia.paisOrigenDatosClave,
+              "nombreCortoPaisProcedencia": mercancia.paisProcedenciaDatosClave,
+              "idTipoProductoTipoTramite": mercancia.tipoProducto,
+              "tipoProductoDescripcionOtros": mercancia.especifique,
+              "nombreCortoUsoEspecifico": mercancia.usoEspecificoDatosClave,
               "fechaCaducidadStr": mercancia.fechaCaducidad
           }
       }),
@@ -119,7 +123,7 @@ export class GuardarAdapter_260216 {
               "personaMoral": fabricante.tipoPersona === "Moral" ? "1" : "0",
               "booleanExtranjero": fabricante.nacionalidad === 'Extranjero' ? "1" : "0",
               "booleanFisicaNoContribuyente": "0",
-              "denominacion": fabricante.razonSocial,
+              "denominacion": fabricante.tipoPersona === "Moral" ? fabricante.razonSocial : `${fabricante.nombres} ${fabricante.primerApellido} ${fabricante.segundoApellido}`,
               "razonSocial": fabricante.razonSocial,
               "rfc": fabricante.rfc,
               "curp": fabricante.curp,
@@ -137,24 +141,24 @@ export class GuardarAdapter_260216 {
                   "numeroExterior": fabricante.numeroExterior,
                   "numeroInterior": fabricante.numeroInterior,
                   "pais": {
-                      "clave": "",
-                      "nombre": fabricante.pais
+                      "clave": fabricante.paisObj?.clave,
+                      "nombre": fabricante.paisObj?.descripcion
                   },
                   "colonia": {
-                      "clave": "",
-                      "nombre": fabricante.colonia
+                      "clave": fabricante.coloniaObj?.clave,
+                      "nombre": fabricante.coloniaObj?.descripcion
                   },
                   "delegacionMunicipio": {
-                      "clave": "",
-                      "nombre": fabricante.municipioAlcaldia
+                      "clave": fabricante.municipioAlcaldiaObj?.clave,
+                      "nombre": fabricante.municipioAlcaldiaObj?.descripcion
                   },
                   "localidad": {
-                      "clave": "",
-                      "nombre": fabricante.localidad
+                      "clave": fabricante.localidadObj?.clave,
+                      "nombre": fabricante.localidadObj?.descripcion
                   },
                   "entidadFederativa": {
-                      "clave": "",
-                      "nombre": fabricante.entidadFederativa
+                      "clave": fabricante.entidadFederativaObj?.clave,
+                      "nombre": fabricante.entidadFederativaObj?.descripcion
                   },
                   "informacionExtra": "",
                   "codigoPostal": fabricante.codigoPostal,
@@ -188,20 +192,20 @@ export class GuardarAdapter_260216 {
                 "numeroExterior": destinatario.numeroExterior,
                 "numeroInterior": destinatario.numeroInterior,
                 "pais": {
-                    "clave": "",
-                    "nombre": destinatario.pais
+                    "clave": destinatario.paisObj?.clave,
+                    "nombre": destinatario.paisObj?.descripcion
                 },
                 "colonia": {
-                    "clave": "",
-                    "nombre": destinatario.colonia
+                    "clave": destinatario.coloniaObj?.clave,
+                    "nombre": destinatario.coloniaObj?.descripcion
                 },
                 "delegacionMunicipio": {
-                    "clave": "",
-                    "nombre": destinatario.municipioAlcaldia
+                    "clave": destinatario.municipioObj?.clave,
+                    "nombre": destinatario.municipioObj?.descripcion
                 },
                 "localidad": {
-                    "clave": "",
-                    "nombre": destinatario.localidad
+                    "clave": destinatario.localidadObj?.clave,
+                    "nombre": destinatario.localidadObj?.descripcion
                 },
                 "entidadFederativa": {
                     "clave": "",
@@ -239,8 +243,8 @@ export class GuardarAdapter_260216 {
                 "numeroExterior": proveedor.numeroExterior,
                 "numeroInterior": proveedor.numeroInterior,
                 "pais": {
-                    "clave": "",
-                    "nombre": proveedor.pais
+                    "clave": proveedor.paisObj?.clave,
+                    "nombre": proveedor.paisObj?.descripcion
                 },
                 "colonia": {
                     "clave": "",
@@ -290,8 +294,8 @@ export class GuardarAdapter_260216 {
               "numeroExterior": facturador.numeroExterior,
               "numeroInterior": facturador.numeroInterior,
               "pais": {
-                  "clave": "",
-                  "nombre": facturador.pais
+                  "clave": facturador.paisObj?.clave,
+                  "nombre": facturador.paisObj?.descripcion
               },
               "colonia": {
                   "clave": "",
@@ -320,8 +324,8 @@ export class GuardarAdapter_260216 {
           "claveDeReferencia": state.pagoDerechos.claveReferencia,
           "cadenaPagoDependencia": state.pagoDerechos.cadenaDependencia,
           "banco": {
-              "clave": state.pagoDerechos.bancoObject?.clave || "",
-              "descripcion": state.pagoDerechos.bancoObject?.descripcion || ""
+              "clave": state.pagoDerechos.bancoObject?.clave,
+              "descripcion": state.pagoDerechos.bancoObject?.descripcion
           },
           "llaveDePago": state.pagoDerechos.llavePago,
           "fecPago": state.pagoDerechos.fechaPago,

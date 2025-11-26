@@ -1,11 +1,11 @@
 [
     {
       "label": "Nuevo",
-      "value": "Nuevo"
+      "value": "CONDMER.N"
     },
     {
       "label": "Usado",
-      "value": "Usado"
+      "value": "CONDMER.U"
     }
   ]
   

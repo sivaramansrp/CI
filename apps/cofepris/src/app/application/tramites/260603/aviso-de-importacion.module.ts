@@ -27,6 +27,7 @@ import { DatosService } from '../../shared/services/datos.service';
 import { ExportacionService } from '../../shared/services/exportacion.service';
 import { PasoDosComponent } from './components/paso-dos/paso-dos.component';
 import { PasoTresComponent } from './components/paso-tres/paso-tres.component';
+import { TercerosRelacionadosVistaComponent } from './components/terceros-relacionados-vista/terceros-relacionados-vista.component';
 import { ToastrService } from 'ngx-toastr';
 
 @NgModule({
@@ -42,7 +43,8 @@ import { ToastrService } from 'ngx-toastr';
     RepresentanteLegalComponent,
     TercerosRelacionadoComponent,
     PasoDosComponent,
-    PasoTresComponent
+    PasoTresComponent,
+    TercerosRelacionadosVistaComponent
   ],
   providers: [provideHttpClient(), DatosService, ExportacionService, InicioSesionService,
     SubirDocumentoService, ToastrService],

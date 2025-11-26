@@ -29,7 +29,7 @@
       [hidden]="hiddenPrimerOption"
       [disabled]="disabledPrimerOption"
     >
-      {{ placeholder ? placeholder : 'Seleccione una opción' }}
+      {{ placeholder ? placeholder : 'Seleccione un valor' }}
     </option>
     <option *ngFor="let option of catalogo" [value]="option.clave">
       {{ option.descripcion }}

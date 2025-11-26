@@ -329,15 +329,6 @@ export const API_GET_SOLICITUDES_PAGO_DERECHOS = (TRAMITE: string, esPrellenado:
  */
 export const API_POST_CADENA_ORIGINAL = (TRAMITE: string, IDSOLICITUD: string) : string => `sat-t${TRAMITE}/solicitud/${IDSOLICITUD}/generar-cadena-original`;
 
-
-/**
- * Genera la ruta de la API para guardar una solicitud relacionada con un trámite específico.
- *
- * @param TRAMITE - Identificador del trámite que se utilizará en el endpoint.
- * @returns La ruta de la API como cadena de texto.
- */
-export const API_POST_GUARDAR = (TRAMITE: string) : string => `sat-t${TRAMITE}/solicitud/guardar`;
-
 /**
  * Genera la ruta de la API para obtener los documentos opcionales de una solicitud.
  *
@@ -390,3 +381,11 @@ export const API_GET_EVALUAR_MOSTRAR = (TRAMITE: string, NUMFOLIOTRAMITE: string
  * @see https://api-v30.cloud-ultrasist.net/api/sat-t130118/swagger-ui/index.html#/Evaluar-Solicitud/opcion…
  */
 export const API_POST_OPCIONES_EVALUACION = (TRAMITE: string, NUMFOLIOTRAMITE: string) : string => `sat-t${TRAMITE}/tramite/${NUMFOLIOTRAMITE}/evaluar/opciones-evaluacion`;
+
+/**
+ * Genera la ruta de la API para guardar una solicitud relacionada con un trámite específico.
+ *
+ * @param TRAMITE - Identificador del trámite que se utilizará en el endpoint.
+ * @returns La ruta de la API como cadena de texto.
+ */
+export const API_POST_GUARDAR = (TRAMITE: string) : string => `sat-t${TRAMITE}/solicitud/guardar`;

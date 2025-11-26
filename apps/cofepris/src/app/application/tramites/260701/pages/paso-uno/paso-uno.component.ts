@@ -2,8 +2,10 @@ import { Subject,map, takeUntil } from 'rxjs';
 
 import { ConsultaioQuery, ConsultaioState } from '@ng-mf/data-access-user';
 
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnInit, ViewChild } from '@angular/core';
 import { CertificadosLicenciasService } from '../../services/certificados-licencias.service';
+import { DatosdelasolicitudComponent } from '../../../../shared/components/shared2607/datos-del/datos-de-la-solicitud.component';
+import { Solicitud260702Store } from '../../../../shared/estados/stores/shared2607/tramites260702.store';
 
 /**
  * Componente PasoUnoComponent.
@@ -54,7 +56,8 @@ export class PasoUnoComponent implements OnInit {
      */
     constructor(
        private certificadosLicenciasSvc: CertificadosLicenciasService,
-       private consultaQuery: ConsultaioQuery
+       private consultaQuery: ConsultaioQuery,
+         private solicitud260703Store:Solicitud260702Store,
     ) {
 
     }
@@ -84,7 +87,36 @@ export class PasoUnoComponent implements OnInit {
     seleccionaTab(i: number): void {
       this.indice = i;
     }
+    /**
+ * Referencia al componente hijo "DatosdelasolicitudComponent" para acceder a sus métodos y propiedades.
+ */
+ @ViewChild(DatosdelasolicitudComponent)datosdelasolicitudComponent!: DatosdelasolicitudComponent;
 
+    /** Indica si el botón continuar ha sido activado para ejecutar las validaciones del formulario. */
+  @Input() isContinuarTriggered: boolean = false;
+  /**
+   * Maneja el cambio de validez del formulario.
+   * 
+   * @param event - Valor booleano que indica si el formulario es válido o no.
+   * Establece el estado de validez del formulario 'datosDelSolicitude' en el store de solicitud260703.
+   */
+  onFormValidityChange(event:boolean):void {
+   this.solicitud260703Store.setFormValidity('datosDelSolicitude', event);
+  }
+  /**
+   * Valida los formularios relacionados con la solicitud actual.
+   * 
+   * Esta función verifica la validez del componente de datos de la solicitud
+   * accediendo al estado actual de `solicitud260703Query` y consultando la propiedad
+   * `formValidity.datosDelSolicitude`. Si la propiedad no está definida, retorna `false`.
+   * 
+   * @returns {boolean} `true` si el formulario de datos de la solicitud es válido, `false` en caso contrario.
+   */
+  public validarFormularios(): boolean { 
+
+     return this.datosdelasolicitudComponent?.validarFormularios() ?? false;
+
+  }
     /**
      * Guarda los datos del formulario obteniendo los datos actuales del servicio y actualizando el estado del formulario.
      *

@@ -462,8 +462,8 @@ const ROUTES: Routes = [
     path: 'exportacion-medicamentos-contengan',
     loadChildren: () =>
       import(
-        './tramites/260304/exportacion-medicamentos-contengan.module'
-      ).then((m) => m.ExportacionMedicamentosContenganModule),
+        './tramites/260304/certificados-licencias-permisos/certificados-licencias-permisos.module'
+      ).then((m) => m.CertificadosLicenciasPermisosModule),
   },
 
   {
@@ -491,8 +491,8 @@ const ROUTES: Routes = [
     path: 'exportacion-materias-primas-estupefacientes',
     loadChildren: () =>
       import(
-        './tramites/260302/exportacion-materias-primas-estupefacientes.module'
-      ).then((m) => m.ExportacionMateriasPrimasEstupefacientesModule),
+        './tramites/260302/certificados-licencias-permisos/certificados-licencias-permisos.module'
+      ).then((m) => m.CertificadosLicenciasPermisosModule),
   },
   {
     path: 'permiso-sanitario-productos',

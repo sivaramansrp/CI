@@ -42,11 +42,11 @@ export class GuardarAdapter_260217 {
           "discriminatorValue": 260217,
           "declaracionesSeleccionadas": state.datosSolicitudFormState.manifesto,
           "regimen": state.datosSolicitudFormState.regimen,
-          "aduanaAIFA": "ALTAMIRA",
+          "aduanaAIFA": "",
           "informacionConfidencial": state.datosSolicitudFormState.publico === 'si' ? true : false
       },
       "establecimiento": {
-          "RFCResponsableSanitario": state.datosSolicitudFormState.rfcSanitario,
+          "rfcResponsableSanitario": state.datosSolicitudFormState.rfcSanitario,
           "razonSocial": state.datosSolicitudFormState.denominacionRazon,
           "correoElectronico": state.datosSolicitudFormState.correoElectronico,
           "domicilio": {
@@ -69,15 +69,16 @@ export class GuardarAdapter_260217 {
       "datosSCIAN": state.scianConfigDatos.map((datos)=>{
         return {
               "cveScian": datos.clave,
-              "descripcion": datos.descripcion
+              "descripcion": datos.descripcion,
+              "selected": true
           }
       }),
       "mercancias": (state.tablaMercanciasConfigDatos ?? []).map((mercancia) => {
         return {
               "idMercancia": "1",
-              "idClasificacionProducto": "",
+              "idClasificacionProducto": null,
               "nombreClasificacionProducto": mercancia.clasificacionProducto,
-              "ideSubClasificacionProducto": "",
+              "ideSubClasificacionProducto": null,
               "nombreSubClasificacionProducto": mercancia.especificarClasificacionProducto,
               "descDenominacionEspecifica": mercancia.denominacionEspecificaProducto,
               "descDenominacionDistintiva": mercancia.denominacionDistintiva,
@@ -91,17 +92,17 @@ export class GuardarAdapter_260217 {
               "unidadMedidaComercial": {
                   "descripcion": mercancia.unidadMedidaComercializacion
               },
-              "cantidadUMCConComas": mercancia.cantidadUMC,
+              "cantidadUMCConComas": mercancia.cantidadUmtValor,
               "unidadMedidaTarifa": {
                   "descripcion": mercancia.cantidadUMT
               },
               "cantidadUMTConComas": mercancia.cantidadUmtValor,
               "presentacion": mercancia.presentacion,
               "registroSanitarioConComas": mercancia.numeroRegistroSanitario,
-              "nombreCortoPaisOrigen": mercancia.paisDeOriginDatos?.toString(),
-              "nombreCortoPaisProcedencia": mercancia.paisDeProcedenciaDatos?.toString(),
+              "nombreCortoPaisOrigen": mercancia.paisOrigenDatosClave,
+              "nombreCortoPaisProcedencia": mercancia.paisProcedenciaDatosClave,
               "tipoProductoDescripcionOtros": mercancia.tipoProducto,
-              "nombreCortoUsoEspecifico": mercancia.usoEspecifico?.toString,
+              "nombreCortoUsoEspecifico": mercancia.usoEspecificoDatosClave,
               "fechaCaducidadStr": mercancia.fechaCaducidad
           }
       }),
@@ -167,8 +168,8 @@ export class GuardarAdapter_260217 {
         return {
             "idPersonaSolicitud": "",
             "ideTipoTercero": "TIPERS.FAB",
-            "personaMoral": "1",
-            "booleanExtranjero": "0",
+            "personaMoral": destinatario.tipoPersona === "Moral" ? "1" : "0",
+            "booleanExtranjero": "",
             "booleanFisicaNoContribuyente": "0",
             "denominacion": "LABORATORIOS PISA S.A. DE C.V.",
             "razonSocial": destinatario.razonSocial,
@@ -318,7 +319,7 @@ export class GuardarAdapter_260217 {
       }),
       "pagoDeDerechos": {
           "claveDeReferencia": state.pagoDerechos.claveReferencia,
-          "cadenaPagoDependencia": state.pagoDerechos.cadenaDependencia,GuardarAdapter_260217,
+          "cadenaPagoDependencia": state.pagoDerechos.cadenaDependencia,
           "banco": {
               "clave": state.pagoDerechos.banco,
               "descripcion": ""

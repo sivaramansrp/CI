@@ -826,6 +826,7 @@ static generarCatalogoObjeto(catalogo: Catalogo[], id: string): Catalogo[] | und
     this.cargarDatos(this.tramiteID);
     this.validarElementos();
     this.crearAgregarFormularioAgregarDestinatarioFinal();
+    this.campoValidar()
     this.changeNacionalidad();
     this.mostrarCamposNoContribuyente =
       PROCEDIMIENTOS_PARA_NO_CONTRIBUYENTE.includes(this.idProcedimiento);
@@ -834,7 +835,6 @@ static generarCatalogoObjeto(catalogo: Catalogo[], id: string): Catalogo[] | und
         ? true
         : false;
     this.forzarDeshabilitarPais();
-    this.actualizarValidadoresCalleNumeroExterior();
      
     if (this.chequeoValidacionAlGuardar) {
       this.isEditMode = false;
@@ -885,6 +885,24 @@ static generarCatalogoObjeto(catalogo: Catalogo[], id: string): Catalogo[] | und
         this.estadosDatos = DATOS;
   }));
 
+  }
+
+  campoValidar(): void {
+    const CALLE_CONTROL = this.agregarDestinatarioFinal?.get('calle');
+    const NUMERO_EXTERIOR_CONTROL = this.agregarDestinatarioFinal?.get('numeroExterior');
+    if((this.elementosRequeridos.includes('calle')||
+        this.chequeoValidacionAlGuardar) && this.idProcedimiento !== 260214 ){
+      CALLE_CONTROL?.setValidators([Validators.required]);
+    }
+    else if((this.elementosRequeridos.includes('numeroExterior') || this.chequeoValidacionAlGuardar) && this.idProcedimiento !== 260214){
+      NUMERO_EXTERIOR_CONTROL?.setValidators([Validators.required]);
+    }
+     else {
+      CALLE_CONTROL?.clearValidators();
+      NUMERO_EXTERIOR_CONTROL?.clearValidators();
+    }
+    CALLE_CONTROL?.updateValueAndValidity();
+    NUMERO_EXTERIOR_CONTROL?.updateValueAndValidity();
   }
 
   /**
@@ -956,16 +974,10 @@ static generarCatalogoObjeto(catalogo: Catalogo[], id: string): Catalogo[] | und
           : [],
       ], 
       calle: [
-        this.obtenerValor('calle'),
-        this.elementosRequeridos.includes('calle')||
-        this.chequeoValidacionAlGuardar ? [Validators.required] : [],
+        this.obtenerValor('calle')
       ],
       numeroExterior: [
-        this.obtenerValor('numeroExterior'),
-        this.elementosRequeridos.includes('numeroExterior') ||
-        this.chequeoValidacionAlGuardar
-          ? [Validators.required]
-          : [],
+        this.obtenerValor('numeroExterior')
       ],
       numeroInterior: [this.obtenerValor('numeroInterior')],
       lada: [this.obtenerValor('lada')],
@@ -1200,8 +1212,8 @@ static generarCatalogoObjeto(catalogo: Catalogo[], id: string): Catalogo[] | und
         this.estaDeshabilitadoDesplegable = false;
       });
     }
-    this.forzarDeshabilitarPais();
     this.agregarDestinatarioFinal.patchValue({pais: 'DEU'});
+    this.forzarDeshabilitarPais();
     this.updateDenominacionRazonValidation();
   }
 

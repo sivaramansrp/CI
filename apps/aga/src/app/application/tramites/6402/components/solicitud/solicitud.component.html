@@ -178,7 +178,7 @@
         <div class="col-md-2">
           @if (this.datosPedimento.get('cveTipoDocumento')?.value !== 'Formato oficial') {
           <button type="button" class="btn btn-primary ms-3" [disabled]="soloLectura">
-            Validor
+            Validar
           </button>
           }
         </div>
@@ -589,43 +589,66 @@
         @if(datosDestinoMercancia.get('conDestino')?.value === 'Si' &&
         datosDestinoMercancia.get('cveTipoDestino')?.value
         === 'Retorno' && datosDestinoMercancia.get('cveTipoDocumentoReemplazada')?.value==='Folio VUCEM'){
-        <div class="col-md-4">
-          <div>
-            <label class="form-label" for="folioFormatoOficialDestino">Folio de formato oficial</label>
-            <span class="require form-label" id="folioFormatoOficialDestino">*</span>
-            <label class="form-label" for="folioFormatoOficialDestino">:</label>
+        <div class="col-md-9 ">
+          <div class="col-md-6">
+            <div>
+              <label class="form-label" for="folioImportacionTemporal">Folio de importación temporal</label>
+              <span class="require form-label" id="folioImportacionTemporal">*</span>
+              <label class="form-label" for="folioImportacionTemporal">:</label>
+            </div>
+            <div>
+              <input id="folioImportacionTemporal" name="folioImportacionTemporal" type="text" class="form-control"
+                maxlength="25" formControlName="folioImportacionTemporal"
+                [ngClass]="isValid(datosDestinoMercancia,'folioImportacionTemporal') ? 'required' : ''"
+                (change)="setValoresStore(datosDestinoMercancia, 'folioImportacionTemporal', 'setFolioImportacionTemporal')" />
+              <div
+                *ngIf="datosDestinoMercancia.get('folioImportacionTemporal')?.invalid && (datosDestinoMercancia.get('folioImportacionTemporal')?.touched || datosDestinoMercancia.get('folioImportacionTemporal')?.dirty)"
+                class="text-danger">
+                <small *ngIf="datosDestinoMercancia.get('folioImportacionTemporal')?.errors?.['required']">
+                  Este campo es obligatorio.
+                </small>
+                <small *ngIf="datosDestinoMercancia.get('folioImportacionTemporal')?.errors?.['pattern']">
+                  Solo números permitidos.
+                </small>
+              </div>
+            </div>
           </div>
-          <div>
-            <input id="folioFormatoOficialDestino" name="folioFormatoOficialDestino" type="text" class="form-control"
-              formControlName="folioFormatoOficialDestino"
-              [ngClass]="isValid(datosDestinoMercancia,'folioFormatoOficialDestino') ? 'required' : ''"
-              (change)="setValoresStore(datosDestinoMercancia, 'folioFormatoOficialDestino', 'setFolioFormatoOficialDestino')" />
+          <div class="col-md-6">
+            <div>
+              <label class="form-label" for="estadoTipoDocumentoDestino" aria-readonly="true">Estado del tipo de
+                documento:</label>
+            </div>
+            <div>
+              <input id="estadoTipoDocumentoDestino" name="estadoTipoDocumentoDestino" type="text" class="form-control"
+                formControlName="estadoTipoDocumentoDestino"
+                (change)="setValoresStore(datosDestinoMercancia, 'estadoTipoDocumentoDestino', 'setEstadoTipoDocumentoDestino')" />
+            </div>
           </div>
         </div>
         }
-          @if(datosDestinoMercancia.get('conDestino')?.value === 'Si' &&
-          datosDestinoMercancia.get('cveTipoDestino')?.value=== 'Retorno' &&
-          datosDestinoMercancia.get('cveTipoDocumentoReemplazada')?.value === 'Pedimento'){
-          <div class="col-md-2">
-            <label class="form-label" for="cveAduanaDestino">Aduana</label>
-            <input id="cveAduanaDestino" name="cveAduanaDestino" type="text" class="form-control"
+        @if(datosDestinoMercancia.get('conDestino')?.value === 'Si' &&
+        datosDestinoMercancia.get('cveTipoDestino')?.value=== 'Retorno' &&
+        datosDestinoMercancia.get('cveTipoDocumentoReemplazada')?.value === 'Pedimento'){
+        <div class="col-md-2">
+          <label class="form-label" for="cveAduanaDestino">Aduana</label>
+          <input id="cveAduanaDestino" name="cveAduanaDestino" type="text" class="form-control"
               formControlName="cveAduanaDestino" [ngClass]="isValid(datosDestinoMercancia,'cveAduanaDestino') ? 'required' : ''"
-              (change)="setValoresStore(datosDestinoMercancia, 'cveAduanaDestino', 'setCveAduanaDestino')" />
-          </div>
-          <div class="col-md-2">
-            <label class="form-label" for="cvePatenteDestino">Patente</label>
-            <input id="cvePatenteDestino" name="cvePatenteDestino" type="text" class="form-control"
+            (change)="setValoresStore(datosDestinoMercancia, 'cveAduanaDestino', 'setCveAduanaDestino')" />
+        </div>
+        <div class="col-md-2">
+          <label class="form-label" for="cvePatenteDestino">Patente</label>
+          <input id="cvePatenteDestino" name="cvePatenteDestino" type="text" class="form-control"
               formControlName="cvePatenteDestino" [ngClass]="isValid(datosDestinoMercancia,'cvePatenteDestino') ? 'required' : ''"
-              (change)="setValoresStore(datosDestinoMercancia, 'cvePatenteDestino', 'setCvePatenteDestino')" />
-          </div>
-          <div class="col-md-2">
-            <label class="form-label" for="cvePedimentoDestino">Pedimento</label>
-            <input id="cvePedimentoDestino" name="cvePedimentoDestino" type="text" class="form-control"
-              formControlName="cvePedimentoDestino"
-              [ngClass]="isValid(datosDestinoMercancia,'cvePedimentoDestino') ? 'required' : ''"
-              (change)="setValoresStore(datosDestinoMercancia, 'cvePedimentoDestino', 'setCvePedimentoDestino')" />
-          </div>
-          }
+            (change)="setValoresStore(datosDestinoMercancia, 'cvePatenteDestino', 'setCvePatenteDestino')" />
+        </div>
+        <div class="col-md-2">
+          <label class="form-label" for="cvePedimentoDestino">Pedimento</label>
+          <input id="cvePedimentoDestino" name="cvePedimentoDestino" type="text" class="form-control"
+            formControlName="cvePedimentoDestino"
+            [ngClass]="isValid(datosDestinoMercancia,'cvePedimentoDestino') ? 'required' : ''"
+            (change)="setValoresStore(datosDestinoMercancia, 'cvePedimentoDestino', 'setCvePedimentoDestino')" />
+        </div>
+        }
           } @else if(datosDestinoMercancia.get('conDestino')?.value === 'Si' && datosDestinoMercancia.get('cveTipoDestino')?.value
         === 'Destrucción'){
         <div class="col-md-5">
@@ -639,6 +662,13 @@
               formControlName="numeroActaDescruccion"
               [ngClass]="isValid(datosDestinoMercancia,'numeroActaDescruccion') ? 'required' : ''"
               (change)="setValoresStore(datosDestinoMercancia, 'numeroActaDescruccion', 'setNumeroActaDescruccion')" />
+            <div
+              *ngIf="datosDestinoMercancia.get('numeroActaDescruccion')?.invalid && (datosDestinoMercancia.get('numeroActaDescruccion')?.touched || datosDestinoMercancia.get('numeroActaDescruccion')?.dirty)"
+              class="text-danger">
+              <small *ngIf="datosDestinoMercancia.get('numeroActaDescruccion')?.errors?.['required']">
+                Este campo es obligatorio.
+              </small>
+            </div>
           </div>
         </div>
         <div class="col-md-3">
@@ -657,6 +687,13 @@
             <input id="autoridadPresentoAvisoDestruccion" name="autoridadPresentoAvisoDestruccion" type="text" class="form-control" formControlName="autoridadPresentoAvisoDestruccion"
               [ngClass]="isValid(datosDestinoMercancia,'autoridadPresentoAvisoDestruccion') ? 'required' : ''"
               (change)="setValoresStore(datosDestinoMercancia, 'autoridadPresentoAvisoDestruccion', 'setAutoridadPresentoAvisoDestruccion')" />
+            <div
+              *ngIf="datosDestinoMercancia.get('autoridadPresentoAvisoDestruccion')?.invalid && (datosDestinoMercancia.get('autoridadPresentoAvisoDestruccion')?.touched || datosDestinoMercancia.get('autoridadPresentoAvisoDestruccion')?.dirty)"
+              class="text-danger">
+              <small *ngIf="datosDestinoMercancia.get('autoridadPresentoAvisoDestruccion')?.errors?.['required']">
+                Este campo es obligatorio.
+              </small>
+            </div>
           </div>
         </div>
 
@@ -711,7 +748,6 @@
           <div>
             <input id="estadoTipoDocumentoDestino" name="estadoTipoDocumentoDestino" type="text" class="form-control"
               formControlName="estadoTipoDocumentoDestino"
-              [ngClass]="isValid(datosDestinoMercancia,'estadoTipoDocumentoDestino') ? 'required' : ''"
               (change)="setValoresStore(datosDestinoMercancia, 'estadoTipoDocumentoDestino', 'setEstadoTipoDocumentoDestino')" />
           </div>
         </div>
@@ -719,7 +755,7 @@
         <div class="row col-md-2 mt-5">
           @if (this.datosPedimento.get('cveTipoDocumentoReemplazada')?.value !== 'Pedimento') {
           <button type="button" class="btn btn-primary ms-3" [disabled]="soloLectura">
-            Validor
+            Validar
           </button>
           }
         </div>

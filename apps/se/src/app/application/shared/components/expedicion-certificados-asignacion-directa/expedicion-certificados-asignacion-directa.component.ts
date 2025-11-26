@@ -502,9 +502,9 @@ export class ExpedicionCertificadosAsignacionDirectaComponent implements OnInit,
     const REGEX = new RegExp(REGEX_NUMEROS);
 
     const PAYLOAD = {
-      "anioAutorizacion": ES_FOLIO_VACIO || "2023",
-      "numFolioAsignacion": ES_ANIO_VACIO || "8811",
-      "rfcSolicitante": "EGM071214V81"
+      "anioAutorizacion": ES_FOLIO_VACIO || "2024",
+      "numFolioAsignacion": ES_ANIO_VACIO || "6",
+      "rfcSolicitante": "AAL0409235E6"
     }
 
     if (ES_ANIO_VACIO || ES_FOLIO_VACIO) {

@@ -4,13 +4,17 @@
       <div class="col-md-12">
         <h2 >Solicitud de modificación y/o prórroga del permiso previo de productos del tabaco</h2>
         </div>
-
+  @if (isPeligro) {
+      <div class="col-md-12">
+        <ng-alert [CONTENIDO]="formErrorAlert" [CUSTOMECLASS]="'alert-danger'"></ng-alert>
+      </div>
+    }
       <app-wizard [listaPasos]="pasos"></app-wizard>
     </div>
 
     <div class="row">
       @switch (indice) { @case (1) {
-      <app-paso-uno></app-paso-uno>
+      <app-paso-uno #pasoUnoRef [isContinuarTriggered]="isContinuarTriggered"></app-paso-uno>
       } @case (2) {
       <app-paso-dos></app-paso-dos>
       } @case (3) {
@@ -19,6 +23,7 @@
 
       <btn-continuar
         [datos]="datosPasos"
+        [dePadre]="true"
         (continuarEvento)="getValorIndice($event)"
       ></btn-continuar>
       <ng-alert [CONTENIDO]="TEXTOS.Aviso" [CUSTOMECLASS]="infoAlert"></ng-alert>

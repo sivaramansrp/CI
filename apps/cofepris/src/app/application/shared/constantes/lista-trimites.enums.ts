@@ -35,10 +35,10 @@ export const LISTA_TRIMITES: AccuseComponentes[] = [
       {
         id: 'solicitud',
         componentPath: () =>
-          import('../../tramites/260604/pages/datos/datos.component').then(
-            (m) => m.DatosComponent
+          import('../../tramites/260604/pages/contenedor-de-paso/contenedor-de-pasos.component').then(
+            (m) => m.ContenedorDePasosComponent
           ),
-        componentName: 'DatosComponent',
+        componentName: 'ContenedorDePasosComponent',
       },
     ],
   },

@@ -54,3 +54,9 @@
 [esFormularioSoloLectura] ="esFormularioSoloLectura"
 (setValoresStoreEvent)="setValoresStore($event)">
 </app-representacion>
+
+<lib-notificaciones
+  *ngIf="mostrarNotificacion"
+  [notificacionInput]="nuevaNotificacion"
+  (confirmacionModal)="mostrarNotificacion = false">
+</lib-notificaciones>

@@ -76,7 +76,7 @@ export const OTROS_TABLA:Array<{ encabezado: string; clave: keyof Otros260303 }>
  * Título del primer paso del trámite.
  * @type {string}
  */
-export const PASO_UNO = 'Solicitud de Importación de Medicamentos que sean o contengan Estupefacientes o Psicotrópicos';
+export const PASO_UNO = 'Solicitud Importación de Medicamentos que sean o contengan Estupefacientes o Psicotrópicos';
 /**
  * Título del segundo paso del trámite.
  * @type {string}

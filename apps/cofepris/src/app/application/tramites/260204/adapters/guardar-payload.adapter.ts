@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 /**
  * @fileoverview
  * Este archivo contiene el servicio adaptador para convertir entre el estado de Akita y los formatos de payload de API
@@ -5,7 +6,8 @@
  */
 
 import { Injectable } from '@angular/core';
-import { Tramite260204State } from '../estados/stores/tramite260204Store.store';
+
+import { Tramite260204State, Tramite260204Store } from '../estados/stores/tramite260204Store.store';
 
 
 @Injectable({
@@ -92,23 +94,20 @@ export class GuardarAdapter_260204 {
                   "descripcion": mercancia.descripcionFraccion
               },
               "unidadMedidaComercial": {
-                  "descripcion": mercancia.cantidadUMCObj?.descripcion
-              },
-              "cantidadUMCConComas": mercancia.cantidadUmcValor,
-              "unidadMedidaTarifa": {
-                  "descripcion": mercancia.cantidadUMT
-              },
-              "cantidadUMTConComas": mercancia.cantidadUmtValor,
+                descripcion: mercancia.cantidadUMC
+            },
+            "cantidadUMCConComas": mercancia.cantidadUmcValor,
+            "unidadMedidaTarifa": {
+                descripcion: mercancia.cantidadUMT
+            },
+            "cantidadUMTConComas": mercancia.cantidadUmtValor,
               "presentacion": mercancia.presentacion,
               "registroSanitarioConComas": mercancia.numeroRegistroSanitario,
-            //   "nombreCortoPaisOrigen": mercancia.paisOrigenDatosClave,
-            //   "nombreCortoPaisProcedencia": mercancia.paisProcedenciaDatosClave,
-            "nombreCortoPaisOrigen": mercancia.paisDeOriginDatos?.toString(),
-              "nombreCortoPaisProcedencia": mercancia.paisDeProcedenciaDatos?.toString(),
+              "nombreCortoPaisOrigen": mercancia.paisOrigenDatosClave,
+              "nombreCortoPaisProcedencia": mercancia.paisProcedenciaDatosClave,
               "idTipoProductoTipoTramite": mercancia.tipoProducto,
               "tipoProductoDescripcionOtros": mercancia.especifique,
-              //"nombreCortoUsoEspecifico": mercancia.usoEspecificoDatosClave,
-               "nombreCortoUsoEspecifico": mercancia.usoEspecifico?.toString(),
+              "nombreCortoUsoEspecifico": mercancia.usoEspecificoDatosClave,
               "fechaCaducidadStr": mercancia.fechaCaducidad
           }
       }),
@@ -336,4 +335,270 @@ export class GuardarAdapter_260204 {
       }
     }
   }
+
+
+  private static mapScianData(arr?: any[]): any[] {
+        return (arr ?? []).map((d: any) => ({ 
+            clave: d.cveScian ?? d.clave ?? '', 
+            descripcion: d.descripcion ?? '' 
+        }));
+    }
+
+
+
+    private static mapMercanciasData(arr?: any[]): any[] {
+        // eslint-disable-next-line complexity
+        return (arr ?? []).map((m: any) => ({
+            claveClasificacionProductoObj: { 
+                clave: m.idClasificacionProducto ?? '',
+                descripcion: m.nombreClasificacionProducto ?? ''
+            },
+            especificarClasificacionObj: { 
+                clave: m.ideSubClasificacionProducto ?? '',
+                descripcion: m.nombreSubClasificacionProducto ?? ''
+            },
+            denominacionEspecificaProducto: m.descDenominacionEspecifica ?? '',
+            denominacionComun: m.descripcionMercancia ?? '',
+            denominacionDistintiva: m.descDenominacionDistintiva ?? '',
+            formaFarmaceutica: m.formaFarmaceuticaDescripcionOtros ?? '',
+            estadoFisico: m.estadoFisicoDescripcionOtros ?? '',
+            fraccionArancelaria: m.fraccionArancelaria?.clave ?? '',
+            descripcionFraccion: m.fraccionArancelaria?.descripcion ?? '',
+           // cantidadUMC: m.cantidadUMCConComas ?? '',
+            cantidadUMT: m.unidadMedidaTarifa?.descripcion ?? '',
+            presentacion: m.presentacion ?? '',
+            numeroRegistroSanitario: m.registroSanitarioConComas ?? '',
+            paisDeOriginDatos: m.nombreCortoPaisOrigen ?? '',
+            paisDeProcedenciaDatos: m.nombreCortoPaisProcedencia ?? '',
+            tipoProducto: m.tipoProductoDescripcionOtros ?? '',
+            usoEspecifico: m.nombreCortoUsoEspecifico ?? '',
+            fechaCaducidad: m.fechaCaducidadStr ?? '',
+            clasificacionProducto: m.nombreClasificacionProducto ?? '',
+            especificarClasificacionProducto: m.nombreSubClasificacionProducto ?? '',
+            unidadMedidaComercializacion: m.unidadMedidaComercial?.descripcion ?? '',
+            unidadMedidaTarifa: m.unidadMedidaTarifa?.descripcion ?? '',
+            paisOrigen: m.nombreCortoPaisOrigen ?? "",
+            paisProcedencia: m.nombreCortoPaisProcedencia ?? "",
+            id: m.idMercancia || null,
+            paisOrigenDatosClave: m.nombreCortoPaisOrigen ?? "",
+            paisProcedenciaDatosClave: m.nombreCortoPaisProcedencia ?? "",
+            usoEspecificoDatosClave: m.nombreCortoUsoEspecifico ?? "",
+            cantidadUmcValor: m.cantidadUMCConComas ?? '',
+            cantidadUMC: m.unidadMedidaComercial?.descripcion ?? '',
+            cantidadUmtValor: m.cantidadUMTConComas ?? '',
+        }));
+    }
+
+    private static mapFabricantesData(grid?: any[]): any[] {
+        // eslint-disable-next-line complexity
+        return (grid ?? []).map((p: any) => ({
+            nacionalidad: p.booleanExtranjero === '1' ? 'Extranjero' : 'Nacional',
+            tipoPersona: p.personaMoral === '1' ? 'Moral' : 'Física',
+            id: parseInt(p.idPersonaSolicitud ?? '0', 10) || undefined,
+            nombreRazonSocial: p.denominacion ?? p.razonSocial ?? '',
+            rfc: p.rfc ?? '',
+            curp: p.curp ?? '',
+            telefono: p.telefono ?? '',
+            correoElectronico: p.correoElectronico ?? '',
+            calle: p.domicilio?.calle ?? '',
+            numeroExterior: p.domicilio?.numeroExterior ?? '',
+            numeroInterior: p.domicilio?.numeroInterior ?? '',
+            pais: p.domicilio?.pais?.nombre ?? '',
+            colonia: p.domicilio?.colonia?.nombre ?? '',
+            municipioAlcaldia: p.domicilio?.delegacionMunicipio?.nombre ?? '',
+            localidad: p.domicilio?.localidad?.nombre ?? '',
+            entidadFederativa: p.domicilio?.entidadFederativa?.nombre ?? '',
+            estadoLocalidad: p.domicilio?.entidadFederativa?.nombre ?? '',
+            codigoPostal: p.domicilio?.codigoPostal ?? '',
+            coloniaEquivalente: p.domicilio?.descripcionColonia ?? '',
+            nombres: p.nombre ?? '',
+            primerApellido: p.apellidoPaterno ?? '',
+            segundoApellido: p.apellidoMaterno ?? '',
+            razonSocial: p.razonSocial ?? '',
+            lada: p.domicilio?.lada ?? ''
+        }));
+    }
+
+
+    private static mapDestinatariosData(grid?: any[]): any[] {
+        // eslint-disable-next-line complexity
+        return (grid ?? []).map((p: any) => ({
+            nacionalidad: p.booleanExtranjero === '1' ? 'Extranjero' : 'Nacional',
+            tipoPersona: p.personaMoral === '1' ? 'Moral' : 'Física',
+            id: parseInt(p.idPersonaSolicitud ?? '0', 10) || undefined,
+            nombreRazonSocial: p.denominacion ?? p.razonSocial ?? '',
+            rfc: p.rfc ?? '',
+            curp: p.curp ?? '',
+            telefono: p.telefono ?? '',
+            correoElectronico: p.correoElectronico ?? '',
+            calle: p.domicilio?.calle ?? '',
+            numeroExterior: p.domicilio?.numeroExterior ?? '',
+            numeroInterior: p.domicilio?.numeroInterior ?? '',
+            pais: p.domicilio?.pais?.nombre ?? '',
+            colonia: p.domicilio?.colonia?.nombre ?? '',
+            municipioAlcaldia: p.domicilio?.delegacionMunicipio?.nombre ?? '',
+            localidad: p.domicilio?.localidad?.nombre ?? '',
+            entidadFederativa: p.domicilio?.entidadFederativa?.nombre ?? '',
+            estadoLocalidad: p.domicilio?.entidadFederativa?.nombre ?? '',
+            codigoPostal: p.domicilio?.codigoPostal ?? '',
+            coloniaEquivalente: p.domicilio?.descripcionColonia ?? '',
+            nombres: p.nombre ?? '',
+            primerApellido: p.apellidoPaterno ?? '',
+            segundoApellido: p.apellidoMaterno ?? '',
+            razonSocial: p.razonSocial ?? '',
+            lada: p.domicilio?.lada ?? ''
+        }));
+    }
+
+
+    private static mapProveedoresData(grid?: any[]): any[] {
+        // eslint-disable-next-line complexity
+        return (grid ?? []).map((p: any) => ({
+            rfc: p.rfc ?? '',
+            razonSocial: p.razonSocial ?? '',
+            nombres: p.nombre ?? '',
+            primerApellido: p.apellidoPaterno ?? '',
+            segundoApellido: p.apellidoMaterno ?? '',
+            telefono: p.telefono ?? '',
+            correoElectronico: p.correoElectronico ?? '',
+            pais: p.domicilio?.pais?.nombre ?? '',
+            municipioAlcaldia: p.domicilio?.delegacionMunicipio?.nombre ?? '',
+            localidad: p.domicilio?.localidad?.nombre ?? '',
+            entidadFederativa: p.domicilio?.entidadFederativa?.nombre ?? '',
+            estadoLocalidad: p.domicilio?.entidadFederativa?.nombre ?? '',
+            codigoPostal: p.domicilio?.codigoPostal ?? '',
+            colonia: p.domicilio?.descripcionColonia ?? '',
+            nombreRazonSocial: p.denominacion ?? p.razonSocial ?? '',
+            curp: p.curp ?? '',
+            calle: p.domicilio?.calle ?? '',
+            numeroExterior: p.domicilio?.numeroExterior ?? '',
+            numeroInterior: p.domicilio?.numeroInterior ?? '',
+            tipoPersona: p.personaMoral === '1' ? 'Moral' : 'Física',
+            nacionalidad: p.booleanExtranjero === '1' ? 'Extranjero' : 'Nacional',
+            actividadEconomica: '',
+            id: parseInt(p.idPersonaSolicitud ?? '0', 10) || undefined,
+        }));
+    }
+
+
+    /**
+     * Maps API facturador data to internal facturador format
+     */
+    private static mapFacturadoresData(grid?: any[]): any[] {
+        // eslint-disable-next-line complexity
+        return (grid ?? []).map((p: any) => ({
+            nacionalidad: p.booleanExtranjero === '1' ? 'Extranjero' : 'Nacional',
+            tipoPersona: p.personaMoral === '1' ? 'Moral' : 'Física',
+            id: parseInt(p.idPersonaSolicitud ?? '0', 10) || undefined,
+            nombreRazonSocial: p.denominacion ?? p.razonSocial ?? '',
+            rfc: p.rfc ?? '',
+            curp: p.curp ?? '',
+            telefono: p.telefono ?? '',
+            correoElectronico: p.correoElectronico ?? '',
+            calle: p.domicilio?.calle ?? '',
+            numeroExterior: p.domicilio?.numeroExterior ?? '',
+            numeroInterior: p.domicilio?.numeroInterior ?? '',
+            pais: p.domicilio?.pais?.nombre ?? '',
+            colonia: p.domicilio?.descripcionColonia ?? '',
+            municipioAlcaldia: p.domicilio?.delegacionMunicipio?.nombre ?? '',
+            localidad: p.domicilio?.localidad?.nombre ?? '',
+            entidadFederativa: p.domicilio?.entidadFederativa?.nombre ?? '',
+            estadoLocalidad: p.domicilio?.localidad?.nombre ?? '',
+            codigoPostal: p.domicilio?.codigoPostal ?? '',
+            coloniaEquivalente: p.domicilio?.descripcionColonia ?? '',
+            nombres: p.nombre ?? '',
+            primerApellido: p.apellidoPaterno ?? '',
+            segundoApellido: p.apellidoMaterno ?? '',
+            razonSocial: p.razonSocial ?? '',
+            lada: p.domicilio?.lada ?? ''
+        }));
+    }
+
+
+    private static mapPagoDerechosData(pagoData?: any): any {
+        return {
+            claveReferencia: pagoData?.claveDeReferencia ?? '',
+            cadenaDependencia: pagoData?.cadenaPagoDependencia ?? '',
+            bancoObject: {
+                clave: pagoData?.banco?.clave ?? '',
+                descripcion: pagoData?.banco?.descripcion ?? '',
+                id: pagoData?.banco?.clave ?? '',
+            },
+            llavePago: pagoData?.llaveDePago ?? '',
+            fechaPago: pagoData?.fecPago ?? '',
+            importePago: pagoData?.impPago ?? '',
+            banco: pagoData?.banco?.clave ?? '',
+        };
+    }
+
+    /**
+     * Map an API response (form payload) back into a partial Tramite260204State.
+     * This is a best-effort reverse mapping of `toFormPayload` and will only
+     * populate commonly used fields. Unknown or complex nested fields are left
+     * untouched so callers can merge them as needed.
+     *
+     * @param response API response object matching the form payload shape
+     * @returns Partial<Tramite260204State>
+     */
+    // eslint-disable-next-line complexity
+    static fromApiResponse(response: unknown): Partial<Tramite260204State> {
+        if (!response || typeof response !== 'object') {
+            return {};
+        }
+        const resp = response as any;
+        const DATOS_SOLICITUD_FORM_STATE = {
+            denominacionRazon: resp.establecimiento?.razonSocial ?? '',
+            rfcSanitario: resp.establecimiento?.RFCResponsableSanitario ?? '',
+            correoElectronico: resp.establecimiento?.correoElectronico ?? '',
+            codigoPostal: resp.establecimiento?.domicilio?.codigoPostal ?? '',
+            municipioAlcaldia: resp.establecimiento?.domicilio?.descripcionMunicipio ?? '',
+            localidad: resp.establecimiento?.domicilio?.informacionExtra ?? '',
+            colonia: resp.establecimiento?.domicilio?.descripcionColonia ?? '',
+            calle: resp.establecimiento?.domicilio?.calle ?? '',
+            lada: resp.establecimiento?.domicilio?.lada ?? '',
+            telefono: resp.establecimiento?.domicilio?.telefono ?? '',
+            aviso: resp.establecimiento?.avisoFuncionamiento ?? '',
+            licenciaSanitaria: resp.establecimiento?.numeroLicencia ?? '',
+            adunasDeEntradas: resp.establecimiento?.aduanas ?? '',
+            regimen: resp.solicitud?.regimen ?? '',
+            publico: resp.solicitud?.informacionConfidencial === true ? 'Si' : 'No',
+            representanteRfc: resp.representanteLegal?.rfc ?? '',
+            representanteNombre: resp.representanteLegal?.nombre ?? '',
+            apellidoPaterno: resp.representanteLegal?.apellidoPaterno ?? '',
+            apellidoMaterno: resp.representanteLegal?.apellidoMaterno ?? '',
+            estado: resp.establecimiento?.domicilio.entidadFederativa?.clave ?? '',
+            aeropuerto: false,
+            manifesto: resp.solicitud?.declaracionesSeleccionadas ?? [],
+        };
+
+        const PARTIAL: Partial<Tramite260204State> = {
+            datosSolicitudFormState: DATOS_SOLICITUD_FORM_STATE as any,
+            scianConfigDatos: this.mapScianData(resp.datosSCIAN) as any,
+            tablaMercanciasConfigDatos: this.mapMercanciasData(resp.mercancias) as any,
+            fabricanteTablaDatos: this.mapFabricantesData(resp.gridTerceros_TIPERS_FAB) as any,
+            destinatarioFinalTablaDatos: this.mapDestinatariosData(resp.gridTerceros_TIPERS_DES) as any,
+            proveedorTablaDatos: this.mapProveedoresData(resp.gridTerceros_TIPERS_PVD) as any,
+            facturadorTablaDatos: this.mapFacturadoresData(resp.gridTerceros_TIPERS_FAC) as any,
+            pagoDerechos: this.mapPagoDerechosData(resp.pagoDeDerechos) as any,
+        };
+
+        return PARTIAL;
+    }
+
+    /**
+     * Convenience method: map the API response and patch it directly into the provided store.
+     * If the `store` argument is omitted, the method simply returns the mapped partial state.
+     *
+     * @param response API response
+     * @param store Optional Tramite260204Store instance to apply the patch
+     * @returns Partial<Tramite260204State> (and patches the store when provided)
+     */
+    static patchToStore(response: any, store?: Tramite260204Store): Partial<Tramite260204State> {
+        const PARTIAL = GuardarAdapter_260204.fromApiResponse(response);
+        if (store) {
+            // Akita's update accepts a partial or updater function
+            store.update((state) => ({ ...state, ...PARTIAL }));
+        }
+        return PARTIAL;
+    }
 }

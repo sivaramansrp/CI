@@ -1,7 +1,7 @@
 /**
  * ImportacionVehiculosNuevosService
  */
-import { Catalogo, CatalogoServices, JSONResponse } from '@ng-mf/data-access-user';
+import { Catalogo, CatalogoServices, JSONResponse, LoginQuery } from '@ng-mf/data-access-user';
 import { Observable, map } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
@@ -9,12 +9,22 @@ import { ProductoResponse } from '../../../shared/constantes/vehiculos-adaptados
 
 import { Tramite130115State, Tramite130115Store } from '../../../estados/tramites/tramite130115.store';
 import { PROC_130115 } from '../servers/api-route';
+import { Subject } from 'rxjs';
 import { Tramite130115Query } from '../../../estados/queries/tramite130115.query';
+import { takeUntil } from 'rxjs';
 @Injectable({
   providedIn: 'root',
 })
 
 export class ImportacionVehiculosNuevosService {
+  // Valor de RFC de ejemplo
+  private loginRfc: string = '';
+
+  /**
+   * @property {Subject<void>} destroyed$
+   * @description Sujeto utilizado para manejar la destrucción de suscripciones y evitar fugas de memoria.
+   */
+  private destroyed$ = new Subject<void>();
   /**
    * Crea una nueva instancia del servicio ImportacionVehiculosNuevosService.
    * 
@@ -23,7 +33,16 @@ export class ImportacionVehiculosNuevosService {
    * @param catalogoServices Servicio para acceder a los catálogos de datos.
    * @param query Consulta para obtener información del trámite 130115.
    */
-  constructor(private http: HttpClient,private tramite130115Store: Tramite130115Store, private catalogoServices: CatalogoServices, private query: Tramite130115Query) {}
+  constructor(private http: HttpClient,private tramite130115Store: Tramite130115Store, private catalogoServices: CatalogoServices, private query: Tramite130115Query, private loginQuery: LoginQuery) {
+    this.loginQuery.selectLoginState$
+      .pipe(
+        takeUntil(this.destroyed$),
+        map((seccionState) => {
+          this.loginRfc = seccionState.rfc;
+        })
+      )
+      .subscribe();
+  }
   
   /**
    * Obtiene la lista de países disponibles desde un archivo JSON.
@@ -92,7 +111,7 @@ getDatosDeLaSolicitud(): Observable<Tramite130115State> {
    *  @returns {Observable<Catalogo[]>} - Un observable que emite una lista de catálogos de clasificaciones de régimen.
    */
   getRegimenClasificacion(tramite: string, cveClasificacion: string): Observable<Catalogo[]> {
-    return this.catalogoServices.getRegimenClasificacion10(tramite, cveClasificacion).pipe(
+    return this.catalogoServices.getClasificacionRegimen(tramite, cveClasificacion).pipe(
       map(res => res?.datos ?? [])
     );
   }
@@ -245,7 +264,7 @@ getDatosDeLaSolicitud(): Observable<Tramite130115State> {
       apellido_paterno: "Norte",
       razon_social: "Aceros Norte",
       descripcion_ubicacion: "Calle Acero, No. 123, Col. Centro",
-      rfc: "AAL0409235E6",
+      rfc: this.loginRfc,
       pais: "SIN"
     };
   }
@@ -256,7 +275,7 @@ getDatosDeLaSolicitud(): Observable<Tramite130115State> {
    */
   buildSolicitante(): unknown {
     return {
-      rfc: "AAL0409235E6",
+      rfc: this.loginRfc,
       nombre: "Juan Pérez",
       es_persona_moral: true,
       certificado_serial_number: ""
