@@ -12,8 +12,8 @@ import {
   ConsultaioStore,
   PersonaTerceros,
   SolicitanteComponent,
-  formatFecha,
   SolicitanteQuery,
+  formatFecha,
 } from '@ng-mf/data-access-user';
 import {
   FilaSolicitud,
@@ -34,12 +34,12 @@ import { AgriculturaApiService } from '../../services/220202/agricultura-api.ser
 import { DatosDeLaSolicitudComponent } from '../../components/datos-de-la-solicitud/datos-de-la-solicitud.component';
 import { DatosParaMovilizacionNacionalComponent } from '../../components/datos-para-movilizacion-nacional/datos-para-movilizacion-nacional.component';
 import { GuardarSolicitud } from '../../models/220202/guardar-solicitud.model';
+import { NgClass } from '@angular/common';
 import { PagoDeDerechosComponent } from '../../components/pago-de-derechos/pago-de-derechos.component';
 import { RegistroSolicitudService } from '../../services/220202/registro-solicitud/registro-solicitud.service';
 import { SeccionLibStore } from '@libs/shared/data-access-user/src/core/estados/seccion.store';
 import { Subject } from 'rxjs';
 import { TercerospageComponent } from '../../components/tercerospage/tercerospage.component';
-import { NgClass } from '@angular/common';
 
 /**
  * Componente para mostrar el subtítulo del asistente.
@@ -211,6 +211,10 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
    * Nombre de la pantalla solicitante
    */
   nombreSolicitante: string = '';
+  /**
+   * Indica si se debe mostrar el formulario o no.
+   */
+  ocultarForm: boolean = false;
 
   /**
    * Constructor del componente.
@@ -218,6 +222,11 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
    * y de las secciones del formulario utilizando el servicio `SeccionLibStore`.
    * @constructor
    * @param {SeccionLibStore} seccionStore - Servicio para gestionar el estado de las secciones del formulario.
+   * @param agriculturaApiService
+   * @param consultaQuery
+   * @param consultaioStore
+   * @param registroSolicitudService
+   * @param solicitanteQuery
    */
   constructor(
     private readonly seccionStore: SeccionLibStore,
@@ -246,6 +255,9 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
           } else {
             this.esDatosRespuesta = true;
           }
+          if (this.consultaState.readonly) {
+            this.ocultarForm = true;
+          }
         })
       )
       .subscribe();
@@ -254,7 +266,7 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
   /**
    * Obtiene los datos de la pestaña Solicitante, en esta caso el RFC ORIGINAL
    */
-  obtieneDatosTabSolicitud() {
+  obtieneDatosTabSolicitud(): void {
     this.solicitanteQuery.selectSeccionState$
       .pipe(takeUntil(this.destroyNotifier$))
       .subscribe((seccionState) => {
