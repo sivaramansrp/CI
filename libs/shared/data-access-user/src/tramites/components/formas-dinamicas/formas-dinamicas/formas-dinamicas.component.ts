@@ -1,6 +1,6 @@
 import { AbstractControl, ControlValueAccessor, FormBuilder, FormControl, FormGroup, NG_VALUE_ACCESSOR, ReactiveFormsModule, ValidationErrors, ValidatorFn, Validators } from '@angular/forms';
+import { ChangeDetectorRef, Component, HostListener, Input, OnInit, Output, TemplateRef, forwardRef } from '@angular/core';
 import { CommonModule, NgTemplateOutlet } from '@angular/common';
-import { Component, HostListener, Input, OnInit, Output, TemplateRef, forwardRef } from '@angular/core';
 import { ModeloDeFormaDinamica, Validadores } from '../../../../core/models/shared/forms-model';
 import { CatalogoSelectComponent } from '../../catalogo-select/catalogo-select.component';
 import { EventEmitter } from '@angular/core';
@@ -238,7 +238,8 @@ export class FormasDinamicasComponent implements ControlValueAccessor, OnInit {
   */
   constructor(
     private fb: FormBuilder,
-    private validacionesService: ValidacionesFormularioService
+    private validacionesService: ValidacionesFormularioService,
+    private cdr: ChangeDetectorRef
   ) {
       this.anchoDePantalla = window.innerWidth;
     }
@@ -356,6 +357,9 @@ export class FormasDinamicasComponent implements ControlValueAccessor, OnInit {
       }
       if (validadore.tipo.includes('minlength') && typeof validadore.valor === 'number') {
         VALIDATORS.push(Validators.minLength(validadore.valor));
+      }
+      if (validadore.tipo.includes('maxlength') && typeof validadore.valor === 'number') {
+        VALIDATORS.push(Validators.maxLength(validadore.valor));
       }
     });
 
@@ -480,9 +484,22 @@ public eventoDeCambioDeValor(event: any, campo: string, tipo?: string): void {
   }
 
   if (campo) {
+    // Marcar el campo como tocado para que se muestren los errores de validación
+    this.forma.get(campo)?.markAsTouched();
     this.emitirCambioDeValor.emit({ campo: campo, valor: VALOR });
   }
 }
+
+  /**
+   * Marca un campo como tocado para mostrar errores de validación
+   */
+  public marcarComoTocado(campo: string): void {
+    const CONTROL = this.forma.get(campo);
+    if (CONTROL) {
+      CONTROL.markAsTouched();
+      this.cdr.detectChanges(); // Detección de cambio forzada
+    }
+  }
 
 
   /**

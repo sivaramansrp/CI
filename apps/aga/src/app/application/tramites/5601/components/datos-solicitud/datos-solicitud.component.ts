@@ -211,12 +211,108 @@ export class DatosSolicitudComponent implements OnInit, OnDestroy {
 
   /**
    * Método que se ejecuta al cambiar el tipo de operación.
-   * Actualiza la visibilidad del campo "fechaOperacion" en el formulario de datos de solicitud.
+   * Actualiza la visibilidad de los campos de fecha según el tipo de operación seleccionado.
    */
-  alCambiarTipoOperacion(): void {
+  alCambiarTipoOperacion(valorSeleccionado?: Catalogo | number): void {
+    
     const CAMPO_FECHA_OPERACION = this.formularioDatosSolicitud.find(f => f.campo === 'fechaOperacion');
-    if (CAMPO_FECHA_OPERACION) {
-      CAMPO_FECHA_OPERACION.mostrar = true;
+    const CAMPO_FECHA_INICIO = this.formularioDatosSolicitud.find(f => f.campo === 'fechaInicio');
+    const CAMPO_FECHA_FIN = this.formularioDatosSolicitud.find(f => f.campo === 'fechaFin');
+    
+    const CAMPO_TITULO_SEMANA = this.formularioDatosSolicitud.find(f => f.campo === 'tituloSemana');
+    
+    const CAMPO_EMPTY_COLUMN = this.formularioDatosSolicitud.find(f => f.campo === 'emptyColumn');
+    
+    const CAMPO_LUNES = this.formularioDatosSolicitud.find(f => f.campo === 'lunes');
+    const CAMPO_MARTES = this.formularioDatosSolicitud.find(f => f.campo === 'martes');
+    const CAMPO_MIERCOLES = this.formularioDatosSolicitud.find(f => f.campo === 'miercoles');
+    const CAMPO_JUEVES = this.formularioDatosSolicitud.find(f => f.campo === 'jueves');
+    const CAMPO_VIERNES = this.formularioDatosSolicitud.find(f => f.campo === 'viernes');
+    const CAMPO_SABADO = this.formularioDatosSolicitud.find(f => f.campo === 'sabado');
+    const CAMPO_DOMINGO = this.formularioDatosSolicitud.find(f => f.campo === 'domingo');
+    
+    const SELECTED_ID = typeof valorSeleccionado === 'object' ? valorSeleccionado?.id : valorSeleccionado;
+    
+    const SELECTED_ID_NUMBER = Number(SELECTED_ID);
+    
+    if (SELECTED_ID_NUMBER === 1) {
+      if (CAMPO_FECHA_OPERACION) {
+        CAMPO_FECHA_OPERACION.mostrar = true;
+      }
+      if (CAMPO_FECHA_INICIO) {
+        CAMPO_FECHA_INICIO.mostrar = false;
+      }
+      if (CAMPO_FECHA_FIN) {
+        CAMPO_FECHA_FIN.mostrar = false;
+      }
+      
+      if (CAMPO_EMPTY_COLUMN) {
+        CAMPO_EMPTY_COLUMN.mostrar = true; 
+        CAMPO_EMPTY_COLUMN.clase = 'd-none'; 
+      }
+      
+      if (CAMPO_TITULO_SEMANA) {
+        CAMPO_TITULO_SEMANA.mostrar = false;
+      }
+
+      [CAMPO_LUNES, CAMPO_MARTES, CAMPO_MIERCOLES, CAMPO_JUEVES, CAMPO_VIERNES, CAMPO_SABADO, CAMPO_DOMINGO].forEach(campo => {
+        if (campo) {
+          campo.mostrar = false;
+        }
+      });
+      
+    } else if (SELECTED_ID_NUMBER === 2) {
+      if (CAMPO_FECHA_OPERACION) {
+        CAMPO_FECHA_OPERACION.mostrar = true;
+      }
+      if (CAMPO_FECHA_INICIO) {
+        CAMPO_FECHA_INICIO.mostrar = true;
+      }
+      if (CAMPO_FECHA_FIN) {
+        CAMPO_FECHA_FIN.mostrar = true;
+      }
+
+      if (CAMPO_EMPTY_COLUMN) {
+        CAMPO_EMPTY_COLUMN.mostrar = true;
+        CAMPO_EMPTY_COLUMN.clase = 'col-md-6'; 
+      }
+ 
+      
+      if (CAMPO_TITULO_SEMANA) {
+        CAMPO_TITULO_SEMANA.mostrar = true;
+      }
+      
+      [CAMPO_LUNES, CAMPO_MARTES, CAMPO_MIERCOLES, CAMPO_JUEVES, CAMPO_VIERNES, CAMPO_SABADO, CAMPO_DOMINGO].forEach(campo => {
+        if (campo) {
+          campo.mostrar = true;
+        }
+      });
+      
+    } else {
+      if (CAMPO_FECHA_OPERACION) {
+        CAMPO_FECHA_OPERACION.mostrar = true;
+      }
+      if (CAMPO_FECHA_INICIO) {
+        CAMPO_FECHA_INICIO.mostrar = false;
+      }
+      if (CAMPO_FECHA_FIN) {
+        CAMPO_FECHA_FIN.mostrar = false;
+      }
+      
+      if (CAMPO_EMPTY_COLUMN) {
+        CAMPO_EMPTY_COLUMN.mostrar = true; 
+        CAMPO_EMPTY_COLUMN.clase = 'd-none'; 
+      }
+      
+      if (CAMPO_TITULO_SEMANA) {
+        CAMPO_TITULO_SEMANA.mostrar = false;
+      }
+      
+      [CAMPO_LUNES, CAMPO_MARTES, CAMPO_MIERCOLES, CAMPO_JUEVES, CAMPO_VIERNES, CAMPO_SABADO, CAMPO_DOMINGO].forEach(campo => {
+        if (campo) {
+          campo.mostrar = false;
+        }
+      });
     }
   }
   
@@ -242,9 +338,9 @@ export class DatosSolicitudComponent implements OnInit, OnDestroy {
       // Actualiza el valor dinámico en el store.
       this.tramite5601Store.setDynamicFieldValue(event.campo, event.valor);
 
-      // Si el campo es 'tipoOperacion', actualiza la visibilidad del campo "fechaOperacion".
+      // Si el campo es 'tipoOperacion', actualiza la visibilidad de los campos de fecha.
       if (event.campo === 'tipoOperacion') {
-        this.alCambiarTipoOperacion();
+        this.alCambiarTipoOperacion(event.valor as Catalogo | number);
       }
     }
   }
