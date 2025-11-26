@@ -1,6 +1,6 @@
-import { Catalogo, CatalogoServices, HttpCoreService } from '@ng-mf/data-access-user';
+import { Catalogo, CatalogoServices, HttpCoreService, JSONResponse, LoginQuery } from '@ng-mf/data-access-user';
+import { Observable, Subject, map, takeUntil} from 'rxjs';
 import { Tramite130110State, Tramite130110Store } from '../../../estados/tramites/tramites130110.store';
-import { map, Observable } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { PROC_130110 } from '../servers/api-route';
@@ -17,6 +17,14 @@ import { Tramite130110Query } from '../../../estados/queries/tramite130110.query
   providedIn: 'root'
 })
 export class ImportacionNeumaticosComercializarService {
+  // Valor de RFC de ejemplo
+  private loginRfc: string = '';
+
+  /**
+   * @property {Subject<void>} destroyed$
+   * @description Sujeto utilizado para manejar la destrucción de suscripciones y evitar fugas de memoria.
+   */
+  private destroyed$ = new Subject<void>();
 /**
 * Constructor del servicio.
 * Servicio HttpClient para realizar solicitudes HTTP.
@@ -26,9 +34,16 @@ constructor(
   public httpService: HttpCoreService,
   private tramite130110Store: Tramite130110Store,
   private query: Tramite130110Query,
-  private catalogoServices: CatalogoServices) {
-  // 
- }
+  private catalogoServices: CatalogoServices, private loginQuery: LoginQuery) {
+      this.loginQuery.selectLoginState$
+        .pipe(
+          takeUntil(this.destroyed$),
+          map((seccionState) => {
+            this.loginRfc = seccionState.rfc;
+          })
+        )
+        .subscribe();
+    }
 
 /**
  * Obtiene la lista de países disponibles desde un archivo JSON.
@@ -128,7 +143,7 @@ getDatosDeLaSolicitud(): Observable<Tramite130110State> {
    *  @returns {Observable<Catalogo[]>} - Un observable que emite una lista de catálogos de clasificaciones de régimen.
    */
   getRegimenClasificacion(tramite: string, cveClasificacion: string): Observable<Catalogo[]> {
-    return this.catalogoServices.getRegimenClasificacion(tramite, cveClasificacion).pipe(
+    return this.catalogoServices.getClasificacionRegimen(tramite, cveClasificacion).pipe(
       map(res => res?.datos ?? [])
     );
   }
@@ -173,8 +188,8 @@ getDatosDeLaSolicitud(): Observable<Tramite130110State> {
 
   guardarDatosPost(
     body: Record<string, unknown>
-  ): Observable<Record<string, unknown>> {
-    return this.httpService.post<Record<string, unknown>>(PROC_130110.GUARDAR, {
+  ): Observable<JSONResponse> {
+    return this.httpService.post<JSONResponse>(PROC_130110.GUARDAR, {
       body: body,
     });
   }
@@ -211,7 +226,7 @@ getDatosDeLaSolicitud(): Observable<Tramite130110State> {
        apellido_paterno: "Norte",
        razon_social: "Aceros Norte",
        descripcion_ubicacion: "Calle Acero, No. 123, Col. Centro",
-       rfc: "AAL0409235E6",
+       rfc: this.loginRfc,
        pais: "SIN"
      };
    }
@@ -222,7 +237,7 @@ getDatosDeLaSolicitud(): Observable<Tramite130110State> {
     */
    buildSolicitante(): unknown {
      return {
-       rfc: "AAL0409235E6",
+       rfc: this.loginRfc,
        nombre: "Juan Pérez",
        es_persona_moral: true,
        certificado_serial_number: "string"

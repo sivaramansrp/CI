@@ -327,7 +327,7 @@ describe('validarYEnviarFormulario', () => {
     it('Debería obtener países por bloque y actualizar selectRangoDias', () => {
       component.fetchPaisesPorBloque(1);
 
-      expect(mockImportacionMaterialDeInvestigacionCientificaService.getPaisesPorBloque).toHaveBeenCalledWith('130110', '1');
+      expect(mockImportacionMaterialDeInvestigacionCientificaService.getPaisesPorBloque).toHaveBeenCalledWith('130112', '1');
       expect(component.paisesPorBloque).toEqual(MOCK_CATALOGO);
       expect(component.selectRangoDias).toEqual(['Option 1', 'Option 2']);
     });

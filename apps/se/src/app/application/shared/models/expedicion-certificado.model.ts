@@ -15,32 +15,110 @@ export interface LicitacionesDisponibles {
     /**
      * Número de la licitación.
      */
-    numeroLicitacion: string;
+    numeroLicitacion?: string;
+
+    licitacionPublica?: {
+      numeroLicitacion: string;
+    };
+
+    numeroFolioCertificado?: string;
+
+    /**
+     * Cantidad aprobada
+     */
+    cantidadAprobada?: number;
+
+    /**
+     * Suma aprobada
+     */
+    sumaAprobada?: number | null;
+
+    /**
+     * Suma expedida
+     */
+    sumaExpedida?: number | null;
+
+    /**
+     * Cantidad cancelada
+     */
+    cantidadCancelada?: number;
+
+    /**
+     * Estado activo
+     */
+    activa?: boolean;
+
+    /**
+     * Estado aprobado
+     */
+    aprobada?: boolean;
+
+    /**
+     * Fecha de autorización
+     */
+    fechaAutorizacion?: string;
+
+    /**
+     * Participante de la licitación
+     */
+    participante?: {
+        participantePK?: {
+            idLicitacionPublica: number;
+            rfcParticipante: string;
+        };
+        rfc?: string | null;
+        montoAdjudicado?: number;
+        ganador?: boolean;
+        tipoParticipante?: string;
+        montoDisponible?: number | null;
+        licitacionPublica?: {
+            idLicitacion: number;
+            anio: number;
+            cantidadMaxima: number;
+            fechaLimiteCalificacion: string;
+            fechaConcurso: string;
+            fechaInicioVigencia: string;
+            fechaFinVigencia: string | null;
+            fundamento: string;
+            tipoConstancia: string;
+            tipoLicitacion: string;
+            unidadMedidaTarifaria: string | null;
+            regimenAduanero: string | null;
+            fechaInicio: string | null;
+            observaciones: string | null;
+            bloqueComercial: string | null;
+            paises: string | null;
+            numeroLicitacion: string;
+            idMecanismoAsignacion: string | null;
+            añoAutorizacion: string | null;
+            fechaInicioVigenciaLicitacion: string | null;
+        };
+    };
 
     /**
      * Monto adjudicado en la licitación.
      */
-    montoAdjudicado: number;
+    montoAdjudicado?: number;
 
     /**
      * Fecha de inicio de vigencia de la licitación.
      */
-    fechaInicioVigencia: string;
+    fechaInicioVigencia?: string;
 
     /**
      * Fecha de fin de vigencia aprobada de la licitación.
      */
-    fechaFinVigenciaAprobada: string;
+    fechaFinVigenciaAprobada?: string;
 
     /**
      * Nombre del producto.
      */
-    nombreProducto: string;
+    nombreProducto?: string;
 
     /**
      * Fecha del concurso.
      */
-    fechaConcurso: string;
+    fechaConcurso?: string;
 
     // Campos mantenidos para compatibilidad con el código existente
     /**
@@ -61,11 +139,25 @@ export interface LicitacionesDisponibles {
      */
     descripcion?: string;
 
+    descripcionMercancia?: string;
+
     /**
      * Fecha de fin de vigencia de la licitación (alias para fechaFinVigenciaAprobada).
      * @deprecated Use fechaFinVigenciaAprobada instead
      */
     fechaFinVigencia?: string;
+
+    fechaExpedicion?: string;
+
+    cantidad?: number;
+
+    certificadoAprobado?: string;
+
+    comprobadoPedimento?: string;
+
+    impTotalFc?: number;
+
+    impDls?: number;
 }
 
 /**
@@ -120,7 +212,12 @@ export interface DetalledelaLicitacion{
         fechaFinVigenciaCupo:string,
         observaciones:string,
         bloqueComercial:string,
-        paises:string   
+        paises:string,
+        fechaInicioVigencia:string
+        mecanismoAsignacion: {
+            observaciones: string;
+        },
+        montoDisponible: number,
 }
 
 /**
@@ -144,27 +241,27 @@ export interface DetalledelaLicitacion{
 export const CONFIGURACION_ACCIONISTAS_TABLA = [
     {
         encabezado: 'Número de licitación',
-        clave: (ele: LicitacionesDisponibles):string => ele.numeroLicitacion || ele.numeroDeLicitacion || '',
+        clave: (ele: LicitacionesDisponibles):string => ele.participante?.licitacionPublica?.numeroLicitacion || ele.licitacionPublica?.numeroLicitacion || ele.numeroFolioCertificado || '',
         orden: 1
       },
       {
         encabezado: 'Fecha de evento de licitación pública',
-        clave: (ele: LicitacionesDisponibles):string => ele.fechaConcurso || ele.fechaDeLicitacion || '',
+        clave: (ele: LicitacionesDisponibles):string => ele.participante?.licitacionPublica?.fechaConcurso || ele.fechaConcurso || ele.fechaExpedicion || '',
         orden: 2
       },
       {
         encabezado: 'Descripción del producto ',
-        clave: (ele: LicitacionesDisponibles):string => ele.nombreProducto || ele.descripcion || '',
+        clave: (ele: LicitacionesDisponibles):string => ele.participante?.licitacionPublica?.fundamento || ele.nombreProducto || ele.descripcionMercancia || '',
         orden: 3
       },
       {
         encabezado: 'Monto adjudicado',
-        clave: (ele: LicitacionesDisponibles):string => ele.montoAdjudicado?.toString() || '0',
+        clave: (ele: LicitacionesDisponibles):string => ele.participante?.montoAdjudicado?.toString() || ele.montoAdjudicado?.toString() || '0',
         orden: 4
       },
       {
         encabezado: 'Fecha inicio vigencia',
-        clave: (ele: LicitacionesDisponibles):string => ele.fechaInicioVigencia,
+        clave: (ele: LicitacionesDisponibles):string => ele.fechaInicioVigencia || ele.participante?.licitacionPublica?.fechaInicioVigencia || ele.fechaExpedicion || '',
         orden: 5
       },
       {

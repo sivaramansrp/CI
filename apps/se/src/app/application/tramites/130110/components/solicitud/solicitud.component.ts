@@ -130,7 +130,7 @@ export class SolicitudComponent implements OnInit, OnDestroy {
   /**
    * Matriz de catálogos adicionales para el formulario.
    */
-  catalogosArray: Catalogo[][] = solicitudeSelectVal;
+  catalogosArray: Catalogo[][] = [[], []];
 
   /**
    * Opciones de solicitud configurables.
@@ -220,6 +220,8 @@ export class SolicitudComponent implements OnInit, OnDestroy {
    *  jest.spyOnIndica si las partidas seleccionadas son inválidas. 
    */
   isInvalidaPartidas: boolean = false;
+
+  procedureId: string = "130110"
   
   /**
    * Constructor del componente.
@@ -618,9 +620,8 @@ this.tramite130110Store.actualizarEstado({
    * Actualiza las propiedades del componente con los datos obtenidos.
    */
   getRegimenes(): void {
-    this.importacionNeumaticosComercializarService.getRegimenes('130110').subscribe((data) => {
-      this.catalogoRegimenes = data;
-      this.getClasificacionRegimen();
+    this.importacionNeumaticosComercializarService.getRegimenes(this.procedureId).subscribe((data) => {
+      this.catalogosArray[0] = data;
     });
   }
 
@@ -628,12 +629,9 @@ this.tramite130110Store.actualizarEstado({
    * Obtiene el catálogo de clasificaciones de régimen desde el servicio.
    * Actualiza las propiedades del componente con los datos obtenidos.
    */
-  getClasificacionRegimen(): void {
-    this.importacionNeumaticosComercializarService.getRegimenClasificacion('130110', "01").subscribe((data) => {
-      this.catalogoClasificacionRegimen = data;
-
-      this.catalogoRegimenes = [...this.catalogoRegimenes, ...data];
-      this.catalogosArray = [this.catalogoRegimenes, this.catalogoClasificacionRegimen];
+  getClasificacionRegimen(valor: string): void {
+    this.importacionNeumaticosComercializarService.getRegimenClasificacion(this.procedureId, valor).subscribe((data) => {
+      this.catalogosArray[1] = data;
     });
   }
 
@@ -642,7 +640,7 @@ this.tramite130110Store.actualizarEstado({
     * Actualiza la propiedad del componente con los datos obtenidos.
     */
  getFraccionArancelaria(): void {
-   this.importacionNeumaticosComercializarService.getFraccionesArancelarias('130110').subscribe((data) => {
+   this.importacionNeumaticosComercializarService.getFraccionesArancelarias(this.procedureId).subscribe((data) => {
      this.fraccionCatalogo = data || [];
    });
  }
@@ -652,7 +650,7 @@ this.tramite130110Store.actualizarEstado({
   * Actualiza la propiedad del componente con los datos obtenidos.
   */
  getUMTCatalogo(): void {
-   this.importacionNeumaticosComercializarService.getUMTCatalogo('130110').subscribe((data) => {
+   this.importacionNeumaticosComercializarService.getUMTCatalogo(this.procedureId).subscribe((data) => {
      this.unidadCatalogo = data || [];
    });
  }
@@ -666,7 +664,7 @@ this.tramite130110Store.actualizarEstado({
    */
   fetchEntidadFederativa(): void {
     this.importacionNeumaticosComercializarService
-      .getEntidadFederativa('130110')
+      .getEntidadFederativa(this.procedureId)
       .pipe(takeUntil(this.destroyed$))
       .subscribe((data) => {
         this.entidadFederativa = data;
@@ -678,7 +676,7 @@ this.tramite130110Store.actualizarEstado({
    */
   fetchRepresentacionFederal(): void {
     this.importacionNeumaticosComercializarService
-    .getRepresentacionFederal('130110',"SIN")
+    .getRepresentacionFederal(this.procedureId,"SIN")
     .subscribe((data) => {
       this.representacionFederal = data;
     });
@@ -689,7 +687,7 @@ this.tramite130110Store.actualizarEstado({
    */
   listaDePaisesDisponibles(): void {
     this.importacionNeumaticosComercializarService
-      .getBloque('130110')
+      .getBloque(this.procedureId)
       .pipe(takeUntil(this.destroyed$))
       .subscribe((data) => {
         this.elementosDeBloque = data;
@@ -702,7 +700,7 @@ this.tramite130110Store.actualizarEstado({
    */
   fetchPaisesPorBloque(_bloqueId: number): void {
     this.importacionNeumaticosComercializarService
-      .getPaisesPorBloque('130110', String(_bloqueId))
+      .getPaisesPorBloque(this.procedureId, String(_bloqueId))
       .pipe(takeUntil(this.destroyed$))
       .subscribe((data) => {
         this.paisesPorBloque = data;
@@ -729,12 +727,14 @@ this.tramite130110Store.actualizarEstado({
     const VALOR = $event.form.get($event.campo)?.value;
 
     if ($event.campo === 'regimen') {
+      const VALOR = this.formDelTramite.get('regimen')?.value;
       this.formDelTramite.get('clasificacion')?.setValue('');
       this.mostrarErrorClasificacion = false;
       this.tramite130110Store.actualizarEstado({
         [$event.campo]: VALOR,
         clasificacion: ''
       });
+      this.getClasificacionRegimen(VALOR);
     } else {
       this.tramite130110Store.actualizarEstado({ [$event.campo]: VALOR });
       if ($event.campo === 'clasificacion' && VALOR) {
