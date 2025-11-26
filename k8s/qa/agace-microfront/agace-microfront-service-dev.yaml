@@ -2,10 +2,10 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: modulefederation-agace-microfront-service-dev
+  name: modulefederation-agace-microfront-service-qa
 spec:
   selector:
-    app: modulefederation-agace-microfront-dev
+    app: modulefederation-agace-microfront-qa
   ports:
     - protocol: TCP
       port: 4209

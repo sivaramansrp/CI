@@ -4,7 +4,7 @@ services:
     image: ghcr.io/vucem30/dockerized-modulefederation-crt-microfront:1.0.4
     build: 
       context: ./../
-      dockerfile: apps/crt/Dockerfile.dev
+      dockerfile: apps/crt/Dockerfile.qa
       args:
         - NODE_ENV=production
     container_name: modulefederation-crt-microfront

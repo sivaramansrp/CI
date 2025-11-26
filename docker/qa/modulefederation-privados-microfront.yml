@@ -6,7 +6,7 @@ services:
 
     build:
       context: ./../
-      dockerfile: apps/privados/Dockerfile.dev
+      dockerfile: apps/privados/Dockerfile.qa
       args:
         - NODE_ENV=production
     container_name: modulefederation-privados-microfront

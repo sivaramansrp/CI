@@ -2,10 +2,10 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: modulefederation-amecafe-microfront-service-dev
+  name: modulefederation-amecafe-microfront-service-qa
 spec:
   selector:
-    app: modulefederation-amecafe-microfront-dev
+    app: modulefederation-amecafe-microfront-qa
   ports:
     - protocol: TCP
       port: 4212

@@ -1,19 +1,19 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: modulefederation-funcionario-microfront-deployment-dev
+  name: modulefederation-funcionario-microfront-deployment-qa
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: modulefederation-funcionario-microfront-dev
+      app: modulefederation-funcionario-microfront-qa
   template:
     metadata:
       labels:
-        app: modulefederation-funcionario-microfront-dev
+        app: modulefederation-funcionario-microfront-qa
     spec:
       containers:
-      - name: front-vucem30-container-dev
+      - name: front-vucem30-container-qa
         image: ghcr.io/vucem30/dockerized-modulefederation-funcionario-microfront:1.0.0
         imagePullPolicy: Always
         ports:

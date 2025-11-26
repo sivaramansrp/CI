@@ -4,7 +4,7 @@ services:
     image: ghcr.io/vucem30/dockerized-modulefederation-semarnat-microfront:1.0.15
     build: 
       context: ./../
-      dockerfile: apps/semarnat/Dockerfile.dev
+      dockerfile: apps/semarnat/Dockerfile.qa
       args:
         - NODE_ENV=production
     container_name: modulefederation-semarnat-microfront

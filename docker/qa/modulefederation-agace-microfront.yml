@@ -6,7 +6,7 @@ services:
 
     build: 
       context: ./../
-      dockerfile: apps/agace/Dockerfile.dev
+      dockerfile: apps/agace/Dockerfile.qa
       args:
         - NODE_ENV=production
     container_name: modulefederation-agace-microfront

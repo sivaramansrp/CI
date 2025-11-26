@@ -4,7 +4,7 @@ services:
     image: ghcr.io/vucem30/dockerized-modulefederation-funcionario-microfront:1.0.0
     build: 
       context: ./../
-      dockerfile: apps/funcionario/Dockerfile.dev
+      dockerfile: apps/funcionario/Dockerfile.qa
       args:
         - NODE_ENV=production
     container_name: modulefederation-funcionario-microfront

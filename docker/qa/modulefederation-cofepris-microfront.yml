@@ -6,7 +6,7 @@ services:
 
     build: 
       context: ./../
-      dockerfile: apps/cofepris/Dockerfile.dev
+      dockerfile: apps/cofepris/Dockerfile.qa
       args:
         - NODE_ENV=production
     container_name: modulefederation-cofepris-microfront

@@ -4,7 +4,7 @@ services:
     image: ghcr.io/vucem30/dockerized-modulefederation-inah-microfront:1.0.3
     build: 
       context: ./../
-      dockerfile: apps/inah/Dockerfile.dev
+      dockerfile: apps/inah/Dockerfile.qa
       args:
         - NODE_ENV=production
     container_name: modulefederation-inah-microfront

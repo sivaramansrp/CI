@@ -1,26 +1,26 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: modulefederation-sedena-microfront-deployment-dev
+  name: modulefederation-sedena-microfront-deployment-qa
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: modulefederation-sedena-microfront-dev
+      app: modulefederation-sedena-microfront-qa
   template:
     metadata:
       labels:
-        app: modulefederation-sedena-microfront-dev
+        app: modulefederation-sedena-microfront-qa
     spec:
       containers:
-      - name: front-vucem30-container-dev
+      - name: front-vucem30-container-qa
         image: ghcr.io/vucem30/dockerized-modulefederation-sedena-microfront:1.0.8
         imagePullPolicy: Always
         ports:
         - containerPort: 80
         env:
         - name: SPRING_PROFILES_ACTIVE
-          value: dev
+          value: qa
         resources:
           requests:
             memory: "128Mi"

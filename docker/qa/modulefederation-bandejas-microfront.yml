@@ -4,7 +4,7 @@ services:
     image: ghcr.io/vucem30/dockerized-modulefederation-bandejas-microfront:1.0.0
     build: 
       context: ./../
-      dockerfile: apps/bandejas/Dockerfile.dev
+      dockerfile: apps/bandejas/Dockerfile.qa
       args:
         - NODE_ENV=production
     container_name: modulefederation-bandejas-microfront

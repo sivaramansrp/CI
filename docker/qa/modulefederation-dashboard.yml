@@ -6,7 +6,7 @@ services:
 
     build: 
       context: ./../
-      dockerfile: apps/dashboard/Dockerfile.dev
+      dockerfile: apps/dashboard/Dockerfile.qa
       args:
         - NODE_ENV=production
     container_name: modulefederation-dashboard

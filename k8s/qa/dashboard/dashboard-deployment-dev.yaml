@@ -1,26 +1,26 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: modulefederation-dashboard-deployment-dev
+  name: modulefederation-dashboard-deployment-qa
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: modulefederation-dashboard-dev
+      app: modulefederation-dashboard-qa
   template:
     metadata:
       labels:
-        app: modulefederation-dashboard-dev
+        app: modulefederation-dashboard-qa
     spec:
       containers:
-      - name: modulefederation-dashboard-deployment-dev
+      - name: modulefederation-dashboard-deployment-qa
         image: ghcr.io/vucem30/dockerized-modulefederation-dashboard:1.0.32
         imagePullPolicy: Always
         ports:
         - containerPort: 80
         env:
         - name: SPRING_PROFILES_ACTIVE
-          value: dev
+          value: qa
         resources:
           requests:
             memory: "128Mi"

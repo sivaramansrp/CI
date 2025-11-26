@@ -6,7 +6,7 @@ services:
 
     build: 
       context: ./../
-      dockerfile: apps/aga/Dockerfile.dev
+      dockerfile: apps/aga/Dockerfile.qa
       args:
         - NODE_ENV=production
     container_name: modulefederation-aga-microfront

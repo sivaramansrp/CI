@@ -2,10 +2,10 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: modulefederation-bandejas-microfront-service-dev
+  name: modulefederation-bandejas-microfront-service-qa
 spec:
   selector:
-    app: modulefederation-bandejas-microfront-dev
+    app: modulefederation-bandejas-microfront-qa
   ports:
     - protocol: TCP
       port: 4224

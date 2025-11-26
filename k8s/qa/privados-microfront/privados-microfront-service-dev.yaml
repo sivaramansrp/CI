@@ -2,10 +2,10 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: modulefederation-privados-microfront-service-dev
+  name: modulefederation-privados-microfront-service-qa
 spec:
   selector:
-    app: modulefederation-privados-microfront-dev
+    app: modulefederation-privados-microfront-qa
   ports:
     - protocol: TCP
       port: 4210

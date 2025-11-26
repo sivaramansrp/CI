@@ -5,7 +5,7 @@ services:
 
     build: 
       context: ./../
-      dockerfile: apps/agricultura/Dockerfile.dev
+      dockerfile: apps/agricultura/Dockerfile.qa
       args:
         - NODE_ENV=production
     container_name: modulefederation-agricultura-microfront

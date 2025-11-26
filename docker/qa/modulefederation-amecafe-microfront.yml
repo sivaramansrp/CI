@@ -4,7 +4,7 @@ services:
     image: ghcr.io/vucem30/dockerized-modulefederation-amecafe-microfront:1.0.7
     build: 
       context: ./../
-      dockerfile: apps/amecafe/Dockerfile.dev
+      dockerfile: apps/amecafe/Dockerfile.qa
       args:
         - NODE_ENV=production
     container_name: modulefederation-amecafe-microfront
