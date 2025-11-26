@@ -2,14 +2,13 @@
  * Este módulo define el componente `DatosTratadosAcuerdosComponent` que maneja la información de los tratados y acuerdos.
  */
 
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, Input, OnChanges, OnDestroy, SimpleChanges } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { Subject } from 'rxjs';
 
-import { Subject, takeUntil } from 'rxjs';
+import { ConfiguracionColumna, TablaDinamicaComponent, TablaSeleccion } from '@ng-mf/data-access-user';
 
-import { TablaDinamicaComponent, TablaSeleccion } from '@ng-mf/data-access-user';
-
-import { CONFIGURACION_ACCIONISTAS } from '@ng-mf/data-access-user';
+import { ComercializadoresProductosResponse, CriterioTratadoDetalle } from '../../models/response/comercializadores-productos-response.model';
  import { DatostratadosacuerdosService } from '@ng-mf/data-access-user';
 
 /**
@@ -22,13 +21,20 @@ import { CONFIGURACION_ACCIONISTAS } from '@ng-mf/data-access-user';
   templateUrl: './datos-tratados-acuerdos.component.html',
   styleUrl: './datos-tratados-acuerdos.component.scss',
 })
-export class DatosTratadosAcuerdosComponent implements OnInit, OnDestroy {
+export class DatosTratadosAcuerdosComponent implements OnChanges, OnDestroy {
 
   /**
    * Configuración de la tabla que se utilizará en el componente.
-   * @type {any}
+   * @type {CriterioTratadoDetalle}
    */
-  configuracionTabla = CONFIGURACION_ACCIONISTAS;
+  public configuracionTabla: ConfiguracionColumna<CriterioTratadoDetalle>[] = [
+    { encabezado: 'País o bloque', clave: (item) => item.pais_bloque_nombre, orden: 1 },
+    { encabezado: "Tratado o Acuerdo", clave: (item) => item.tratado_acuerdo.nombre, orden: 2 },
+    { encabezado: "Criterio de origen", clave: (item) => item.criterio_origen.nombre, orden: 3 },
+    { encabezado: "Norma", clave: (item) => item.norma_pais_criterio.descripcion_norma_origen, orden: 4 },
+    { encabezado: "Otras instancias", clave: (item) => item.otras_instancias_asociadas ?? "", orden: 5 },
+    { encabezado: "Juegos o surtidos", clave: (item) => item.descripcion_juego_surtido ?? "", orden: 6 },
+  ];
 
   /**
    * Selección de la tabla inicializada como indefinida.
@@ -37,17 +43,23 @@ export class DatosTratadosAcuerdosComponent implements OnInit, OnDestroy {
   seleccionTabla = TablaSeleccion.UNDEFINED;
 
   /**
-   * Datos que se mostrarán en la tabla.
-   * @type {any}
-   */
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  public datosTabla!:any;
+    * Datos de la tabla de tratados.
+    * Este array contiene objetos de tipo `CriterioTratadoDetalle` que representan
+    * el resultado los tratados.
+  */
+   public tratadosTablaDatos: CriterioTratadoDetalle[]= []
 
   /**
    * Subject para manejar la desuscripción cuando el componente se destruye.
    * @type {Subject<void>}
    */
   private destroyed$ = new Subject<void>();
+
+  /**
+   * Tratados del comercializador de productos.
+   * @type {ComercializadoresProductosResponse}
+   */
+  @Input() tratados!: ComercializadoresProductosResponse;
 
   /**
    * Constructor del componente.
@@ -62,14 +74,27 @@ export class DatosTratadosAcuerdosComponent implements OnInit, OnDestroy {
    * Hook del ciclo de vida que se llama después de que las propiedades enlazadas a datos de una directiva se inicializan.
    * Obtiene datos del servicio y los asigna a tableData.
    */
-  ngOnInit(): void {
-    this.service.getData().pipe(
-      takeUntil(this.destroyed$)
-    ).subscribe(
-      (data: object) => {
-        this.datosTabla = data;
-      }
-    );
+ ngOnChanges(changes: SimpleChanges): void {
+  if (changes['tratados']) {
+    const ACTUAL = changes['tratados'].currentValue;
+
+    if (!ACTUAL) {
+      return;
+    }
+
+    this.tablaTratados(ACTUAL);
+  }
+}
+
+  /**
+   * @method tablaTratados
+   * @description 
+   * Actualiza los datos de la tabla de tratados con la información obtenida de la respuesta.
+   * @param data 
+  */
+  tablaTratados(data: ComercializadoresProductosResponse):void{
+    const TRATADOS = data.criterios_tratado
+    this.tratadosTablaDatos = TRATADOS;
   }
 
   /**
