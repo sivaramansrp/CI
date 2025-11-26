@@ -1,4 +1,3 @@
-import { CategoriaMensaje, Notificacion, NotificacionesComponent} from '../notificaciones/notificaciones.component';
 import {
   ChangeDetectorRef,
   Component,
@@ -32,13 +31,13 @@ import {
   UNIDADES_DOCUMENTOS,
 } from '../../../core/enums/mensajes-documentos.enum';
 import { ErrorModelo, UploadDocumentResponse, Usuario } from '../../../core/models/shared/cargar-documentos.model';
+import { Notificacion, NotificacionesComponent} from '../notificaciones/notificaciones.component';
 import { Subject, catchError, interval, map, of, switchMap, takeUntil, takeWhile } from 'rxjs';
 import { CargarDocumentoService } from '../../../core/services/shared/cargar-documento/cargar-documento.service';
 import { CatalogoDocumentosService } from '../../../core/services/shared/catalogos/catalogo-documentos.service';
 import { CommonModule } from '@angular/common';
 import { DocumentosQuery } from '../../../core/queries/documentos.query';
 import { FormsModule } from '@angular/forms';
-import { HttpClient } from '@angular/common/http';
 import { NgSelectModule } from '@ng-select/ng-select';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
@@ -46,6 +45,9 @@ import { DocumentoRequeridoFirmar } from '../../../core/models/shared/firma-elec
 import { DocumentoRequerimiento } from '../../../core/models/iniciar-atender-requerimiento.model';
 import { DocumentosFirmaStore } from '../../../core/estados/documentos-firma.store';
 import { hexToISO88591 } from '../../../core/utils/utilerias';
+
+import { PayloadConsultaDocumentosSolicitud } from "../../../core/models/shared/anexar-documentos.model";
+
 
 @Component({
   selector: 'carga-documento',
@@ -207,8 +209,8 @@ export class CargaDocumentoComponent implements OnInit, OnChanges, OnDestroy {
     private cdr: ChangeDetectorRef,
     private catalogoDocumentosService: CatalogoDocumentosService,
     private cargarDocumentoService: CargarDocumentoService,
-    private http: HttpClient,
     private documentosFirmaStore: DocumentosFirmaStore,
+    private serviceDocumentosCarga: CatalogoDocumentosService
   ) {
 
   }
@@ -1028,9 +1030,16 @@ manejarErrorArchivo(tipoDeCampo: TipoDocumentos[]): void {
   });
 }
 
+
+
+
+
+
+
 ngOnDestroy(): void {
   this.destroy$.next();
   this.destroy$.complete();
 }
 
 }
+

@@ -131,25 +131,23 @@ describe('SolicitudComponent', () => {
       ],
     }).compileComponents();
   });
-
   beforeEach(async () => {
     mockControlPermisosPreviosExportacionService = {
-      getEntidadFederativa: jest.fn().mockReturnValue(of(MOCK_CATALOGO)),
-      getRepresentacionFederal: jest.fn().mockReturnValue(of(MOCK_CATALOGO)),
-      getListaDePaisesDisponibles: jest.fn().mockReturnValue(of(MOCK_CATALOGO)),
-      getPaisesPorBloque: jest.fn().mockReturnValue(of(MOCK_CATALOGO)),
+      getBloqueService: jest.fn().mockReturnValue(of(MOCK_CATALOGO)),
+      getPaisesPorBloqueService: jest.fn().mockReturnValue(of(MOCK_CATALOGO)),
+      getEntidadesFederativasCatalogo: jest.fn().mockReturnValue(of(MOCK_CATALOGO)),
+      getRepresentacionFederalCatalogo: jest.fn().mockReturnValue(of(MOCK_CATALOGO)),
+      getTodosPaisesSeleccionados: jest.fn().mockReturnValue(of(MOCK_CATALOGO)),
       getSolicitudeOptions: jest.fn().mockReturnValue(
         of({
           options: MOCK_PRODUCTO_OPTIONS,
           defaultSelect: 'Inicial',
         })
       ),
-      getProductoOptions: jest.fn().mockReturnValue(
-        of({
-          options: MOCK_PRODUCTO_OPTIONS,
-        })
-      ),
-      getTablaDatos: jest.fn().mockReturnValue(of([{ cantidad: 10, totalUSD: 1000 }])), // Mock implementation
+      getRegimenCatalogo: jest.fn().mockReturnValue(of(MOCK_CATALOGO)),
+      getClasificacionRegimenCatalogo: jest.fn().mockReturnValue(of(MOCK_CATALOGO)),
+      getFraccionCatalogoService: jest.fn().mockReturnValue(of(MOCK_CATALOGO)),
+      getUMTService: jest.fn().mockReturnValue(of(MOCK_CATALOGO)),
     };
   
     await TestBed.configureTestingModule({
@@ -167,25 +165,21 @@ describe('SolicitudComponent', () => {
   it('debería crear', () => {
     expect(component).toBeTruthy();
   });
-
   describe('ngOnInit', () => {
     it('Debe inicializar formularios y configurar suscripciones', () => {
-      jest.spyOn(component, 'inicializarFormularios');
       jest.spyOn(component, 'configuracionFormularioSuscripciones');
-      jest.spyOn(component, 'opcionesDeBusqueda');
-      jest.spyOn(component, 'formularioTotalCount');
-      jest.spyOn(component, 'fetchEntidadFederativa');
-      jest.spyOn(component, 'fetchRepresentacionFederal');
-      jest.spyOn(component, 'listaDePaisesDisponibles');
+      jest.spyOn(component, 'getRegimenCatalogo');
+      jest.spyOn(component, 'getFraccionCatalogo');
+      jest.spyOn(component, 'getEntidadesFederativasCatalogo');
+      jest.spyOn(component, 'getBloque');
 
       component.ngOnInit();
 
       expect(component.configuracionFormularioSuscripciones).toHaveBeenCalled();
-      expect(component.opcionesDeBusqueda).toHaveBeenCalled();
-      expect(component.formularioTotalCount).toHaveBeenCalled();
-      expect(component.fetchEntidadFederativa).toHaveBeenCalled();
-      expect(component.fetchRepresentacionFederal).toHaveBeenCalled();
-      expect(component.listaDePaisesDisponibles).toHaveBeenCalled();
+      expect(component.getRegimenCatalogo).toHaveBeenCalled();
+      expect(component.getFraccionCatalogo).toHaveBeenCalled();
+      expect(component.getEntidadesFederativasCatalogo).toHaveBeenCalled();
+      expect(component.getBloque).toHaveBeenCalled();
     });
 
     it('Debería actualizar mostrarTabla según la consulta', () => {
@@ -217,17 +211,15 @@ describe('SolicitudComponent', () => {
       expect(component.frmRepresentacionForm.get('entidad')).toBeDefined();
     });
   });
-
   describe('opcionesDeBusqueda', () => {
-    it('Debería obtener las opciones de solicitud y producto', () => {
-      component.opcionesDeBusqueda();
+    it('El componente debe tener opcionesSolicitud configuradas', () => {
+      expect(component.opcionesSolicitud).toBeDefined();
+      expect(component.opcionesSolicitud.length).toBeGreaterThan(0);
+    });
 
-      expect(mockControlPermisosPreviosExportacionService.getSolicitudeOptions).toHaveBeenCalled();
-      expect(mockControlPermisosPreviosExportacionService.getProductoOptions).toHaveBeenCalled();
-      expect(mockStore.actualizarEstado).toHaveBeenNthCalledWith(1, {
-        solicitud: 'Nuevo',
-        defaultSelect: 'Inicial',
-      });
+    it('El componente debe tener productoOpciones configuradas', () => {
+      expect(component.productoOpciones).toBeDefined();
+      expect(component.productoOpciones.length).toBeGreaterThan(0);
     });
   });
 
@@ -258,10 +250,17 @@ describe('SolicitudComponent', () => {
       expect(component.mostrarTabla).toBe(true);
     });
   });
-
   describe('navegarParaModificarPartida', () => {
     it('Debería actualizar el estado y mostrarTabla si hay fila seleccionada', () => {
-      component.filaSeleccionada = [{ cantidad: '10', descripcion: 'Item', precioUnitarioUSD: '50', unidadDeMedida: 'kg', fraccionFrancelaria: '1234', totalUSD: '100' }];
+      component.filaSeleccionada = [{ 
+        id: '1',
+        cantidad: '10', 
+        descripcion: 'Item', 
+        precioUnitarioUSD: '50', 
+        unidadDeMedida: 'kg', 
+        fraccionFrancelaria: '1234', 
+        totalUSD: '100' 
+      }];
 
       component.navegarParaModificarPartida();
 
@@ -269,51 +268,48 @@ describe('SolicitudComponent', () => {
       expect(mockStore.actualizarEstado).toHaveBeenCalledWith({filaSeleccionada:component.filaSeleccionada});
     });
   });
-
-  describe('fetchEntidadFederativa', () => {
+  describe('getEntidadesFederativasCatalogo', () => {
     it('Debería obtener la lista de entidades federativas', () => {
-      component.fetchEntidadFederativa(); 
+      component.getEntidadesFederativasCatalogo(); 
     
-      expect(mockControlPermisosPreviosExportacionService.getEntidadFederativa).toHaveBeenCalled(); 
+      expect(mockControlPermisosPreviosExportacionService.getEntidadesFederativasCatalogo).toHaveBeenCalled(); 
       expect(component.entidadFederativa).toEqual(MOCK_CATALOGO);
     });
   });
 
-  describe('fetchRepresentacionFederal', () => {
+  describe('getRepresentacionFederalCatalogo', () => {
     it('Debería obtener la lista de representaciones federales', () => {
-      component.fetchRepresentacionFederal();
+      component.getRepresentacionFederalCatalogo('DGO');
 
-      expect(mockControlPermisosPreviosExportacionService.getRepresentacionFederal).toHaveBeenCalled();
+      expect(mockControlPermisosPreviosExportacionService.getRepresentacionFederalCatalogo).toHaveBeenCalled();
       expect(component.representacionFederal).toEqual(MOCK_CATALOGO);
     });
   });
 
-  describe('listaDePaisesDisponibles', () => {
-    it('Debería obtener la lista de países disponibles', () => {
-      component.listaDePaisesDisponibles();
+  describe('getBloque', () => {
+    it('Debería obtener la lista de bloques disponibles', () => {
+      component.getBloque();
 
-      expect(mockControlPermisosPreviosExportacionService.getListaDePaisesDisponibles).toHaveBeenCalled();
+      expect(mockControlPermisosPreviosExportacionService.getBloqueService).toHaveBeenCalled();
       expect(component.elementosDeBloque).toEqual(MOCK_CATALOGO);
     });
   });
 
-  describe('fetchPaisesPorBloque', () => {
-    it('Debería obtener países por bloque y actualizar selectRangoDias', () => {
-      component.fetchPaisesPorBloque(1);
+  describe('getPaisesPorBloque', () => {
+    it('Debería obtener países por bloque', () => {
+      component.getPaisesPorBloque('1');
 
-      expect(mockControlPermisosPreviosExportacionService.getPaisesPorBloque).toHaveBeenCalledWith(1);
+      expect(mockControlPermisosPreviosExportacionService.getPaisesPorBloqueService).toHaveBeenCalledWith('130217', '1');
       expect(component.paisesPorBloque).toEqual(MOCK_CATALOGO);
-      expect(component.selectRangoDias).toEqual(['Option 1', 'Option 2']);
     });
   });
-
   describe('enCambioDeBloque', () => {
-    it('Debería llamar a fetchPaisesPorBloque con el bloqueId', () => {
-      jest.spyOn(component, 'fetchPaisesPorBloque');
+    it('Debería llamar a getPaisesPorBloque con el bloqueId', () => {
+      jest.spyOn(component, 'getPaisesPorBloque');
 
       component.enCambioDeBloque(2);
 
-      expect(component.fetchPaisesPorBloque).toHaveBeenCalledWith(2);
+      expect(component.getPaisesPorBloque).toHaveBeenCalledWith('2');
     });
   });
  
@@ -332,7 +328,6 @@ describe('setValoresStore', () => {
       expect(mockStore.actualizarEstado).toHaveBeenCalledWith({ producto: 'Nuevo' });
     });
   });
-
   describe('ngOnDestroy', () => {
     it('Debería completar el tema destruido$', () => {
       const DESTROY_SPY = jest.spyOn(component['destroyed$'], 'next');
@@ -342,6 +337,145 @@ describe('setValoresStore', () => {
 
       expect(DESTROY_SPY).toHaveBeenCalled();
       expect(COMPLETE_SPY).toHaveBeenCalled();
+    });
+  });
+
+  describe('calcularImporteUnitario', () => {
+    it('Debería calcular correctamente el importe unitario', () => {
+      const result = component.calcularImporteUnitario('10', '100');
+      expect(result).toBe('10.000');
+    });
+
+    it('Debería retornar "0" cuando cantidadPartidas es 0', () => {
+      const result = component.calcularImporteUnitario('0', '100');
+      expect(result).toBe('0');
+    });
+
+    it('Debería manejar valores no numéricos', () => {
+      const result = component.calcularImporteUnitario('', '100');
+      expect(result).toBe('0');
+    });
+  });
+
+  describe('validarFormulario', () => {
+    beforeEach(() => {
+      component.inicializarFormularios();
+    });
+
+    it('Debería retornar false cuando los formularios son inválidos', () => {
+      const result = component.validarFormulario();
+      expect(result).toBe(false);
+    });
+
+    it('Debería retornar false cuando no hay partidas en la tabla', () => {
+      component.tableBodyData = [];
+      const result = component.validarFormulario();
+      expect(result).toBe(false);
+      expect(component.isInvalidaPartidas).toBe(true);
+    });
+
+    it('Debería establecer isInvalidaPartidas en false cuando hay partidas', () => {
+      component.tableBodyData = [{ 
+        id: '1',
+        cantidad: '10', 
+        descripcion: 'Item', 
+        precioUnitarioUSD: '50', 
+        unidadDeMedida: 'kg', 
+        fraccionFrancelaria: '1234', 
+        totalUSD: '100' 
+      }];
+      component.validarFormulario();
+      expect(component.isInvalidaPartidas).toBe(false);
+    });
+  });
+
+  describe('disabledModificar', () => {
+    it('Debería retornar true cuando no hay filas seleccionadas', () => {
+      component.filaSeleccionada = [];
+      const result = component.disabledModificar();
+      expect(result).toBe(true);
+    });
+
+    it('Debería retornar false cuando hay filas seleccionadas', () => {
+      component.filaSeleccionada = [{ 
+        id: '1',
+        cantidad: '10', 
+        descripcion: 'Item', 
+        precioUnitarioUSD: '50', 
+        unidadDeMedida: 'kg', 
+        fraccionFrancelaria: '1234', 
+        totalUSD: '100' 
+      }];
+      const result = component.disabledModificar();
+      expect(result).toBe(false);
+    });
+  });
+
+  describe('manejarlaFilaSeleccionada', () => {
+    it('Debería actualizar filaSeleccionada con las filas proporcionadas', () => {
+      const filas = [{ 
+        id: '1',
+        cantidad: '10', 
+        descripcion: 'Item', 
+        precioUnitarioUSD: '50', 
+        unidadDeMedida: 'kg', 
+        fraccionFrancelaria: '1234', 
+        totalUSD: '100' 
+      }];
+
+      component.manejarlaFilaSeleccionada(filas);
+
+      expect(component.filaSeleccionada).toEqual(filas);
+      expect(mockStore.actualizarEstado).toHaveBeenCalledWith({filaSeleccionada: filas});
+    });
+
+    it('Debería establecer filaSeleccionada como array vacío cuando no hay filas', () => {
+      component.manejarlaFilaSeleccionada([]);
+      expect(component.filaSeleccionada).toEqual([]);
+    });
+  });
+
+  describe('todosPaisesSeleccionados', () => {
+    it('Debería obtener todos los países cuando evento es true', () => {
+      component.todosPaisesSeleccionados(true);
+
+      expect(mockControlPermisosPreviosExportacionService.getTodosPaisesSeleccionados).toHaveBeenCalledWith('130217');
+      expect(component.paisesPorBloque).toEqual(MOCK_CATALOGO);
+    });
+
+    it('No debería hacer nada cuando evento es false', () => {
+      component.todosPaisesSeleccionados(false);
+
+      expect(mockControlPermisosPreviosExportacionService.getTodosPaisesSeleccionados).not.toHaveBeenCalled();
+    });
+  });
+
+  describe('fechasSeleccionadas', () => {
+    it('Debería actualizar el estado con las fechas seleccionadas', () => {
+      const fechas = ['2024-01-01', '2024-01-02'];
+      component.fechasSeleccionadas(fechas);
+
+      expect(mockStore.actualizarEstado).toHaveBeenCalledWith({ fechasSeleccionadas: fechas });
+    });
+  });
+
+  describe('Component Properties', () => {
+    it('Debería tener las propiedades iniciales correctas', () => {
+      expect(component.mostrarTabla).toBe(false);
+      expect(component.esFormularioSoloLectura).toBe(false);
+      expect(component.isInvalidaPartidas).toBe(false);
+      expect(component.idProcedimiento).toBe(130217);
+      expect(component.tableBodyData).toEqual([]);
+      expect(component.filaSeleccionada).toEqual([]);
+    });
+
+    it('Debería tener los textos configurados', () => {
+      expect(component.TEXTOS).toBeDefined();
+    });
+
+    it('Debería tener las opciones de producto configuradas', () => {
+      expect(component.productoOpciones).toBeDefined();
+      expect(Array.isArray(component.productoOpciones)).toBe(true);
     });
   });
 });

@@ -24,7 +24,8 @@ import {
   SIN_ACCION_AL_INICIAR,
   TEXTO_MANIFESTO_Y_DECLARACIONES,
   ENABLE_FIELDS,
-  PROCEDIMIENTOS_DESHABILITAR_REPRESENTANTE
+  PROCEDIMIENTOS_DESHABILITAR_REPRESENTANTE,
+  DETALLE_MERCANCIA
 } from '../../constantes/datos-solicitud.enum';
 import {
   AbstractControl,
@@ -117,6 +118,7 @@ export class DatosDeLaSolicitudComponent
   implements OnInit, AfterViewInit, OnDestroy, OnChanges
 {
 
+  public detalleMercancia: boolean = false;
   /**
    * @property {Subject<void>} destroyNotifier$
    * Subject utilizado para cancelar suscripciones activas al destruir el componente.
@@ -678,7 +680,7 @@ public mercanciaSeleccionada: TablaMercanciasDatos | undefined;
   ngOnInit(): void {
     this.inicializarCatalogo(String(this.idProcedimiento));
      this.esProcedimiento260210 = this.idProcedimiento === NUMERO_TRAMITE.TRAMITE_260210;
-   
+   this.detalleMercancia = DETALLE_MERCANCIA.includes(this.idProcedimiento);
     this.crearDatosSolicitudForm();
     this.actualizarDatosFormularioSolicitud();
     this.esManifesto =
@@ -2126,36 +2128,36 @@ verificarCamposValidosODeshabilitados(): boolean {
  * Handles merchandise selection from the modal
  */
 onMercanciaSeleccionado(mercanciaData: TablaMercanciasDatos): void {
-  if (this.mercanciaSeleccionada) {
+    if (this.mercanciaSeleccionada) {
     // Busque el índice del objeto existente que coincida con TODAS las propiedades
-    const INDEX = this.tablaMercanciasConfig.datos.findIndex(
+      const INDEX = this.tablaMercanciasConfig.datos.findIndex(
     item => item.id === this.mercanciaSeleccionada!.id
-  );
+      );
 
-    if (INDEX !== -1) {
+      if (INDEX !== -1) {
       // Reemplace ese objeto específico con los nuevos datos
       this.tablaMercanciasConfig.datos[INDEX] = { ...mercanciaData };
-    }
+      }
 
-  } else {
+    } else {
     // Agregar nueva mercancía si no hay nada seleccionado
-    this.tablaMercanciasConfig.datos = [
-      ...this.tablaMercanciasConfig.datos,
+      this.tablaMercanciasConfig.datos = [
+        ...this.tablaMercanciasConfig.datos,
       mercanciaData
-    ];
+      ];
   }
-  
+
   // Update the form control value
   this.datosSolicitudForm.get('mercancias')?.setValue(this.tablaMercanciasConfig.datos);
-  
+
   if (this.mercanciasSeleccionado) {
     this.mercanciasSeleccionado.emit(this.tablaMercanciasConfig.datos);
   }
-  
+
   // Clear selected merchandise and close modal
   this.mercanciaSeleccionada = undefined;
   this.cerrarMercanciaModal();
-  
+
   // Force change detection
   this.cdr.markForCheck();
 }

@@ -261,6 +261,20 @@ export class Tramite260204Store extends Store<Tramite260204State> {
     super(createInitialState());
   }
 
+      /**
+   * @método
+   * @nombre establecerDatos
+   * @descripción
+   * Actualiza el estado con los valores proporcionados.
+   *
+   * @param {Partial<Tramite260210State>} values - Valores parciales para actualizar el estado.
+   */
+  public establecerDatos(values: Partial<Tramite260204State>): void {
+    this.update((state) => ({
+      ...state,
+      ...values,
+    }));
+  }
   /**
    * Actualiza el estado del formulario de datos de solicitud en el store.
    *

@@ -1,91 +1,133 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { Component, CUSTOM_ELEMENTS_SCHEMA, Input, ViewChild } from '@angular/core';
 import { DesmantelarComponent } from './desmantelar.component';
+import { BtnContinuarComponent, SolicitanteComponent, WizardComponent } from '@libs/shared/data-access-user/src';
+import { DatosComponent } from '../datos/datos.component';
+import { Solocitud130106Service } from '../../service/service130106.service';
+import { ToastrService } from 'ngx-toastr';
+import { of } from 'rxjs';
+import { Solicitud130106State } from '../../../../estados/tramites/tramite130106.store';
 import { AccionBoton } from '@libs/shared/data-access-user/src/core/models/140103/cancelacion.model';
-import { ListaPasosWizard, DatosPasos } from '@libs/shared/data-access-user/src';
-import { OCTA_TEMPO } from '@libs/shared/data-access-user/src/core/services/130102/octava-temporal.enum';
 
-@Component({
-  selector: 'app-wizard',
-  template: ''
-})
-class MockWizardComponent {
-  // Add all required properties from WizardComponent
-  listaPasos: any;
-  indice: number = 0;
-  indiceActual: number = 0;
-  estadoInicial: any;
-  datosPasos: any;
-  pasoActual: any;
-  pasos: any;
-  // Mocked methods
-  siguiente = jest.fn();
-  atras = jest.fn();
-}
+const mockSolicitudState: Solicitud130106State = {
+  idSolicitud: 1,
+  regimen: '',
+  clasificacion: '',
+  solicitudDescripcion: '',
+  producto: '',
+  fraccion: '',
+  cantidad: '',
+  valorFacturaUSD: '',
+  unidadMedida: '',
+  cantidadPartidasDeLaMercancia: '',
+  descripcionPartidasDeLaMercancia: '',
+  valorPartidaUSDPartidasDeLaMercancia: '',
+  cantidadTotal: '',
+  valorTotalUSD: '',
+  bloque: '',
+  usoEspecifico: '',
+  justificacionImportacionExportacion: '',
+  observaciones: '',
+  entidad: '',
+  representacion: '',
+  filaSeleccionada: [],
+  tableBodyData: [],
+  mostrarTabla: false,
+  defaultSelect: '',
+  defaultProducto: '',
+  fechasSeleccionadas: [],
+  solicitud: '',
+  factura: '',
+  umt: '',
+  mercanciaCantidad: '',
+  mercanciaFactura: '',
+  descripcion: '',
+  especifico: '',
+  justificacion: '',
+  disponible: '',
+  seleccionado: '',
+  selectRangoDias: [],
+  valorPartidaUSD: 0,
+};
 
 describe('DesmantelarComponent', () => {
   let component: DesmantelarComponent;
   let fixture: ComponentFixture<DesmantelarComponent>;
+  let solocitud130106Service: any;
+  let toastrService: any;
 
   beforeEach(async () => {
+    solocitud130106Service = {
+      getAllState: jest.fn().mockReturnValue(of(mockSolicitudState)),
+      getPayloadDatos: jest.fn().mockReturnValue([]),
+      guardarDatosPost: jest.fn().mockReturnValue(of({ codigo: '00', mensaje: 'ok', datos: { id_solicitud: 123, idSolicitud: 123 } })),
+    };
+    toastrService = { success: jest.fn(), error: jest.fn() };
     await TestBed.configureTestingModule({
-      declarations: [DesmantelarComponent, MockWizardComponent],
-      schemas: [CUSTOM_ELEMENTS_SCHEMA],
+      imports:[require('@angular/common/http/testing').HttpClientTestingModule, SolicitanteComponent, WizardComponent,BtnContinuarComponent],
+      declarations: [DesmantelarComponent, DatosComponent],
+      providers: [
+        { provide: Solocitud130106Service, useValue: solocitud130106Service },
+        { provide: ToastrService, useValue: toastrService },
+      ],
+      schemas: [require('@angular/core').CUSTOM_ELEMENTS_SCHEMA],
     }).compileComponents();
-
     fixture = TestBed.createComponent(DesmantelarComponent);
     component = fixture.componentInstance;
-
-    // Assign mocked ViewChild manually after view init
+    component.wizardComponent = { siguiente: jest.fn(), atras: jest.fn() } as any;
     fixture.detectChanges();
   });
 
-  it('should create the component', () => {
+  it('should create', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should initialize datosPasos correctly', () => {
-    expect(component.datosPasos.nroPasos).toBe(component.pantallasPasos.length);
-    expect(component.datosPasos.indice).toBe(1);
-    expect(component.datosPasos.txtBtnAnt).toBe('Anterior');
-    expect(component.datosPasos.txtBtnSig).toBe('Continuar');
+  it('getValorIndice should call obtenerDatosDelStore for indice 1 and accion cont', () => {
+    const spy = jest.spyOn(component, 'obtenerDatosDelStore');
+    component.indice = 1;
+    component.getValorIndice({ valor: 1, accion: 'cont' });
+    expect(spy).toHaveBeenCalled();
   });
 
-  it('should call wizardComponent.siguiente() when accion is "cont" and valor is in range', () => {
-    // Assign a mock instance to wizardComponent
-    component.wizardComponent = new MockWizardComponent() as any;
-    const spy = jest.spyOn(component.wizardComponent, 'siguiente');
+  it('getValorIndice should call pasoNavegarPor for valid valor', () => {
+    const spy = jest.spyOn(component, 'pasoNavegarPor');
+    component.indice = 2; // Ensure else branch is triggered
+    component.getValorIndice({ valor: 2, accion: 'cont' });
+    expect(spy).toHaveBeenCalledWith({ valor: 2, accion: 'cont' });
+  });
 
-    const evento: AccionBoton = { accion: 'cont', valor: 2 };
-    component.getValorIndice(evento);
-
+  it('pasoNavegarPor should navigate forward and set alertaNotificacion', () => {
+    component.wizardComponent.siguiente = jest.fn();
+    component.folioTemporal = 123;
+    component.pasoNavegarPor({ valor: 2, accion: 'cont' });
     expect(component.indice).toBe(2);
-    expect(spy).toHaveBeenCalled();
+    expect(component.alertaNotificacion).toBeDefined();
+    expect(component.wizardComponent.siguiente).toHaveBeenCalled();
   });
 
-  it('should call wizardComponent.atras() when accion is not "cont" and valor is in range', () => {
-    // Assign a mock instance to wizardComponent
-    component.wizardComponent = new MockWizardComponent() as any;
-    const spy = jest.spyOn(component.wizardComponent, 'atras');
-
-    const evento: AccionBoton = { accion: 'back', valor: 3 };
-    component.getValorIndice(evento);
-
-    expect(component.indice).toBe(3);
-    expect(spy).toHaveBeenCalled();
+  it('pasoNavegarPor should navigate backward', () => {
+    component.wizardComponent.atras = jest.fn();
+    component.pasoNavegarPor({ valor: 2, accion: 'back' });
+    expect(component.indice).toBe(2);
+    expect(component.wizardComponent.atras).toHaveBeenCalled();
   });
 
-  it('should not update indice or call wizard methods if valor is out of range', () => {
-    // Assign a mock instance to wizardComponent
-    component.wizardComponent = new MockWizardComponent() as any;
-    const siguienteSpy = jest.spyOn(component.wizardComponent, 'siguiente');
-    const atrasSpy = jest.spyOn(component.wizardComponent, 'atras');
+  it('obtenerDatosDelStore should call guardar with state', () => {
+    const spy = jest.spyOn(component, 'guardar');
+    component.obtenerDatosDelStore({ valor: 1, accion: 'cont' });
+    expect(spy).toHaveBeenCalledWith(mockSolicitudState, { valor: 1, accion: 'cont' });
+  });
 
-    const evento: AccionBoton = { accion: 'cont', valor: 6 }; // out of range
-    component.getValorIndice(evento);
+  it('guardar should resolve and set folioTemporal', async () => {
+    component.solicitudState = mockSolicitudState;
+    const result = await component.guardar(mockSolicitudState, { valor: 2, accion: 'cont' });
+    expect(result.codigo).toBe('00');
+    expect(component.folioTemporal).toBe(123);
+    expect(toastrService.success).toHaveBeenCalled();
+  });
 
-    expect(component.indice).toBe(1); // remains unchanged
-    expect(siguienteSpy).not.toHaveBeenCalled();
-    expect(atrasSpy).not.toHaveBeenCalled();
+  it('guardar should reject if solicitudState is undefined', async () => {
+    jest.spyOn(console, 'error').mockImplementation(() => {});
+    component.solicitudState = undefined as any;
+    await expect(component.guardar(mockSolicitudState, { valor: 2, accion: 'cont' })).rejects.toBe('solicitudState is undefined');
   });
 });

@@ -26,16 +26,14 @@ import { InputRadioComponent } from "@libs/shared/data-access-user/src/tramites/
 
 import { TituloComponent } from 'libs/shared/data-access-user/src/tramites/components/titulo/titulo.component';
 
-import solicitudeSelectVal from 'libs/shared/theme/assets/json/130102/solicitude-select.json';
-
 import { Solicitud130102State, Tramite130102Store } from '../../estados/tramites/tramite130102.store';
 import { Tramite130102Query } from '../../estados/queries/tramite130102.query';
 
 import { Subject, map, takeUntil } from 'rxjs';
 import { FormularioRegistroService } from '../../services/octava-temporal.service';
 
-import { ConsultaioQuery } from '@ng-mf/data-access-user';
 import { CatOctavaTemporalService } from '../../services/cat-octava-temporal.service';
+import { ConsultaioQuery } from '@ng-mf/data-access-user';
 
 /**
  * Componente para la gestión de solicitudes y tipos de documentos en un trámite.
@@ -60,12 +58,12 @@ export class DetosDelTramiteComponent implements OnInit, OnDestroy {
   inputFields = [
     {
       label: 'Régimen al que se destinará la mercancía',
-      placeholder: 'Seleccione un documento',
+      placeholder: 'Seleccione un valor',
       required: true,
     },
     {
       label: 'Clasificación del régimen',
-      placeholder: 'Seleccione un documento',
+      placeholder: 'Seleccione un valor',
       required: true,
     },
   ];
@@ -185,8 +183,8 @@ this.tramite130102Query.selectSeccionState$
       solicitud: [this.solicitudState?.solicitud],
   
 
-      regimen: [this.solicitudState?.regimen, [Validators.required]],
-      clasificacionRegimen: [this.solicitudState?.clasificacionRegimen, [Validators.required]],
+      regimen: [this.solicitudState?.regimen || null, [Validators.required]],
+      clasificacionRegimen: [this.solicitudState?.clasificacionRegimen || null, [Validators.required]],
     });
      if (this.esFormularioSoloLectura) {
     this.formDelTramite.disable();
@@ -212,10 +210,10 @@ this.tramite130102Query.selectSeccionState$
    *  
    */
   obtenerClaficacionRegimen(form: FormGroup): void {  
-    const cveRegimen = form.get('regimen')?.value;
+    const CVE_REGIMEN = form.get('regimen')?.value;
 
-    if (cveRegimen) {
-      this.catOctavaTemporalService.getClasificacionRegimenes(cveRegimen).pipe(
+    if (CVE_REGIMEN) {
+      this.catOctavaTemporalService.getClasificacionRegimenes(CVE_REGIMEN).pipe(
       takeUntil(this.destroyNotifier$))
       .subscribe((data) => {
         this.catalogosArray[1] = data.datos.map((item, index) => ({
@@ -269,7 +267,7 @@ this.tramite130102Query.selectSeccionState$
       takeUntil(this.destroyNotifier$))
       .subscribe((data) => {
       this.catalogosArray[0] = data.datos.map((item) => ({
-        id: parseInt(item.clave),
+        id: parseInt(item.clave, 10),
         clave: item.clave,
         descripcion: item.descripcion,
       }));

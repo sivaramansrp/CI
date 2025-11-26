@@ -150,8 +150,8 @@ inicializarEstadoFormulario(): void {
     .subscribe();
 
     this.frmRepresentacion = this.fb.group({
-      entidad: [ this.solicitudState?.entidad , Validators.required],
-      representacion: [ this.solicitudState?.representacion , Validators.required],
+      entidad: [ this.solicitudState?.entidad || null, Validators.required],
+      representacion: [ this.solicitudState?.representacion || null, Validators.required],
     });
     if (this.esFormularioSoloLectura) {
     this.frmRepresentacion.disable();
@@ -240,9 +240,9 @@ inicializarEstadoFormulario(): void {
    * @return void
    */
   onChangeEntidad(form: FormGroup): void {
-    const cveEntidad = form.get('entidad')?.value;
-    if (cveEntidad) {
-      this.obtenerUnidadesAdministrativas(cveEntidad);
+    const CVE_ENTIDAD = form.get('entidad')?.value;
+    if (CVE_ENTIDAD) {
+      this.obtenerUnidadesAdministrativas(CVE_ENTIDAD);
     }
   }
 

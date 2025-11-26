@@ -1,9 +1,11 @@
-import { API_GET_DOCUMENTOS_OBLIGATORIOS, API_GET_DOCUMENTOS_SOLICITUD, TRAMITE } from "../../../servers/api-router";
-import { CatalogoDocumentosResponse, ParametrosGetDocumentos } from "../../../models/shared/anexar-documentos.model";
+import { API_GET_DOCUMENTOS_OBLIGATORIOS, API_GET_DOCUMENTOS_SOLICITUD, API_POST_PRE_LLENADO_DOCUMENTOS, TRAMITE } from "../../../servers/api-router";
+import { CatalogoDocumentosResponse, ParametrosGetDocumentos, PayloadConsultaDocumentosSolicitud, RespuestaRecuperaDocumentos } from "../../../models/shared/anexar-documentos.model";
 import { HttpClient, HttpParams } from "@angular/common/http";
 import { Observable, catchError, map, throwError } from "rxjs";
 import { ENVIRONMENT } from "../../../../enviroments/enviroment";
 import { Injectable } from "@angular/core";
+
+import { BaseResponse } from "../../../models/5701/base-response.model";
 
 @Injectable({
     providedIn: 'root',
@@ -57,5 +59,18 @@ export class CatalogoDocumentosService {
                 return throwError(() => new Error('Error al obtener documentos'));
             })
         );
+    }
+
+    /**
+     * Carga documentos prellenados para una solicitud específica.
+     *
+     * @param tramite - Identificador del trámite.
+     * @param idsolicitud - ID de la solicitud.
+     * @param payload - Datos para consulta de documentos.
+     * @returns Observable con la respuesta de guardado.
+     */
+    recuperaDocumentos(tramite: number, idsolicitud: string, especifico: boolean, payload: PayloadConsultaDocumentosSolicitud): Observable<BaseResponse<RespuestaRecuperaDocumentos>> {
+        const ENDPOINT = `${this.host}${API_POST_PRE_LLENADO_DOCUMENTOS(tramite.toString(), idsolicitud, especifico)}`;
+        return this.http.post<BaseResponse<RespuestaRecuperaDocumentos>>(ENDPOINT, payload);
     }
 }

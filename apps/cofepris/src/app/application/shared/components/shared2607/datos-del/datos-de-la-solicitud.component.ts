@@ -12,6 +12,7 @@ import { CatalogoSelectComponent } from '@libs/shared/data-access-user/src';
 import { CommonModule } from '@angular/common';
 import { ConsultaioQuery } from '@ng-mf/data-access-user';
 import { CrosslistComponent } from '@libs/shared/data-access-user/src';
+import { DatosServiceService } from '../../../services/datos-service.service';
 import { InputCheckComponent } from '@libs/shared/data-access-user/src';
 import { InputFechaComponent } from '@libs/shared/data-access-user/src';
 import { Modal } from 'bootstrap';
@@ -19,9 +20,7 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { RegistrarSolicitudMcpService } from '../../../services/shared2607/registrar-solicitud-mcp.service';
 import { Solicitud260702Query } from '../../../estados/queries/shared2607/tramites260702.query';
 import { TEXTOS } from '../../../constantes/constantes.enum';
-import { TablaDinamicaComponent, AlertComponent } from '@libs/shared/data-access-user/src';
 import { TituloComponent } from '@libs/shared/data-access-user/src';
-import { DatosServiceService } from '../../../services/datos-service.service';
 
 /**
  * Componente para gestionar los datos de la solicitud.
@@ -429,6 +428,12 @@ export class DatosdelasolicitudComponent implements OnInit, OnDestroy, OnChanges
         })
       )
       .subscribe();
+      this.solicitud260702Query.selectSolicitud$
+    .pipe(takeUntil(this.destroyed$))
+    .subscribe(state => {
+      this.tableData = [...state.tableData];
+      
+    });
 
     this.createForm();
     this.getEstadosData();

@@ -1,5 +1,5 @@
 /**
- * Conjunto de rutas de la API para el procedimiento 80101.
+ * Conjunto de rutas de la API para el procedimiento 130106.
  */
 import { ENVIRONMENT } from "@libs/shared/data-access-user/src/enviroments/enviroment";
 /**
@@ -29,23 +29,16 @@ const TRAMITE = ENVIRONMENT.TRAMITE_URL;
 /**
  * Procedimiento de la API
  */
-const PROCEDURE = '/sat-t110222';
+const PROCEDURE = '/sat-t130106';
 
 /**
- * Rutas de la API para el procedimiento 110223.
+ * Rutas de la API para el procedimiento 130106.
  * Incluye las rutas para guardar la solicitud y para obtener el catálogo de tipo de factura.
  */
 export const PROC_130106 = {
     GUARDAR: `${BASE_URL}${API}${PROCEDURE}/solicitud/guardar`,
-    BUSCAR: `${BASE_URL}${API}${PROCEDURE}/solicitud/buscar`,
-    TIPO_FACTURA: `${BASE_URL}${API}${PROCEDURE}${CATALOGO}/tipo-factura`,
-    
     GET_FORM_DATA: `${BASE_URL}${API}${API_VERSION}${PROCEDURE}${SOLICITUD}/acuse`,
-
     CONSULTA_SOLICITUDE: (id: string | number): string =>`${BASE_URL}${API}${PROCEDURE}${TRAMITE}/consulta/${id}`,
     OPINIONES: (numFolioTramite: string | number): string =>`${BASE_URL}${API}${PROCEDURE}${TRAMITE}/${numFolioTramite}/opiniones`,
-    API_POST_CADENA_ORIGINAL : (IDSOLICITUD: string) : string => `${BASE_URL}${API}${PROCEDURE}/solicitud/${IDSOLICITUD}/genera-cadena-original`,
-    API_POST_FIRMA : (IDSOLICITUD: string) : string => `${BASE_URL}${API}${PROCEDURE}/solicitud/${IDSOLICITUD}/firmar`,
 }
 
-export const PRODUCTORS_EXPORTADOR = (rfc: string): string => `${BASE_URL}${API}${PROCEDURE}/solicitud/buscar-productor?rfcSolicitante=${rfc}`;
