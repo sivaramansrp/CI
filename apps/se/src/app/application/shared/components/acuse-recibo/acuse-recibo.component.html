@@ -14,18 +14,18 @@
                     <thead>
                         <tr class="table-header">
                             @for (item of encabezadoTablaResolucion; track $index) {
-                            <th>{{ item.valor }}</th>
+                            <th class="text-center">{{ item.valor }}</th>
                             }
-                            <th class="center">Descargar</th>
+                            <th class="text-center">Descargar</th>
                         </tr>
                     </thead>
                     <tbody>
                         @for (row of datosTabla; track $index) {
-                        <tr class="table-row">
+                        <tr class="table-row text-center">
                             @for (item of encabezadoTablaResolucion; let i = $index; track $index) {
-                            <td>{{ row[item.key] }}</td>
+                            <td class="text-center">{{ row[item.key] }}</td>
                             }
-                            <td class="center">
+                            <td class="text-center">
                                 <button type="button" class="btn btn-link me-2" id="descargarPdfResol"
                                     data-bs-toggle="button" data-bs-placement="top" title="Ver Documento"
                                     (click)="descargarPdfResolucion(row.urlPdf)">
@@ -51,18 +51,18 @@
                     <thead>
                         <tr class="table-header">
                             @for (item of encabezadoTablaResolucion; track $index) {
-                            <th>{{ item.valor }}</th>
+                            <th class="text-center">{{ item.valor }}</th>
                             }
-                            <th class="center">Descargar</th>
+                            <th class="text-center">Descargar</th>
                         </tr>
                     </thead>
                     <tbody>
                         @for (row of datosTablaAcuseNotificacion; track $index) {
-                        <tr class="table-row">
+                        <tr class="table-row text-center">
                             @for (item of encabezadoTablaResolucion; let i = $index; track $index) {
-                            <td>{{ row[item.key] }}</td>
+                            <td class="text-center">{{ row[item.key] }}</td>
                             }
-                            <td class="center">
+                            <td class="text-center">
                                 <button type="button" class="btn btn-link me-2" id="descargarPdfResol"
                                     data-bs-toggle="button" data-bs-placement="top" title="Ver Documento"
                                     (click)="descargarPdfResolucion(row.urlPdf)">
@@ -92,7 +92,7 @@
                             @for (item of encabezadoTablaResolucion; track $index) {
                             <th>{{ item.valor }}</th>
                             }
-                            <th class="center">Descargar</th>
+                            <th class="text-center">Descargar</th>
                         </tr>
                     </thead>
                     <tbody>
