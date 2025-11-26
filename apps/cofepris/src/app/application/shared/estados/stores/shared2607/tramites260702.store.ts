@@ -158,7 +158,10 @@ export interface Solicitud260702State {
 
   /** Fracción arancelaria del producto */
   fraccionArancelaria: string;
-  
+  /**
+   * Mensaje relacionado con el aviso de privacidad.
+   */
+  mensaje: boolean;
   /** Indica si los datos deben hacerse públicos. */
   hacerlosPublicos: string;
 
@@ -354,6 +357,8 @@ export function createInitialSolicitudState(): Solicitud260702State {
     /** Fracción arancelaria del producto */
     fraccionArancelaria: '',
 
+   /** Mensaje relacionado con el aviso de privacidad. */
+    mensaje: false,
     /** Indica si los datos deben hacerse públicos. */
     hacerlosPublicos: '',
     /** Datos de la tabla */
@@ -977,6 +982,17 @@ export class Solicitud260702Store extends Store<Solicitud260702State> {
     this.update((state) => ({
       ...state,
       fraccionArancelaria,
+    }));
+  }
+
+  /**
+   * Método para actualizar el mensaje en el estado.
+   * @param mensaje Mensaje a establecer.
+   */
+  public setMensaje(mensaje: string): void {
+    this.update((state) => ({
+      ...state,
+      mensaje,
     }));
   }
   /**

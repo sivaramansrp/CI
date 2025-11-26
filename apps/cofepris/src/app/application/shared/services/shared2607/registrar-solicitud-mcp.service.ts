@@ -27,7 +27,7 @@ export class RegistrarSolicitudMcpService {
    * @param http Cliente HTTP para realizar solicitudes a los recursos.
    */
   constructor(private http: HttpClient,
-        public httpService: HttpCoreService,
+        private httpService: HttpCoreService,
   ) {
     this.host = `${COMUN_URL.BASE_URL}`;
   }

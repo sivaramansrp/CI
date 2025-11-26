@@ -79,7 +79,7 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
     private fb: FormBuilder,
     private consultaQuery: ConsultaioQuery,
     private consulta: ConsultaService,
-    public solicitud260704Store:Solicitud260702Store,
+    private solicitud260704Store:Solicitud260702Store,
     private solicitud260704Query:Solicitud260702Query
   ) {
     this.pasoUnoForm = this.fb.group({
