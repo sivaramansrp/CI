@@ -18,7 +18,7 @@ export class GuardarAdapter_260207 {
    * @returns Payload formateado para la API
    */
   static toFormPayload(state: Tramite260207State): unknown {
-    return {
+  return {
       "solicitante": {
         "rfc": "AAL0409235E6",
         "nombre": "ACEROS ALVARADO S.A. DE C.V.",
@@ -40,10 +40,10 @@ export class GuardarAdapter_260207 {
       },
       "solicitud": {
           "discriminatorValue": 260207,
-          "declaracionesSeleccionadas": state.datosSolicitudFormState.manifesto || '',
+          "declaracionesSeleccionadas": state.datosSolicitudFormState.manifesto,
           "regimen": state.datosSolicitudFormState.regimen,
-          "aduanaAIFA": "ALTAMIRA",
-          "informacionConfidencial": state.datosSolicitudFormState.publico === 'si' ? true : false
+          "aduanaAIFA": "", 
+          "informacionConfidencial": state.datosSolicitudFormState.publico === 'Si' ? true : false
       },
       "establecimiento": {
           "rfcResponsableSanitario": state.datosSolicitudFormState.rfcSanitario,
@@ -52,7 +52,7 @@ export class GuardarAdapter_260207 {
           "domicilio": {
               "codigoPostal": state.datosSolicitudFormState.codigoPostal,
               "entidadFederativa": {
-                  "clave": "09"
+                  "clave": state.datosSolicitudFormState.estado
               },
               "descripcionMunicipio": state.datosSolicitudFormState.municipioAlcaldia,
               "informacionExtra": state.datosSolicitudFormState.localidad,
@@ -69,136 +69,268 @@ export class GuardarAdapter_260207 {
       "datosSCIAN": state.scianConfigDatos.map((datos)=>{
         return {
               "cveScian": datos.clave,
-              "descripcion": datos.descripcion
+              "descripcion": datos.descripcion,
+              "selected": true
           }
       }),
       "mercancias": (state.tablaMercanciasConfigDatos ?? []).map((mercancia) => {
         return {
-              "idMercancia": "",
-              "idClasificacionProducto": "",
-              "nombreClasificacionProducto": mercancia.clasificacionProducto,
-              "ideSubClasificacionProducto": "",
-              "nombreSubClasificacionProducto": mercancia.especificarClasificacionProducto,
+              "idMercancia": null,
+              "idClasificacionProducto": mercancia.claveClasificacionProductoObj?.clave,
+              "nombreClasificacionProducto": mercancia.claveClasificacionProductoObj?.descripcion,
+              "ideSubClasificacionProducto": mercancia.especificarClasificacionObj?.clave,
+              "nombreSubClasificacionProducto": mercancia.especificarClasificacionObj?.descripcion,
               "descDenominacionEspecifica": mercancia.denominacionEspecificaProducto,
               "descDenominacionDistintiva": mercancia.denominacionDistintiva,
-              "descripcionMercancia": "",
-              "formaFarmaceuticaDescripcionOtros": mercancia.formaFarmaceutica,
-              "estadoFisicoDescripcionOtros": mercancia.estadoFisico,
+              "descripcionMercancia": mercancia.denominacionComun,
+              "idFormaFarmaceutica": mercancia.formaFarmaceutica,
+              "formaFarmaceuticaDescripcionOtros": mercancia.especifiqueForma,
+              "idEstadoFisico": mercancia.estadoFisico,
+              "estadoFisicoDescripcionOtros": mercancia.especifiqueEstado,
               "fraccionArancelaria": {
                   "clave": mercancia.fraccionArancelaria,
-                  "descripcion": ""
+                  "descripcion": mercancia.descripcionFraccion
               },
               "unidadMedidaComercial": {
-                  "descripcion": mercancia.unidadMedidaComercializacion || ""
+                  "descripcion": mercancia.cantidadUMCObj?.descripcion
               },
-              "cantidadUMCConComas": mercancia.cantidadUMC,
+              "cantidadUMCConComas": mercancia.cantidadUmcValor,
               "unidadMedidaTarifa": {
                   "descripcion": mercancia.cantidadUMT
               },
               "cantidadUMTConComas": mercancia.cantidadUmtValor,
               "presentacion": mercancia.presentacion,
               "registroSanitarioConComas": mercancia.numeroRegistroSanitario,
-              "valorEnDolaresCIF": "",
-              "valorEnPesosMexicanosCIF": "",
-              "paisOrigen": {
-                  "clave": mercancia.paisOrigen || "",
-                  "descripcion": ""
-              },
-              "paisProcedencia": {
-                  "clave": mercancia.paisProcedencia || "",
-                  "descripcion": ""
-              },
-              "incoterm": {
-                  "clave": "",
-                  "descripcion": ""
-              },
-              "principioActivo": "",
-              "observaciones": "",
-              "marcaComercial": "",
-              "modelo": ""
+              "nombreCortoPaisOrigen": mercancia.paisOrigenDatosClave,
+              "nombreCortoPaisProcedencia": mercancia.paisProcedenciaDatosClave,
+              "idTipoProductoTipoTramite": mercancia.tipoProducto,
+              "tipoProductoDescripcionOtros": mercancia.especifique,
+              "nombreCortoUsoEspecifico": mercancia.usoEspecificoDatosClave,
+              "fechaCaducidadStr": mercancia.fechaCaducidad
           }
       }),
-      "tercerosRelacionados": {
-          "destinatarioFinal": state.destinatarioFinalTablaDatos.map((destinatario) => {
-              return {
-                  "rfc": destinatario.rfc,
-                  "nombre": destinatario.nombres || "",
-                  "correoElectronico": destinatario.correoElectronico,
-                  "domicilio": {
-                      "codigoPostal": destinatario.codigoPostal,
-                      "entidadFederativa": {
-                          "clave": "09"
-                      },
-                      "descripcionMunicipio": destinatario.municipioAlcaldia,
-                      "informacionExtra": destinatario.localidad,
-                      "descripcionColonia": destinatario.colonia,
-                      "calle": destinatario.calle,
-                      "lada": destinatario.lada,
-                      "telefono": destinatario.telefono
-                  }
-              }
-          }),
-          "facturador": state.facturadorTablaDatos.map((facturador) => {
-              return {
-                  "nombre": facturador.nombres || "",
-                  "correoElectronico": facturador.correoElectronico,
-                  "domicilio": {
-                      "pais": facturador.pais,
-                      "codigoPostal": facturador.codigoPostal,
-                      "estado": facturador.entidadFederativa,
-                      "descripcionMunicipio": facturador.municipioAlcaldia,
-                      "informacionExtra": facturador.localidad,
-                      "descripcionColonia": facturador.colonia,
-                      "calle": facturador.calle,
-                      "lada": facturador.lada,
-                      "telefono": facturador.telefono
-                  },
-                  "taxId": ""
-              }
-          }),
-          "proveedor": state.proveedorTablaDatos.map((proveedor) => {
-              return {
-                  "nombre": proveedor.nombres || "",
-                  "correoElectronico": proveedor.correoElectronico,
-                  "domicilio": {
-                      "pais": proveedor.pais,
-                      "codigoPostal": proveedor.codigoPostal,
-                      "estado": proveedor.entidadFederativa,
-                      "descripcionMunicipio": proveedor.municipioAlcaldia,
-                      "informacionExtra": proveedor.localidad,
-                      "descripcionColonia": proveedor.colonia,
-                      "calle": proveedor.calle,
-                      "lada": proveedor.lada,
-                      "telefono": proveedor.telefono
-                  },
-                  "taxId": ""
-              }
-          }),
-          "fabricante": state.fabricanteTablaDatos.map((fabricante) => {
-              return {
-                  "nombre": fabricante.nombres || "",
-                  "correoElectronico": fabricante.correoElectronico,
-                  "domicilio": {
-                      "pais": fabricante.pais,
-                      "codigoPostal": fabricante.codigoPostal,
-                      "estado": fabricante.entidadFederativa,
-                      "descripcionMunicipio": fabricante.municipioAlcaldia,
-                      "informacionExtra": fabricante.localidad,
-                      "descripcionColonia": fabricante.colonia,
-                      "calle": fabricante.calle,
-                      "lada": fabricante.lada,
-                      "telefono": fabricante.telefono
-                  },
-                  "taxId": ""
-              }
-          })
+      "representanteLegal": {
+          "rfc": state.datosSolicitudFormState.representanteRfc,
+          "resultadoIDC": "",
+          "nombre": state.datosSolicitudFormState.representanteNombre,
+          "apellidoPaterno": state.datosSolicitudFormState.apellidoPaterno,
+          "apellidoMaterno": state.datosSolicitudFormState.apellidoMaterno
       },
-      "pagoDerechos": {
-          "formaPago": state.pagoDerechos.claveReferencia,
-          "cantidadPagar": state.pagoDerechos.importePago,
-          "lineaCaptura": state.pagoDerechos.llavePago,
-          "fechaPago": state.pagoDerechos.fechaPago
+      "gridTerceros_TIPERS_FAB": state.fabricanteTablaDatos.map((fabricante) => {
+        return {
+              "idPersonaSolicitud": "",
+              "ideTipoTercero": "",
+              "personaMoral": fabricante.tipoPersona === "Moral" ? "1" : "0",
+              "booleanExtranjero": fabricante.nacionalidad === 'Extranjero' ? "1" : "0",
+              "booleanFisicaNoContribuyente": "0",
+              "denominacion": fabricante.tipoPersona === "Moral" ? fabricante.razonSocial : `${fabricante.nombres} ${fabricante.primerApellido} ${fabricante.segundoApellido}`,
+              "razonSocial": fabricante.razonSocial,
+              "rfc": fabricante.rfc,
+              "curp": fabricante.curp,
+              "nombre": fabricante.nombres,
+              "apellidoPaterno": fabricante.primerApellido,
+              "apellidoMaterno": fabricante.segundoApellido,
+              "telefono": fabricante.telefono,
+              "correoElectronico": fabricante.correoElectronico,
+              "actividadProductiva": "",
+              "actividadProductivaDesc": "",
+              "descripcionGiro": "",
+              "numeroRegistro": "",
+              "domicilio": {
+                  "calle": fabricante.calle,
+                  "numeroExterior": fabricante.numeroExterior,
+                  "numeroInterior": fabricante.numeroInterior,
+                  "pais": {
+                      "clave": fabricante.paisObj?.clave,
+                      "nombre": fabricante.paisObj?.descripcion
+                  },
+                  "colonia": {
+                      "clave": fabricante.coloniaObj?.clave,
+                      "nombre": fabricante.coloniaObj?.descripcion
+                  },
+                  "delegacionMunicipio": {
+                      "clave": fabricante.municipioAlcaldiaObj?.clave,
+                      "nombre": fabricante.municipioAlcaldiaObj?.descripcion
+                  },
+                  "localidad": {
+                      "clave": fabricante.localidadObj?.clave,
+                      "nombre": fabricante.localidadObj?.descripcion
+                  },
+                  "entidadFederativa": {
+                      "clave": fabricante.entidadFederativaObj?.clave,
+                      "nombre": fabricante.entidadFederativaObj?.descripcion
+                  },
+                  "informacionExtra": "",
+                  "codigoPostal": fabricante.codigoPostal,
+                  "descripcionColonia": fabricante.colonia
+              },
+              "idSolicitud": "0"
+          }
+      }),
+      "gridTerceros_TIPERS_DES": state.destinatarioFinalTablaDatos.map((destinatario) => {
+        return {
+            "idPersonaSolicitud": "",
+            "ideTipoTercero": "TIPERS.FAB",
+            "personaMoral": destinatario.tipoPersona === "Moral" ? "1" : "0",
+            "booleanExtranjero": "",
+            "booleanFisicaNoContribuyente": "0",
+            "denominacion": "LABORATORIOS PISA S.A. DE C.V.",
+            "razonSocial": destinatario.razonSocial,
+            "rfc": destinatario.rfc,
+            "curp": destinatario.curp,
+            "nombre": destinatario.nombres,
+            "apellidoPaterno": destinatario.primerApellido,
+            "apellidoMaterno": destinatario.segundoApellido,
+            "telefono": destinatario.telefono,
+            "correoElectronico": destinatario.correoElectronico,
+            "actividadProductiva": "",
+            "actividadProductivaDesc": "",
+            "descripcionGiro": "",
+            "numeroRegistro": "",
+            "domicilio": {
+                "calle": destinatario.calle,
+                "numeroExterior": destinatario.numeroExterior,
+                "numeroInterior": destinatario.numeroInterior,
+                "pais": {
+                    "clave": destinatario.paisObj?.clave,
+                    "nombre": destinatario.paisObj?.descripcion
+                },
+                "colonia": {
+                    "clave": destinatario.coloniaObj?.clave,
+                    "nombre": destinatario.coloniaObj?.descripcion
+                },
+                "delegacionMunicipio": {
+                    "clave": destinatario.municipioObj?.clave,
+                    "nombre": destinatario.municipioObj?.descripcion
+                },
+                "localidad": {
+                    "clave": destinatario.localidadObj?.clave,
+                    "nombre": destinatario.localidadObj?.descripcion
+                },
+                "entidadFederativa": {
+                    "clave": "",
+                    "nombre": ""
+                },
+                "informacionExtra": "",
+                "codigoPostal": destinatario.codigoPostal,
+                "descripcionColonia": destinatario.colonia
+            },
+            "idSolicitud": "0"
+          }
+      }),
+      "gridTerceros_TIPERS_PVD": state.proveedorTablaDatos.map((proveedor) => {
+        return {
+            "idPersonaSolicitud": "",
+            "ideTipoTercero": "",
+            "personaMoral": proveedor.tipoPersona === "Moral" ? "1" : "0",
+            "booleanExtranjero": "",
+            "booleanFisicaNoContribuyente": "",
+            "denominacion": proveedor.razonSocial,
+            "razonSocial": proveedor.razonSocial,
+            "rfc": proveedor.rfc,
+            "curp": proveedor.curp,
+            "nombre": proveedor.nombres,
+            "apellidoPaterno": proveedor.primerApellido,
+            "apellidoMaterno": proveedor.segundoApellido,
+            "telefono": proveedor.telefono,
+            "correoElectronico": proveedor.correoElectronico,
+            "actividadProductiva": "",
+            "actividadProductivaDesc": "",
+            "descripcionGiro": "",
+            "numeroRegistro": "",
+            "domicilio": {
+                "calle": proveedor.calle,
+                "numeroExterior": proveedor.numeroExterior,
+                "numeroInterior": proveedor.numeroInterior,
+                "pais": {
+                    "clave": proveedor.paisObj?.clave,
+                    "nombre": proveedor.paisObj?.descripcion
+                },
+                "colonia": {
+                    "clave": "",
+                    "nombre": ""
+                },
+                "delegacionMunicipio": {
+                    "clave": "",
+                    "nombre": ""
+                },
+                "localidad": {
+                    "clave": "",
+                    "nombre": ""
+                },
+                "entidadFederativa": {
+                    "clave": "",
+                    "nombre": ""
+                },
+                "informacionExtra": "",
+                "codigoPostal": proveedor.codigoPostal,
+                "descripcionColonia": proveedor.colonia
+            },
+            "idSolicitud": "0"
+          }
+      }),
+      "gridTerceros_TIPERS_FAC": state.facturadorTablaDatos.map((facturador) => { 
+        return {
+          "idPersonaSolicitud": "",
+          "ideTipoTercero": "",
+          "personaMoral": facturador.tipoPersona === "Moral" ? "1" : "0",
+          "booleanExtranjero": "",
+          "booleanFisicaNoContribuyente": "",
+          "denominacion": facturador.razonSocial,
+          "razonSocial": facturador.razonSocial,
+          "rfc": facturador.rfc,
+          "curp": facturador.curp,
+          "nombre": facturador.nombres,
+          "apellidoPaterno": facturador.primerApellido,
+          "apellidoMaterno": facturador.segundoApellido,
+          "telefono": facturador.telefono,
+          "correoElectronico": facturador.correoElectronico,
+          "actividadProductiva": "",
+          "actividadProductivaDesc": "",
+          "descripcionGiro": "",
+          "numeroRegistro": "",
+          "domicilio": {
+              "calle": facturador.calle,
+              "numeroExterior": facturador.numeroExterior,
+              "numeroInterior": facturador.numeroInterior,
+              "pais": {
+                  "clave": facturador.paisObj?.clave,
+                  "nombre": facturador.paisObj?.descripcion
+              },
+              "colonia": {
+                  "clave": "",
+                  "nombre": ""
+              },
+              "delegacionMunicipio": {
+                  "clave": "",
+                  "nombre": ""
+              },
+              "localidad": {
+                  "clave": "",
+                  "nombre": ""
+              },
+              "entidadFederativa": {
+                  "clave": "",
+                  "nombre": ""
+              },
+              "informacionExtra": "",
+              "codigoPostal": facturador.codigoPostal,
+              "descripcionColonia": facturador.colonia
+          },
+          "idSolicitud": "0"
+        }
+      }),
+      "pagoDeDerechos": {
+          "claveDeReferencia": state.pagoDerechos.claveReferencia,
+          "cadenaPagoDependencia": state.pagoDerechos.cadenaDependencia,
+          "banco": {
+              "clave": state.pagoDerechos.bancoObject?.clave,
+              "descripcion": state.pagoDerechos.bancoObject?.descripcion
+          },
+          "llaveDePago": state.pagoDerechos.llavePago,
+          "fecPago": state.pagoDerechos.fechaPago,
+          "impPago": state.pagoDerechos.importePago
       }
-    };
+    }
   }
 }
