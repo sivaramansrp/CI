@@ -8,6 +8,9 @@
     "noPropertyAccessFromIndexSignature": true,
     "noImplicitReturns": true,
     "noFallthroughCasesInSwitch": true,
+    "resolveJsonModule": true,
+    "esModuleInterop": false,
+    "allowSyntheticDefaultImports": true,
     "paths": {
       "@/*": ["apps/privados/src/app/*"],
       "@app/*": ["apps/privados/src/app/*"],
