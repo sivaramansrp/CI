@@ -147,7 +147,7 @@ export class SolicitudComponent implements OnInit, OnDestroy {
   /**
    *  Matriz de catálogos adicionales para el formulario.
    */
-  catalogosArray: Catalogo[][] = solicitudeSelectVal;
+  catalogosArray: Catalogo[][] = [[],[]];
   /**
    *  Opciones de solicitud configurables.
    */
@@ -260,7 +260,9 @@ export class SolicitudComponent implements OnInit, OnDestroy {
    * Cada elemento es un objeto del tipo `Catalogo`, que representa una opción seleccionable
    * en el catálogo correspondiente a las partidas de mercancía.
    */
-  fraccionDescripcionPartidasDeLaMercancia: Catalogo[] = []
+  fraccionDescripcionPartidasDeLaMercancia: Catalogo[] = [];
+
+  procedureId: string = "130112";
 
   /**
    * Constructor del componente.
@@ -671,9 +673,9 @@ this.tramite130112Store.actualizarEstado({
    * Actualiza las propiedades del componente con los datos obtenidos.
    */
   getRegimenes(): void {
-    this.importacionMaterialDeInvestigacionCientificaService.getRegimenes('130112').subscribe((data) => {
-      this.catalogoRegimenes = data;
-      this.getClasificacionRegimen();
+    this.importacionMaterialDeInvestigacionCientificaService.getRegimenes(this.procedureId).subscribe((data) => {
+      this.catalogosArray[0] = data;
+      
     });
   }
 
@@ -681,12 +683,9 @@ this.tramite130112Store.actualizarEstado({
    * Obtiene el catálogo de clasificaciones de régimen desde el servicio.
    * Actualiza las propiedades del componente con los datos obtenidos.
    */
-  getClasificacionRegimen(): void {
-    this.importacionMaterialDeInvestigacionCientificaService.getRegimenClasificacion('130112', "01").subscribe((data) => {
-      this.catalogoClasificacionRegimen = data;
-
-      this.catalogoRegimenes = [...this.catalogoRegimenes, ...data];
-      this.catalogosArray = [this.catalogoRegimenes, this.catalogoClasificacionRegimen];
+  getClasificacionRegimen(valor: string): void {
+    this.importacionMaterialDeInvestigacionCientificaService.getRegimenClasificacion(this.procedureId, valor.toString()).subscribe((data) => {
+      this.catalogosArray[1] = data;
     });
   }
 
@@ -695,7 +694,7 @@ this.tramite130112Store.actualizarEstado({
     * Actualiza la propiedad del componente con los datos obtenidos.
     */
  getFraccionArancelaria(): void {
-   this.importacionMaterialDeInvestigacionCientificaService.getFraccionesArancelarias('130112').subscribe((data) => {
+   this.importacionMaterialDeInvestigacionCientificaService.getFraccionesArancelarias(this.procedureId).subscribe((data) => {
      this.fraccionCatalogo = data?.map(item => ({
              ...item,
              descripcion: `${item.clave} - ${item.descripcion}`
@@ -708,7 +707,7 @@ this.tramite130112Store.actualizarEstado({
   * Actualiza la propiedad del componente con los datos obtenidos.
   */
  getUMTCatalogo(): void {
-   this.importacionMaterialDeInvestigacionCientificaService.getUMTCatalogo('130112').subscribe((data) => {
+   this.importacionMaterialDeInvestigacionCientificaService.getUMTCatalogo(this.procedureId).subscribe((data) => {
      this.unidadCatalogo = data || [];
    });
  }
@@ -729,7 +728,7 @@ this.tramite130112Store.actualizarEstado({
    */
   listaDePaisesDisponibles(): void {
     this.importacionMaterialDeInvestigacionCientificaService
-    .getBloque('130112')
+    .getBloque(this.procedureId)
       .pipe(takeUntil(this.destroyed$))
       .subscribe((data) => {
         this.elementosDeBloque = data;
@@ -742,7 +741,7 @@ this.tramite130112Store.actualizarEstado({
    */
   fetchPaisesPorBloque(_bloqueId: number): void {
     this.importacionMaterialDeInvestigacionCientificaService
-      .getPaisesPorBloque('130112', String(_bloqueId))
+      .getPaisesPorBloque(this.procedureId, String(_bloqueId))
             .pipe(takeUntil(this.destroyed$))
             .subscribe((data) => {
               this.paisesPorBloque = data;
@@ -765,19 +764,10 @@ this.tramite130112Store.actualizarEstado({
    */
  setValoresStore($event: { form: FormGroup; campo: string }): void {
     const VALOR = $event.form.get($event.campo)?.value;
-
+    this.tramite130112Store.actualizarEstado({ [$event.campo]: VALOR });
     if ($event.campo === 'regimen') {
-      this.formDelTramite.get('clasificacion')?.setValue('');
-      this.mostrarErrorClasificacion = false;
-      this.tramite130112Store.actualizarEstado({
-        [$event.campo]: VALOR,
-        clasificacion: '',
-      });
-    } else {
-      this.tramite130112Store.actualizarEstado({ [$event.campo]: VALOR });
-      if ($event.campo === 'clasificacion' && VALOR) {
-        this.mostrarErrorClasificacion = true;
-      }
+      const VALOR = this.formDelTramite.get('regimen')?.value;
+      this.getClasificacionRegimen(VALOR);
     }
 
    if ($event.campo === 'fraccion') {
