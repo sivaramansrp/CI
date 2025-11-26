@@ -1,4 +1,4 @@
-import { Catalogo, CatalogoServices, HttpCoreService, JSONResponse, LoginQuery } from '@ng-mf/data-access-user';
+import { Catalogo, CatalogoServices, HttpCoreService, LoginQuery } from '@ng-mf/data-access-user';
 import { Observable, Subject, map, takeUntil} from 'rxjs';
 import { Tramite130110State, Tramite130110Store } from '../../../estados/tramites/tramites130110.store';
 import { HttpClient } from '@angular/common/http';
@@ -188,8 +188,8 @@ getDatosDeLaSolicitud(): Observable<Tramite130110State> {
 
   guardarDatosPost(
     body: Record<string, unknown>
-  ): Observable<JSONResponse> {
-    return this.httpService.post<JSONResponse>(PROC_130110.GUARDAR, {
+  ): Observable<Record<string, unknown>> {
+    return this.httpService.post<Record<string, unknown>>(PROC_130110.GUARDAR, {
       body: body,
     });
   }

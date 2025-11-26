@@ -1,4 +1,4 @@
-import { Catalogo, CatalogoServices, HttpCoreService, JSONResponse, LoginQuery } from '@ng-mf/data-access-user';
+import { Catalogo, CatalogoServices, HttpCoreService, LoginQuery } from '@ng-mf/data-access-user';
 import { Observable, Subject, map, takeUntil} from 'rxjs';
 import { Tramite130112State, Tramite130112Store } from '../estados/tramites/tramites130112.store';
 import { HttpClient } from '@angular/common/http';
@@ -188,8 +188,8 @@ export class ImportacionMaterialDeInvestigacionCientificaService {
 
   guardarDatosPost(
     body: Record<string, unknown>
-  ): Observable<JSONResponse> {
-    return this.httpService.post<JSONResponse>(PROC_130112.GUARDAR, {
+  ): Observable<Record<string, unknown>> {
+    return this.httpService.post<Record<string, unknown>>(PROC_130112.GUARDAR, {
       body: body,
     });
   }

@@ -574,8 +574,8 @@ export class SolicitudComponent implements OnInit, OnDestroy {
     cantidad: this.partidasDelaMercanciaForm.get('cantidadPartidasDeLaMercancia')?.value,
     totalUSD: this.partidasDelaMercanciaForm.get('valorPartidaUSDPartidasDeLaMercancia')?.value,
     descripcion: this.partidasDelaMercanciaForm.get('descripcionPartidasDeLaMercancia')?.value,
-    unidadDeMedida: this.unidadCatalogo.find(f => String(f.id) === String(this.mercanciaForm.get('unidadMedida')?.value))?.descripcion || '',
-    fraccionFrancelaria: this.fraccionCatalogo.find(f => String(f.id) === String(this.mercanciaForm.get('fraccion')?.value))?.descripcion || '',
+    unidadDeMedida: this.unidadCatalogo.find(f => String(f.clave) === String(this.mercanciaForm.get('unidadMedida')?.value))?.descripcion || '',
+    fraccionFrancelaria: this.fraccionCatalogo.find(f => String(f.clave) === String(this.mercanciaForm.get('fraccion')?.value))?.descripcion || '',
     fraccionDescripcionPartidasDeLaMercancia: this.fraccionCatalogo.find(f => String(f.id) === String(this.partidasDelaMercanciaForm.get('fraccionDescripcionPartidasDeLaMercancia')?.value))?.descripcion || '',
     precioUnitarioUSD: PRECIOUNITARIO_USD
   };
