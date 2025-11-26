@@ -182,7 +182,7 @@ import { Router } from '@angular/router';
 import { SIN_VALOR_SELECT } from '@libs/shared/data-access-user/src/core/enums/transporte-componente.enum';
 import { ValidaDespachoService } from '../../../../core/services/5701/valida-despacho.service';
 import { ValidaHorarioService } from '../../../../core/services/5701/valida-horario.service';
-import { SolicitudDetalleModel } from '../../models/response/solicitud-detalle.model';
+import { PersonaResponsable, SolicitudDetalleModel } from '../../models/response/solicitud-detalle.model';
 
 @Component({
   selector: 'app-solicitud',
@@ -836,28 +836,69 @@ export class SolicitudComponent
     
     // Setea datos del transporte despacho
     if(data.transporte_despacho) {
-      const vehiculos: TransporteDespacho[] = [];
-      /**
-       * setear datos de transporte despacho
-       */
+      this.tramite5701Store.setTipoTransporte(data.transporte_despacho.tipo_transporte ?? '');
       this.changeSeleccionTipoVehiculo(data.transporte_despacho.tipo_transporte ?? '');
-      const vehiculo: TransporteDespacho = {
-
-        tipo_transporte: data.transporte_despacho.tipo_transporte ?? '',
-        placas_transporte: data.transporte_despacho.placas ?? '',
-        contenedor_transporte: data.transporte_despacho.contenedor ?? '',
-        observaciones: data.transporte_despacho.observaciones ?? '',
-        modelo_transporte: data.transporte_despacho.modelo ?? '',
-        marca_transporte: data.transporte_despacho.marca ?? '',
-        emp_transportista: data.transporte_despacho.empresa_transportista ?? '',
-        fecha_porte: data.transporte_despacho.fecha_carta_porte ?? '',
-
-      };
-      vehiculos.push(vehiculo);
-      this.tramite5701Store.setTransporte(vehiculos);
-      this.changeAgregarVehiculo(vehiculos, 'vehiculo');
-     
     };
+
+    if(data.list_transporte_despacho && data.list_transporte_despacho.length > 0) {
+      data.list_transporte_despacho.forEach((vehiculo) => {
+        const vehiculos: TransporteDespacho[] = [];
+        const transporte: TransporteDespacho = {
+          tipo_transporte: vehiculo.tipo_transporte || '',
+          placas_transporte: vehiculo.placas_transporte || '',
+          contenedor_transporte: vehiculo.contenedor_transporte || '',
+          observaciones: vehiculo.observaciones,
+          modelo_transporte: vehiculo.modelo_transporte || '',
+          marca_transporte: vehiculo.marca_transporte || '',
+          emp_transportista: vehiculo.emp_transportista || '',
+          fecha_porte: vehiculo.fecha_porte || '',
+          numero_porte: vehiculo.numero_porte || ''
+        };
+        vehiculos.push(transporte);
+        this.tramite5701Store.setTransporte(vehiculos);
+        this.changeAgregarVehiculo(vehiculos, 'vehiculo');
+      });
+      
+    }
+
+    if(data.unidad_arribo ) {
+     this.tramite5701Store.setTipoTransporteArriboSalida(data.unidad_arribo.tipo_transporte || '');
+     this.changeSeleccionTipoVehiculo(data.unidad_arribo.tipo_transporte || '');
+    }
+
+    if(data.list_unidad_arribo && data.list_unidad_arribo.length > 0) {
+      data.list_unidad_arribo.forEach((vehiculo) => {
+        const vehiculosArribo: TransporteDespacho[] = [];
+        const transporteArribo: TransporteDespacho = {  
+          tipo_transporte: vehiculo.tipo_transporte || '',
+          placas_transporte: vehiculo.placas_transporte || '',
+          contenedor_transporte: vehiculo.contenedor_transporte || '',
+          observaciones: vehiculo.observaciones || '',
+          modelo_transporte: vehiculo.modelo_transporte || '',
+          marca_transporte: vehiculo.marca_transporte || '',  
+          emp_transportista: vehiculo.emp_transportista || '',
+          fecha_porte: vehiculo.fecha_porte || '',
+          numero_porte: vehiculo.numero_porte || ''
+        };
+        vehiculosArribo.push(transporteArribo);
+        this.tramite5701Store.setTransporteArriboDatos(vehiculosArribo);
+        this.changeAgregarVehiculo(vehiculosArribo, 'arriboSalida');
+      });
+    }
+
+    if(data.persona_responsable) {
+      const personasResponsables: ResponsablesDespacho[] = [];
+      data.persona_responsable.forEach((persona) => {
+        personasResponsables.push({ 
+          nombre: persona.nombre,
+          gafeteRespoDespacho: persona.gafete,
+          primerApellido: persona.apellido_paterno,
+          segundoApellido: persona.apellido_materno,
+        });
+      });
+      this.tramite5701Store.setPersonasResponsablesDespacho(personasResponsables);
+      this.changeResponsablesDespacho(personasResponsables);
+    }
     
   }
 
