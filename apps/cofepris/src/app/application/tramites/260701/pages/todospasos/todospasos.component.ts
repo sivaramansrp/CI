@@ -1,6 +1,9 @@
-import { AVISO,AccionBoton, DatosPasos, ListaPasosWizard, WizardComponent } from '@libs/shared/data-access-user/src';
-import { Component, ViewChild } from '@angular/core';
-import { PANTA_PASOS, TITULO_PASO_DOS, TITULO_PASO_TRES, TITULO_PASO_UNO } from '../../services/certificados-licencias.enum';
+import { AVISO,AccionBoton, DatosPasos, ERROR_FORMA_ALERT, ListaPasosWizard, WizardComponent } from '@libs/shared/data-access-user/src';
+import { Component, OnInit,ViewChild} from '@angular/core';
+import { PANTA_PASOS, TITULO_PASO_UNO } from '../../services/certificados-licencias.enum';
+import { Solicitud260702State, Solicitud260702Store } from '../../../../shared/estados/stores/shared2607/tramites260702.store';
+import { PasoUnoComponent } from '../paso-uno/paso-uno.component';
+import { Solicitud260702Query } from '../../../../shared/estados/queries/shared2607/tramites260702.query';
 
 /**
  * Componente que representa la página "Todos Pasos".
@@ -12,8 +15,20 @@ import { PANTA_PASOS, TITULO_PASO_DOS, TITULO_PASO_TRES, TITULO_PASO_UNO } from 
   selector: 'app-todospasos',
   templateUrl: './todospasos.component.html',
 })
-export class TodospasosComponent {
+export class TodospasosComponent implements OnInit {
 
+  /** Indica si el botón continuar ha sido activado para ejecutar las validaciones del formulario. */
+  public isContinuarTriggered: boolean = false;
+  /**
+ * Contiene la información del mensaje de error utilizado
+ * para mostrar alertas relacionadas con el formulario.
+ */
+   public formErrorAlert = ERROR_FORMA_ALERT;
+    /**
+     * Indica si la opción de peligro está activada.
+     * Cuando es verdadero, representa que la condición de peligro está presente.
+     */
+    isPeligro:boolean=false;
   /**
    * Esta variable se utiliza para almacenar los textos de aviso.
    */
@@ -69,24 +84,56 @@ export class TodospasosComponent {
      txtBtnSig: 'Continuar',
    };
 
+/**
+   * Estado actual de la solicitud para el trámite 260702.
+   * Contiene toda la información relevante sobre el proceso de la solicitud,
+   * incluyendo datos ingresados por el usuario y el progreso en el flujo del trámite.
+   */
+  private solicitudState!: Solicitud260702State;
+   /**
+       * Referencia al componente `PasoUnoComponent`.
+       */
+      @ViewChild('pasoUnoRef') pasoUnoComponent!: PasoUnoComponent;
+
+      constructor( private solicitud260703Store:Solicitud260702Store,
+      private solicitud260703Query:Solicitud260702Query,
+   ){
+ 
+  }
+    /**
+   * Método del ciclo de vida de Angular que se ejecuta al inicializar el componente.
+   * Suscribe al observable `selectSolicitud$` para obtener el estado actual de la solicitud
+   * y actualiza las propiedades locales `solicitudState` y `isContinuarTriggered` según los datos recibidos.
+   */
+  ngOnInit():void{
+     this.solicitud260703Query.selectSolicitud$.pipe().subscribe((data) => {
+      this.solicitudState = data;
+      this.isContinuarTriggered = this.solicitudState['continuarTriggered'] ?? false;
+    });
+  }
    /**
    * Este método se utiliza para inicializar el componente.
    */
-   public getValorIndice(e: AccionBoton) {
-    if (e.valor > 0 && e.valor < 5) {
-      this.indice = e.valor;
-      if(this.indice === 2) {
-        this.titulo = TITULO_PASO_DOS;
-      } else if(this.indice === 3) {
-        this.titulo = TITULO_PASO_TRES;
-      } else {
-        this.titulo = TITULO_PASO_UNO;
+ getValorIndice(e: AccionBoton):void{  
+if (this.indice === 1 && e.accion === 'cont') {
+      this.solicitud260703Store.setContinuarTriggered(true);
+      const ES_VALIDO = this.validarFormulariosPasoActual();
+      if (!ES_VALIDO) {
+        this.isPeligro = true; 
+        return;
       }
-      if (e.accion === 'cont') {
-        this.wizardComponent.siguiente();
-      } else {
-        this.wizardComponent.atras();
-      }
+      this.isPeligro = false;
     }
+  }
+
+   /**
+   * Valida los formularios del paso actual antes de permitir continuar.
+   * @returns {boolean} - `true` si los formularios son válidos, `false` en caso contrario.
+   */
+  public validarFormulariosPasoActual(): boolean { 
+    if (this.indice === 1) {
+      return this.pasoUnoComponent?.validarFormularios() ?? false;
+    }
+    return true;
   }
 }
