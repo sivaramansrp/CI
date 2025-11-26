@@ -89,7 +89,7 @@ export class TodospasosComponent implements OnInit {
    * Contiene toda la información relevante sobre el proceso de la solicitud,
    * incluyendo datos ingresados por el usuario y el progreso en el flujo del trámite.
    */
-  solicitudState!: Solicitud260702State;
+  private solicitudState!: Solicitud260702State;
    /**
        * Referencia al componente `PasoUnoComponent`.
        */
@@ -98,7 +98,7 @@ export class TodospasosComponent implements OnInit {
       constructor( private solicitud260703Store:Solicitud260702Store,
       private solicitud260703Query:Solicitud260702Query,
    ){
- //constructor code
+ 
   }
     /**
    * Método del ciclo de vida de Angular que se ejecuta al inicializar el componente.
@@ -130,7 +130,7 @@ if (this.indice === 1 && e.accion === 'cont') {
    * Valida los formularios del paso actual antes de permitir continuar.
    * @returns {boolean} - `true` si los formularios son válidos, `false` en caso contrario.
    */
-  validarFormulariosPasoActual(): boolean { 
+  public validarFormulariosPasoActual(): boolean { 
     if (this.indice === 1) {
       return this.pasoUnoComponent?.validarFormularios() ?? false;
     }
