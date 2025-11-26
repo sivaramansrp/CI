@@ -131,14 +131,6 @@ export class PasoDosComponent implements OnInit {
       )
       .subscribe();
 
-    this.regresarSeccionCargarDocumentoEvento
-      .pipe(
-        takeUntilDestroyed(this.destroyRef),
-        map(() => {
-          this.reenviarRegresarSeccion.emit();
-        })
-      )
-      .subscribe();
   }
 
   /**

@@ -404,6 +404,15 @@ export interface AvisoSanitarioState {
      * Arreglo que contiene las claves de los usos específicos seleccionados para el producto.
      */
     cveUsoEspecifico: string[];
+     /**
+     * Lista de proveedores relacionados con el trámite.
+     */
+    proveedorTablaModificaDatos: Proveedor[];
+
+    /**
+     * Lista de fabricantes relacionados con el trámite.
+     */
+    fabricanteTablaModificaDatos: Fabricante[];
 
 }
 
@@ -543,6 +552,8 @@ export function createInitialState(): AvisoSanitarioState {
         cvePaisDeOrigen: [],
         cvePaisDeProcedencia: [],
         cveUsoEspecifico: [],
+        proveedorTablaModificaDatos:[],
+        fabricanteTablaModificaDatos:[]
     }
 }
 
@@ -2028,4 +2039,36 @@ export class Tramite260601Store extends Store<AvisoSanitarioState> {
             solicitudBodyData,
         }));
     }
+
+     /**
+   * @method fabricanteTablaModificaDatos
+   * @description
+   * Actualiza los datos seleccionados en la tabla de fabricantes en el estado del trámite.
+   * Sustituye el arreglo actual por el nuevo conjunto de fabricantes.
+   *
+   * @param {Fabricante[]} tabSeleccionado - Lista de fabricantes seleccionados que se asignarán al estado.
+   * @returns {void} Este método no retorna ningún valor.
+   */
+  public fabricanteTablaModificaDatos(tabSeleccionado: Fabricante[]): void {
+    this.update((state) => ({
+      ...state,
+      fabricanteTablaModificaDatos: tabSeleccionado,
+    }));
+  }
+
+  /**
+   * @method proveedorTablaModificaDatos
+   * @description
+   * Actualiza los datos seleccionados en la tabla de proveedores dentro del estado del trámite.
+   * Sobrescribe la lista previa con los proveedores seleccionados.
+   *
+   * @param {Proveedor[]} tabSeleccionado - Lista de proveedores seleccionados que se asignarán al estado.
+   * @returns {void} Este método no retorna ningún valor.
+   */
+  public proveedorTablaModificaDatos(tabSeleccionado: Proveedor[]): void {
+    this.update((state) => ({
+      ...state,
+      proveedorTablaModificaDatos: tabSeleccionado,
+    }));
+  }
 }

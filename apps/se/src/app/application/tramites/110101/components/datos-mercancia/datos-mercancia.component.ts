@@ -397,26 +397,71 @@ get ninoFormGroup(): FormGroup {
   }
 
   /**
-   * Suscribe a los cambios en el campo `fraccionArancelaria` dentro del
-   * FormGroup hijo `ninoFormGroup` y realiza la consulta arancelaria
-   * correspondiente cuando el valor cambie. Se ejecuta después de que
-   * la vista y sus hijos han sido inicializados.
+   * Inicializa listeners para los campos `fraccionArancelariaModal`
+   * y `valorDolares` para aplicar validaciones de entrada y formateo,
+   * además de ejecutar la consulta arancelaria cuando corresponda.
    */
   ngAfterViewInit(): void {
-    const FRACCIONCONTROL = this.ninoFormGroup.get('fraccionArancelariaModal');
-    if (!FRACCIONCONTROL) {
-      return;
-    }
-    const INPUTELEMENT = document.getElementById('fraccionArancelariaModal');
-    if (INPUTELEMENT) {
-      fromEvent(INPUTELEMENT, 'blur')
+    const FRACCION_CONTROL = this.ninoFormGroup.get('fraccionArancelariaModal');
+    if (FRACCION_CONTROL) {
+    const FRACCION_INPUT = document.getElementById('fraccionArancelariaModal');
+
+    if (FRACCION_INPUT) {
+      fromEvent(FRACCION_INPUT, 'input')
         .pipe(takeUntil(this.destroy$))
         .subscribe(() => {
-          const VALOR = FRACCIONCONTROL.value;
+          let valor = FRACCION_CONTROL.value ?? '';
+          valor = valor.replace(/[^0-9]/g, '');
+
+          FRACCION_CONTROL.setValue(valor, { emitEvent: false });
+        });
+
+      fromEvent(FRACCION_INPUT, 'blur')
+        .pipe(takeUntil(this.destroy$))
+        .subscribe(() => {
+          const VALOR = FRACCION_CONTROL.value;
           if (VALOR && VALOR.trim() !== '') {
             this.consultaArancelariaPartida(VALOR);
           }
         });
+      }
+    }
+
+    const VALOR_DOLARES_CONTROL = this.ninoFormGroup.get('valorDolares');
+
+    if (VALOR_DOLARES_CONTROL) {
+      const VALOR_DOLARES_INPUT = document.getElementById('valorDolares');
+
+      if (VALOR_DOLARES_INPUT) {
+        fromEvent(VALOR_DOLARES_INPUT, 'input')
+          .pipe(takeUntil(this.destroy$))
+          .subscribe(() => {
+            let valor = VALOR_DOLARES_CONTROL.value ?? '';
+            valor = valor
+              .replace(/[^0-9.]/g, '')      
+              .replace(/(\..*)\./g, '$1')
+              .replace(/^(\d{15})\d+/g, '$1')
+              .replace(/(\.\d{4}).+/g, '$1');   
+
+            VALOR_DOLARES_CONTROL.setValue(valor, { emitEvent: false });
+          }); 
+
+        fromEvent(VALOR_DOLARES_INPUT, 'blur')
+          .pipe(takeUntil(this.destroy$))
+          .subscribe(() => {
+            let valor = VALOR_DOLARES_CONTROL.value;
+            if (valor && valor.trim() !== '') {
+              if (!valor.includes('.')) {
+                valor = valor + '.0000';
+              } else {
+                const [ENTERO, DECIMAL = ''] = valor.split('.');
+                valor = ENTERO + '.' + DECIMAL.padEnd(4, '0');
+              }
+              
+              VALOR_DOLARES_CONTROL.setValue(valor, { emitEvent: false });
+            }
+          });
+      }
     }
   }
 
