@@ -17,13 +17,13 @@ export interface ArchivoMercanciaResponse {
  */
 export interface ErrorValidacion {
     /** Número de línea con error */
-    numeroLinea: number;
+    numero_linea: number;
     
     /** Contenido de la línea con error */
-    contenidoLinea: string;
+    contenido_linea: string;
     
     /** Mensaje descriptivo del error */
-    mensajeError: string;
+    mensaje_error: string;
 }
 
 /**

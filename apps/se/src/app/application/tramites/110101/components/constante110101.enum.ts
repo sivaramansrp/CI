@@ -1,5 +1,6 @@
 import { ConfiguracionColumna, REGEX_NUMERO_15_ENTEROS_4_DECIMALES, REGEX_SOLO_NUMEROS } from "@libs/shared/data-access-user/src";
-import { DatosMercanciaModalTabla, EnvasesTabla, InsumosTabla, ProcesosTabla } from "../models/panallas110101.model";
+import { DatosMercanciaModalTabla, EnvasesTabla, InsumosTabla } from "../models/panallas110101.model";
+import { ErrorValidacion } from "../models/response/archivo-mercancia-response.model";
 import { ProcesoSolicitado } from "../models/response/validar-fraccion-response.model";
 
 /**
@@ -147,6 +148,13 @@ export const ENVASES_TABLA: ConfiguracionColumna<EnvasesTabla>[] = [
 export const MODAL_TABLA: ConfiguracionColumna<DatosMercanciaModalTabla>[] = [
   { encabezado: 'Tratado o Acuerdo', clave: (item: DatosMercanciaModalTabla) => item.tratado_nombre, orden: 1 },
   { encabezado: "País o bloque", clave: (item: DatosMercanciaModalTabla) => item.nombre_pais_bloque, orden: 2 }
+];
+
+/** Configuración de las columnas para la tabla modal de errores csven el trámite 110101. */
+export const MODAL_TABLA_ERRORES_CSV: ConfiguracionColumna<ErrorValidacion>[] = [
+  { encabezado: 'Linea', clave: (item: ErrorValidacion) => item.numero_linea, orden: 1 },
+  { encabezado: "Contenido", clave: (item: ErrorValidacion) => item.contenido_linea, orden: 2 },
+  { encabezado: "Errores", clave: (item: ErrorValidacion) => item.mensaje_error, orden: 3 }
 ];
 
 /** Configuración de los campos del formulario modal para agregar o editar datos de mercancía en el trámite 110101. */
