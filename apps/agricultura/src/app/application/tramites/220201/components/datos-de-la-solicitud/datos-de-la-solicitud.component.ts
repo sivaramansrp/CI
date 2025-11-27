@@ -13,10 +13,6 @@ import {
   TablaDinamicaExpandidaComponent,
   TablaSeleccion,
   TituloComponent,
-  convertDate,
-  formatFechaCreacion,
-  formatFechaCustom,
-  formatearFechaSolicitud,
   formatearFechaSolicitudSinHora,
 } from '@libs/shared/data-access-user/src';
 import {
@@ -860,6 +856,7 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy, AfterView
         .subscribe({
           next: (datos) => {
             if (datos?.datos) {
+              this.solicitudService.emitirIdSolicitud(event.id_solicitud || '');
               this.obtenerSanidadAgropecuariaList(datos.datos.cve_aduana || '');
               this.obtenerVeterinarioList(datos.datos.establecimiento_TIF || '');
               this.obtenerPuntoInspeccionList(datos.datos.oficina_inspeccion_sanidad_agropecuaria || '');
@@ -918,8 +915,8 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy, AfterView
                   tipoRequisito: mercancia.tipo_requisito || '',
                   requisito: mercancia.requisitos || '',
                   numeroCertificadoInternacional: String(mercancia.numero_certificado) || '',
-                  fraccionArancelaria: mercancia.fraccion_arancelaria_corto || '',
-                  descripcionFraccion: mercancia.descripcion_fracción_arancelaria || '',
+                  fraccionArancelaria: mercancia.cve_fraccion || '',
+                  descripcionFraccion: mercancia.descripcion_mercancia || '',
                   idDescripcionFraccion: mercancia.id_fraccion_gubernamental || 0,
                   nico: mercancia.clave_nico || '',
                   descripcionNico: mercancia.descripcion_nico || '',
@@ -930,7 +927,8 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy, AfterView
                   descripcionUMT: mercancia.descripcion_umt || '',
                   descripcionUMC: mercancia.descripcion_umc || '',
                   cantidadUMC: mercancia.cantidad_umc || 0,
-                  especie: mercancia.descripcion_especie || '',
+                  especie: String(mercancia.id_especie || ''),
+                  cantidadEspecie: mercancia.cantidad_presentacion || 0,
                   uso: String(mercancia.id_uso_mercancia_tipo_tramite) || '',
                   paisDeOrigen: mercancia.clave_paises_origen || '',
                   paisDeDestino: mercancia.nombre_pais_procedencia || '',
@@ -974,6 +972,7 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy, AfterView
         .subscribe({
           next: (response) => {
             this.sharedService.enviarMovilizacionPrellenado(response.datos as PrellenadoMovilizacion);
+            this.sharedService.enviarDocumentosPrellenado(true);
           },
           error: () => {
             this.nuevaNotificacion = {
