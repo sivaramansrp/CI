@@ -4,11 +4,12 @@ import { CatalogosTramiteService } from '../../services/catalogo.service';
 import { CodigoRespuesta } from '../../../../core/enum/se-core-enum';
 
 import { AfterViewInit, ChangeDetectorRef, Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
-import { DATOS_MERCANCIA_MODAL_FORM, ENVASES_TABLA, INSUMOS_TABLA, MODAL_TABLA } from '../constante110101.enum';
+import { DATOS_MERCANCIA_MODAL_FORM, ENVASES_TABLA, INSUMOS_TABLA, MODAL_TABLA, MODAL_TABLA_ERRORES_CSV } from '../constante110101.enum';
 import { DatosMercanciaModalTabla, EnvasesTabla, InsumosTabla } from '../../models/panallas110101.model';
 import { DatosMercanciaEvaluacionComponent } from "../datos-mercancia-evaluacion/datos-mercancia-evaluacion.component";
 import { DatosMercanciaService } from '../../services/datos-mercancia.service';
-import { ElementoValido } from '../../models/response/archivo-mercancia-response.model';
+
+import { ArchivoMercanciaResponse, ElementoValido, ErrorValidacion } from '../../models/response/archivo-mercancia-response.model';
 
 import { FormBuilder, FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { InsumoTratadosRequest } from '../../models/request/validar-insumo-request.model';
@@ -28,6 +29,7 @@ import { TituloComponent } from '@ng-mf/data-access-user';
 import { ValidacionesFormularioService } from '@ng-mf/data-access-user';
 import mercancia from '@libs/shared/theme/assets/json/110101/mercancia.json'
 
+import { ElementosProcesadosRequest } from '../../models/request/carga-archivos-validacion-request.model';
 import { EvaluarMercanciaResponse } from '../../models/response/mercancia-response.model';
 import { MensajePantallaService } from '../../services/validaciones-tabs.service';
 
@@ -78,6 +80,13 @@ export class DatosMercanciaComponent implements OnInit, OnDestroy, AfterViewInit
   @ViewChild('modalArchivo') modalArchivo!: ElementRef;
 
   /**
+   * Referencia al elemento del modal para errores csv.
+   *
+   * Se utiliza para abrir o cerrar el modal de errores csv.
+   */
+  @ViewChild('errorescsv') errorescsv!: ElementRef;
+
+  /**
    * Referencia al elemento del modal para gestionar archivos.
    *
    * Se utiliza para abrir o cerrar el modal de archivos.
@@ -107,6 +116,9 @@ export class DatosMercanciaComponent implements OnInit, OnDestroy, AfterViewInit
   /** Configuración de la tabla de sectores */
   public configuracionTabla: ConfiguracionColumna<DatosMercanciaModalTabla>[] = MODAL_TABLA;
 
+  /** Configuración de la tabla de errores Csv */
+  public configuracionTablaErroresCsv: ConfiguracionColumna<ErrorValidacion>[] = MODAL_TABLA_ERRORES_CSV;
+
   /**
    * @property listaSeleccionadasInsumos
    * @type {InsumosTabla[]}
@@ -135,6 +147,12 @@ export class DatosMercanciaComponent implements OnInit, OnDestroy, AfterViewInit
 
   /** Un array de objetos `tablaDatos` que representa los datos para la tabla de solicitudes.*/
   public tablaDatos: DatosMercanciaModalTabla[] = [];
+
+  /** Un array de objetos `tablaDatosErrorCsv` que representa los datos para la tabla errores csv.*/
+  public tablaDatosErrorCsvInsumo: ErrorValidacion[] = [];
+
+   /** Un array de objetos `tablaDatosErrorCsv` que representa los datos para la tabla errores csv.*/
+  public tablaDatosErrorCsvEnvases: ErrorValidacion[] = [];
 
   /** Almacena las filas seleccionadas de la tabla */
   public filasSeleccionadas: DatosMercanciaModalTabla[] = [];
@@ -1474,9 +1492,69 @@ get ninoFormGroup(): FormGroup {
       .subscribe({
         next: (response) => {
           if (response.codigo === CodigoRespuesta.EXITO && response.datos?.elementos_validos?.length) {
-            if(response.datos.elementos_validos[0].tipo_elemento === "INSUMOS" ){
+            this.tablaDatosErrorCsvInsumo = [];
+            this.tablaDatosErrorCsvEnvases = [];
+            this.validacionCargaCsv(response.datos);
+            this.formularioArchivo.reset();
+          }
+          if(response.codigo === CodigoRespuesta.EXITO && response.datos?.errores?.length){
+           if(TIPOARCHIVO === 'INSUMOS'){
+            this.tablaDatosErrorCsvInsumo = response.datos.errores;
+           }else{
+            this.tablaDatosErrorCsvEnvases = response.datos.errores;
+           }
+           
+          }
+        },
+        error: (err) => {
+          window.scrollTo({ top: 0, behavior: 'smooth' });
+          const MENSAJE = err?.error?.error || 'Error en archivo';
+          this.nuevaNotificacion = {
+            tipoNotificacion: 'toastr',
+            categoria: 'error',
+            modo: 'action',
+            titulo: '',
+            mensaje: MENSAJE,
+            cerrar: false,
+            txtBtnAceptar: '',
+            txtBtnCancelar: '',
+          }
+        }
+      });
+  }
+  /**
+   * Procesa la respuesta del primer servicio de carga CSV y envía la información
+   * al segundo servicio para su validación final.
+   * 
+   * - Construye el payload requerido por `postArchivoMercanciaSegundaParte`.
+   * - Actualiza las tablas de insumos o empaques según el tipo de elemento.
+   * - Muestra notificaciones en caso de error.
+   * 
+   * @param datosPrimerServicio Respuesta con los elementos válidos del primer servicio.
+   */
+  validacionCargaCsv(datosPrimerServicio: ArchivoMercanciaResponse):void{
+     const TRATADOS_SELECCIONADOS = this.solicitudeState.respuestaServicioDatosTabla.map(item => ({
+      id_tratado_acuerdo: item.id_tratado_acuerdo,
+      cve_grupo_criterio: item.cve_grupo_criterio,
+      cve_pais:item.cve_pais,
+      cve_tratado_acuerdo:item.cve_tratado_acuerdo
+    }));
+    const PAYLOAD: ElementosProcesadosRequest = {
+      items: datosPrimerServicio.elementos_validos,
+      tratados_seleccionados: TRATADOS_SELECCIONADOS,
+      peso: true,
+      volumen: true
+    };
+    this.datosMercanciaService.postArchivoMercanciaSegundaParte(PAYLOAD)
+      .pipe(takeUntil(this.destroy$))
+      .subscribe({
+        next: (response) => {
+          if (response.codigo === CodigoRespuesta.EXITO && response.datos?.elementos_validos?.length) {
+            this.tablaDatosErrorCsvInsumo = [];
+            this.tablaDatosErrorCsvEnvases = [];
+            if (response.datos.elementos_validos[0].tipo_elemento === "INSUMOS") {
               this.mostrarTabla = false;
-                response.datos.elementos_validos.forEach((elemento: ElementoValido) => {
+              response.datos.elementos_validos.forEach((elemento: ElementoValido) => {
                 this.insumosTablaDatos.push({
                   nombreTecnico: elemento.nombre_tecnico,
                   proveedor: elemento.proveedor,
@@ -1486,7 +1564,7 @@ get ninoFormGroup(): FormGroup {
                   valorEnDolares: elemento.valor,
                   paisDeOrigen: elemento.pais_origen,
                   peso: elemento.peso,
-                  volumen: null, 
+                  volumen: null,
                   cvePais: elemento.pais_origen
                 });
               });
@@ -1494,9 +1572,9 @@ get ninoFormGroup(): FormGroup {
               this.tramite110101Store.addInsumo(this.insumosTablaDatos);
               this.cd.detectChanges();
               this.mostrarTabla = true;
-            }else{
-               this.mostrarTabla = false;
-               response.datos.elementos_validos.forEach((elemento: ElementoValido) => {
+            } else {
+              this.mostrarTabla = false;
+              response.datos.elementos_validos.forEach((elemento: ElementoValido) => {
                 this.envasesTablaDatos.push({
                   nombreTecnico: elemento.nombre_tecnico,
                   proveedor: elemento.proveedor,
@@ -1506,29 +1584,24 @@ get ninoFormGroup(): FormGroup {
                   valorEnDolares: elemento.valor,
                   paisDeOrigen: elemento.pais_origen,
                   peso: elemento.peso,
-                  volumen: null, 
+                  volumen: null,
                   cvePais: elemento.pais_origen
                 });
               });
               this.tramite110101Store.clearEmpaques();
               this.tramite110101Store.addEmpaque(this.envasesTablaDatos);
-               this.cd.detectChanges();
+              this.cd.detectChanges();
               this.mostrarTabla = true;
             }
-             
             this.formularioArchivo.reset();
-          } else {
-            window.scrollTo({ top: 0, behavior: 'smooth' });
-            this.nuevaNotificacion = {
-              tipoNotificacion: 'toastr',
-              categoria: CategoriaMensaje.ERROR,
-              modo: 'action',
-              titulo: response?.error || 'Error en archivo',
-              mensaje: response?.causa || response?.mensaje || 'Error en archivo',
-              cerrar: false,
-              txtBtnAceptar: '',
-              txtBtnCancelar: '',
-            };
+          } 
+           if(response.codigo === CodigoRespuesta.EXITO && response.datos?.errores?.length){
+           if(this.tipoArchivoActual === 'INSUMOS'){
+            this.tablaDatosErrorCsvInsumo = response.datos.errores;
+           }else{
+            this.tablaDatosErrorCsvEnvases = response.datos.errores;
+           }
+           
           }
         },
         error: (err) => {
@@ -1548,6 +1621,30 @@ get ninoFormGroup(): FormGroup {
       });
   }
 
+
+  /**
+   * Limpia los datos de insumos o empaques según el tipo especificado.
+   * Si no se especifica un tipo, limpia ambos.
+   * @param tipo - El tipo de datos a limpiar ('Insumo' o 'Empaque').
+   */
+  limpiarInsumosYEmpaques(tipo?: string): void {
+    if (tipo === 'Insumo') {
+      this.insumosTablaDatos = [];
+       this.tramite110101Store.clearInsumos();
+       this.tablaDatosErrorCsvInsumo =[];
+    }else{
+      this.envasesTablaDatos = [];
+      this.tramite110101Store.clearEmpaques();
+      this.tablaDatosErrorCsvEnvases =[];
+    }
+  }
+
+  mostrarErroresCsv(tipo: 'INSUMOS' | 'EMPAQUES'): void{
+    if (tipo) {
+      const MODAL_INSTANCE = new Modal(this.errorescsv.nativeElement);
+      MODAL_INSTANCE.show();
+    }
+  }
 
   /**
    * **Limpia los recursos y finaliza las suscripciones al destruir el componente**

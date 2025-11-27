@@ -1,4 +1,4 @@
-import { API_GET_FRACCION_ARANCELARIA_PARTIDA, API_GET_UNIDAD_MEDIDA_COMERCIAL, API_POST_EMPAQUES_ARCHIVOS, API_POST_FRACCION_ARANCELARIA_VALIDAR, API_POST_INSUMO_ARCHIVOS, API_POST_VALIDAR_EMPAQUE, API_POST_VALIDAR_INSUMO } from "../server/api-router";
+import { API_GET_FRACCION_ARANCELARIA_PARTIDA, API_GET_UNIDAD_MEDIDA_COMERCIAL, API_POST_ARCHIVO_SEGUNDA_PARTE, API_POST_EMPAQUES_ARCHIVOS, API_POST_FRACCION_ARANCELARIA_VALIDAR, API_POST_INSUMO_ARCHIVOS, API_POST_VALIDAR_EMPAQUE, API_POST_VALIDAR_INSUMO } from "../server/api-router";
 import { Catalogo, ENVIRONMENT } from "@libs/shared/data-access-user/src";
 import { BaseResponse } from "@libs/shared/data-access-user/src/core/models/shared/base-response.model";
 import { DatosFraccionArancelariaResponse } from "../models/response/datos-fraccion-arancelaria-response.model";
@@ -6,12 +6,13 @@ import { FraccionValidarRequest } from "../models/request/validar-fraccion-reque
 import { FraccionValidarResponse } from "../models/response/validar-fraccion-response.model";
 
 import { ArchivoMercanciaResponse } from "../models/response/archivo-mercancia-response.model";
-
-import { HttpClient, HttpHeaders } from "@angular/common/http";
+import { ElementosProcesadosRequest } from "../models/request/carga-archivos-validacion-request.model";
+import { HttpClient } from "@angular/common/http";
 import { Injectable } from "@angular/core";
 import { InsumoTratadosRequest } from "../models/request/validar-insumo-request.model";
 import { Observable } from "rxjs";
 import { TratadoArchivo } from "../models/request/tratado-criterio-request.model";
+
 @Injectable({
     providedIn: 'root'
 })
@@ -109,5 +110,15 @@ export class DatosMercanciaService {
         { type: 'application/json' }
         ));
         return this.http.post<BaseResponse<ArchivoMercanciaResponse>>(ENDPOINT, FORMDATA);
+    }
+
+    /**
+     * Validación de la segunda parte del archivo de mercancía que realiza internamente el sistema.
+     * @param PAYLOAD - datos de los elementos procesados para la validación.
+     * @returns Observable con la respuesta del servidor es válido
+     */
+    postArchivoMercanciaSegundaParte(PAYLOAD: ElementosProcesadosRequest):Observable<BaseResponse<ArchivoMercanciaResponse>> {
+        const ENDPOINT = `${this.host}${API_POST_ARCHIVO_SEGUNDA_PARTE}`;
+        return this.http.post<BaseResponse<ArchivoMercanciaResponse>>(ENDPOINT, PAYLOAD);
     }
 }

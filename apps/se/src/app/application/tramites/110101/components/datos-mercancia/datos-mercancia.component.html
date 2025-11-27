@@ -329,7 +329,10 @@
       <div class="text-end mt-5">
         <button class="btn btn-default ms-2" [disabled]="esFormularioSoloLectura" (click)="cargaArchivo('INSUMOS')">Carga por
           archivo</button>
-        <button class="btn btn-danger ms-2" [disabled]="esFormularioSoloLectura">Limpiar insumos</button>
+        <button class="btn btn-danger ms-2" [disabled]="esFormularioSoloLectura" (click)="limpiarInsumosYEmpaques('INSUMOS')">Limpiar insumos</button>
+         @if (tablaDatosErrorCsvInsumo.length > 0) {
+        <button class="btn btn-default ms-2" [disabled]="esFormularioSoloLectura" (click)="mostrarErroresCsv('INSUMOS')" >Errores en archivo</button>
+         }
       </div>
     }
 
@@ -357,7 +360,10 @@
       <div class="text-end mt-5">
         <button class="btn btn-default ms-2" [disabled]="esFormularioSoloLectura" (click)="cargaArchivo('EMPAQUES')">Carga por
           archivo</button>
-        <button class="btn btn-danger ms-2" [disabled]="esFormularioSoloLectura">Limpiar envases</button>
+        <button class="btn btn-danger ms-2" [disabled]="esFormularioSoloLectura" (click)="limpiarInsumosYEmpaques()">Limpiar envases</button>
+        @if (tablaDatosErrorCsvEnvases.length > 0) {
+          <button class="btn btn-default ms-2" [disabled]="esFormularioSoloLectura" (click)="mostrarErroresCsv('EMPAQUES')" >Errores en archivo</button>
+        }
       </div>
     }
  
@@ -485,6 +491,39 @@
         <div class="p-4 text-center">
             <button class="btn btn-primary" data-bs-dismiss="modal" #closeModal>Aceptar</button>
         </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" id="errorescsv" #errorescsv tabindex="-1" aria-labelledby="modalAgregarLabel"
+  aria-hidden="true">
+  <div class="modal-dialog modal-xl modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-body">
+
+        <div class="row">
+          <ng-titulo
+            [titulo]="'Errores encontrados en el Archivo'" />
+
+          <div class="row">
+            <h5>Errores encontrados en el Archivo</h5>
+            <div class="col-md-12">
+               @if (tipoArchivoActual === "INSUMOS"){
+                 <app-tabla-dinamica [tipoSeleccionTabla]="tipoSeleccionTabla" [configuracionTabla]="configuracionTablaErroresCsv"
+                [datos]="tablaDatosErrorCsvInsumo"></app-tabla-dinamica>
+               }
+              @if (tipoArchivoActual === "EMPAQUES"){
+               <app-tabla-dinamica [tipoSeleccionTabla]="tipoSeleccionTabla" [configuracionTabla]="configuracionTablaErroresCsv"
+                [datos]="tablaDatosErrorCsvEnvases"></app-tabla-dinamica>
+              }
+            </div>
+          </div>
+
+        </div>
+      </div>
+      <div class="p-4 text-end mt-3">
+        <button class="btn btn-default" (click)="cerrarDialogo()">Cerrar</button>
+      </div>
     </div>
   </div>
 </div>

@@ -2,7 +2,7 @@ import { Subject, catchError, of, switchMap, takeUntil, tap } from 'rxjs';
 import { BaseResponse } from '@libs/shared/data-access-user/src/core/models/shared/base-response.model';
 import { DocumentosState } from '@libs/shared/data-access-user/src/core/estados/documentos.store'
 
-import { CategoriaMensaje, DocumentoService, Notificacion, TramiteFolioQueries, TramiteFolioStore, base64ToHex, encodeToISO88591Hex } from '@libs/shared/data-access-user/src';
+import { CategoriaMensaje, DocumentoService, Notificacion, TramiteFolioQueries, TramiteFolioStore, base64ToHex, encodeToISO88591Hex, formatFecha } from '@libs/shared/data-access-user/src';
 import { CodigoRespuesta } from '../../../../core/enum/se-core-enum';
 
 import { Component, Input, OnDestroy, OnInit } from '@angular/core';
@@ -210,7 +210,7 @@ export class PasoTresComponent implements OnInit, OnDestroy {
 
       cve_rol_capturista: "CapturistaGubernamental",
       cve_usuario_capturista: "Gubernamental",
-      fecha_firma: PasoTresComponent.formatFecha(new Date()),
+      fecha_firma: formatFecha(new Date()),
       clave_unidad_admin: this.solicitudState.claveUnidadAdministrativa,
       //Representacion federal
       clave_entidad: this.solicitudState.claveEntidadFederativa,
@@ -369,10 +369,10 @@ export class PasoTresComponent implements OnInit, OnDestroy {
             cadena_original: CADENAHEX,
             cert_serial_number: this.datosFirmaReales.certSerialNumber,
             clave_usuario: this.datosFirmaReales.rfc,
-            fecha_firma: PasoTresComponent.formatFecha(new Date()),
+            fecha_firma: formatFecha(new Date()),
             clave_rol: 'Solicitante',
             sello: FIRMAHEX,
-            fecha_fin_vigencia: PasoTresComponent.formatFecha(this.datosFirmaReales.fechaFin),
+            fecha_fin_vigencia: formatFecha(this.datosFirmaReales.fechaFin),
             documentos_requeridos: response.datos?.documentos_requeridos || [],
           };
 
@@ -427,24 +427,6 @@ export class PasoTresComponent implements OnInit, OnDestroy {
       .subscribe();
   }
 
-  /**
-   * Formatea una fecha a un string en el formato 'YYYY-MM-DD HH:mm:ss'.
-   * @param fecha - Fecha a formatear, puede ser un string o un objeto Date.
-   * @returns String formateado de la fecha.
-   */
-  static formatFecha(fecha: string | Date): string {
-    const DATE_OBJ = new Date(fecha);
-    const PAD = (n: number): string => n.toString().padStart(2, '0');
-
-    const YYYY = DATE_OBJ.getFullYear();
-    const MM = PAD(DATE_OBJ.getMonth() + 1);
-    const DD = PAD(DATE_OBJ.getDate());
-    const HH = PAD(DATE_OBJ.getHours());
-    const MM_MINUTES = PAD(DATE_OBJ.getMinutes());
-    const SS = PAD(DATE_OBJ.getSeconds());
-
-    return `${YYYY}-${MM}-${DD} ${HH}:${MM_MINUTES}:${SS}`;
-  }
 
 
   /**
