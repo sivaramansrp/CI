@@ -204,29 +204,24 @@ export class LibBandejaComponent<T extends BandejaRegistroBase> implements OnIni
     this.mostrarColapsable(1);
     this.filterConfiguracionTabla();
 
-    this.route.queryParams.subscribe((params) => {
+    const TIPOMENSAJE = localStorage.getItem('mensajeExito');
 
-      if (params['observacionExitoso'] === 'true') {
+    if (TIPOMENSAJE) {
+      if (TIPOMENSAJE === 'OBSERVACION') {
         this.labelExitoMensaje = MensajesExito.OBSERVACION;
       }
 
-      if (params['dictamenExitoso'] === 'true') {
+      if (TIPOMENSAJE === 'DICTAMEN') {
         this.labelExitoMensaje = MensajesExito.DICTAMEN;
       }
 
-      if (this.labelExitoMensaje) {
-        setTimeout(() => {
-          this.labelExitoMensaje = null;
+      // Mostrar solo 5 segundos
+      setTimeout(() => {
+        this.labelExitoMensaje = null;
+        localStorage.removeItem('mensajeExito');
+      }, 5000);
+    }
 
-          // Limpia los Parámetros de la URL
-          this.router.navigate([], {
-            relativeTo: this.route,
-            queryParams: { observacionExitoso: null, dictamenExitoso: null },
-            queryParamsHandling: 'merge',
-          });
-        }, 5000);
-      }
-    });
   }
 
   /*
