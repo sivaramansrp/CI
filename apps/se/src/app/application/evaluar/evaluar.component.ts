@@ -17,7 +17,7 @@ import { ReviewersTabsComponent } from '@libs/shared/data-access-user/src/tramit
 import { SolicitarDocumentosEvaluacionComponent } from '@libs/shared/data-access-user/src/tramites/components/solicitar-documentos-evaluacion/solicitar-documentos-evaluacion.component';
 import { SolicitarOpinionComponent } from '@libs/shared/data-access-user/src/tramites/components/solicitar-opinion/solicitar-opinion.component';
 
-import { CatalogoTipoDocumento, CategoriaMensaje, ConsultaioQuery, ConsultaioState, ConsultaioStore, DocumentosEspecificosResponse, FECHA_DE_INICIO, Notificacion, NotificacionesComponent, TabEvaluarTratadosResponse, base64ToHex, encodeToISO88591Hex } from '@ng-mf/data-access-user';
+import { CatalogoTipoDocumento, CategoriaMensaje, ConsultaioQuery, ConsultaioState, ConsultaioStore, DesplazarseHaciaArribaService, DocumentosEspecificosResponse, FECHA_DE_INICIO, Notificacion, NotificacionesComponent, TabEvaluarTratadosResponse, base64ToHex, encodeToISO88591Hex } from '@ng-mf/data-access-user';
 import { Subject, catchError, map, of, takeUntil, tap } from 'rxjs';
 import { LISTA_TRIMITES } from '../shared/constantes/lista-trimites.enums';
 
@@ -37,11 +37,11 @@ import { TabsSolicitudServiceTsService } from "../core/services/evaluar-tramite/
 import { TareasSolicitud } from "@libs/shared/data-access-user/src/core/models/shared/consulta-tareas-response.model";
 
 
-import { GuardarRequerimiento } from '../core/models/evaluar/request/guardar-requerimiento-request.model';
+import { Documento, GuardarRequerimiento } from '../core/models/evaluar/request/guardar-requerimiento-request.model';
+import { Documentos, IniciarRequerimientoResponse } from '@libs/shared/data-access-user/src/core/models/shared/Iniciar-requerimiento-response.model';
 import { GuardarRequerimientoService } from '../core/services/evaluar-tramite/guardarRequerimiento.service';
 import { IniciarDictamenResponse } from '@libs/shared/data-access-user/src/core/models/shared/iniciar-dictamen-response.model';
 import { IniciarRequerimientoRequest } from '../core/models/evaluar/request/iniciar-requerimiento-request.model';
-import { IniciarRequerimientoResponse } from '@libs/shared/data-access-user/src/core/models/shared/Iniciar-requerimiento-response.model';
 import { MostrarFirmarRequest } from '../core/models/evaluar/request/firmar-mostrar-dictamen.request.model';
 import { MostrarFirmarResponse } from '../core/models/evaluar/response/mostrar-firmar-response.model';
 import { SentidosDisponiblesResponse } from '@libs/shared/data-access-user/src/core/models/shared/sentidos-disponibles.model';
@@ -300,6 +300,9 @@ export class EvaluarComponent implements OnInit, OnDestroy {
   /** Listado de documentos específicos guardados para el requerimiento */
   listadoDocumentosGuardados: CatalogoTipoDocumento[] = [];
 
+  /** Lista de documentos requeridos */
+  listaDocumentosRequeridos: Documento[] = [];
+
   /**
 * Objeto que contiene los datos reales de la firma electrónica generada después del proceso de firma.
 * Incluye:
@@ -397,6 +400,7 @@ export class EvaluarComponent implements OnInit, OnDestroy {
     private firmarDictamenService: FirmarDictamenService,
     private firmarRequermientoService: FirmarRequermientoService,
     private tramiteConfigService: TramiteConfigService,
+    private desplazarseHaciaArribaService: DesplazarseHaciaArribaService
   ) {
 
     this.consultaioQuery.selectConsultaioState$
@@ -448,6 +452,7 @@ export class EvaluarComponent implements OnInit, OnDestroy {
 
     this.getEvaluacionTramite();
     this.getTabs();
+    this.desplazarseHaciaArribaService.desplazarArriba();
   }
 
   /**
@@ -1545,7 +1550,9 @@ export class EvaluarComponent implements OnInit, OnDestroy {
               txtBtnAceptar: '',
               txtBtnCancelar: '',
             }
-            this.router.navigate(['bandeja-de-tareas-pendientes']);
+            this.router.navigate(['bandeja-de-tareas-pendientes'], {
+              queryParams: { dictamenExitoso: true }
+            });
           }
 
         }),
@@ -1598,6 +1605,20 @@ export class EvaluarComponent implements OnInit, OnDestroy {
   }
 
   /**
+   * @method onDocumentosRequeridos
+   * @description Actualiza la lista de documentos requeridos.
+   * @param {Documentos[]} lista - Lista de documentos requeridos.
+   * @returns {void}
+   */
+onDocumentosRequeridos(lista: Documentos[]): void {
+  this.listaDocumentosRequeridos = lista.map(doc => ({
+    id_documento_solicitud: doc.id_documento_solicitud,
+    id_tipo_documento: doc.id_tipo_documento,
+    requerido: doc.requerido
+  }));
+}
+
+  /**
    * Inicia el proceso de requerimiento con datos predefinidos
    * Realiza una petición POST para iniciar un requerimiento y maneja la respuesta
    */
@@ -1646,6 +1667,7 @@ export class EvaluarComponent implements OnInit, OnDestroy {
       cve_usuario: this.guardarDatos.current_user,
       justificacion: this.justificacion,
       alcance_requerimiento: 'X0XX',
+      documentos: this.listaDocumentosRequeridos,
       documentos_especificos: this.listadoDocumentosEspecificos
     };
 
@@ -1714,6 +1736,7 @@ export class EvaluarComponent implements OnInit, OnDestroy {
       cve_usuario: this.guardarDatos.current_user,
       id_accion: this.guardarDatos.action_id,
       justificacion: this.justificacion,
+      documentos: this.listaDocumentosRequeridos,
       documentos_especificos: this.listadoDocumentosEspecificos,
       alcance_requerimiento: '',
       solicitante: {

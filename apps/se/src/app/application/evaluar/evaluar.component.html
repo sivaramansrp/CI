@@ -101,8 +101,10 @@
                         @case (2) {
                         <app-solicitar-documentos [isSegundaTabla]="requerimientoConfig.isSegundaTabla"
                             [documentosEspecificos]="documentosEscpecificos"
+                            [iniciarResponse]="dataIniciarRequerimiento"
                             [documentosIniciales]="listadoDocumentosGuardados"
-                            (documentosActualizados)="onDocumentosActualizados($event)">
+                            (documentosActualizados)="onDocumentosActualizados($event)"
+                            (documentosRequeridosActualizados)="onDocumentosRequeridos($event)">
                         </app-solicitar-documentos>
                         }
                         }
