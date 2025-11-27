@@ -2,12 +2,12 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: modulefederation-aga-microfront-service-qa
+  name: modulefederation-agace-microfront-service-dev
 spec:
   selector:
-    app: modulefederation-aga-microfront-qa
+    app: modulefederation-agace-microfront-dev
   ports:
     - protocol: TCP
-      port: 4202
+      port: 4209
       targetPort: 80
   type: NodePort
