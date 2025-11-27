@@ -177,7 +177,13 @@ export const API_POST_INSUMO_ARCHIVOS = `sat-t110101/solicitud/insumo/archivo`;
  * API para agregar insumos mediante archivo.
  * @see https://api-v30.cloud-ultrasist.net/api/sat-t110101/swagger-ui/index.html#/Registro-Solicitud/cargar-empaques-por-archivo
  */
-export const API_POST_EMPAQUES_ARCHIVOS = `/api/sat-t110101/solicitud/empaque/archivo`; 
+export const API_POST_EMPAQUES_ARCHIVOS = `sat-t110101/solicitud/empaque/archivo`; 
+
+/**
+ * API para agregar mercancia mediante archivo - primera parte.
+ * @see https://api-v30.cloud-ultrasist.net/api/sat-t110101/swagger-ui/index.html#/Registro-Solicitud/cargar-segunda-parte
+ */
+export const API_POST_ARCHIVO_SEGUNDA_PARTE = `sat-t110101/solicitud/archivo/segunda-parte`;
 
 
 /**
