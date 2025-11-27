@@ -1,26 +1,26 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: modulefederation-aga-microfront-deployment-qa
+  name: modulefederation-agace-microfront-deployment-dev
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: modulefederation-aga-microfront-qa
+      app: modulefederation-agace-microfront-dev
   template:
     metadata:
       labels:
-        app: modulefederation-aga-microfront-qa
+        app: modulefederation-agace-microfront-dev
     spec:
       containers:
-      - name: front-vucem30-container-qa
-        image: ghcr.io/vucem30/dockerized-modulefederation-aga-microfront:1.0.32
+      - name: front-vucem30-container-dev
+        image: ghcr.io/vucem30/dockerized-modulefederation-agace-microfront:1.0.35
         imagePullPolicy: Always
         ports:
         - containerPort: 80
         env:
         - name: SPRING_PROFILES_ACTIVE
-          value: qa
+          value: dev
         resources:
           requests:
             memory: "128Mi"
