@@ -1,4 +1,4 @@
-import { Catalogo, CatalogoTipoDocumento, RespuestaDocuemntosRequeridos } from '../../../core/models/shared/catalogos.model';
+import { Catalogo, CatalogoTipoDocumento } from '../../../core/models/shared/catalogos.model';
 import { Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges } from '@angular/core';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Notificacion, NotificacionesComponent } from '../notificaciones/notificaciones.component';
@@ -11,9 +11,10 @@ import { SolicitudDocumentosQuery } from '../../../core/queries/solicitud-docume
 import { TablaDinamicaComponent } from '../tabla-dinamica/tabla-dinamica.component';
 import { TablaSeleccion } from '../../../core/enums/tabla-seleccion.enum';
 import data from '@libs/shared/theme/assets/json/funcionario/cat-tipo-documento.json';
-import dataDocuemtos from '@libs/shared/theme/assets/json/funcionario/lista-documentos-requeridos.json'
 
+import { Documentos, IniciarRequerimientoResponse } from '../../../core/models/shared/Iniciar-requerimiento-response.model';
 import { DocumentosEspecificosResponse } from '../../../core/models/shared/documentos-especificos.model';
+import { DocumentosTabsService } from '../../../core/services/shared/documentosTabs.service';
 
 @Component({
   selector: 'app-solicitar-documentos',
@@ -31,10 +32,7 @@ export class SolicitarDocumentosEvaluacionComponent implements OnInit, OnChanges
    * Catálogo documento requerido
    */
   catTipoDocumento: Catalogo[] = [];
-  /**
-   * Lista documentos requeridos
-   */
-  exampleDocumentosRequeridos!: RespuestaDocuemntosRequeridos[];
+
   /**
    * Lista de documentos
    */
@@ -50,8 +48,15 @@ export class SolicitarDocumentosEvaluacionComponent implements OnInit, OnChanges
   /** Lista de documentos guardados previamente en el requerimiento */
    @Input () documentosIniciales : CatalogoTipoDocumento [] = [];
 
+  /** Datos de respuesta de la inicialización del requerimiento */
+  @Input() iniciarResponse!: IniciarRequerimientoResponse;
+
   /** Evento que notifica cuando los documentos han sido actualizados */
   @Output() documentosActualizados = new EventEmitter<{ id: number }[]>();
+
+  /** Evento que emite los documentos requeridos */
+  @Output() documentosRequeridosActualizados = new EventEmitter<Documentos[]>();
+
 
   /**
  * Variable para identificar el Id del tipo de documento
@@ -95,7 +100,8 @@ export class SolicitarDocumentosEvaluacionComponent implements OnInit, OnChanges
 
   constructor(private fb: FormBuilder,
     private documentosStates: SolicitudDocumentosStore,
-    private solicitudRequerimientoQuery: SolicitudDocumentosQuery
+    private solicitudRequerimientoQuery: SolicitudDocumentosQuery,
+    private documentosTabsService: DocumentosTabsService
   ) {
     // do nothing.
   }
@@ -104,7 +110,6 @@ export class SolicitarDocumentosEvaluacionComponent implements OnInit, OnChanges
    */
   ngOnInit(): void {
     this.catTipoDocumento = data;
-    this.exampleDocumentosRequeridos = dataDocuemtos;
     this.solicitudRequerimientoQuery.selectSolicitud$
       .pipe(
         takeUntil(this.destroyNotifier$),
@@ -226,4 +231,93 @@ export class SolicitarDocumentosEvaluacionComponent implements OnInit, OnChanges
     this.valor = form.get(campo)?.value;
     (this.documentosStates[metodoNombre] as (value: string) => void)(this.valor);
   }
+
+  /** Método que se ejecuta cuando cambia el estado del checkbox de requerido.
+   * @param documento - El documento cuyo estado de requerido ha cambiado.
+   * @param event - El evento del cambio del checkbox.
+   */
+  onRequeridoChange(documento: Documentos, event: Event): void {
+    const TARGET = event.target as HTMLInputElement;
+    documento.requerido = TARGET.checked;
+    this.emitirDocumentosRequeridos();
+  }
+
+  /** Emite la lista de documentos requeridos actualizados. */
+  emitirDocumentosRequeridos(): void {
+    const DOCUMENTOSMARCADOS = this.iniciarResponse.documentos
+      .filter(doc => doc.requerido === true);
+
+    this.documentosRequeridosActualizados.emit(DOCUMENTOSMARCADOS);
+  }
+
+  /**
+* Abre el detalle de un acuse en una nueva pestaña.
+* @param {string} url - La URL (UUID) del archivo PDF del acuse.
+* @returns {void}
+* @example
+* // Abre el detalle de acuse
+* verDetalleAcuse('a1b2c3d4-e5f6-7890-abcd-ef1234567890');
+*/
+  verDetalleAcuse(url: string, nombre: string): void {
+    this.base64Archivos(url, 'abrir', nombre);
+  }
+
+  /**
+* Obtiene el contenido base64 de un archivo y realiza la acción especificada.
+* @param {string} uuid - Identificador único del archivo a obtener.
+* @param {'abrir' | 'descargar'} accion - Acción a realizar con el archivo.
+* @returns {void}
+* @example
+* // Abre el archivo en una nueva pestaña
+* base64Archivos('a1b2c3d4-e5f6-7890-abcd-ef1234567890', 'abrir');
+* 
+* // Descarga el archivo
+* base64Archivos('a1b2c3d4-e5f6-7890-abcd-ef1234567890', 'descargar');
+*/
+  base64Archivos(uuid: string, accion: 'abrir' | 'descargar', nombre: string): void {
+    this.documentosTabsService.getDescargarDoc(uuid).subscribe({
+      next: (data) => {
+        if (data?.codigo === "UPSER00" && data?.datos?.content) {
+          SolicitarDocumentosEvaluacionComponent.manejarPdf(
+            data.datos.content,
+            nombre,
+            accion
+          );
+        }
+      },
+    });
+  }
+
+
+  /**
+  * Método genérico para manejar un PDF en base64.
+  *
+  * @param base64 Contenido del PDF en base64.
+  * @param nombreArchivo Nombre del archivo a descargar (si aplica).
+  * @param accion 'abrir' para abrir en pestaña o 'descargar' para forzar descarga.
+  */
+  static manejarPdf(base64: string, nombreArchivo: string, accion: 'abrir' | 'descargar'): void {
+    // Decodificar el base64
+    const BYTE_CHARACTERS = atob(base64);
+    const BYTE_NUMBERS = new Array(BYTE_CHARACTERS.length);
+    for (let i = 0; i < BYTE_CHARACTERS.length; i++) {
+      BYTE_NUMBERS[i] = BYTE_CHARACTERS.charCodeAt(i);
+    }
+    const BYTE_ARRAY = new Uint8Array(BYTE_NUMBERS);
+
+    // Crear el Blob y la URL
+    const BLOB = new Blob([BYTE_ARRAY], { type: 'application/pdf' });
+    const URLCODIFICADA = URL.createObjectURL(BLOB);
+
+    if (accion === 'abrir') {
+      window.open(URLCODIFICADA, '_blank');
+    } else {
+      const LINK = document.createElement('a');
+      LINK.href = URLCODIFICADA;
+      LINK.download = nombreArchivo.endsWith('.pdf') ? nombreArchivo : `${nombreArchivo}.pdf`;
+      LINK.click();
+      URL.revokeObjectURL(URLCODIFICADA);
+    }
+  }
+
 }
