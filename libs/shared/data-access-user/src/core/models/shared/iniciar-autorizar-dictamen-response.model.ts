@@ -61,10 +61,11 @@ export interface IniciarAutorizacionResponse {
     /** Indica si el dictaminador califica al exportador JPN */
     mostrar_calificacion_jpn?:boolean | null;
 
-    historial_observaciones?: HistorialObservacione[];
+    historial_observaciones?: HistorialObservaciones[];
 }
 
-export interface HistorialObservacione {
+/** Historial de observaciones */
+export interface HistorialObservaciones {
     /** ID de la observación */
     id_observacion: number;
     /** ID del estado de la observación */
