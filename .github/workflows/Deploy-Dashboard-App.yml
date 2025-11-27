@@ -1,22 +1,25 @@
-name: Deploy Dashboard App
+name: Deploy Dashboard QA
 
 on:
   workflow_dispatch:
 
 jobs:
-  build-and-push:
+  build-and-push-qa:
     runs-on: ubuntu-latest
     outputs:
-      image_tag: ${{ steps.get-version.outputs.VERSION }}
+      image_tag: ${{ steps.set-image-tag.outputs.TAG }}
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Get version from package.json
-        id: get-version
+      - name: Set Docker image tag
+        id: set-image-tag
+        # You can adapt this line if you want to use a different tag, such as a commit SHA, timestamp, or branch name.
+        # Here, we use package.json version + '-qa' for clarity, but you could use just 'qa-latest' or similar.
         run: |
           VERSION=$(jq -r .version package.json)
-          echo "VERSION=$VERSION" >> $GITHUB_OUTPUT
+          TAG="$VERSION-qa"
+          echo "TAG=$TAG" >> $GITHUB_OUTPUT
 
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
@@ -28,116 +31,77 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GHCR_PAT }}
 
-      - name: Update Docker Compose image tag
+      - name: Update Docker Compose image tag (QA)
         run: |
-          sed -i "s|image: ghcr.io/vucem30/dockerized-modulefederation-dashboard:.*|image: ghcr.io/vucem30/dockerized-modulefederation-dashboard:${{ steps.get-version.outputs.VERSION }}|g" docker/modulefederation-dashboard.yml
+          sed -i "s|image: ghcr.io/vucem30/dockerized-modulefederation-dashboard:.*|image: ghcr.io/vucem30/dockerized-modulefederation-dashboard:${{ steps.set-image-tag.outputs.TAG }}|g" docker/qa/modulefederation-dashboard.yml
 
-      - name: Build Docker image for dashboard app
+      - name: Build Docker image for dashboard QA
         run: |
-          docker compose -f docker/modulefederation-dashboard.yml build --no-cache
+          docker compose -f docker/qa/modulefederation-dashboard.yml build --no-cache
 
-      - name: Push Docker image
+      - name: Push Docker QA image
         run: |
-          docker push ghcr.io/vucem30/dockerized-modulefederation-dashboard:${{ steps.get-version.outputs.VERSION }}
+          docker push ghcr.io/vucem30/dockerized-modulefederation-dashboard:${{ steps.set-image-tag.outputs.TAG }}
 
-  deploy:
-    needs: build-and-push
+  deploy-qa:
+    needs: build-and-push-qa
     runs-on: ubuntu-latest
     environment:
-      name: production
+      name: qa
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Get version from package.json
-        id: get-version
+      - name: Set Docker image tag
+        id: set-image-tag
         run: |
           VERSION=$(jq -r .version package.json)
-          echo "VERSION=$VERSION" >> $GITHUB_OUTPUT
+          TAG="$VERSION-qa"
+          echo "TAG=$TAG" >> $GITHUB_OUTPUT
 
-      - name: Debug:List yaml files before copy
+      - name: Update image tag in QA deployment YAML
         run: |
-          echo "Showing YAML files in k8s/dashboard/"
-          ls -l k8s/dashboard/ || echo "Directory does not exist"
-          echo "Full find output:"
-          find k8s/dashboard/ || echo "Directory does not exist"
+          sed -i "s|image: ghcr.io/vucem30/dockerized-modulefederation-dashboard:.*|image: ghcr.io/vucem30/dockerized-modulefederation-dashboard:${{ steps.set-image-tag.outputs.TAG }}|g" k8s/qa/dashboard/dashboard-deployment-qa
 
-      - name: Update deployment YAML image tag
-        run: |
-          sed -i "s|image: ghcr.io/vucem30/dockerized-modulefederation-dashboard:.*|image: ghcr.io/vucem30/dockerized-modulefederation-dashboard:${{ steps.get-version.outputs.VERSION }}|g" k8s/dashboard/*.yaml
-
-      - name: Copy deployment files to server
+      - name: Copy QA deployment YAMLs to server
         uses: appleboy/scp-action@v0.1.7
         with:
-          host: ${{ secrets.REMOTE_SRV_IP }}
-          username: ${{ secrets.REMOTE_SRV_USER }}
-          key: ${{ secrets.REMOTE_SRV_PRIV_KEY }}
-          source: k8s/dashboard/*.yaml
-          target: ~/deployments/dashboard/
-          strip_components: 2
+          host: ${{ secrets.REMOTE_QA_SRV_IP }}
+          username: ${{ secrets.REMOTE_QA_SRV_USER }}
+          key: ${{ secrets.REMOTE_QA_SRV_PRIV_KEY }}
+          source: |
+            k8s/qa/dashboard/dashboard-deployment-qa
+            k8s/qa/dashboard/dashboard-service-qa.yaml
+            k8s/qa/dashboard/dashboard-ingress-qa.yaml
+          target: ~/deployments/dashboard-qa/
+          strip_components: 3
 
-      - name: List files on remote after copy
+      - name: List files on remote server
         uses: appleboy/ssh-action@v1.0.3
         with:
-          host: ${{ secrets.REMOTE_SRV_IP }}
-          username: ${{ secrets.REMOTE_SRV_USER }}
-          key: ${{ secrets.REMOTE_SRV_PRIV_KEY }}
+          host: ${{ secrets.REMOTE_QA_SRV_IP }}
+          username: ${{ secrets.REMOTE_QA_SRV_USER }}
+          key: ${{ secrets.REMOTE_QA_SRV_PRIV_KEY }}
           script: |
-            ls -l ~/deployments/dashboard/
+            ls -l ~/deployments/dashboard-qa/
 
-      - name: SSH Deploy and Restart
+      - name: Deploy to Kubernetes QA
         uses: appleboy/ssh-action@v1.0.3
         with:
-          host: ${{ secrets.REMOTE_SRV_IP }}
-          username: ${{ secrets.REMOTE_SRV_USER }}
-          key: ${{ secrets.REMOTE_SRV_PRIV_KEY }}
+          host: ${{ secrets.REMOTE_QA_SRV_IP }}
+          username: ${{ secrets.REMOTE_QA_SRV_USER }}
+          key: ${{ secrets.REMOTE_QA_SRV_PRIV_KEY }}
           script: |
-            set -euo pipefail
-            APP_NAME="dashboard"
-            IMAGE_TAG="${{ steps.get-version.outputs.VERSION }}"
-            DEPLOY_DIR=~/deployments/$APP_NAME
-            DEPLOYMENT_FILE="${APP_NAME}-deployment-dev.yaml"
-            SERVICE_FILE="${APP_NAME}-service-dev.yaml"
-            INGRESS_FILE="${APP_NAME}-ingress-dev.yaml"
-            cd "$DEPLOY_DIR"
-            for FILE in "$DEPLOYMENT_FILE" "$SERVICE_FILE" "$INGRESS_FILE"; do
-              if [ ! -f "$FILE" ]; then
-                echo "ERROR: $FILE not found in $(pwd)"
-                ls -l
-                exit 1
-              fi
-            done
-            docker login --username ${{ secrets.DOCKER_USERNAME }} --password ${{ secrets.DOCKER_PASSWORD }} ghcr.io
+            cd ~/deployments/dashboard-qa/
+            # Make sure the image was updated
+            grep "image: ghcr.io/vucem30/dockerized-modulefederation-dashboard:${{ steps.set-image-tag.outputs.TAG }}" dashboard-deployment-qa
 
-            echo "Before image/container cleanup:"
-            docker images | grep $APP_NAME || true
-            docker ps -a | grep $APP_NAME || true
+            # Deploy in order: deployment, service, ingress
+            microk8s kubectl apply -f dashboard-deployment-qa
+            microk8s kubectl apply -f dashboard-service-qa.yaml
+            microk8s kubectl apply -f dashboard-ingress-qa.yaml
 
-            # Remove containers using the image
-            docker ps -a --filter "ancestor=ghcr.io/vucem30/dockerized-modulefederation-$APP_NAME:$IMAGE_TAG" -q | xargs -r docker rm -f
-
-            # Remove the old image if present
-            docker rmi -f ghcr.io/vucem30/dockerized-modulefederation-$APP_NAME:$IMAGE_TAG || true
-
-            # Prune all unused images, containers, and system resources to free up disk space
-            docker image prune -af || true
-            docker container prune -f || true
-            docker system prune -af || true
-
-            echo "After image/container cleanup:"
-            docker images | grep $APP_NAME || true
-            docker ps -a | grep $APP_NAME || true
-
-            # Always pull the latest image before deployment
-            docker pull ghcr.io/vucem30/dockerized-modulefederation-$APP_NAME:$IMAGE_TAG
-
-            grep "image: ghcr.io/vucem30/dockerized-modulefederation-$APP_NAME:$IMAGE_TAG" "$DEPLOYMENT_FILE"
-
-            # Ensure pods are always started with the latest image
-            microk8s kubectl apply -f "$DEPLOYMENT_FILE"
-            microk8s kubectl apply -f "$SERVICE_FILE"
-            microk8s kubectl apply -f "$INGRESS_FILE"
-            # Force new pods with latest image
-            microk8s kubectl rollout restart deployment modulefederation-$APP_NAME-deployment-dev -n default
-            microk8s kubectl rollout status deployment modulefederation-$APP_NAME-deployment-dev -n default
-            microk8s kubectl get pods | grep $APP_NAME
+            # Restart pods for new image
+            microk8s kubectl rollout restart deployment modulefederation-dashboard-deployment-qa -n default
+            microk8s kubectl rollout status deployment modulefederation-dashboard-deployment-qa -n default
+            microk8s kubectl get pods | grep dashboard
