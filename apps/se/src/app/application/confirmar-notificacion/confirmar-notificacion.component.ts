@@ -1,4 +1,4 @@
-import { CategoriaMensaje, ConsultaioQuery, ConsultaioState, FirmaElectronicaComponent, Notificacion, NotificacionesComponent, TramiteFolioStore, base64ToHex, encodeToISO88591Hex, } from '@ng-mf/data-access-user';
+import { CategoriaMensaje, ConsultaioQuery, ConsultaioState, DesplazarseHaciaArribaService, FirmaElectronicaComponent, Notificacion, NotificacionesComponent, TramiteFolioStore, base64ToHex, encodeToISO88591Hex, } from '@ng-mf/data-access-user';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { CadenaOriginalRequest } from '../core/models/confirmar-notificacion/request/generar-cadena-original-request.model';
 import { CadenaOriginalService } from '../core/services/confirmar-notificacion/CadenaOriginal.service';
@@ -178,6 +178,7 @@ export class ConfirmarNotificacionComponent implements OnInit, OnDestroy {
     private firmaService: FirmaService,
     private tramiteStore: TramiteFolioStore,
     private cadenaOriginalService: CadenaOriginalService,
+    private desplazarseHaciaArribaService: DesplazarseHaciaArribaService,
     private tramiteConfigService: TramiteConfigService) {
      this.consultaioQuery.selectConsultaioState$
       .pipe(
@@ -198,6 +199,7 @@ export class ConfirmarNotificacionComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.getConfirmarNotificacion();
     this.obtenerAcusesRecibos();
+    this.desplazarseHaciaArribaService.desplazarArriba();
   }
 
   /**
