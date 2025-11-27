@@ -1253,7 +1253,8 @@ export class AutorizarDictamenComponent implements OnInit, OnDestroy {
       .subscribe({
         next: (resp) => {
           if (resp.codigo === "00" && resp.datos) {
-            this.getRegresar(true);
+            localStorage.setItem('mensajeExito', 'OBSERVACION');
+            this.getRegresar();
           } else {
             window.scrollTo({ top: 0, behavior: 'smooth' });
             this.nuevaNotificacion = {
@@ -1296,16 +1297,13 @@ export class AutorizarDictamenComponent implements OnInit, OnDestroy {
    * 
    * @returns {void}
    */
-  getRegresar(exito: boolean = false): void {
+  getRegresar(): void {
     this.isObservacion = false;
     this.isDictamen = true;
     this.isFirma = false;
     this.isDocumento = false;
-    const QUERY = exito ? { observacionExitoso: true } : {};
-
-    this.router.navigate(['bandeja-de-tareas-pendientes'], {
-      queryParams: QUERY
-    });
+    
+    this.router.navigate(['bandeja-de-tareas-pendientes']);
   }
 
   /**

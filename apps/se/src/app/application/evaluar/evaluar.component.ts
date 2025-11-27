@@ -1550,9 +1550,8 @@ export class EvaluarComponent implements OnInit, OnDestroy {
               txtBtnAceptar: '',
               txtBtnCancelar: '',
             }
-            this.router.navigate(['bandeja-de-tareas-pendientes'], {
-              queryParams: { dictamenExitoso: true }
-            });
+            localStorage.setItem('mensajeExito', 'DICTAMEN');
+            this.router.navigate(['bandeja-de-tareas-pendientes']);
           }
 
         }),
