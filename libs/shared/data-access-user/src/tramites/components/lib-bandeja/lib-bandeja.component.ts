@@ -19,6 +19,7 @@ import { ModeloDeFormaDinamica } from '../../../core/models/shared/forms-model';
 
 import { BandejaDeSolicitudes, SolicitudesPendientesRequest } from '../../../core/models/shared/lib-bandeja.model';
 import { TABLADECONFIGUACIONFUNCIONARIO, TABLADECONFIGUACIONSOLICITANTE } from '../../../core/enums/bandeja-de-solicitudes-funcionario-solicitante.enum';
+import { MensajesExito } from '../../../core/enums/mensajes-bandeja-tareas-pendientes.enum';
 import moment from 'moment';
 
 const INPUT_FORMAT = 'DD/MM/YYYY';
@@ -173,11 +174,10 @@ export class LibBandejaComponent<T extends BandejaRegistroBase> implements OnIni
    */
   public tieneConfiguracionTablaDatos: boolean = true;
 
-  /**
-   * Indica si se debe mostrar un mensaje de observación exitosa.
+  /** 
+   * Indica si se debe mostrar el mensaje de éxito
    */
-  public labelExitoso: boolean | null = false;
-
+  labelExitoMensaje: string | null = null;
 
   /*
    * Constructor que inyecta Router y ConsultaioStore
@@ -203,24 +203,25 @@ export class LibBandejaComponent<T extends BandejaRegistroBase> implements OnIni
   ngOnInit(): void {
     this.mostrarColapsable(1);
     this.filterConfiguracionTabla();
-    
-     this.route.queryParams.subscribe((params) => {
-      if (params['labelExitoso'] === 'true') {
-        this.labelExitoso = true;
 
-        // Oculta el mensaje después de 5 segundos
-        setTimeout(() => {
-          this.labelExitoso = false;
+    const TIPOMENSAJE = localStorage.getItem('mensajeExito');
 
-          // Limpia el parámetro de la URL
-          this.router.navigate([], {
-            relativeTo: this.route,
-            queryParams: { labelExitoso: null },
-            queryParamsHandling: 'merge',
-          });
-        }, 5000);
+    if (TIPOMENSAJE) {
+      if (TIPOMENSAJE === 'OBSERVACION') {
+        this.labelExitoMensaje = MensajesExito.OBSERVACION;
       }
-    });
+
+      if (TIPOMENSAJE === 'DICTAMEN') {
+        this.labelExitoMensaje = MensajesExito.DICTAMEN;
+      }
+
+      // Mostrar solo 5 segundos
+      setTimeout(() => {
+        this.labelExitoMensaje = null;
+        localStorage.removeItem('mensajeExito');
+      }, 5000);
+    }
+
   }
 
   /*

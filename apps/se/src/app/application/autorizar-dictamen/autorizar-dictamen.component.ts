@@ -12,7 +12,7 @@ import { GenerarDictamenComponent } from '@libs/shared/data-access-user/src/tram
 import { ReviewersTabsComponent } from '@libs/shared/data-access-user/src/tramites/components/reviewers-tabs/reviewers-tabs.component';
 
 
-import { CategoriaMensaje, ConsultaioQuery, ConsultaioState, ConsultaioStore, FECHA_DE_INICIO, Notificacion, NotificacionesComponent, base64ToHex, encodeToISO88591Hex } from '@ng-mf/data-access-user';
+import { CategoriaMensaje, ConsultaioQuery, ConsultaioState, ConsultaioStore, DesplazarseHaciaArribaService, FECHA_DE_INICIO, Notificacion, NotificacionesComponent, base64ToHex, encodeToISO88591Hex } from '@ng-mf/data-access-user';
 import { Subject, catchError, map, of, takeUntil, tap } from 'rxjs';
 import { LISTA_TRIMITES } from '../shared/constantes/lista-trimites.enums';
 
@@ -314,7 +314,8 @@ export class AutorizarDictamenComponent implements OnInit, OnDestroy {
     private acuseDetalleService: AcuseDetalleService,
     private evaluarSolicitudService: EvaluarSolicitudService,
     private fb: FormBuilder,
-    private tramiteConfigService: TramiteConfigService
+    private tramiteConfigService: TramiteConfigService,
+    private desplazarseHaciaArribaService: DesplazarseHaciaArribaService
   ) {
 
     this.consultaioQuery.selectConsultaioState$
@@ -366,6 +367,7 @@ export class AutorizarDictamenComponent implements OnInit, OnDestroy {
     this.iniciarDictamenAutorizar();
     this.getSentidosDisponibles();
     this.getTabs();
+    this.desplazarseHaciaArribaService.desplazarArriba();
   }
 
   /**
@@ -1251,6 +1253,7 @@ export class AutorizarDictamenComponent implements OnInit, OnDestroy {
       .subscribe({
         next: (resp) => {
           if (resp.codigo === "00" && resp.datos) {
+            localStorage.setItem('mensajeExito', 'OBSERVACION');
             this.getRegresar();
           } else {
             window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -1299,9 +1302,8 @@ export class AutorizarDictamenComponent implements OnInit, OnDestroy {
     this.isDictamen = true;
     this.isFirma = false;
     this.isDocumento = false;
-    this.router.navigate(['bandeja-de-tareas-pendientes'], {
-      queryParams: { labelExitoso: true }
-    });
+    
+    this.router.navigate(['bandeja-de-tareas-pendientes']);
   }
 
   /**
